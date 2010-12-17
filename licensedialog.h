@@ -2,7 +2,7 @@
 #define LICENSEDIALOG_H
 
 #include <QDialog>
-#include "protect.h"
+#include "../_Modules/Protect/protect.h"
 
 namespace Ui {
     class licenseDialog;

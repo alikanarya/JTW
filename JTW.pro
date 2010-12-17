@@ -30,9 +30,9 @@ SOURCES += main.cpp\
     sampledialog.cpp \
     helpdialog.cpp \
     exitdialog.cpp \
-    protect.cpp \
     licensedialog.cpp \
-    reportdialog.cpp
+    reportdialog.cpp \
+    ../_Modules/Protect/protect.cpp
 
 HEADERS  += mainwindow.h \
     getImage.h \
@@ -55,9 +55,9 @@ HEADERS  += mainwindow.h \
     sampledialog.h \
     helpdialog.h \
     exitdialog.h \
-    protect.h \
     licensedialog.h \
-    reportdialog.h
+    reportdialog.h \
+    ../_Modules/Protect/protect.h
 
 FORMS    += mainwindow.ui \
     setupform.ui \

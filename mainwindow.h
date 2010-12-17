@@ -76,7 +76,7 @@ namespace Ui {
 //#include "plccheckthread.h"
 //#include "imggetthread.h"
 #include "plccontrolthread.h"
-#include "protect.h"
+#include "../_Modules/Protect/protect.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
