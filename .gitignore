@@ -1,0 +1,10 @@
+
+*.lic
+*.ini
+/Makefile.Release
+/Makefile
+/Makefile.Debug
+/JTW.pro.user
+/libnodave.dll
+/object_script.JTW.Release
+/object_script.JTW.Debug

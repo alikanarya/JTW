@@ -1,0 +1,38 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/Image-capture-icon.png</file>
+        <file>resources/Play-Normal-icon.png</file>
+        <file>resources/Pause-Normal-icon.png</file>
+        <file>resources/Pause-Disabled-icon.png</file>
+        <file>resources/Play-Disabled-icon.png</file>
+        <file>resources/Stop-Normal-icon.png</file>
+        <file>resources/Stop-Disabled-icon.png</file>
+        <file>resources/Phone-Book-icon.png</file>
+        <file>resources/settings-icon.png</file>
+        <file>resources/Weather-icon.png</file>
+        <file>resources/target.png</file>
+        <file>resources/calculator-icon.png</file>
+        <file>resources/Phone-Book-Disabled-icon.png</file>
+        <file>resources/Weather-Disabled-icon.png</file>
+        <file>resources/Record-Disabled-icon.png</file>
+        <file>resources/Record-Normal-Red-icon.png</file>
+        <file>resources/info-icon.png</file>
+        <file>resources/exit-48.png</file>
+        <file>resources/NokselLogo.bmp</file>
+        <file>resources/Emergency-Stop-Disabled-Icon.png</file>
+        <file>resources/Emergency-Stop-Enabled-Icon.png</file>
+        <file>resources/calculator-Disabled-icon.png</file>
+        <file>resources/Button-Help-icon.png</file>
+        <file>resources/s7_200-Enabled-Icon.png</file>
+        <file>resources/Camera-Disabled-Icon.png</file>
+        <file>resources/Camera-Enabled-Icon.png</file>
+        <file>resources/s7_200-Disabled-Icon.png</file>
+        <file>resources/report-icon.png</file>
+    </qresource>
+    <qresource prefix="/pixmaps">
+        <file>resources/bad_corner.jpg</file>
+        <file>resources/bad_mono.jpg</file>
+        <file>resources/good_corner.jpg</file>
+        <file>resources/good_mono.jpg</file>
+    </qresource>
+</RCC>
