@@ -69,7 +69,8 @@ namespace Ui {
 #include <QNetworkInterface>
 
 #include "getimage.h"
-#include "imgprocess.h"
+#include "../_Modules/Imgprocess/imgprocess.h"
+#include "messages.h"
 #include "../_Modules/S7/s7.h"
 //#include "playthread.h"
 #include "getsystemtime.h"

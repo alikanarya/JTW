@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "imgprocess.h"
+#include "../_Modules/Imgprocess/imgprocess.h"
 
 namespace Ui {
     class analyzeDialog;

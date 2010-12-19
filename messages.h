@@ -1,18 +1,12 @@
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
-#define message0    "Herþey normal"
 #define message1    "Kaynak baþlatýldý"
 #define message2    "Kaynak durduruldu"
 #define message3    "Kamera baðlantýsý normal"
 #define message4    "Kaynak gecikmesi: "
 #define message5    "Rapor dosyasý yazýlamadý"
 
-#define alarm1      "Lazer izi tespit edilemedi !!! (Eþik deðerinden az)"
-#define alarm2      "Hiç aralýk bulunamadý !!!"
-#define alarm3      "Aralýk miktarý eþik deðerinden az !!!"
-#define alarm4      "Bulunan aralýk imajýn kenarlarýna çok yakýn !!!"
-#define alarm5      "Lazer açýsý çok fazla !!!"
 #define alarm6      "Resim alýnamadý !!! Kamera veya baðlantýsýnda problem olabilir."
 #define alarm7      "Kamera baðlantýsýnda problem oluþtu !!!"
 #define alarm8      "Kaynak gecikmesi için girilen deðer geçersiz !!! Tekrar deneyiniz."

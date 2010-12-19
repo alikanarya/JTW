@@ -1,7 +1,7 @@
 #ifndef SETUPFORM_H
 #define SETUPFORM_H
 
-#include "imgprocess.h"
+#include "../_Modules/Imgprocess/imgprocess.h"
 #include <QDialog>
 #include <QTime>
 
