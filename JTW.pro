@@ -17,7 +17,6 @@ SOURCES += main.cpp\
     imgprocess.cpp \
     setupform.cpp \
     settingsform.cpp \
-    s7.cpp \
     infoform.cpp \
     playthread.cpp \
     getsystemtime.cpp \
@@ -32,7 +31,8 @@ SOURCES += main.cpp\
     exitdialog.cpp \
     licensedialog.cpp \
     reportdialog.cpp \
-    ../_Modules/Protect/protect.cpp
+    ../_Modules/Protect/protect.cpp \
+    ../_Modules/S7/s7.cpp
 
 HEADERS  += mainwindow.h \
     getImage.h \
@@ -41,8 +41,6 @@ HEADERS  += mainwindow.h \
     setupform.h \
     settingsform.h \
     messages.h \
-    s7.h \
-    s7types.h \
     infoform.h \
     playthread.h \
     getsystemtime.h \
@@ -57,7 +55,9 @@ HEADERS  += mainwindow.h \
     exitdialog.h \
     licensedialog.h \
     reportdialog.h \
-    ../_Modules/Protect/protect.h
+    ../_Modules/Protect/protect.h \
+    ../_Modules/S7/s7types.h \
+    ../_Modules/S7/s7.h
 
 FORMS    += mainwindow.ui \
     setupform.ui \

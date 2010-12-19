@@ -3,7 +3,7 @@
 
 #include <QThread>
 
-#include "s7.h"
+#include "../_Modules/S7/s7.h"
 
 class plcControlThread : public QThread{
     Q_OBJECT
