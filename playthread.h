@@ -3,7 +3,7 @@
 
 #include <QThread>
 
-#include "getsystemtime.h"
+#include "../_Modules/Getsystemtime/getsystemtime.h"
 
 class playThread : public QThread {
     Q_OBJECT

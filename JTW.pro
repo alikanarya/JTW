@@ -18,7 +18,6 @@ SOURCES += main.cpp\
     settingsform.cpp \
     infoform.cpp \
     playthread.cpp \
-    getsystemtime.cpp \
     restartdialog.cpp \
     pwddialog.cpp \
     plccheckthread.cpp \
@@ -32,7 +31,8 @@ SOURCES += main.cpp\
     reportdialog.cpp \
     ../_Modules/Protect/protect.cpp \
     ../_Modules/S7/s7.cpp \
-    ../_Modules/Imgprocess/imgprocess.cpp
+    ../_Modules/Imgprocess/imgprocess.cpp \
+    ../_Modules/Getsystemtime/getsystemtime.cpp
 
 HEADERS  += mainwindow.h \
     getImage.h \
@@ -41,7 +41,6 @@ HEADERS  += mainwindow.h \
     messages.h \
     infoform.h \
     playthread.h \
-    getsystemtime.h \
     restartdialog.h \
     pwddialog.h \
     plccheckthread.h \
@@ -57,7 +56,8 @@ HEADERS  += mainwindow.h \
     ../_Modules/S7/s7types.h \
     ../_Modules/S7/s7.h \
     ../_Modules/Imgprocess/imgprocess.h \
-    ../_Modules/Imgprocess/imgprocess_msg.h
+    ../_Modules/Imgprocess/imgprocess_msg.h \
+    ../_Modules/Getsystemtime/getsystemtime.h
 
 FORMS    += mainwindow.ui \
     setupform.ui \

@@ -73,7 +73,7 @@ namespace Ui {
 #include "messages.h"
 #include "../_Modules/S7/s7.h"
 //#include "playthread.h"
-#include "getsystemtime.h"
+#include "../_Modules/Getsystemtime/getsystemtime.h"
 //#include "plccheckthread.h"
 //#include "imggetthread.h"
 #include "plccontrolthread.h"
