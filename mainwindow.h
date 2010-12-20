@@ -68,7 +68,7 @@ namespace Ui {
 #include <QtGui>
 #include <QNetworkInterface>
 
-#include "getimage.h"
+#include "../_Modules/Getimage/getimage.h"
 #include "../_Modules/Imgprocess/imgprocess.h"
 #include "messages.h"
 #include "../_Modules/S7/s7.h"

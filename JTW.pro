@@ -13,7 +13,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    getImage.cpp \
     setupform.cpp \
     settingsform.cpp \
     infoform.cpp \
@@ -32,10 +31,10 @@ SOURCES += main.cpp\
     ../_Modules/Protect/protect.cpp \
     ../_Modules/S7/s7.cpp \
     ../_Modules/Imgprocess/imgprocess.cpp \
-    ../_Modules/Getsystemtime/getsystemtime.cpp
+    ../_Modules/Getsystemtime/getsystemtime.cpp \
+    ../_Modules/Getimage/getImage.cpp
 
 HEADERS  += mainwindow.h \
-    getImage.h \
     setupform.h \
     settingsform.h \
     messages.h \
@@ -57,7 +56,8 @@ HEADERS  += mainwindow.h \
     ../_Modules/S7/s7.h \
     ../_Modules/Imgprocess/imgprocess.h \
     ../_Modules/Imgprocess/imgprocess_msg.h \
-    ../_Modules/Getsystemtime/getsystemtime.h
+    ../_Modules/Getsystemtime/getsystemtime.h \
+    ../_Modules/Getimage/getImage.h
 
 FORMS    += mainwindow.ui \
     setupform.ui \
