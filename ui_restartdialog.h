@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'restartdialog.ui'
 **
-** Created: Mon Dec 20 01:06:17 2010
+** Created: Mon 20. Dec 16:09:54 2010
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

@@ -16,11 +16,8 @@ SOURCES += main.cpp\
     setupform.cpp \
     settingsform.cpp \
     infoform.cpp \
-    playthread.cpp \
     restartdialog.cpp \
     pwddialog.cpp \
-    plccheckthread.cpp \
-    imggetthread.cpp \
     plccontrolthread.cpp \
     analyzedialog.cpp \
     sampledialog.cpp \
@@ -39,11 +36,8 @@ HEADERS  += mainwindow.h \
     settingsform.h \
     messages.h \
     infoform.h \
-    playthread.h \
     restartdialog.h \
     pwddialog.h \
-    plccheckthread.h \
-    imggetthread.h \
     plccontrolthread.h \
     analyzedialog.h \
     sampledialog.h \

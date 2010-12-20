@@ -72,10 +72,7 @@ namespace Ui {
 #include "../_Modules/Imgprocess/imgprocess.h"
 #include "messages.h"
 #include "../_Modules/S7/s7.h"
-//#include "playthread.h"
 #include "../_Modules/Getsystemtime/getsystemtime.h"
-//#include "plccheckthread.h"
-//#include "imggetthread.h"
 #include "plccontrolthread.h"
 #include "../_Modules/Protect/protect.h"
 
@@ -91,9 +88,6 @@ public:
     QSettings *settings;                // settings: to read/write ini file
     QString statusMessage;              // general status message
 
-    //playThread threadPlay;              // play & control thread
-    //plcCheckThread *threadPLCcheck;
-    //imgGetThread threadImgGet;
     plcControlThread *threadPLCControl;
 
     QUrl urlCam;                        // camera url
