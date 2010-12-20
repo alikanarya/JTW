@@ -70,4 +70,7 @@ RESOURCES += \
     icons.qrc
 
 OTHER_FILES += \
-    libnodave.dll
+    libnodave.dll \
+    appicon.rc
+
+win32:RC_FILE = appicon.rc

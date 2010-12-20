@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'licensedialog.ui'
 **
-** Created: Mon 20. Dec 16:09:54 2010
+** Created: Tue Dec 21 01:13:39 2010
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
