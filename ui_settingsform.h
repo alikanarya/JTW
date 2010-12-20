@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'settingsform.ui'
 **
-** Created: Mon 20. Dec 16:09:54 2010
+** Created: Mon 20. Dec 16:37:54 2010
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -167,10 +167,10 @@ public:
         table->setRowCount(10);
         table->setColumnCount(1);
         table->horizontalHeader()->setVisible(false);
-        table->horizontalHeader()->setDefaultSectionSize(150);
+        table->horizontalHeader()->setDefaultSectionSize(200);
         table->horizontalHeader()->setHighlightSections(true);
-        table->horizontalHeader()->setMinimumSectionSize(150);
-        table->verticalHeader()->setVisible(false);
+        table->horizontalHeader()->setMinimumSectionSize(200);
+        table->verticalHeader()->setVisible(true);
         table->verticalHeader()->setCascadingSectionResizes(false);
         table->verticalHeader()->setDefaultSectionSize(25);
         table->verticalHeader()->setHighlightSections(true);
