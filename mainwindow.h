@@ -10,7 +10,7 @@
 #define _HOUGH_LINE_NO      5
 #define _VOTE_THRESHOLD     150
 #define _VOID_THRESHOLD     30
-#define _PLC_TYPE           1
+#define _PLC_TYPE           0
 #define _DB_NO              1
 #define _RIGHT_VMEM_BYTE    101
 #define _RIGHT_BITofBYTE    0
