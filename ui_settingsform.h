@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'settingsform.ui'
 **
-** Created: Mon 20. Dec 16:37:54 2010
+** Created: Mon 20. Dec 17:57:21 2010
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -48,6 +48,8 @@ public:
     QRadioButton *radio300;
     QLabel *label_3;
     QLineEdit *editDBNo;
+    QLineEdit *editControlDelay;
+    QLabel *label_4;
     QButtonGroup *radioGroup;
 
     void setupUi(QWidget *settingsForm)
@@ -76,6 +78,7 @@ public:
         font.setBold(true);
         font.setWeight(75);
         setupButton->setFont(font);
+        setupButton->setFocusPolicy(Qt::NoFocus);
         label = new QLabel(settingsForm);
         label->setObjectName(QString::fromUtf8("label"));
         label->setGeometry(QRect(10, 20, 111, 16));
@@ -100,11 +103,13 @@ public:
         saveExitButton->setObjectName(QString::fromUtf8("saveExitButton"));
         saveExitButton->setGeometry(QRect(160, 420, 100, 25));
         saveExitButton->setFont(font);
+        saveExitButton->setFocusPolicy(Qt::NoFocus);
         saveExitButton->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
         exitButton = new QPushButton(settingsForm);
         exitButton->setObjectName(QString::fromUtf8("exitButton"));
         exitButton->setGeometry(QRect(310, 470, 80, 25));
         exitButton->setFont(font);
+        exitButton->setFocusPolicy(Qt::NoFocus);
         exitButton->setStyleSheet(QString::fromUtf8(""));
         table = new QTableWidget(settingsForm);
         if (table->columnCount() < 1)
@@ -195,11 +200,11 @@ public:
         label_2->setFont(font);
         checkPLConBoot = new QCheckBox(settingsForm);
         checkPLConBoot->setObjectName(QString::fromUtf8("checkPLConBoot"));
-        checkPLConBoot->setGeometry(QRect(10, 70, 361, 17));
+        checkPLConBoot->setGeometry(QRect(10, 95, 361, 17));
         checkPLConBoot->setFont(font);
         checkCamonBoot = new QCheckBox(settingsForm);
         checkCamonBoot->setObjectName(QString::fromUtf8("checkCamonBoot"));
-        checkCamonBoot->setGeometry(QRect(10, 50, 381, 17));
+        checkCamonBoot->setGeometry(QRect(10, 75, 381, 17));
         checkCamonBoot->setFont(font);
         line = new QFrame(settingsForm);
         line->setObjectName(QString::fromUtf8("line"));
@@ -234,6 +239,19 @@ public:
         editDBNo = new QLineEdit(settingsForm);
         editDBNo->setObjectName(QString::fromUtf8("editDBNo"));
         editDBNo->setGeometry(QRect(204, 187, 51, 20));
+        editControlDelay = new QLineEdit(settingsForm);
+        editControlDelay->setObjectName(QString::fromUtf8("editControlDelay"));
+        editControlDelay->setGeometry(QRect(152, 50, 80, 20));
+        editControlDelay->setFont(font2);
+        editControlDelay->setFocusPolicy(Qt::StrongFocus);
+        editControlDelay->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);\n"
+"background-color: rgb(255, 0, 0);"));
+        editControlDelay->setMaxLength(5);
+        editControlDelay->setAlignment(Qt::AlignCenter);
+        label_4 = new QLabel(settingsForm);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+        label_4->setGeometry(QRect(10, 53, 131, 16));
+        label_4->setFont(font);
 
         retranslateUi(settingsForm);
         QObject::connect(setupButton, SIGNAL(clicked()), settingsForm, SLOT(showSetupForm()));
@@ -245,6 +263,7 @@ public:
         QObject::connect(checkCamonBoot, SIGNAL(clicked()), settingsForm, SLOT(checkCamonBoot()));
         QObject::connect(radio200, SIGNAL(clicked()), settingsForm, SLOT(changePLCtype()));
         QObject::connect(radio300, SIGNAL(clicked()), settingsForm, SLOT(changePLCtype()));
+        QObject::connect(editControlDelay, SIGNAL(returnPressed()), settingsForm, SLOT(getControlDelay()));
 
         QMetaObject::connectSlotsByName(settingsForm);
     } // setupUi
@@ -292,6 +311,22 @@ public:
         radio300->setText(QApplication::translate("settingsForm", "S7-300", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("settingsForm", "DB No:", 0, QApplication::UnicodeUTF8));
         editDBNo->setInputMask(QApplication::translate("settingsForm", "999; ", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        editControlDelay->setToolTip(QApplication::translate("settingsForm", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Boru besleme h\304\261z\304\261d\304\261r.</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Kameran\304\261n g\303\266rd\303\274\304\237\303\274 alana</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font"
+                        "-weight:600;\">kaynak ba\305\237l\304\261\304\237\304\261n\304\261n gelme zaman\304\261n\304\261 ifade eder.</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Birimi mili saniyedir (1 sn = 1000 ms).</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Do\304\237ru zamanda komutun verilebilmesi i\303\247in \303\266nemlidir.</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Hassas \303\266l\303\247\303\274m yap\304\261n\304\261z.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        editControlDelay->setInputMask(QString());
+        editControlDelay->setText(QString());
+        label_4->setText(QApplication::translate("settingsForm", "Kontrol Gecikmesi", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

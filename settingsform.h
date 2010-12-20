@@ -47,6 +47,8 @@ private:
 
 private slots:
     void changePLCtype();
+    void getControlDelay();     // get control delay from gui
+
 };
 
 #endif // SETTINGSFORM_H

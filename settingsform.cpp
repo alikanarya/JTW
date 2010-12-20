@@ -1,6 +1,8 @@
 #include "settingsform.h"
 #include "ui_settingsform.h"
+
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 
 extern MainWindow *w;
 
@@ -63,6 +65,8 @@ void settingsForm::getParameters(){
 
     ui->labelyRes->setText(QString::number(w->yRes));
     ui->yResIndexSlider->setSliderPosition(w->yResIndex);
+
+    ui->editControlDelay->setText(QString::number(w->controlDelay));
 
     ui->checkCamonBoot->setChecked(w->playCamonBoot);
 
@@ -165,6 +169,21 @@ void settingsForm::changePLCtype(){
         case -3:    // S7-300
             ui->editDBNo->setEnabled(true);
             break;
+    }
+}
+
+void settingsForm::getControlDelay(){
+    w->controlDelay = ui->editControlDelay->text().toInt(&w->controlDelayValid, 10);
+
+    if (!w->controlDelayValid)
+        w->ui->plainTextEdit->appendPlainText(alarm8);
+    else {
+        if (w->controlDelay > 0 && w->controlDelay < 500){
+            w->controlDelay = 500;
+            ui->editControlDelay->setText("500");
+            w->ui->plainTextEdit->appendPlainText(alarm9);
+        } else
+            w->ui->plainTextEdit->appendPlainText(message4 + QString::number(w->controlDelay) + " mili saniye");
     }
 }
 

@@ -58,6 +58,9 @@
      <bold>true</bold>
     </font>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="text">
     <string>Kurulum</string>
    </property>
@@ -145,6 +148,9 @@
      <bold>true</bold>
     </font>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
@@ -168,6 +174,9 @@
      <weight>75</weight>
      <bold>true</bold>
     </font>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
@@ -455,7 +464,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>70</y>
+     <y>95</y>
      <width>361</width>
      <height>17</height>
     </rect>
@@ -476,7 +485,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>50</y>
+     <y>75</y>
      <width>381</width>
      <height>17</height>
     </rect>
@@ -619,6 +628,75 @@
     <string>999; </string>
    </property>
   </widget>
+  <widget class="QLineEdit" name="editControlDelay">
+   <property name="geometry">
+    <rect>
+     <x>152</x>
+     <y>50</y>
+     <width>80</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::StrongFocus</enum>
+   </property>
+   <property name="toolTip">
+    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Boru besleme hızıdır.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Kameranın gördüğü alana&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;kaynak başlığının gelme zamanını ifade eder.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Birimi mili saniyedir (1 sn = 1000 ms).&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Doğru zamanda komutun verilebilmesi için önemlidir.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Hassas ölçüm yapınız.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);
+background-color: rgb(255, 0, 0);</string>
+   </property>
+   <property name="inputMask">
+    <string/>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="maxLength">
+    <number>5</number>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>53</y>
+     <width>131</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Kontrol Gecikmesi</string>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="icons.qrc"/>
@@ -712,7 +790,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>303</x>
-     <y>78</y>
+     <y>103</y>
     </hint>
     <hint type="destinationlabel">
      <x>339</x>
@@ -728,7 +806,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>331</x>
-     <y>55</y>
+     <y>80</y>
     </hint>
     <hint type="destinationlabel">
      <x>369</x>
@@ -768,6 +846,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>editControlDelay</sender>
+   <signal>returnPressed()</signal>
+   <receiver>settingsForm</receiver>
+   <slot>getControlDelay()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>188</x>
+     <y>57</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>262</x>
+     <y>57</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showSetupForm()</slot>
@@ -778,6 +872,7 @@
   <slot>checkPLConBoot()</slot>
   <slot>checkCamonBoot()</slot>
   <slot>changePLCtype()</slot>
+  <slot>getControlDelay()</slot>
  </slots>
  <buttongroups>
   <buttongroup name="radioGroup"/>
