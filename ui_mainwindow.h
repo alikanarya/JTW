@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon 20. Dec 16:09:53 2010
+** Created: Mon Dec 20 23:25:57 2010
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -67,6 +67,7 @@ public:
     QPushButton *clearMsgBoxButton;
     QPushButton *helpButton;
     QPushButton *reportButton;
+    QFrame *frameOverFrame2;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -303,7 +304,9 @@ public:
         cameraStatus->setFlat(true);
         frame_2 = new QFrame(centralWidget);
         frame_2->setObjectName(QString::fromUtf8("frame_2"));
+        frame_2->setEnabled(false);
         frame_2->setGeometry(QRect(773, 99, 310, 211));
+        frame_2->setAutoFillBackground(false);
         frame_2->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 127);"));
         frame_2->setFrameShape(QFrame::Box);
         frame_2->setFrameShadow(QFrame::Plain);
@@ -377,6 +380,12 @@ public:
         reportButton->setIcon(icon15);
         reportButton->setIconSize(QSize(40, 40));
         reportButton->setFlat(true);
+        frameOverFrame2 = new QFrame(centralWidget);
+        frameOverFrame2->setObjectName(QString::fromUtf8("frameOverFrame2"));
+        frameOverFrame2->setGeometry(QRect(773, 98, 312, 213));
+        frameOverFrame2->setStyleSheet(QString::fromUtf8("background-color: rgb(236, 233, 216);"));
+        frameOverFrame2->setFrameShape(QFrame::StyledPanel);
+        frameOverFrame2->setFrameShadow(QFrame::Raised);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));

@@ -67,6 +67,7 @@ void settingsForm::getParameters(){
     ui->yResIndexSlider->setSliderPosition(w->yResIndex);
 
     ui->editControlDelay->setText(QString::number(w->controlDelay));
+    ui->editControlDelay->setEnabled(!w->controlOn);
 
     ui->checkCamonBoot->setChecked(w->playCamonBoot);
 
