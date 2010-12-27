@@ -464,7 +464,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>95</y>
+     <y>130</y>
      <width>361</width>
      <height>17</height>
     </rect>
@@ -485,7 +485,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>75</y>
+     <y>110</y>
      <width>381</width>
      <height>17</height>
     </rect>
@@ -528,7 +528,7 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>130</y>
+     <y>150</y>
      <width>400</width>
      <height>16</height>
     </rect>
@@ -629,10 +629,13 @@
    </property>
   </widget>
   <widget class="QLineEdit" name="editControlDelay">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>152</x>
-     <y>50</y>
+     <x>310</x>
+     <y>20</y>
      <width>80</width>
      <height>20</height>
     </rect>
@@ -679,9 +682,55 @@ background-color: rgb(255, 0, 0);</string>
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
+     <x>310</x>
+     <y>0</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Kontrol Gecikmesi</string>
+   </property>
+  </widget>
+  <widget class="QSlider" name="targetSlider">
+   <property name="geometry">
+    <rect>
+     <x>152</x>
+     <y>50</y>
+     <width>240</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>100</number>
+   </property>
+   <property name="maximum">
+    <number>320</number>
+   </property>
+   <property name="singleStep">
+    <number>2</number>
+   </property>
+   <property name="pageStep">
+    <number>5</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
      <x>10</x>
      <y>53</y>
-     <width>131</width>
+     <width>111</width>
      <height>16</height>
     </rect>
    </property>
@@ -694,7 +743,30 @@ background-color: rgb(255, 0, 0);</string>
     </font>
    </property>
    <property name="text">
-    <string>Kontrol Gecikmesi</string>
+    <string>Hedef Bölge</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelTarget">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>53</y>
+     <width>30</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
+   </property>
+   <property name="text">
+    <string>100</string>
    </property>
   </widget>
  </widget>
@@ -790,7 +862,7 @@ background-color: rgb(255, 0, 0);</string>
    <hints>
     <hint type="sourcelabel">
      <x>303</x>
-     <y>103</y>
+     <y>138</y>
     </hint>
     <hint type="destinationlabel">
      <x>339</x>
@@ -806,7 +878,7 @@ background-color: rgb(255, 0, 0);</string>
    <hints>
     <hint type="sourcelabel">
      <x>331</x>
-     <y>80</y>
+     <y>115</y>
     </hint>
     <hint type="destinationlabel">
      <x>369</x>
@@ -853,12 +925,28 @@ background-color: rgb(255, 0, 0);</string>
    <slot>getControlDelay()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>188</x>
-     <y>57</y>
+     <x>346</x>
+     <y>47</y>
     </hint>
     <hint type="destinationlabel">
      <x>262</x>
      <y>57</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>targetSlider</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>settingsForm</receiver>
+   <slot>targetSlider()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>161</x>
+     <y>68</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>134</x>
+     <y>55</y>
     </hint>
    </hints>
   </connection>
@@ -873,6 +961,7 @@ background-color: rgb(255, 0, 0);</string>
   <slot>checkCamonBoot()</slot>
   <slot>changePLCtype()</slot>
   <slot>getControlDelay()</slot>
+  <slot>targetSlider()</slot>
  </slots>
  <buttongroups>
   <buttongroup name="radioGroup"/>

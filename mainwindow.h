@@ -4,22 +4,23 @@
 #define INIFILENAME         "settings.ini"
 #define _URL_CAM            "http://10.0.0.5/snap.jpg"
 #define _URL_PLC            "10.0.0.4"
+#define _FRAME_WIDTH        320
 #define _THETA_MIN          80
 #define _THETA_MAX          100
 #define _THETA_STEP         1.0
 #define _HOUGH_LINE_NO      5
 #define _VOTE_THRESHOLD     150
 #define _VOID_THRESHOLD     30
-#define _PLC_TYPE           0
+#define _PLC_TYPE           1
 #define _DB_NO              1
-#define _RIGHT_VMEM_BYTE    101
+#define _RIGHT_VMEM_BYTE    0
 #define _RIGHT_BITofBYTE    0
-#define _LEFT_VMEM_BYTE     100
-#define _LEFT_BITofBYTE     0
-#define _STOP_VMEM_BYTE     102
-#define _STOP_BITofBYTE     0
-#define _EMRGENCY_VMEM_BYTE 103
-#define _EMRGENCY_BITofBYTE 0
+#define _LEFT_VMEM_BYTE     0
+#define _LEFT_BITofBYTE     1
+#define _STOP_VMEM_BYTE     0
+#define _STOP_BITofBYTE     2
+#define _EMRGENCY_VMEM_BYTE 0
+#define _EMRGENCY_BITofBYTE 3
 #define _ERROR_LIMIT        10
 #define _YRES_ARRAY_INDEX   8
 #define _PLC_CONN_ONBOOT    false
@@ -126,6 +127,8 @@ public:
     int frameWidth, frameHeight;
     int offsetX, offsetY;               // upper left corner coor. of target image
     int centerX;                        // image center x coor.
+    QRect imageFrameRect;
+    QRect guideFrameRect, gfBoxRect, gfLineHorRect, gfLineVerRect, gfTolLeftRect, gfTolRightRect;
 
     // image processing parameters
     imgProcess *iprocess;               // image processing object
@@ -248,7 +251,6 @@ private slots:
     void emergencyButton();
     void infoButton();                              // show info GUI
     void exitButton();                              // show exit gui
-    void getControlDelay();                         // get control delay from gui
     void clearMsgBoxButton();                       // clears plan text edit widget (info) of the gui
     void helpButton();
     void showLicenseDialog();

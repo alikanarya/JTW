@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'settingsform.ui'
 **
-** Created: Tue Dec 21 01:13:38 2010
+** Created: Thu Dec 23 18:14:13 2010
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -50,6 +50,9 @@ public:
     QLineEdit *editDBNo;
     QLineEdit *editControlDelay;
     QLabel *label_4;
+    QSlider *targetSlider;
+    QLabel *label_5;
+    QLabel *labelTarget;
     QButtonGroup *radioGroup;
 
     void setupUi(QWidget *settingsForm)
@@ -200,11 +203,11 @@ public:
         label_2->setFont(font);
         checkPLConBoot = new QCheckBox(settingsForm);
         checkPLConBoot->setObjectName(QString::fromUtf8("checkPLConBoot"));
-        checkPLConBoot->setGeometry(QRect(10, 95, 361, 17));
+        checkPLConBoot->setGeometry(QRect(10, 130, 361, 17));
         checkPLConBoot->setFont(font);
         checkCamonBoot = new QCheckBox(settingsForm);
         checkCamonBoot->setObjectName(QString::fromUtf8("checkCamonBoot"));
-        checkCamonBoot->setGeometry(QRect(10, 75, 381, 17));
+        checkCamonBoot->setGeometry(QRect(10, 110, 381, 17));
         checkCamonBoot->setFont(font);
         line = new QFrame(settingsForm);
         line->setObjectName(QString::fromUtf8("line"));
@@ -215,7 +218,7 @@ public:
         line->setFrameShape(QFrame::HLine);
         line_2 = new QFrame(settingsForm);
         line_2->setObjectName(QString::fromUtf8("line_2"));
-        line_2->setGeometry(QRect(0, 130, 400, 16));
+        line_2->setGeometry(QRect(0, 150, 400, 16));
         line_2->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
         line_2->setFrameShadow(QFrame::Plain);
         line_2->setLineWidth(2);
@@ -241,7 +244,8 @@ public:
         editDBNo->setGeometry(QRect(204, 187, 51, 20));
         editControlDelay = new QLineEdit(settingsForm);
         editControlDelay->setObjectName(QString::fromUtf8("editControlDelay"));
-        editControlDelay->setGeometry(QRect(152, 50, 80, 20));
+        editControlDelay->setEnabled(false);
+        editControlDelay->setGeometry(QRect(310, 20, 80, 20));
         editControlDelay->setFont(font2);
         editControlDelay->setFocusPolicy(Qt::StrongFocus);
         editControlDelay->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);\n"
@@ -250,8 +254,30 @@ public:
         editControlDelay->setAlignment(Qt::AlignCenter);
         label_4 = new QLabel(settingsForm);
         label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setGeometry(QRect(10, 53, 131, 16));
-        label_4->setFont(font);
+        label_4->setGeometry(QRect(310, 0, 91, 16));
+        QFont font4;
+        font4.setFamily(QString::fromUtf8("Arial"));
+        font4.setPointSize(8);
+        font4.setBold(false);
+        font4.setWeight(50);
+        label_4->setFont(font4);
+        targetSlider = new QSlider(settingsForm);
+        targetSlider->setObjectName(QString::fromUtf8("targetSlider"));
+        targetSlider->setGeometry(QRect(152, 50, 240, 25));
+        targetSlider->setMinimum(100);
+        targetSlider->setMaximum(320);
+        targetSlider->setSingleStep(2);
+        targetSlider->setPageStep(5);
+        targetSlider->setOrientation(Qt::Horizontal);
+        label_5 = new QLabel(settingsForm);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setGeometry(QRect(10, 53, 111, 16));
+        label_5->setFont(font);
+        labelTarget = new QLabel(settingsForm);
+        labelTarget->setObjectName(QString::fromUtf8("labelTarget"));
+        labelTarget->setGeometry(QRect(110, 53, 30, 16));
+        labelTarget->setFont(font1);
+        labelTarget->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
 
         retranslateUi(settingsForm);
         QObject::connect(setupButton, SIGNAL(clicked()), settingsForm, SLOT(showSetupForm()));
@@ -264,6 +290,7 @@ public:
         QObject::connect(radio200, SIGNAL(clicked()), settingsForm, SLOT(changePLCtype()));
         QObject::connect(radio300, SIGNAL(clicked()), settingsForm, SLOT(changePLCtype()));
         QObject::connect(editControlDelay, SIGNAL(returnPressed()), settingsForm, SLOT(getControlDelay()));
+        QObject::connect(targetSlider, SIGNAL(sliderMoved(int)), settingsForm, SLOT(targetSlider()));
 
         QMetaObject::connectSlotsByName(settingsForm);
     } // setupUi
@@ -327,6 +354,8 @@ public:
         editControlDelay->setInputMask(QString());
         editControlDelay->setText(QString());
         label_4->setText(QApplication::translate("settingsForm", "Kontrol Gecikmesi", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("settingsForm", "Hedef B\303\266lge", 0, QApplication::UnicodeUTF8));
+        labelTarget->setText(QApplication::translate("settingsForm", "100", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

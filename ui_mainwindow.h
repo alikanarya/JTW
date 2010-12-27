@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Dec 21 01:13:38 2010
+** Created: Thu Dec 23 19:40:14 2010
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -18,13 +18,11 @@
 #include <QtGui/QGraphicsView>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenuBar>
 #include <QtGui/QPlainTextEdit>
 #include <QtGui/QPushButton>
 #include <QtGui/QStatusBar>
-#include <QtGui/QTextBrowser>
 #include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -58,10 +56,6 @@ public:
     QLabel *labelLogoCustomer;
     QPushButton *emergencyButton;
     QPushButton *cameraStatus;
-    QFrame *frame_2;
-    QTextBrowser *textBrowser;
-    QLabel *label;
-    QLineEdit *editControlDelay;
     QLabel *label_2;
     QLabel *label_4;
     QPushButton *clearMsgBoxButton;
@@ -302,49 +296,14 @@ public:
         cameraStatus->setIcon(icon13);
         cameraStatus->setIconSize(QSize(48, 48));
         cameraStatus->setFlat(true);
-        frame_2 = new QFrame(centralWidget);
-        frame_2->setObjectName(QString::fromUtf8("frame_2"));
-        frame_2->setEnabled(false);
-        frame_2->setGeometry(QRect(773, 99, 310, 211));
-        frame_2->setAutoFillBackground(false);
-        frame_2->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 127);"));
-        frame_2->setFrameShape(QFrame::Box);
-        frame_2->setFrameShadow(QFrame::Plain);
-        frame_2->setLineWidth(2);
-        textBrowser = new QTextBrowser(frame_2);
-        textBrowser->setObjectName(QString::fromUtf8("textBrowser"));
-        textBrowser->setGeometry(QRect(2, 70, 306, 131));
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setGeometry(QRect(10, 560, 306, 20));
         QFont font3;
         font3.setFamily(QString::fromUtf8("Arial"));
         font3.setPointSize(10);
         font3.setBold(true);
         font3.setWeight(75);
-        textBrowser->setFont(font3);
-        textBrowser->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 127);"));
-        textBrowser->setFrameShape(QFrame::NoFrame);
-        textBrowser->setFrameShadow(QFrame::Plain);
-        textBrowser->setLineWidth(2);
-        label = new QLabel(frame_2);
-        label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(2, 2, 306, 30));
-        QFont font4;
-        font4.setFamily(QString::fromUtf8("Arial"));
-        font4.setPointSize(12);
-        font4.setBold(true);
-        font4.setWeight(75);
-        label->setFont(font4);
-        label->setAlignment(Qt::AlignCenter);
-        editControlDelay = new QLineEdit(frame_2);
-        editControlDelay->setObjectName(QString::fromUtf8("editControlDelay"));
-        editControlDelay->setGeometry(QRect(116, 30, 80, 25));
-        editControlDelay->setFont(font);
-        editControlDelay->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);\n"
-"background-color: rgb(255, 255, 255);"));
-        editControlDelay->setMaxLength(5);
-        editControlDelay->setAlignment(Qt::AlignCenter);
-        label_2 = new QLabel(centralWidget);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(10, 560, 306, 20));
         label_2->setFont(font3);
         label_2->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
         label_4 = new QLabel(centralWidget);
@@ -352,12 +311,12 @@ public:
         label_4->setGeometry(QRect(1030, 50, 261, 21));
         sizePolicy.setHeightForWidth(label_4->sizePolicy().hasHeightForWidth());
         label_4->setSizePolicy(sizePolicy);
-        QFont font5;
-        font5.setFamily(QString::fromUtf8("Pristina"));
-        font5.setPointSize(12);
-        font5.setBold(true);
-        font5.setWeight(75);
-        label_4->setFont(font5);
+        QFont font4;
+        font4.setFamily(QString::fromUtf8("Pristina"));
+        font4.setPointSize(12);
+        font4.setBold(true);
+        font4.setWeight(75);
+        label_4->setFont(font4);
         label_4->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
         label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         clearMsgBoxButton = new QPushButton(centralWidget);
@@ -382,7 +341,7 @@ public:
         reportButton->setFlat(true);
         frameOverFrame2 = new QFrame(centralWidget);
         frameOverFrame2->setObjectName(QString::fromUtf8("frameOverFrame2"));
-        frameOverFrame2->setGeometry(QRect(773, 98, 312, 213));
+        frameOverFrame2->setGeometry(QRect(880, 110, 312, 213));
         frameOverFrame2->setStyleSheet(QString::fromUtf8("background-color: rgb(236, 233, 216);"));
         frameOverFrame2->setFrameShape(QFrame::StyledPanel);
         frameOverFrame2->setFrameShadow(QFrame::Raised);
@@ -410,7 +369,6 @@ public:
         QObject::connect(infoButton, SIGNAL(clicked()), MainWindow, SLOT(infoButton()));
         QObject::connect(exitButton, SIGNAL(clicked()), MainWindow, SLOT(exitButton()));
         QObject::connect(emergencyButton, SIGNAL(clicked()), MainWindow, SLOT(emergencyButton()));
-        QObject::connect(editControlDelay, SIGNAL(returnPressed()), MainWindow, SLOT(getControlDelay()));
         QObject::connect(clearMsgBoxButton, SIGNAL(clicked()), MainWindow, SLOT(clearMsgBoxButton()));
         QObject::connect(helpButton, SIGNAL(clicked()), MainWindow, SLOT(helpButton()));
         QObject::connect(reportButton, SIGNAL(clicked()), MainWindow, SLOT(showReport()));
@@ -468,20 +426,6 @@ public:
 #endif // QT_NO_TOOLTIP
         emergencyButton->setText(QString());
         cameraStatus->setText(QString());
-        textBrowser->setHtml(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'Arial'; font-size:10pt; font-weight:600; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2';\">Boru besleme h\304\261z\304\261d\304\261r.</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2';\">Kameran\304\261n g\303\266rd\303\274\304\237\303\274 alana</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2';\">kayna"
-                        "k ba\305\237l\304\261\304\237\304\261n\304\261n gelme zaman\304\261n\304\261 ifade eder.</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2';\">Birimi mili saniyedir (1 sn = 1000 ms).</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2';\">Do\304\237ru zamanda komutun verilebilmesi i\303\247in \303\266nemlidir.</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2';\">Hassas \303\266l\303\247\303\274m yap\304\261n\304\261z.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("MainWindow", "KAYNAK GEC\304\260KMES\304\260", 0, QApplication::UnicodeUTF8));
-        editControlDelay->setInputMask(QString());
-        editControlDelay->setText(QString());
         label_2->setText(QApplication::translate("MainWindow", "Bilgi Penceresi", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainWindow", "\302\251Aykurt Elektrik Hendek/Sakarya, 2010", 0, QApplication::UnicodeUTF8));
         clearMsgBoxButton->setText(QApplication::translate("MainWindow", "Temizle", 0, QApplication::UnicodeUTF8));

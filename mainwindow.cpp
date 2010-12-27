@@ -45,10 +45,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // orginal and target image parameters
     imageWidth = 640;   //image->width();
     imageHeight = 480;  //image->height();
-    frameWidth = 320;
     frameHeight = 100;
-    offsetX = (imageWidth - frameWidth)/2;
+    //offsetX = (imageWidth - frameWidth)/2;
     offsetY = (imageHeight - frameHeight)/2;
+
+    imageFrameRect = ui->imageFrame->geometry();
+    guideFrameRect = ui->guideFrame->geometry();
+    gfBoxRect = ui->frame->geometry();
+    gfLineHorRect = ui->guideLineHorz->geometry();
+    gfLineVerRect = ui->guideLineVert->geometry();
+    gfTolLeftRect = ui->guideTolLeft->geometry();
+    gfTolRightRect = ui->guideTolRight->geometry();
+
+    showGuide = true;       // show guide initially
+    repaintGuide();
 
     // play video controls
     play = playCamonBoot;
@@ -100,7 +110,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     checker();
 
     connectRequested = connectRequestedonBoot;
-    //threadPLCcheck = new plcCheckThread(plc);
     threadPLCControl = new plcControlThread(plc);
 
     if (permPLC && connectRequestedonBoot){
@@ -127,10 +136,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     setupPWDOK = false;
 
     // init deviation trend
-    centerX = ui->guideLineVert->x();   // x coor. of center vert. guide line
-    ui->guideTolRight->setGeometry(centerX+errorLimit+1, 190, 1, 100);
-    ui->guideTolLeft->setGeometry(centerX-errorLimit, 190, 1, 100);
-
     scene = new QGraphicsScene();
     ui->trackView->setScene(scene);
 
@@ -144,16 +149,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     addAxis();
 
-    showGuide = true;       // show guide initially
-
     // plc commands init.
     cmdState = _CMD_CENTER;
 
     controlDelay = QString::number(controlDelay).toInt(&controlDelayValid, 10);
     timerControlInterval = 200;
     weldCommandsSize = controlDelay / timerControlInterval;
-
-    ui->editControlDelay->setText(QString::number(controlDelay));
 
     // start message
     ui->plainTextEdit->appendPlainText(timeString() + "Sistem baþlatýlmýþtýr. Hoþ geldiniz.");
@@ -529,7 +530,6 @@ void MainWindow::controlButton(){
 
     //ui->stopButton->setEnabled(!controlOn);
     ui->analyzeButton->setEnabled(!controlOn);
-    ui->editControlDelay->setEnabled(!controlOn);
 }
 
 void MainWindow::emergencyButton(){
@@ -572,7 +572,7 @@ void MainWindow::processImage(){
 
     // if center of track is not an error, append dev. to trend data list OR append error code to list
     if (iprocess->detected){
-        int error = iprocess->trackCenterX - 160;
+        int error = iprocess->trackCenterX - (frameWidth/2);
         deviationData.append(error);
 
         if (trackOn){
@@ -660,9 +660,28 @@ void MainWindow::drawTrack(){
 
 void MainWindow::repaintGuide(){
     // update & show/hide guide
-    ui->guideTolRight->setGeometry(centerX + errorLimit, 190, 1, 100);
-    ui->guideTolLeft->setGeometry(centerX - errorLimit + 1 , 190, 1, 100);
+
+    offsetX = (imageWidth - frameWidth)/2;
+
+    guideFrameRect.setX(imageFrameRect.x() + offsetX);
+    guideFrameRect.setWidth(frameWidth + 4);
+    ui->guideFrame->setGeometry(guideFrameRect);
+
+    ui->guideLineVert->setGeometry(frameWidth/2 + 1, gfLineVerRect.y(), gfLineVerRect.width(), gfLineVerRect.height());
+    centerX = ui->guideLineVert->x();   // x coor. of center vert. guide line
+
+    ui->guideTolLeft->setGeometry(centerX - errorLimit + 1, gfTolLeftRect.y(), gfTolLeftRect.width(), gfTolLeftRect.height());
+
+    ui->guideTolRight->setGeometry(centerX + errorLimit, gfTolRightRect.y(), gfTolRightRect.width(), gfTolRightRect.height());
+
+    gfBoxRect.setWidth(frameWidth + 4);   // 4: total line edges thickness
+    ui->frame->setGeometry(gfBoxRect);
+
+    gfLineHorRect.setWidth(frameWidth);
+    ui->guideLineHorz->setGeometry(gfLineHorRect);
+
     ui->guideFrame->setVisible(showGuide);
+
 }
 
 void MainWindow::repaintDevTrend(){
@@ -703,21 +722,6 @@ void MainWindow::infoButton(){
 void MainWindow::exitButton(){
     exitDialog *exitGui = new exitDialog(this);
     exitGui->show();
-}
-
-void MainWindow::getControlDelay(){
-    controlDelay = ui->editControlDelay->text().toInt(&controlDelayValid, 10);
-
-    if (!controlDelayValid)
-        ui->plainTextEdit->appendPlainText(alarm8);
-    else {
-        if (controlDelay > 0 && controlDelay < 500){
-            controlDelay = 500;
-            ui->editControlDelay->setText("500");
-            ui->plainTextEdit->appendPlainText(alarm9);
-        } else
-            ui->plainTextEdit->appendPlainText(message4 + QString::number(controlDelay) + " mili saniye");
-    }
 }
 
 void MainWindow::clearMsgBoxButton(){
@@ -778,6 +782,7 @@ void MainWindow::readSettings(){
         settings->endGroup();
 
         settings->beginGroup("ipro");
+            frameWidth = settings->value("frw", _FRAME_WIDTH).toInt();
             thetaMin = settings->value("tmn", _THETA_MIN).toInt();
             thetaMax = settings->value("tmx", _THETA_MAX).toInt();
             thetaStep = settings->value("tst", _THETA_STEP).toFloat();
@@ -810,6 +815,7 @@ void MainWindow::readSettings(){
         connectRequestedonBoot = _PLC_CONN_ONBOOT;
         controlDelay = _CONTROL_DELAY;
 
+        frameWidth = _FRAME_WIDTH;
         thetaMin = _THETA_MIN;
         thetaMax = _THETA_MAX;
         thetaStep = _THETA_STEP;
@@ -850,6 +856,7 @@ void MainWindow::writeSettings(){
     settings->endGroup();
 
     settings->beginGroup("ipro");
+        settings->setValue("frw", QString::number(frameWidth));
         settings->setValue("tmn", QString::number(thetaMin));
         settings->setValue("tmx", QString::number(thetaMax));
         settings->setValue("tst", QString::number(thetaStep));
