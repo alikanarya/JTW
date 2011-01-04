@@ -28,6 +28,8 @@
         <file>resources/Camera-Enabled-Icon.png</file>
         <file>resources/s7_200-Disabled-Icon.png</file>
         <file>resources/report-icon.png</file>
+        <file>resources/forward.png</file>
+        <file>resources/backward.png</file>
     </qresource>
     <qresource prefix="/pixmaps">
         <file>resources/bad_corner.jpg</file>

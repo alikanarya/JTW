@@ -2,59 +2,72 @@
 
 #include "mainwindow.h"
 
-extern MainWindow *w;
+plcControlThread::plcControlThread(int type, QString url){
+    plcType = type;
+    plcUrl = url;
+    plc = new s7();
+
+    plc->changeType(plcType);
+    plcType = plc->plcType;  // to fix in case of wrong selection
+
+    if (plcType == 0) dbNo = 1;    // for S7-200
+
+    stopped = false;
+    result = false;
+}
 
 plcControlThread::plcControlThread(s7 &_plc){
     stopped = false;
+    result = false;
     plc = &_plc;
 }
 
 void plcControlThread::run(){
     if (!stopped){
+
         if (commandState == _CMD_CHECK){            // reset cmds
             check();
         } else
-
             if (plc->plcInteract) {         // if plc is successfully connected
 
                 if (commandState == _CMD_CENTER){           // action to center
-                    plcCmdCenter();                             // no action
-                    plcCmdStopReset();                          // reset stop cmd in case of existance
-                    plcCmdEmergencyPsv();                       // Emergency passive
+                    result = plcCmdCenter();                             // no action
+                    result = result & plcCmdStopReset();                          // reset stop cmd in case of existance
+                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
                 } else
                 if (commandState == _CMD_RIGHT){            // action to right
-                    plcCmdRight();                              // right
-                    plcCmdStopReset();                          // reset stop cmd in case of existance
-                    plcCmdEmergencyPsv();                       // Emergency passive
+                    result = plcCmdRight();                              // right
+                    result = result & plcCmdStopReset();                          // reset stop cmd in case of existance
+                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
                 } else
                 if (commandState == _CMD_LEFT){             // action to left
-                    plcCmdLeft();                               // left
-                    plcCmdStopReset();                          // reset stop cmd in case of existance
-                    plcCmdEmergencyPsv();                       // Emergency passive
+                    result = plcCmdLeft();                               // left
+                    result = result & plcCmdStopReset();                          // reset stop cmd in case of existance
+                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
                 } else
                 if (commandState == _CMD_STOP){             // stop
-                    plcCmdCenter();                             // no action
-                    plcCmdStop();                               // stop
-                    plcCmdEmergencyPsv();                       // Emergency passive
+                    result = plcCmdCenter();                             // no action
+                    result = result & plcCmdStop();                               // stop
+                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
                 } else
                 if (commandState == _CMD_EMERGENCY_ACT){    // emergency active
-                    plcCmdCenter();                             // no action
-                    plcCmdStop();                               // stop
-                    plcCmdEmergencyAct();                       // Emergency active
+                    result = plcCmdCenter();                             // no action
+                    result = result & plcCmdStop();                               // stop
+                    result = result & plcCmdEmergencyAct();                       // Emergency active
                 } else
                 if (commandState == _CMD_EMERGENCY_PSV){    // emergency passive
-                    plcCmdStopReset();                          // reset stop cmd in case of existance
-                    plcCmdEmergencyPsv();                       // Emergency passive
+                    result = plcCmdStopReset();                          // reset stop cmd in case of existance
+                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
                 } else
                 if (commandState == _CMD_RESET){            // reset cmds
-                    plcCmdCenter();                             // no action
-                    plcCmdStopReset();                          // reset stop cmd in case of existance
-                    plcCmdEmergencyPsv();                       // Emergency passive
+                    result = plcCmdCenter();                             // no action
+                    result = result & plcCmdStopReset();                          // reset stop cmd in case of existance
+                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
                 } else {
                     // state unknown, behave as emergency
-                    plcCmdCenter();             // no action
-                    plcCmdStop();               // stop
-                    plcCmdEmergencyAct();       // Emergency active
+                    result = plcCmdCenter();             // no action
+                    result = result & plcCmdStop();               // stop
+                    result = result & plcCmdEmergencyAct();       // Emergency active
                 }
             }
     }
@@ -66,42 +79,70 @@ void plcControlThread::stop(){
     stopped = true;
 }
 
-int plcControlThread::plcCmdCenter(){
-    plc->clrBit(w->DB_NO, w->left_VMEM_BYTE, w->left_BITofBYTE);
-    int result = plc->clrBit(w->DB_NO, w->right_VMEM_BYTE, w->right_BITofBYTE);
-    return result;
+bool plcControlThread::plcCmdCenter(){
+    int result1 = plc->clrBit(dbNo, right_BYTE, right_BIT);
+    int result2 = plc->clrBit(dbNo, left_BYTE, left_BIT);
+
+    if (result1 == 0 && result2 == 0)
+        return true;
+    else
+        return false;
 }
 
-int plcControlThread::plcCmdRight(){
-    plc->clrBit(w->DB_NO, w->left_VMEM_BYTE, w->left_BITofBYTE);
-    int result = plc->setBit(w->DB_NO, w->right_VMEM_BYTE, w->right_BITofBYTE);
-    return result;
+bool plcControlThread::plcCmdRight(){
+    int result1 = plc->clrBit(dbNo, left_BYTE, left_BIT);
+    int result2 = plc->setBit(dbNo, right_BYTE, right_BIT);
+
+    if (result1 == 0 && result2 == 0)
+        return true;
+    else
+        return false;
 }
 
-int plcControlThread::plcCmdLeft(){
-    plc->clrBit(w->DB_NO, w->right_VMEM_BYTE, w->right_BITofBYTE);
-    int result = plc->setBit(w->DB_NO, w->left_VMEM_BYTE, w->left_BITofBYTE);
-    return result;
+bool plcControlThread::plcCmdLeft(){
+    int result1 = plc->clrBit(dbNo, right_BYTE, right_BIT);
+    int result2 = plc->setBit(dbNo, left_BYTE, left_BIT);
+
+    if (result1 == 0 && result2 == 0)
+        return true;
+    else
+        return false;
 }
 
-int plcControlThread::plcCmdStop(){
-    int result = plc->setBit(w->DB_NO, w->stop_VMEM_BYTE, w->stop_BITofBYTE);
-    return result;
+bool plcControlThread::plcCmdStop(){
+    int result = plc->setBit(dbNo, stop_BYTE, stop_BIT);
+
+    if (result == 0)
+        return true;
+    else
+        return false;
 }
 
-int plcControlThread::plcCmdStopReset(){
-    int result = plc->clrBit(w->DB_NO, w->stop_VMEM_BYTE, w->stop_BITofBYTE);
-    return result;
+bool plcControlThread::plcCmdStopReset(){
+    int result = plc->clrBit(dbNo, stop_BYTE, stop_BIT);
+
+    if (result == 0)
+        return true;
+    else
+        return false;
 }
 
-int plcControlThread::plcCmdEmergencyAct(){
-    int result = plc->setBit(w->DB_NO, w->emergency_VMEM_BYTE, w->emergency_BITofBYTE);
-    return result;
+bool plcControlThread::plcCmdEmergencyAct(){
+    int result = plc->setBit(dbNo, emergency_BYTE, emergency_BIT);
+
+    if (result == 0)
+        return true;
+    else
+        return false;
 }
 
-int plcControlThread::plcCmdEmergencyPsv(){
-    int result = plc->clrBit(w->DB_NO, w->emergency_VMEM_BYTE, w->emergency_BITofBYTE);
-    return result;
+bool plcControlThread::plcCmdEmergencyPsv(){
+    int result = plc->clrBit(dbNo, emergency_BYTE, emergency_BIT);
+
+    if (result == 0)
+        return true;
+    else
+        return false;
 }
 
 void plcControlThread::check(){
@@ -109,17 +150,25 @@ void plcControlThread::check(){
 
     // check plc existance
     if (plcInteract){
-        result = plc->readBits(w->DB_NO, w->right_VMEM_BYTE, w->right_BITofBYTE);      // test read
-        //result = plc->readBits(1, 0, 1);      // test read
+        checkResult = plc->readBits(dbNo, right_BYTE, right_BIT);      // test read
 
         // if not read
-        if (result < 0){
-            plc->connect(w->urlPLC.toString().toUtf8());   // try re-connect
-         } else {
-         }
+        if (checkResult < 0){
+            plc->connect(plcUrl.toUtf8());   // try re-connect
+        } else {
+            //
+        }
      } else {
         // check if connection to plc is not established
-        plc->connect(w->urlPLC.toString().toUtf8());       // try re-connect
+        plc->connect(plcUrl.toUtf8());       // try re-connect
      }
 
+}
+
+void plcControlThread::disconnect(){
+    plc->disconnect();
+}
+
+plcControlThread::~plcControlThread(){
+    delete plc;
 }

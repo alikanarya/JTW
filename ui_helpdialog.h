@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'helpdialog.ui'
 **
-** Created: Tue Dec 21 01:13:39 2010
+** Created: Mon Jan 3 01:42:59 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -363,8 +363,8 @@ public:
 "- Kamera g\303\266r\303\274nt\303\274s\303\274 durdu\304\237unda/ula\305\237\304\261lamad\304\261\304\237\304\261nda veya\n"
 "- PLC'ye ula\305\237\304\261lamad\304\261\304\237\304\261nda veya\n"
 "- Operat\303\266r, analiz sonu\303\247lar\304\261na onay vermediyse veya\n"
-"- \304\260z takibi yap\304\261lm\304\261yorsa veya\n"
-"- Kaynak gecikmesi i\303\247in ge\303\247erli bir rakam verilmediyse		KAYNAK YAPILAMAZ", 0, QApplication::UnicodeUTF8));
+"- \304\260z takibi yap\304\261lm\304\261yorsa\n"
+"KAYNAK YAPILAMAZ", 0, QApplication::UnicodeUTF8));
         plainTextEdit_8->setDocumentTitle(QString());
         plainTextEdit_8->setPlainText(QApplication::translate("helpDialog", "Ayarlar Butonu: Teknik servisin gerekti\304\237inde yapmas\304\261 gereken ayarlar\304\261 g\303\266sterir", 0, QApplication::UnicodeUTF8));
         plainTextEdit_9->setDocumentTitle(QString());

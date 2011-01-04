@@ -10,21 +10,33 @@ class plcControlThread : public QThread{
 
 public:
     s7 *plc;                                // pointer to plc class
+    int plcType;
+    QString plcUrl;
+    int dbNo;
+    int right_BYTE, right_BIT;
+    int left_BYTE, left_BIT;
+    int stop_BYTE, stop_BIT;
+    int emergency_BYTE, emergency_BIT;
+
     int commandState;
-    int result;
+    bool result;
+    int checkResult;
     bool plcInteract;
 
+
+    plcControlThread(int type, QString url);
     plcControlThread(s7 &_plc);
     void stop();
-    int plcCmdCenter();
-    int plcCmdRight();
-    int plcCmdLeft();
-    int plcCmdStop();
-    int plcCmdStopReset();
-    int plcCmdEmergencyAct();
-    int plcCmdEmergencyPsv();
+    bool plcCmdCenter();
+    bool plcCmdRight();
+    bool plcCmdLeft();
+    bool plcCmdStop();
+    bool plcCmdStopReset();
+    bool plcCmdEmergencyAct();
+    bool plcCmdEmergencyPsv();
     void check();
-//    void run();
+    void disconnect();
+    ~plcControlThread();
 
 protected:
     void run();

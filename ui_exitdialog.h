@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'exitdialog.ui'
 **
-** Created: Tue Dec 21 01:13:39 2010
+** Created: Sun Jan 2 12:30:02 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

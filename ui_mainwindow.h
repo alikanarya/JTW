@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu Dec 23 19:40:14 2010
+** Created: Sun Jan 2 12:30:02 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -61,7 +61,8 @@ public:
     QPushButton *clearMsgBoxButton;
     QPushButton *helpButton;
     QPushButton *reportButton;
-    QFrame *frameOverFrame2;
+    QLabel *imageFrameIn;
+    QPushButton *cmdStatus;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -102,7 +103,7 @@ public:
         screenShotButton->setFlat(true);
         labelTime = new QLabel(centralWidget);
         labelTime->setObjectName(QString::fromUtf8("labelTime"));
-        labelTime->setGeometry(QRect(661, 320, 104, 25));
+        labelTime->setGeometry(QRect(612, 556, 85, 23));
         QFont font;
         font.setPointSize(12);
         font.setBold(true);
@@ -131,12 +132,13 @@ public:
         stopButton->setFlat(true);
         plainTextEdit = new QPlainTextEdit(centralWidget);
         plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
-        plainTextEdit->setGeometry(QRect(10, 580, 644, 145));
+        plainTextEdit->setGeometry(QRect(500, 580, 310, 140));
         QFont font1;
-        font1.setPointSize(10);
+        font1.setPointSize(8);
         plainTextEdit->setFont(font1);
         plainTextEdit->setStyleSheet(QString::fromUtf8("background-color: rgb(170, 255, 127);"));
-        plainTextEdit->setFrameShape(QFrame::Panel);
+        plainTextEdit->setFrameShape(QFrame::Box);
+        plainTextEdit->setFrameShadow(QFrame::Sunken);
         plainTextEdit->setLineWidth(2);
         plainTextEdit->setReadOnly(true);
         analyzeButton = new QPushButton(centralWidget);
@@ -200,7 +202,7 @@ public:
         guideButton->setFlat(true);
         trackView = new QGraphicsView(centralWidget);
         trackView->setObjectName(QString::fromUtf8("trackView"));
-        trackView->setGeometry(QRect(661, 70, 104, 240));
+        trackView->setGeometry(QRect(170, 560, 324, 160));
         trackView->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);\n"
 "background-color: rgb(236, 233, 216);"));
         trackView->setFrameShape(QFrame::Box);
@@ -208,7 +210,7 @@ public:
         trackView->setLineWidth(2);
         trackView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         trackView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        trackView->setSceneRect(QRectF(0, 0, 101, 480));
+        trackView->setSceneRect(QRectF(0, 0, 320, 160));
         trackView->setTransformationAnchor(QGraphicsView::NoAnchor);
         settingsButton = new QPushButton(centralWidget);
         settingsButton->setObjectName(QString::fromUtf8("settingsButton"));
@@ -238,7 +240,7 @@ public:
         controlButton->setFlat(true);
         plcStatus = new QPushButton(centralWidget);
         plcStatus->setObjectName(QString::fromUtf8("plcStatus"));
-        plcStatus->setGeometry(QRect(1057, 680, 48, 48));
+        plcStatus->setGeometry(QRect(70, 680, 48, 48));
         QIcon icon9;
         icon9.addFile(QString::fromUtf8(":/resources/s7_200-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         plcStatus->setIcon(icon9);
@@ -262,7 +264,7 @@ public:
         exitButton->setFlat(true);
         label_3 = new QLabel(centralWidget);
         label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setGeometry(QRect(810, 10, 481, 48));
+        label_3->setGeometry(QRect(940, 10, 351, 31));
         sizePolicy.setHeightForWidth(label_3->sizePolicy().hasHeightForWidth());
         label_3->setSizePolicy(sizePolicy);
         QFont font2;
@@ -275,22 +277,23 @@ public:
         label_3->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         labelLogoCustomer = new QLabel(centralWidget);
         labelLogoCustomer->setObjectName(QString::fromUtf8("labelLogoCustomer"));
-        labelLogoCustomer->setGeometry(QRect(1226, 99, 66, 66));
+        labelLogoCustomer->setGeometry(QRect(990, 43, 24, 24));
         labelLogoCustomer->setFrameShape(QFrame::Box);
-        labelLogoCustomer->setLineWidth(2);
+        labelLogoCustomer->setLineWidth(1);
         labelLogoCustomer->setPixmap(QPixmap(QString::fromUtf8(":/resources/NokselLogo.bmp")));
+        labelLogoCustomer->setScaledContents(true);
         emergencyButton = new QPushButton(centralWidget);
         emergencyButton->setObjectName(QString::fromUtf8("emergencyButton"));
-        emergencyButton->setGeometry(QRect(1140, 669, 70, 70));
+        emergencyButton->setGeometry(QRect(1175, 680, 48, 48));
         QIcon icon12;
         icon12.addFile(QString::fromUtf8(":/resources/Emergency-Stop-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         icon12.addFile(QString::fromUtf8(":/resources/Emergency-Stop-Enabled-Icon.png"), QSize(), QIcon::Normal, QIcon::On);
         emergencyButton->setIcon(icon12);
-        emergencyButton->setIconSize(QSize(64, 64));
+        emergencyButton->setIconSize(QSize(48, 48));
         emergencyButton->setFlat(true);
         cameraStatus = new QPushButton(centralWidget);
         cameraStatus->setObjectName(QString::fromUtf8("cameraStatus"));
-        cameraStatus->setGeometry(QRect(996, 680, 48, 48));
+        cameraStatus->setGeometry(QRect(10, 680, 48, 48));
         QIcon icon13;
         icon13.addFile(QString::fromUtf8(":/resources/Camera-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         cameraStatus->setIcon(icon13);
@@ -298,7 +301,7 @@ public:
         cameraStatus->setFlat(true);
         label_2 = new QLabel(centralWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(10, 560, 306, 20));
+        label_2->setGeometry(QRect(500, 560, 111, 20));
         QFont font3;
         font3.setFamily(QString::fromUtf8("Arial"));
         font3.setPointSize(10);
@@ -321,7 +324,7 @@ public:
         label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         clearMsgBoxButton = new QPushButton(centralWidget);
         clearMsgBoxButton->setObjectName(QString::fromUtf8("clearMsgBoxButton"));
-        clearMsgBoxButton->setGeometry(QRect(574, 555, 80, 25));
+        clearMsgBoxButton->setGeometry(QRect(730, 555, 80, 25));
         clearMsgBoxButton->setFont(font3);
         helpButton = new QPushButton(centralWidget);
         helpButton->setObjectName(QString::fromUtf8("helpButton"));
@@ -339,12 +342,22 @@ public:
         reportButton->setIcon(icon15);
         reportButton->setIconSize(QSize(40, 40));
         reportButton->setFlat(true);
-        frameOverFrame2 = new QFrame(centralWidget);
-        frameOverFrame2->setObjectName(QString::fromUtf8("frameOverFrame2"));
-        frameOverFrame2->setGeometry(QRect(880, 110, 312, 213));
-        frameOverFrame2->setStyleSheet(QString::fromUtf8("background-color: rgb(236, 233, 216);"));
-        frameOverFrame2->setFrameShape(QFrame::StyledPanel);
-        frameOverFrame2->setFrameShadow(QFrame::Raised);
+        imageFrameIn = new QLabel(centralWidget);
+        imageFrameIn->setObjectName(QString::fromUtf8("imageFrameIn"));
+        imageFrameIn->setGeometry(QRect(655, 70, 644, 484));
+        imageFrameIn->setFrameShape(QFrame::Box);
+        imageFrameIn->setLineWidth(2);
+        imageFrameIn->setScaledContents(false);
+        cmdStatus = new QPushButton(centralWidget);
+        cmdStatus->setObjectName(QString::fromUtf8("cmdStatus"));
+        cmdStatus->setGeometry(QRect(130, 560, 32, 32));
+        cmdStatus->setAutoFillBackground(false);
+        cmdStatus->setStyleSheet(QString::fromUtf8(""));
+        QIcon icon16;
+        icon16.addFile(QString::fromUtf8(":/resources/backward.png"), QSize(), QIcon::Normal, QIcon::Off);
+        cmdStatus->setIcon(icon16);
+        cmdStatus->setIconSize(QSize(32, 32));
+        cmdStatus->setFlat(true);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -426,11 +439,13 @@ public:
 #endif // QT_NO_TOOLTIP
         emergencyButton->setText(QString());
         cameraStatus->setText(QString());
-        label_2->setText(QApplication::translate("MainWindow", "Bilgi Penceresi", 0, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("MainWindow", "Bilgi", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainWindow", "\302\251Aykurt Elektrik Hendek/Sakarya, 2010", 0, QApplication::UnicodeUTF8));
         clearMsgBoxButton->setText(QApplication::translate("MainWindow", "Temizle", 0, QApplication::UnicodeUTF8));
         helpButton->setText(QString());
         reportButton->setText(QString());
+        imageFrameIn->setText(QString());
+        cmdStatus->setText(QString());
     } // retranslateUi
 
 };

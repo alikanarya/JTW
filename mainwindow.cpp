@@ -10,10 +10,6 @@
 #include "exitdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
-    // turkish char set support
-    QTextCodec::setCodecForTr( QTextCodec::codecForName("ISO-8859-9") );
-    QTextCodec::setCodecForCStrings( QTextCodec::codecForName("ISO-8859-9") );
-
     //rectScreen = QApplication::desktop()->geometry();
     ui->setupUi(this);
 
@@ -34,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     emergencyOffIcon.addFile(":/resources/Emergency-Stop-Disabled-Icon.png");
     calculatorOnIcon.addFile(":/resources/calculator-icon.png");
     calculatorOffIcon.addFile(":/resources/calculator-Disabled-icon.png");
+    cmd2RightIcon.addFile(":/resources/forward.png");
+    cmd2LeftIcon.addFile(":/resources/backward.png");
 
     //************ui->controlButton->setEnabled(false);
     ui->trackButton->setEnabled(false);
@@ -59,6 +57,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     showGuide = true;       // show guide initially
     repaintGuide();
+
+    sceneRect = ui->trackView->geometry();
+    sceneCenterX = (sceneRect.width() - 4)/ 2;  // 4: total border thickness
+    //ui->plainTextEdit->appendPlainText(QString::number(sceneCenterX));
+
 
     // play video controls
     play = playCamonBoot;
@@ -96,21 +99,27 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     permOperator = false;
 
     // plc
-    plc.changeType(plcType);
-    plcType = plc.plcType;  // to fix in case of wrong selection
+    connectRequested = connectRequestedonBoot;
+    threadPLCControl = new plcControlThread(plcType, urlPLC.toString());
 
-    if (plcType == 0) DB_NO = 1;    // S7-200
+    threadPLCControl->dbNo = DB_NO;
+    threadPLCControl->right_BYTE = right_VMEM_BYTE;
+    threadPLCControl->right_BIT = right_BITofBYTE;
+    threadPLCControl->left_BYTE = left_VMEM_BYTE;
+    threadPLCControl->left_BIT = left_BITofBYTE;
+    threadPLCControl->stop_BYTE = stop_VMEM_BYTE;
+    threadPLCControl->stop_BIT = stop_BITofBYTE;
+    threadPLCControl->emergency_BYTE = emergency_VMEM_BYTE;
+    threadPLCControl->emergency_BIT = emergency_BITofBYTE;
 
-    if (!plc.libraryLoaded){
+    if (!threadPLCControl->plc->libraryLoaded){
         permPLC = false;
-        ui->plainTextEdit->appendPlainText(plc.message);
+        ui->plainTextEdit->appendPlainText(threadPLCControl->plc->message);
         ui->plainTextEdit->appendPlainText(MESSAGE5);
-    } else permPLC = true;
+    } else
+        permPLC = true;
 
     checker();
-
-    connectRequested = connectRequestedonBoot;
-    threadPLCControl = new plcControlThread(plc);
 
     if (permPLC && connectRequestedonBoot){
         plcInteractPrev = false;
@@ -143,17 +152,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     penLimit.setColor(Qt::red);     penLimit.setWidth(1);
     penTrack.setColor(Qt::blue);    penTrack.setWidth(1);
 
-    deviationDataSize = 240 / yRes + 2;     // 240/yRes+1 + 1 past data to draw first line
+    deviationDataSize = sceneRect.height() / yRes + 2;     // sceneRect.height()/yRes+1 + 1 past data to draw first line
     deviationData.clear();
     eCodeDev = 200;
 
     addAxis();
 
-    // plc commands init.
-    cmdState = _CMD_CENTER;
+    // weld commands init.
+    cmdState = _CMD_STOP;
+    ui->cmdStatus->setIcon(QIcon());
 
     controlDelay = QString::number(controlDelay).toInt(&controlDelayValid, 10);
-    timerControlInterval = 200;
+    timerControlInterval = 100;
+    controlThreadCountSize = 1000 / timerControlInterval;   // timer shot count for 1sec plc check
     weldCommandsSize = controlDelay / timerControlInterval;
 
     // start message
@@ -243,25 +254,41 @@ void MainWindow::update(){
 }
 
 void MainWindow:: plcControl(){
+    controlThreadCount++;
+
     checker();
 
-    int state = _CMD_RESET;
-    if (!controlPause){
-        if (emergencyStop){
-            if (!threadPLCControl->isRunning()){
-                threadPLCControl->commandState = _CMD_EMERGENCY_ACT;
-                threadPLCControl->start();
-            }
-        } else {
-            if (cameraChecker->cameraDown || !play || detectionError || !permOperator){
-                state = _CMD_STOP;
-            } else
-                if (play && trackOn && controlOn){
-                    state = cmdState;   // Kaynak komutu
-                } else
-                    state = _CMD_STOP;
+    int state = _CMD_STOP;
 
-            if (state != _CMD_RESET) {
+    if (!controlPause){
+
+        if (controlThreadCount == controlThreadCountSize) {
+            state = _CMD_CHECK;
+            controlThreadCount = 0;
+        } else {
+            if (emergencyStop){
+                state = _CMD_EMERGENCY_ACT;
+            } else {
+                if (cameraChecker->cameraDown || !play || detectionError || !permOperator){
+                    state = _CMD_STOP;
+                } else {
+                    if (play && trackOn && controlOn){
+                        state = cmdState;   // Weld Command from image processing
+                    } else
+                        state = _CMD_STOP;
+                }
+            }
+        }
+
+        if (state != cmdStatePrev) {
+            if (state == _CMD_RIGHT)
+                ui->cmdStatus->setIcon(cmd2LeftIcon);
+            else if (state == _CMD_LEFT)
+                ui->cmdStatus->setIcon(cmd2RightIcon);
+            else if (state != _CMD_CHECK)
+                ui->cmdStatus->setIcon(QIcon());
+
+            if (state != _CMD_CHECK || state != _CMD_EMERGENCY_ACT || state != _CMD_RESET) {
                 if (controlDelay == 0){
                     if (!threadPLCControl->isRunning()){
                         threadPLCControl->commandState = state;
@@ -282,19 +309,19 @@ void MainWindow:: plcControl(){
                             threadPLCControl->start();
                         }
                         weldCommands.removeFirst();
+                        //ui->plainTextEdit->appendPlainText(QString::number(cmdState)+"plc "+QString::number(timeSystem.getSystemTimeMsec()));
                     }
                 }
             } else {
                 if (!threadPLCControl->isRunning()){
-                    threadPLCControl->commandState = _CMD_RESET;
+                    threadPLCControl->commandState = state;
                     threadPLCControl->start();
                 }
             }
         }
 
+        if (state!= _CMD_CHECK) cmdStatePrev = state;
     }
-
-    //ui->plainTextEdit->appendPlainText(QString::number(cmdState)+"plc "+QString::number(timeSystem.getSystemTimeMsec()));
 }
 
 void MainWindow::updateSn(){
@@ -331,6 +358,25 @@ void MainWindow::updateSn(){
 
     if (cameraChecker->cameraDown && !alarmCameraDownLock) emit cameraDown();
 
+
+    // plc live state
+    if (!plcInteractPrev && threadPLCControl->plc->plcInteract){           // 0 -> 1
+        permPLC = true;
+        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE6);
+    } else
+        if (plcInteractPrev && !threadPLCControl->plc->plcInteract){       // 1 -> 0
+            permPLC = false;
+            ui->plainTextEdit->appendPlainText(timeString() + MESSAGE4);
+    }
+
+    plcInteractPrev = threadPLCControl->plc->plcInteract;
+
+    if (threadPLCControl->plc->plcInteract)
+        ui->plcStatus->setIcon(plcOnlineIcon);
+    else
+        ui->plcStatus->setIcon(plcOfflineIcon);
+
+
     // if video is played
     if (play){
         if (fpsReal != 0) timeDelayAvg = timeDelayTotal / fpsReal;      // calc. ave time delay
@@ -364,58 +410,27 @@ void MainWindow::updateSn(){
 
 void MainWindow::startTimer(){
     if (!threadPLCControl->isRunning()){
-        threadPLCControl->commandState = _CMD_CHECK;
+        cmdState = _CMD_CHECK;
+        threadPLCControl->commandState = cmdState;
         threadPLCControl->start();
     }
+    cmdStatePrev = cmdState;
 
-    controlPause = true;
-
-    // wait 5sec. to check first init of plc connection
-    QTimer::singleShot(5000, this, SLOT(initPlcCheckTimer()));
+    // wait 2sec. to check first init of plc connection
+    QTimer::singleShot(2000, this, SLOT(initPlcTimer()));
 }
 
-void MainWindow::initPlcCheckTimer(){
-    ui->plainTextEdit->appendPlainText(timeString() + plc.message);
-    if (plc.plcInteract) ui->plcStatus->setIcon(plcOnlineIcon);
-
-    // 2sn timer; to check plc live state periodically
-    timerPLCCheck = new QTimer(this);
-    connect(timerPLCCheck, SIGNAL(timeout()), this, SLOT(plcCheck()));
-    timerPLCCheck->start(2000);
+void MainWindow::initPlcTimer(){
+    ui->plainTextEdit->appendPlainText(timeString() + threadPLCControl->plc->message);
+    if (threadPLCControl->plc->plcInteract) ui->plcStatus->setIcon(plcOnlineIcon);
 
     timerControlEnabled = true;
     timerControl = new QTimer(this);
+    controlThreadCount = 0;
     connect(timerControl, SIGNAL(timeout()), this, SLOT(plcControl()));
+    controlPause = false;
     timerControl->start(timerControlInterval);
 
-}
-
-void MainWindow::plcCheck(){
-    if (threadPLCControl->isRunning()) threadPLCControl->terminate();
-    //threadPLCControl->wait();
-    controlPause = true;
-    if (!threadPLCControl->isRunning()){
-        threadPLCControl->commandState = _CMD_CHECK;
-        threadPLCControl->start();
-    }
-    //threadPLCControl->wait();
-    controlPause = false;
-
-    if (!plcInteractPrev && plc.plcInteract){           // 0 -> 1
-        permPLC = true;
-        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE6);
-    } else
-        if (plcInteractPrev && !plc.plcInteract){       // 1 -> 0
-            permPLC = false;
-            ui->plainTextEdit->appendPlainText(timeString() + MESSAGE4);
-    }
-
-    plcInteractPrev = plc.plcInteract;
-
-    if (plc.plcInteract)
-        ui->plcStatus->setIcon(plcOnlineIcon);
-    else
-        ui->plcStatus->setIcon(plcOfflineIcon);
 }
 
 void  MainWindow::cameraDownAction(){
@@ -629,9 +644,9 @@ int MainWindow::calcTotalMsec(int hour, int min, int second, int msec){
 }
 
 void MainWindow::addAxis(){
-    scene->addLine(50, 0, 50, 240, penAxis);
-    scene->addLine(50 - errorLimit, 0, 50 - errorLimit, 240, penLimit);
-    scene->addLine(49 + errorLimit, 0, 49 + errorLimit, 240, penLimit);
+    scene->addLine(sceneCenterX, 0, sceneCenterX, sceneRect.height(), penAxis);
+    scene->addLine(sceneCenterX - errorLimit, 0, sceneCenterX - errorLimit, sceneRect.height(), penLimit);
+    scene->addLine((sceneCenterX - 1) + errorLimit, 0, (sceneCenterX - 1) + errorLimit, sceneRect.height(), penLimit);
 }
 
 void MainWindow::clearTrack(){
@@ -649,9 +664,9 @@ void MainWindow::drawTrack(){
     }
 
     for (int i=1; i<deviationData.size(); i++){
-        x = 50 + deviationData[i];
+        x = sceneCenterX + deviationData[i];
         y = i*yRes;
-        xPrev = 50 + deviationData[i-1];
+        xPrev = sceneCenterX + deviationData[i-1];
         yPrev = (i-1)*yRes;
         scene->addLine(xPrev,yPrev,x,y,penTrack);
     }
@@ -778,7 +793,7 @@ void MainWindow::readSettings(){
             emergency_VMEM_BYTE = settings->value("emrbyt", _EMRGENCY_VMEM_BYTE).toInt();
             emergency_BITofBYTE = settings->value("emrbit", _EMRGENCY_BITofBYTE).toInt();
             connectRequestedonBoot = settings->value("pcon", _PLC_CONN_ONBOOT).toBool();
-            controlDelay = settings->value("ctd", _CONTROL_DELAY).toInt();
+            controlDelay = 0;   //settings->value("ctd", _CONTROL_DELAY).toInt();
         settings->endGroup();
 
         settings->beginGroup("ipro");
@@ -945,7 +960,7 @@ void MainWindow::playCam(){
 }
 
 MainWindow::~MainWindow(){
-    plc.disconnect();
+    threadPLCControl->disconnect();
 
 //    delete settings;
     delete ui;

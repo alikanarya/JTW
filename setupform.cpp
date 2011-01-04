@@ -7,10 +7,6 @@
 extern MainWindow *w;
 
 setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
-    // turkish char set support for lineEdit
-    QTextCodec::setCodecForTr( QTextCodec::codecForName("ISO-8859-9") );
-    QTextCodec::setCodecForCStrings( QTextCodec::codecForName("ISO-8859-9") );
-
     fileBaseTarget = "target";
     fileBaseMono = "mono";
     fileBaseEdge = "edge";

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'settingsform.ui'
 **
-** Created: Thu Dec 23 18:14:13 2010
+** Created: Sun Jan 2 12:30:02 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -252,8 +252,10 @@ public:
 "background-color: rgb(255, 0, 0);"));
         editControlDelay->setMaxLength(5);
         editControlDelay->setAlignment(Qt::AlignCenter);
+        editControlDelay->setReadOnly(true);
         label_4 = new QLabel(settingsForm);
         label_4->setObjectName(QString::fromUtf8("label_4"));
+        label_4->setEnabled(false);
         label_4->setGeometry(QRect(310, 0, 91, 16));
         QFont font4;
         font4.setFamily(QString::fromUtf8("Arial"));

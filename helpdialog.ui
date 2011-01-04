@@ -613,8 +613,8 @@ Kaynak yapılması için devrede olmalıdır</string>
 - Kamera görüntüsü durduğunda/ulaşılamadığında veya
 - PLC'ye ulaşılamadığında veya
 - Operatör, analiz sonuçlarına onay vermediyse veya
-- İz takibi yapılmıyorsa veya
-- Kaynak gecikmesi için geçerli bir rakam verilmediyse		KAYNAK YAPILAMAZ</string>
+- İz takibi yapılmıyorsa
+KAYNAK YAPILAMAZ</string>
    </property>
    <property name="backgroundVisible">
     <bool>false</bool>

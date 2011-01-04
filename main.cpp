@@ -6,6 +6,10 @@ MainWindow *w;
 int main(int argc, char *argv[]){
     QApplication a(argc, argv);
 
+    // turkish char set support
+    QTextCodec::setCodecForTr( QTextCodec::codecForName("ISO-8859-9") );
+    QTextCodec::setCodecForCStrings( QTextCodec::codecForName("ISO-8859-9") );
+
     w = new MainWindow();
 
     //w->showMaximized();

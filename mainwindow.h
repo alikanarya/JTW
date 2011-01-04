@@ -39,8 +39,10 @@
 #define _CMD_RESET          6
 #define _CMD_CHECK          7
 
-//const int yResArray[9] = {1, 2, 4, 6, 8, 10, 12, 16, 20};
-const int yResArray[9] = {12, 12, 12, 12, 12, 12, 12, 16, 20};
+//const int yResArray[9] = {1, 2, 4, 6, 8, 10, 12, 16, 20}; // for height 240
+//const int yResArray[9] = {12, 12, 12, 12, 12, 12, 12, 16, 20};
+//const int yResArray[9] = {1, 1, 2, 4, 5, 8, 10, 16, 20}; // for height 160
+const int yResArray[9] = {10, 10, 10, 10, 10, 10, 10, 16, 20};
 
 #include <QMainWindow>
 namespace Ui {
@@ -106,6 +108,7 @@ public:
     QIcon stopOnIcon, stopOffIcon;
     QIcon emergencyOnIcon, emergencyOffIcon;
     QIcon calculatorOnIcon, calculatorOffIcon;
+    QIcon cmd2LeftIcon, cmd2RightIcon;
 
     // deviation trend vars
     QGraphicsScene *scene;      // to show devitation trend
@@ -129,6 +132,8 @@ public:
     int centerX;                        // image center x coor.
     QRect imageFrameRect;
     QRect guideFrameRect, gfBoxRect, gfLineHorRect, gfLineVerRect, gfTolLeftRect, gfTolRightRect;
+    QRect sceneRect;
+    int sceneCenterX;
 
     // image processing parameters
     imgProcess *iprocess;               // image processing object
@@ -142,18 +147,18 @@ public:
 
     // plc vars
     QUrl urlPLC;                            // plc url
-    s7 plc;                                 // plc class
     int plcType;                            // selection for S7-200, S7-300, etc
     bool connectRequested;                  // plc connection request
     bool connectRequestedonBoot;            // plc connection request on app. start
     bool plcInteractPrev;
-    int cmdState;
+    int cmdState, cmdStatePrev;
     int DB_NO;
     int right_VMEM_BYTE, right_BITofBYTE;
     int left_VMEM_BYTE, left_BITofBYTE;
     int stop_VMEM_BYTE, stop_BITofBYTE;
     int emergency_VMEM_BYTE, emergency_BITofBYTE;
     int controlDelay;
+    int controlThreadCount, controlThreadCountSize;
     bool controlPause;
 
     struct weldData {
@@ -169,7 +174,7 @@ public:
     int firstTimeTick, secondTimeTick;          // succesive system time instances
     int tickDiff;                               // difference between 2 system times
     int frameInterval;                          // image play interval in msec
-    QTimer *timer, *timerSn, *timerPLCCheck;    // 1msec & 1sn timers & 2sn timers
+    QTimer *timer, *timerSn;                    // 1msec & 1sn timers
     QTimer *timerControl;
     bool timerControlEnabled;
     int timerControlInterval;
@@ -260,8 +265,7 @@ private slots:
     void update();                                  // 1msec timer actions
     void updateSn();                                // 1sn timer actions
     void startTimer();                              // 2sn bood delay timer
-    void initPlcCheckTimer();                       // 5sec first connect(plc) time delay to start checking plc state
-    void plcCheck();                                // 2sn timer actions
+    void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
     void cameraDownAction();                        // actions handled when camera is not accesible
 
 
