@@ -485,6 +485,8 @@ void MainWindow::analyzeButton(){
             iprocessLeft->thetaMin = iprocess->angleAvg + 90 - 5;
             iprocessLeft->thetaMax = iprocess->angleAvg + 90 + 5;
             iprocessLeft->thetaStep = 1.0;
+            iprocessLeft->centerX = 0;
+            iprocessLeft->centerY = iprocess->rightMostCornerY;
             iprocessLeft->houghTransform();                             // detect lines in edge image
 
             iprocessLeft->calculateHoughMaxs(5);                        // get max voted line(s)
@@ -509,6 +511,8 @@ void MainWindow::analyzeButton(){
             iprocessRight->thetaMin = iprocess->angleAvg + 90 - 5;
             iprocessRight->thetaMax = iprocess->angleAvg + 90 + 5;
             iprocessRight->thetaStep = 1.0;
+            iprocessRight->centerX = 0;
+            iprocessRight->centerY = iprocess->leftMostCornerY;
             iprocessRight->houghTransform();                            // detect lines in edge image
 
             iprocessRight->calculateHoughMaxs(5);                       // get max voted line(s)
@@ -523,7 +527,7 @@ void MainWindow::analyzeButton(){
             iprocessRight->errorEdgeLimit = 0;                          // bypass corner void check
             iprocessRight->errorAngleLimit = 90;                        // bypass angle check
             iprocessRight->detectPrimaryVoid();                         // decide primary void line & corners/center
-/*
+
 
             iprocessLeft->imgOrginal.save("_left.jpg");
             iprocessLeft->imgMono.save("_leftMono.jpg");
@@ -559,7 +563,7 @@ void MainWindow::analyzeButton(){
         }
 
 //            iprocessLeft->saveMatrix(iprocessLeft->valueMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight, "_leftValuMat.csv");
-*/
+
 
 //---------------
 
