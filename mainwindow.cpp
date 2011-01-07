@@ -466,6 +466,115 @@ void MainWindow::analyzeButton(){
         iprocess->voidThreshold = voidThreshold;                                            // void threshold to decide max void as primary
         iprocess->detectPrimaryVoid();                                                      // decide primary void line & corners/center
 
+//---------------
+        subImageProcessingSwitch = true;
+        if (subImageProcessingSwitch && iprocess->detected) {
+            int tStartX = iprocess->voidSpace[iprocess->voidIndex]->start.x();
+            int tCenterX = iprocess->trackCenterX;
+            int tEndX = iprocess->voidSpace[iprocess->voidIndex]->end.x();
+
+            QImage targetLeft = target.copy(tStartX, 0, tCenterX - tStartX, frameHeight);
+            QImage targetRight = target.copy(tCenterX, 0, tEndX + 1 - tCenterX, frameHeight);
+
+            // left image process
+            imgProcess *iprocessLeft = new imgProcess(targetLeft, targetLeft.width(),targetLeft.height());      // new imgProcess object
+            iprocessLeft->toMono();                                     // convert target to mono
+            iprocessLeft->constructValueMatrix(iprocessLeft->imgMono);  // construct mono matrix
+            iprocessLeft->detectEdgeSobel();                            // detect edges of the mono image
+
+            iprocessLeft->thetaMin = iprocess->angleAvg + 90 - 5;
+            iprocessLeft->thetaMax = iprocess->angleAvg + 90 + 5;
+            iprocessLeft->thetaStep = 1.0;
+            iprocessLeft->houghTransform();                             // detect lines in edge image
+
+            iprocessLeft->calculateHoughMaxs(5);                        // get max voted line(s)
+            iprocessLeft->calcVoteAvg();                                // ave value of max voted line(s)
+
+            iprocessLeft->voteThreshold = 0;                            // bypass line vote check
+            iprocessLeft->checkPrimaryLine();                           // is max voted line  above the low-limit?
+            iprocessLeft->calcAngleAvg();                               // ave angle value of max voted line(s)
+
+            iprocessLeft->detectVoidLines();                            // detect void lines on hough lines in mono image
+            iprocessLeft->voidThreshold = 0;                            // bypass void length check
+            iprocessLeft->errorEdgeLimit = 0;                           // bypass corner void check
+            iprocessLeft->errorAngleLimit = 90;                         // bypass angle check
+            iprocessLeft->detectPrimaryVoid();                          // decide primary void line & corners/center
+
+            // right image process
+            imgProcess *iprocessRight = new imgProcess(targetRight, targetRight.width(),targetRight.height());      // new imgProcess object
+            iprocessRight->toMono();                                    // convert target to mono
+            iprocessRight->constructValueMatrix(iprocessRight->imgMono);// construct mono matrix
+            iprocessRight->detectEdgeSobel();                           // detect edges of the mono image
+
+            iprocessRight->thetaMin = iprocess->angleAvg + 90 - 5;
+            iprocessRight->thetaMax = iprocess->angleAvg + 90 + 5;
+            iprocessRight->thetaStep = 1.0;
+            iprocessRight->houghTransform();                            // detect lines in edge image
+
+            iprocessRight->calculateHoughMaxs(5);                       // get max voted line(s)
+            iprocessRight->calcVoteAvg();                               // ave value of max voted line(s)
+
+            iprocessRight->voteThreshold = 0;                           // bypass line vote check
+            iprocessRight->checkPrimaryLine();                          // is max voted line  above the low-limit?
+            iprocessRight->calcAngleAvg();                              // ave angle value of max voted line(s)
+
+            iprocessRight->detectVoidLines();                           // detect void lines on hough lines in mono image
+            iprocessRight->voidThreshold = 0;                           // bypass void length check
+            iprocessRight->errorEdgeLimit = 0;                          // bypass corner void check
+            iprocessRight->errorAngleLimit = 90;                        // bypass angle check
+            iprocessRight->detectPrimaryVoid();                         // decide primary void line & corners/center
+/*
+
+            iprocessLeft->imgOrginal.save("_left.jpg");
+            iprocessLeft->imgMono.save("_leftMono.jpg");
+            iprocessLeft->getImage(iprocessLeft->edgeMatrix, iprocessLeft->edgeWidth, iprocessLeft->edgeHeight)->save("_leftEdge.jpg");
+
+            ui->plainTextEdit->appendPlainText(iprocessLeft->statusMessage);
+            iprocessLeft->constructHoughMatrix();
+            iprocessLeft->getImage(iprocessLeft->houghMatrix, iprocessLeft->edgeWidth, iprocessLeft->edgeHeight)->save("_leftHough.jpg");
+
+        for (int i=0;i<iprocessLeft->voidSpace.size();i++){
+            QString message = QString::number(iprocessLeft->voidSpace[i]->start.x()) + ", " +
+                      QString::number(iprocessLeft->voidSpace[i]->start.y()) + ", " +
+                      QString::number(iprocessLeft->voidSpace[i]->end.x()) + ", " +
+                      QString::number(iprocessLeft->voidSpace[i]->end.y()) + ", " +
+                      QString::number(iprocessLeft->voidSpace[i]->length);
+            ui->plainTextEdit->appendPlainText(message);
+        }
+            iprocessRight->imgOrginal.save("_right.jpg");
+            iprocessRight->imgMono.save("_rightMono.jpg");
+            iprocessRight->getImage(iprocessRight->edgeMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight)->save("_rightEdge.jpg");
+
+            ui->plainTextEdit->appendPlainText(iprocessRight->statusMessage);
+            iprocessRight->constructHoughMatrix();
+            iprocessRight->getImage(iprocessRight->houghMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight)->save("_rightHough.jpg");
+
+        for (int i=0;i<iprocessRight->voidSpace.size();i++){
+            QString message = QString::number(iprocessRight->voidSpace[i]->start.x()) + ", " +
+                      QString::number(iprocessRight->voidSpace[i]->start.y()) + ", " +
+                      QString::number(iprocessRight->voidSpace[i]->end.x()) + ", " +
+                      QString::number(iprocessRight->voidSpace[i]->end.y()) + ", " +
+                      QString::number(iprocessRight->voidSpace[i]->length);
+            ui->plainTextEdit->appendPlainText(message);
+        }
+
+//            iprocessLeft->saveMatrix(iprocessLeft->valueMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight, "_leftValuMat.csv");
+*/
+
+//---------------
+
+            //if
+            iprocess->leftCornerX = tStartX + iprocessLeft->rightMostCornerX;
+            iprocess->leftCornerY = iprocessLeft->rightMostCornerY;
+            iprocess->rightCornerX = tCenterX + iprocessRight->leftMostCornerX;
+            iprocess->rightCornerY = iprocessRight->leftMostCornerY;
+            iprocess->trackCenterX = (iprocess->leftCornerX + iprocess->rightCornerX) / 2;
+            iprocess->trackCenterY = (iprocess->leftCornerY + iprocess->rightCornerY) / 2;
+
+
+        }
+//---------------
+
         // END IMAGE PROCESSING
         int endTime = timeSystem.getSystemTimeMsec();
 

@@ -143,6 +143,7 @@ public:
     int houghLineNo;
     int voteThreshold, voidThreshold;
     int errorLimit;                     // deviation from center in pixels
+    bool subImageProcessingSwitch;
 
 
     // plc vars
