@@ -469,9 +469,11 @@ void MainWindow::analyzeButton(){
 //---------------
         subImageProcessingSwitch = true;
         if (subImageProcessingSwitch && iprocess->detected) {
-            int tStartX = iprocess->voidSpace[iprocess->voidIndex]->start.x();
+            //int tStartX = iprocess->voidSpace[iprocess->voidIndex]->start.x();
+            int tStartX = 0;
             int tCenterX = iprocess->trackCenterX;
-            int tEndX = iprocess->voidSpace[iprocess->voidIndex]->end.x();
+            //int tEndX = iprocess->voidSpace[iprocess->voidIndex]->end.x();
+            int tEndX = frameWidth - 1;
 
             QImage targetLeft = target.copy(tStartX, 0, tCenterX - tStartX, frameHeight);
             QImage targetRight = target.copy(tCenterX, 0, tEndX + 1 - tCenterX, frameHeight);
@@ -485,7 +487,7 @@ void MainWindow::analyzeButton(){
             iprocessLeft->thetaMin = iprocess->angleAvg + 90 - 5;
             iprocessLeft->thetaMax = iprocess->angleAvg + 90 + 5;
             iprocessLeft->thetaStep = 1.0;
-            iprocessLeft->centerX = 0;
+            //iprocessLeft->centerX = 0;
             iprocessLeft->centerY = iprocess->rightMostCornerY;
             iprocessLeft->houghTransform();                             // detect lines in edge image
 
@@ -511,7 +513,7 @@ void MainWindow::analyzeButton(){
             iprocessRight->thetaMin = iprocess->angleAvg + 90 - 5;
             iprocessRight->thetaMax = iprocess->angleAvg + 90 + 5;
             iprocessRight->thetaStep = 1.0;
-            iprocessRight->centerX = 0;
+            //iprocessRight->centerX = 0;
             iprocessRight->centerY = iprocess->leftMostCornerY;
             iprocessRight->houghTransform();                            // detect lines in edge image
 
