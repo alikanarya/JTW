@@ -484,21 +484,21 @@ void MainWindow::analyzeButton(){
             iprocessLeft->constructValueMatrix(iprocessLeft->imgMono);  // construct mono matrix
             iprocessLeft->detectEdgeSobel();                            // detect edges of the mono image
 
-            iprocessLeft->thetaMin = iprocess->angleAvg + 90 - 5;
-            iprocessLeft->thetaMax = iprocess->angleAvg + 90 + 5;
-            iprocessLeft->thetaStep = 1.0;
+            iprocessLeft->thetaMin = 80;
+            iprocessLeft->thetaMax = 100;
+            iprocessLeft->thetaStep = 0.5;
             //iprocessLeft->centerX = 0;
-            iprocessLeft->centerY = iprocess->rightMostCornerY;
+            //iprocessLeft->centerY = iprocess->rightMostCornerY;
             iprocessLeft->houghTransform();                             // detect lines in edge image
 
-            iprocessLeft->calculateHoughMaxs(5);                        // get max voted line(s)
+            iprocessLeft->calculateHoughMaxs(3);                        // get max voted line(s)
             iprocessLeft->calcVoteAvg();                                // ave value of max voted line(s)
 
             iprocessLeft->voteThreshold = 0;                            // bypass line vote check
             iprocessLeft->checkPrimaryLine();                           // is max voted line  above the low-limit?
             iprocessLeft->calcAngleAvg();                               // ave angle value of max voted line(s)
 
-            iprocessLeft->detectVoidLines();                            // detect void lines on hough lines in mono image
+            iprocessLeft->detectVoidLinesEdge();                            // detect void lines on hough lines in mono image
             iprocessLeft->voidThreshold = 0;                            // bypass void length check
             iprocessLeft->errorEdgeLimit = 0;                           // bypass corner void check
             iprocessLeft->errorAngleLimit = 90;                         // bypass angle check
@@ -510,34 +510,37 @@ void MainWindow::analyzeButton(){
             iprocessRight->constructValueMatrix(iprocessRight->imgMono);// construct mono matrix
             iprocessRight->detectEdgeSobel();                           // detect edges of the mono image
 
-            iprocessRight->thetaMin = iprocess->angleAvg + 90 - 5;
-            iprocessRight->thetaMax = iprocess->angleAvg + 90 + 5;
-            iprocessRight->thetaStep = 1.0;
+//            iprocessRight->thetaMin = iprocess->angleAvg + 90 - 2;
+//            iprocessRight->thetaMax = iprocess->angleAvg + 90 + 2;
+            iprocessRight->thetaMin = 80;
+            iprocessRight->thetaMax = 100;
+            iprocessRight->thetaStep = 0.5;
             //iprocessRight->centerX = 0;
-            iprocessRight->centerY = iprocess->leftMostCornerY;
+            //iprocessRight->centerY = iprocess->leftMostCornerY;
             iprocessRight->houghTransform();                            // detect lines in edge image
 
-            iprocessRight->calculateHoughMaxs(5);                       // get max voted line(s)
+            iprocessRight->calculateHoughMaxs(15);                       // get max voted line(s)
             iprocessRight->calcVoteAvg();                               // ave value of max voted line(s)
 
             iprocessRight->voteThreshold = 0;                           // bypass line vote check
             iprocessRight->checkPrimaryLine();                          // is max voted line  above the low-limit?
             iprocessRight->calcAngleAvg();                              // ave angle value of max voted line(s)
 
-            iprocessRight->detectVoidLines();                           // detect void lines on hough lines in mono image
+            iprocessRight->detectVoidLinesEdge();                           // detect void lines on hough lines in mono image
             iprocessRight->voidThreshold = 0;                           // bypass void length check
             iprocessRight->errorEdgeLimit = 0;                          // bypass corner void check
             iprocessRight->errorAngleLimit = 90;                        // bypass angle check
             iprocessRight->detectPrimaryVoid();                         // decide primary void line & corners/center
 
 
-            iprocessLeft->imgOrginal.save("_left.jpg");
-            iprocessLeft->imgMono.save("_leftMono.jpg");
-            iprocessLeft->getImage(iprocessLeft->edgeMatrix, iprocessLeft->edgeWidth, iprocessLeft->edgeHeight)->save("_leftEdge.jpg");
+            //iprocessLeft->imgOrginal.save("_left.jpg");
+            //iprocessLeft->imgMono.save("_leftMono.jpg");
+            //iprocessLeft->getImage(iprocessLeft->edgeMatrix, iprocessLeft->edgeWidth, iprocessLeft->edgeHeight)->save("_leftEdge.jpg");
 
             ui->plainTextEdit->appendPlainText(iprocessLeft->statusMessage);
             iprocessLeft->constructHoughMatrix();
             iprocessLeft->getImage(iprocessLeft->houghMatrix, iprocessLeft->edgeWidth, iprocessLeft->edgeHeight)->save("_leftHough.jpg");
+        iprocessLeft->saveMatrix(iprocessLeft->houghLines, 3, iprocessLeft->houghLineNo, "_leftLines.csv");
 
         for (int i=0;i<iprocessLeft->voidSpace.size();i++){
             QString message = QString::number(iprocessLeft->voidSpace[i]->start.x()) + ", " +
@@ -547,9 +550,9 @@ void MainWindow::analyzeButton(){
                       QString::number(iprocessLeft->voidSpace[i]->length);
             ui->plainTextEdit->appendPlainText(message);
         }
-            iprocessRight->imgOrginal.save("_right.jpg");
-            iprocessRight->imgMono.save("_rightMono.jpg");
-            iprocessRight->getImage(iprocessRight->edgeMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight)->save("_rightEdge.jpg");
+            //iprocessRight->imgOrginal.save("_right.jpg");
+            //iprocessRight->imgMono.save("_rightMono.jpg");
+            //iprocessRight->getImage(iprocessRight->edgeMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight)->save("_rightEdge.jpg");
 
             ui->plainTextEdit->appendPlainText(iprocessRight->statusMessage);
             iprocessRight->constructHoughMatrix();
@@ -563,7 +566,7 @@ void MainWindow::analyzeButton(){
                       QString::number(iprocessRight->voidSpace[i]->length);
             ui->plainTextEdit->appendPlainText(message);
         }
-
+        iprocessRight->saveMatrix(iprocessRight->houghLines, 3, iprocessRight->houghLineNo, "_rightLines.csv");
 //            iprocessLeft->saveMatrix(iprocessLeft->valueMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight, "_leftValuMat.csv");
 
 
