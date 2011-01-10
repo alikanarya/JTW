@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'settingsform.ui'
 **
-** Created: Sun Jan 2 12:30:02 2011
+** Created: Mon 10. Jan 17:11:49 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -53,6 +53,9 @@ public:
     QSlider *targetSlider;
     QLabel *label_5;
     QLabel *labelTarget;
+    QLabel *label_6;
+    QLabel *labelTargetVert;
+    QSlider *targetVertSlider;
     QButtonGroup *radioGroup;
 
     void setupUi(QWidget *settingsForm)
@@ -178,7 +181,7 @@ public:
         table->horizontalHeader()->setDefaultSectionSize(200);
         table->horizontalHeader()->setHighlightSections(true);
         table->horizontalHeader()->setMinimumSectionSize(200);
-        table->verticalHeader()->setVisible(true);
+        table->verticalHeader()->setVisible(false);
         table->verticalHeader()->setCascadingSectionResizes(false);
         table->verticalHeader()->setDefaultSectionSize(25);
         table->verticalHeader()->setHighlightSections(true);
@@ -273,13 +276,30 @@ public:
         targetSlider->setOrientation(Qt::Horizontal);
         label_5 = new QLabel(settingsForm);
         label_5->setObjectName(QString::fromUtf8("label_5"));
-        label_5->setGeometry(QRect(10, 53, 111, 16));
+        label_5->setGeometry(QRect(10, 53, 91, 16));
         label_5->setFont(font);
         labelTarget = new QLabel(settingsForm);
         labelTarget->setObjectName(QString::fromUtf8("labelTarget"));
         labelTarget->setGeometry(QRect(110, 53, 30, 16));
         labelTarget->setFont(font1);
         labelTarget->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
+        label_6 = new QLabel(settingsForm);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+        label_6->setGeometry(QRect(10, 83, 91, 16));
+        label_6->setFont(font);
+        labelTargetVert = new QLabel(settingsForm);
+        labelTargetVert->setObjectName(QString::fromUtf8("labelTargetVert"));
+        labelTargetVert->setGeometry(QRect(110, 83, 30, 16));
+        labelTargetVert->setFont(font1);
+        labelTargetVert->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
+        targetVertSlider = new QSlider(settingsForm);
+        targetVertSlider->setObjectName(QString::fromUtf8("targetVertSlider"));
+        targetVertSlider->setGeometry(QRect(152, 80, 240, 25));
+        targetVertSlider->setMinimum(100);
+        targetVertSlider->setMaximum(320);
+        targetVertSlider->setSingleStep(2);
+        targetVertSlider->setPageStep(5);
+        targetVertSlider->setOrientation(Qt::Horizontal);
 
         retranslateUi(settingsForm);
         QObject::connect(setupButton, SIGNAL(clicked()), settingsForm, SLOT(showSetupForm()));
@@ -293,6 +313,7 @@ public:
         QObject::connect(radio300, SIGNAL(clicked()), settingsForm, SLOT(changePLCtype()));
         QObject::connect(editControlDelay, SIGNAL(returnPressed()), settingsForm, SLOT(getControlDelay()));
         QObject::connect(targetSlider, SIGNAL(sliderMoved(int)), settingsForm, SLOT(targetSlider()));
+        QObject::connect(targetVertSlider, SIGNAL(sliderMoved(int)), settingsForm, SLOT(targetVertSlider()));
 
         QMetaObject::connectSlotsByName(settingsForm);
     } // setupUi
@@ -356,8 +377,10 @@ public:
         editControlDelay->setInputMask(QString());
         editControlDelay->setText(QString());
         label_4->setText(QApplication::translate("settingsForm", "Kontrol Gecikmesi", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("settingsForm", "Hedef B\303\266lge", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("settingsForm", "Hedef Yatay", 0, QApplication::UnicodeUTF8));
         labelTarget->setText(QApplication::translate("settingsForm", "100", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("settingsForm", "Hedef Dikey", 0, QApplication::UnicodeUTF8));
+        labelTargetVert->setText(QApplication::translate("settingsForm", "100", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

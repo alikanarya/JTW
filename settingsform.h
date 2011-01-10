@@ -41,7 +41,8 @@ public slots:
     void checkPLConBoot();      // is plc be connected on app. start
     void checkCamonBoot();      // is camara be played on app. start
     void saveExit();            // commit changes & restart app.
-    void targetSlider();
+    void targetSlider();        // target area horizontal size adjustment
+    void targetVertSlider();    // target area vertical size adjustment
 
 private:
     Ui::settingsForm *ui;

@@ -61,8 +61,19 @@ void settingsForm::errorLimitSlider(){
 
 void settingsForm::targetSlider(){
     int pos = ui->targetSlider->sliderPosition();
+
     if (pos % 2 == 0) w->frameWidth = pos;
+
     ui->labelTarget->setText(QString::number(w->frameWidth));
+    w->repaintGuide();
+}
+
+void settingsForm::targetVertSlider(){
+    int pos = ui->targetVertSlider->sliderPosition();
+
+    if (pos % 2 == 0) w->frameHeight = pos;
+
+    ui->labelTargetVert->setText(QString::number(w->frameHeight));
     w->repaintGuide();
 }
 
@@ -72,6 +83,9 @@ void settingsForm::getParameters(){
 
     ui->labelTarget->setText(QString::number(w->frameWidth));
     ui->targetSlider->setSliderPosition(w->frameWidth);
+
+    ui->labelTargetVert->setText(QString::number(w->frameHeight));
+    ui->targetVertSlider->setSliderPosition(w->frameHeight);
 
     ui->labelyRes->setText(QString::number(w->yRes));
     ui->yResIndexSlider->setSliderPosition(w->yResIndex);

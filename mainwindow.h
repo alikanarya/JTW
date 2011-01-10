@@ -7,6 +7,7 @@
 #define _FPS                25
 #define _IPROCESS_INT       1
 #define _FRAME_WIDTH        320
+#define _FRAME_HEIGHT       100
 #define _THETA_MIN          80
 #define _THETA_MAX          100
 #define _THETA_STEP         1.0

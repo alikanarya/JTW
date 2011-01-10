@@ -237,7 +237,7 @@
     <number>200</number>
    </attribute>
    <attribute name="verticalHeaderVisible">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <attribute name="verticalHeaderCascadingSectionResizes">
     <bool>false</bool>
@@ -736,7 +736,7 @@ background-color: rgb(255, 0, 0);</string>
     <rect>
      <x>10</x>
      <y>53</y>
-     <width>111</width>
+     <width>91</width>
      <height>16</height>
     </rect>
    </property>
@@ -749,7 +749,7 @@ background-color: rgb(255, 0, 0);</string>
     </font>
    </property>
    <property name="text">
-    <string>Hedef Bölge</string>
+    <string>Hedef Yatay</string>
    </property>
   </widget>
   <widget class="QLabel" name="labelTarget">
@@ -773,6 +773,75 @@ background-color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string>100</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>83</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Hedef Dikey</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelTargetVert">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>83</y>
+     <width>30</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
+   </property>
+   <property name="text">
+    <string>100</string>
+   </property>
+  </widget>
+  <widget class="QSlider" name="targetVertSlider">
+   <property name="geometry">
+    <rect>
+     <x>152</x>
+     <y>80</y>
+     <width>240</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>100</number>
+   </property>
+   <property name="maximum">
+    <number>320</number>
+   </property>
+   <property name="singleStep">
+    <number>2</number>
+   </property>
+   <property name="pageStep">
+    <number>5</number>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
    </property>
   </widget>
  </widget>
@@ -956,6 +1025,22 @@ background-color: rgb(255, 0, 0);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>targetVertSlider</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>settingsForm</receiver>
+   <slot>targetVertSlider()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>189</x>
+     <y>92</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>143</x>
+     <y>86</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showSetupForm()</slot>
@@ -968,6 +1053,7 @@ background-color: rgb(255, 0, 0);</string>
   <slot>changePLCtype()</slot>
   <slot>getControlDelay()</slot>
   <slot>targetSlider()</slot>
+  <slot>targetVertSlider()</slot>
  </slots>
  <buttongroups>
   <buttongroup name="radioGroup"/>

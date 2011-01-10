@@ -45,7 +45,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     imageHeight = 480;  //image->height();
     frameHeight = 100;
     //offsetX = (imageWidth - frameWidth)/2;
-    offsetY = (imageHeight - frameHeight)/2;
+    //offsetY = (imageHeight - frameHeight)/2;
 
     imageFrameRect = ui->imageFrame->geometry();
     guideFrameRect = ui->guideFrame->geometry();
@@ -828,13 +828,37 @@ void MainWindow::drawTrack(){
 
 void MainWindow::repaintGuide(){
     // update & show/hide guide
+    ui->guideFrame->setEnabled(false);
 
     offsetX = (imageWidth - frameWidth)/2;
+    offsetY = (imageHeight - frameHeight)/2;
 
     guideFrameRect.setX(imageFrameRect.x() + offsetX);
     guideFrameRect.setWidth(frameWidth + 4);
     ui->guideFrame->setGeometry(guideFrameRect);
 
+    ui->guideLineVert->setGeometry(frameWidth/2 + 1, gfLineVerRect.y(), gfLineVerRect.width(), gfLineVerRect.height());
+    centerX = ui->guideLineVert->x();   // x coor. of center vert. guide line
+
+    gfTolLeftRect.setX(centerX - errorLimit + 1);
+    gfTolLeftRect.setY(offsetY);
+    gfTolLeftRect.setHeight(frameHeight);
+    ui->guideTolLeft->setGeometry(gfTolLeftRect);
+
+    gfTolRightRect.setX(centerX + errorLimit);
+    gfTolRightRect.setY(offsetY);
+    gfTolRightRect.setHeight(frameHeight);
+    ui->guideTolRight->setGeometry(gfTolRightRect);
+
+    gfBoxRect.setY(offsetY);
+    gfBoxRect.setWidth(frameWidth + 4);     // 4: total line edges thickness
+    gfBoxRect.setHeight(frameHeight + 4);   // 4: total line edges thickness
+    ui->frame->setGeometry(gfBoxRect);
+
+    gfLineHorRect.setWidth(frameWidth);
+    ui->guideLineHorz->setGeometry(gfLineHorRect);
+
+/*
     ui->guideLineVert->setGeometry(frameWidth/2 + 1, gfLineVerRect.y(), gfLineVerRect.width(), gfLineVerRect.height());
     centerX = ui->guideLineVert->x();   // x coor. of center vert. guide line
 
@@ -847,6 +871,8 @@ void MainWindow::repaintGuide(){
 
     gfLineHorRect.setWidth(frameWidth);
     ui->guideLineHorz->setGeometry(gfLineHorRect);
+*/
+    ui->guideFrame->setEnabled(true);
 
     ui->guideFrame->setVisible(showGuide);
 
