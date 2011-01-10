@@ -3,14 +3,19 @@
 
 #define INIFILENAME         "settings.ini"
 #define _URL_CAM            "http://10.0.0.5/snap.jpg"
-#define _URL_PLC            "10.0.0.4"
+#define _URL_PLC            "10.0.1.4"
+#define _FPS                25
+#define _IPROCESS_INT       1
 #define _FRAME_WIDTH        320
 #define _THETA_MIN          80
 #define _THETA_MAX          100
 #define _THETA_STEP         1.0
+#define _THETA_MIN_SUB      80
+#define _THETA_MAX_SUB      100
+#define _THETA_STEP_SUB     0.5
 #define _HOUGH_LINE_NO      5
-#define _VOTE_THRESHOLD     150
-#define _VOID_THRESHOLD     30
+#define _VOTE_THRESHOLD     10
+#define _VOID_THRESHOLD     10
 #define _PLC_TYPE           1
 #define _DB_NO              1
 #define _RIGHT_VMEM_BYTE    0
@@ -21,10 +26,11 @@
 #define _STOP_BITofBYTE     2
 #define _EMRGENCY_VMEM_BYTE 0
 #define _EMRGENCY_BITofBYTE 3
-#define _ERROR_LIMIT        10
+#define _ERROR_LIMIT        5
 #define _YRES_ARRAY_INDEX   8
-#define _PLC_CONN_ONBOOT    false
-#define _PLAY_CAM_ONBOOT    false
+#define _PLC_CONN_ONBOOT    true
+#define _PLAY_CAM_ONBOOT    true
+#define _SUB_IPROCESS       true
 #define _CONTROL_DELAY      0
 
 #define _PWD_SETTINGS       "nokts"
@@ -138,8 +144,11 @@ public:
     // image processing parameters
     imgProcess *iprocess;               // image processing object
     QImage targetArea;                  // target area image
+    int iprocessInterval;
     int thetaMin, thetaMax;
     float thetaStep;
+    int thetaMinSub, thetaMaxSub;
+    float thetaStepSub;
     int houghLineNo;
     int voteThreshold, voidThreshold;
     int errorLimit;                     // deviation from center in pixels

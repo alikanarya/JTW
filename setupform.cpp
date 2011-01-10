@@ -43,6 +43,15 @@ void setupForm::captureButton(){
             thetaStep = 0.1;
             ui->editHoughThetaStep->setText("0.1");
         }
+
+        thetaMinSub = ui->editHoughThetaMinSub->text().toInt();
+        thetaMaxSub = ui->editHoughThetaMaxSub->text().toInt();
+        thetaStepSub = ui->editHoughThetaStepSub->text().toFloat();
+        if (thetaStepSub < 0.1){
+            thetaStepSub = 0.1;
+            ui->editHoughThetaStepSub->setText("0.1");
+        }
+
         houghLineNo = ui->editHoughLineNo->text().toInt();
         if (houghLineNo == 0){
             houghLineNo = 2;
@@ -53,9 +62,8 @@ void setupForm::captureButton(){
 
         captureTimeStr = QTime::currentTime().toString("hhmmss_");                                  // for filename
 
-        // START IMAGE PROCESSING
         startTime = w->timeSystem.getSystemTimeMsec();
-
+        // START IMAGE PROCESSING
         target = w->lastData->image->copy(w->offsetX,w->offsetY,w->frameWidth,w->frameHeight);      // take target image
 
         iprocess = new imgProcess(target, target.width(),target.height());                          // new imgProcess object
@@ -69,18 +77,84 @@ void setupForm::captureButton(){
         iprocess->houghTransform();                                                                 // detect lines in edge image
 
         iprocess->calculateHoughMaxs(houghLineNo);                                                  // get max voted line(s)
+        iprocess->calcAvgDistAndAngle(houghLineNo);
         voteAvg = iprocess->calcVoteAvg();                                                          // ave value of max voted line(s)
 
         iprocess->voteThreshold = voteThreshold;                                                    // acceptable vote value low-limit
         if (!iprocess->checkPrimaryLine())                                                          // is max voted line  above the low-limit?
             ui->labelPrimaryLine->show();
-
         iprocess->detectVoidLines();                                                                // detect void lines on hough lines in mono image
+
         iprocess->voidThreshold = voidThreshold;                                                    // void threshold to decide max void as primary
         iprocess->detectPrimaryVoid();                                                              // decide primary void line & corners/center
 
-        endTime = w->timeSystem.getSystemTimeMsec();
+        if (w->subImageProcessingSwitch && iprocess->detected) {
+            int tStartX = 0;
+            int tCenterX = iprocess->trackCenterX;
+            int tEndX = w->frameWidth - 1;
+
+            QImage targetLeft = target.copy(tStartX, 0, tCenterX - tStartX, w->frameHeight);
+            QImage targetRight = target.copy(tCenterX, 0, tEndX + 1 - tCenterX, w->frameHeight);
+
+            // left image process
+            imgProcess *iprocessLeft = new imgProcess(targetLeft, targetLeft.width(), targetLeft.height()); // new imgProcess object
+            iprocessLeft->toMono();                                     // convert target to mono
+            iprocessLeft->constructValueMatrix(iprocessLeft->imgMono);  // construct mono matrix
+            iprocessLeft->detectEdgeSobel();                            // detect edges of the mono image
+
+            iprocessLeft->thetaMin = thetaMinSub;
+            iprocessLeft->thetaMax = thetaMaxSub;
+            iprocessLeft->thetaStep = thetaStepSub;
+            iprocessLeft->houghTransform();                             // detect lines in edge image
+
+            iprocessLeft->calculateHoughMaxs(50);                       // get max voted line(s)
+            iprocessLeft->calcAvgDistAndAngleOfMajors();
+
+            iprocessLeft->primaryLineDetected = true;                  // bypass line vote check
+            iprocessLeft->detectVoidLinesEdge();                       // detect void lines on hough lines in edge image
+
+            iprocessLeft->voidThreshold = 0;                           // bypass void length check
+            iprocessLeft->errorEdgeLimit = 0;                          // bypass corner void check
+            iprocessLeft->angleAvg = 0;                                // bypass angle value check
+            iprocessLeft->detectPrimaryVoid();                         // decide primary void line & corners/center
+
+            // right image process
+            imgProcess *iprocessRight = new imgProcess(targetRight, targetRight.width(), targetRight.height()); // new imgProcess object
+            iprocessRight->toMono();                                    // convert target to mono
+            iprocessRight->constructValueMatrix(iprocessRight->imgMono);// construct mono matrix
+            iprocessRight->detectEdgeSobel();                           // detect edges of the mono image
+
+            iprocessRight->thetaMin = thetaMinSub;
+            iprocessRight->thetaMax = thetaMaxSub;
+            iprocessRight->thetaStep = thetaStepSub;
+            iprocessRight->houghTransform();                            // detect lines in edge image
+
+            iprocessRight->calculateHoughMaxs(50);                       // get max voted line(s)
+            iprocessRight->calcAvgDistAndAngleOfMajors();
+
+            iprocessRight->primaryLineDetected = true;                  // bypass line vote check
+            iprocessRight->detectVoidLinesEdge();                       // detect void lines on hough lines in edge image
+
+            iprocessRight->voidThreshold = 0;                           // bypass void length check
+            iprocessRight->errorEdgeLimit = 0;                          // bypass corner void check
+            iprocessRight->angleAvg = 0;                                // bypass angle value check
+            iprocessRight->detectPrimaryVoid();                         // decide primary void line & corners/center
+
+
+            if (iprocessLeft->detected && iprocessRight->detected){
+                iprocess->leftCornerX = tStartX + iprocessLeft->rightMostCornerX;
+                iprocess->leftCornerY = iprocessLeft->rightMostCornerY;
+                iprocess->rightCornerX = tCenterX + iprocessRight->leftMostCornerX;
+                iprocess->rightCornerY = iprocessRight->leftMostCornerY;
+                iprocess->trackCenterX = (iprocess->leftCornerX + iprocess->rightCornerX) / 2;
+                iprocess->trackCenterY = (iprocess->leftCornerY + iprocess->rightCornerY) / 2;
+            }
+
+            delete iprocessLeft;
+            delete iprocessRight;
+        }
         // END IMAGE PROCESSING
+        endTime = w->timeSystem.getSystemTimeMsec();
 
         processElapsed = endTime - startTime;
 
@@ -188,6 +262,12 @@ void setupForm::getParameters(){
     thetaMin = w->thetaMin;
     thetaMax = w->thetaMax;
     thetaStep = w->thetaStep;
+
+    ui->checkSubImage->setChecked(w->subImageProcessingSwitch);
+    thetaMinSub = w->thetaMinSub;
+    thetaMaxSub = w->thetaMaxSub;
+    thetaStepSub = w->thetaStepSub;
+
     houghLineNo = w->houghLineNo;
     voteThreshold = w->voteThreshold;
     voidThreshold = w->voidThreshold;
@@ -195,22 +275,49 @@ void setupForm::getParameters(){
     ui->editHoughThetaMin->setText(QString::number(thetaMin));
     ui->editHoughThetaMax->setText(QString::number(thetaMax));
     ui->editHoughThetaStep->setText(QString::number(thetaStep));
+
+    ui->editHoughThetaMinSub->setText(QString::number(thetaMinSub));
+    ui->editHoughThetaMaxSub->setText(QString::number(thetaMaxSub));
+    ui->editHoughThetaStepSub->setText(QString::number(thetaStepSub));
+    ui->editHoughThetaMinSub->setEnabled(w->subImageProcessingSwitch);
+    ui->editHoughThetaMaxSub->setEnabled(w->subImageProcessingSwitch);
+    ui->editHoughThetaStepSub->setEnabled(w->subImageProcessingSwitch);
+
     ui->editHoughLineNo->setText(QString::number(houghLineNo));
     ui->editHoughThreshold->setText(QString::number(voteThreshold));
     ui->editVoidThreshold->setText(QString::number(voidThreshold));
+
+    ui->editFPS->setText(QString::number(w->fpsTarget));
+    ui->editIPI->setText(QString::number(w->iprocessInterval));
 }
 
 void setupForm::clearButton(){
     ui->plainTextEdit->clear();
 }
 
+void setupForm::subImageCheck(){
+    w->subImageProcessingSwitch = ui->checkSubImage->isChecked();
+    ui->editHoughThetaMinSub->setEnabled(ui->checkSubImage->isChecked());
+    ui->editHoughThetaMaxSub->setEnabled(ui->checkSubImage->isChecked());
+    ui->editHoughThetaStepSub->setEnabled(ui->checkSubImage->isChecked());
+}
+
 void setupForm::saveExitButton(){
     w->thetaMin = thetaMin = ui->editHoughThetaMin->text().toInt();;
     w->thetaMax = thetaMax = ui->editHoughThetaMax->text().toInt();
     w->thetaStep = thetaStep = ui->editHoughThetaStep->text().toFloat();
+
+    w->thetaMinSub = thetaMinSub = ui->editHoughThetaMinSub->text().toInt();;
+    w->thetaMaxSub = thetaMaxSub = ui->editHoughThetaMaxSub->text().toInt();
+    w->thetaStepSub = thetaStepSub = ui->editHoughThetaStepSub->text().toFloat();
+
     w->houghLineNo = houghLineNo = ui->editHoughLineNo->text().toInt();
     w->voteThreshold = voteThreshold = ui->editHoughThreshold->text().toInt();
     w->voidThreshold = voidThreshold = ui->editVoidThreshold->text().toInt();
+
+    w->fpsTarget = ui->editFPS->text().toInt();
+    w->frameInterval = 1000 / w->fpsTarget;
+    w->iprocessInterval = ui->editIPI->text().toInt();
 
     this->close();
 }

@@ -67,7 +67,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     play = playCamonBoot;
     if (play) playButton();
     pause = false;
-    fpsTarget = 25;
     fpsRequest = 0;
     fpsReal = 0;
     frameInterval = 1000 / fpsTarget;
@@ -466,9 +465,7 @@ void MainWindow::analyzeButton(){
         iprocess->calcAngleAvg();                                                           // ave angle value of max voted line(s)
         iprocess->detectPrimaryVoid();                                                      // decide primary void line & corners/center
 
-        //ui->plainTextEdit->appendPlainText("dis: "+QString::number(iprocess->distanceAvg)+" angle: "+QString::number(iprocess->thetaAvg));
-//---------------
-        subImageProcessingSwitch = true;
+        //----- Sub Image Processing
         if (subImageProcessingSwitch && iprocess->detected) {
             int tStartX = 0;
             int tCenterX = iprocess->trackCenterX;
@@ -483,9 +480,9 @@ void MainWindow::analyzeButton(){
             iprocessLeft->constructValueMatrix(iprocessLeft->imgMono);  // construct mono matrix
             iprocessLeft->detectEdgeSobel();                            // detect edges of the mono image
 
-            iprocessLeft->thetaMin = 80;
-            iprocessLeft->thetaMax = 100;
-            iprocessLeft->thetaStep = 0.5;
+            iprocessLeft->thetaMin = thetaMinSub;
+            iprocessLeft->thetaMax = thetaMaxSub;
+            iprocessLeft->thetaStep = thetaStepSub;
             iprocessLeft->houghTransform();                             // detect lines in edge image
 
             iprocessLeft->calculateHoughMaxs(50);                       // get max voted line(s)
@@ -505,9 +502,9 @@ void MainWindow::analyzeButton(){
             iprocessRight->constructValueMatrix(iprocessRight->imgMono);// construct mono matrix
             iprocessRight->detectEdgeSobel();                           // detect edges of the mono image
 
-            iprocessRight->thetaMin = 80;
-            iprocessRight->thetaMax = 100;
-            iprocessRight->thetaStep = 0.5;
+            iprocessRight->thetaMin = thetaMinSub;
+            iprocessRight->thetaMax = thetaMaxSub;
+            iprocessRight->thetaStep = thetaStepSub;
             iprocessRight->houghTransform();                            // detect lines in edge image
 
             iprocessRight->calculateHoughMaxs(50);                       // get max voted line(s)
@@ -521,47 +518,24 @@ void MainWindow::analyzeButton(){
             iprocessRight->angleAvg = 0;                                // bypass angle value check
             iprocessRight->detectPrimaryVoid();                         // decide primary void line & corners/center
 
-/*
+            /*
             ui->plainTextEdit->appendPlainText(iprocessLeft->statusMessage);
             //ui->plainTextEdit->appendPlainText("index: "+QString::number(iprocessLeft->secondLineIndex));
             iprocessLeft->constructHoughMatrixAvgLine();
             iprocessLeft->getImage(iprocessLeft->houghMatrix, iprocessLeft->edgeWidth, iprocessLeft->edgeHeight)->save("_leftHough.jpg");
-        iprocessLeft->saveMatrix(iprocessLeft->houghLines, 3, iprocessLeft->houghLineNo, "_leftLines.csv");
-        iprocessLeft->saveList(iprocessLeft->highLinesList,"_leftHi.csv");
-        iprocessLeft->saveList(iprocessLeft->lowLinesList,"_leftLo.csv");
-        */
-/*
-        for (int i=0;i<iprocessLeft->voidSpace.size();i++){
-            QString message = QString::number(iprocessLeft->voidSpace[i]->start.x()) + ", " +
+            iprocessLeft->saveMatrix(iprocessLeft->houghLines, 3, iprocessLeft->houghLineNo, "_leftLines.csv");
+            iprocessLeft->saveList(iprocessLeft->highLinesList,"_leftHi.csv");
+            iprocessLeft->saveList(iprocessLeft->lowLinesList,"_leftLo.csv");
+
+            for (int i=0;i<iprocessLeft->voidSpace.size();i++){
+                QString message = QString::number(iprocessLeft->voidSpace[i]->start.x()) + ", " +
                       QString::number(iprocessLeft->voidSpace[i]->start.y()) + ", " +
                       QString::number(iprocessLeft->voidSpace[i]->end.x()) + ", " +
                       QString::number(iprocessLeft->voidSpace[i]->end.y()) + ", " +
                       QString::number(iprocessLeft->voidSpace[i]->length);
-            ui->plainTextEdit->appendPlainText(message);
-        }
-*/
-        /*
-            ui->plainTextEdit->appendPlainText(iprocessRight->statusMessage);
-            //ui->plainTextEdit->appendPlainText("index: "+QString::number(iprocessRight->secondLineIndex));
-            iprocessRight->constructHoughMatrixAvgLine();
-            iprocessRight->getImage(iprocessRight->houghMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight)->save("_rightHough.jpg");
-            iprocessRight->saveMatrix(iprocessRight->houghLines, 3, iprocessRight->houghLineNo, "_rightLines.csv");
-            iprocessRight->saveList(iprocessRight->highLinesList,"_rightHi.csv");
-            iprocessRight->saveList(iprocessRight->lowLinesList,"_rightLo.csv");
+                ui->plainTextEdit->appendPlainText(message);
+            }
             */
-        /*
-        for (int i=0;i<iprocessRight->voidSpace.size();i++){
-            QString message = QString::number(iprocessRight->voidSpace[i]->start.x()) + ", " +
-                      QString::number(iprocessRight->voidSpace[i]->start.y()) + ", " +
-                      QString::number(iprocessRight->voidSpace[i]->end.x()) + ", " +
-                      QString::number(iprocessRight->voidSpace[i]->end.y()) + ", " +
-                      QString::number(iprocessRight->voidSpace[i]->length);
-            ui->plainTextEdit->appendPlainText(message);
-        }
-        */
-
-
-//---------------
 
             if (iprocessLeft->detected && iprocessRight->detected){
                 iprocess->leftCornerX = tStartX + iprocessLeft->rightMostCornerX;
@@ -575,7 +549,7 @@ void MainWindow::analyzeButton(){
             delete iprocessLeft;
             delete iprocessRight;
         }
-//---------------
+        //----- Sub Image Processing End
 
         // END IMAGE PROCESSING
         int endTime = timeSystem.getSystemTimeMsec();
@@ -687,14 +661,81 @@ void MainWindow::processImage(){
     iprocess->houghTransform();                                                         // detect lines in edge image
 
     iprocess->calculateHoughMaxs(houghLineNo);                                          // get max voted line(s)
-    iprocess->calcVoteAvg();                                                            // ave value of max voted line(s)
+    iprocess->calcAvgDistAndAngle(houghLineNo);
 
     iprocess->voteThreshold = voteThreshold;                                            // acceptable vote value low-limit
     iprocess->checkPrimaryLine();                                                       // is max voted line  above the low-limit?
-
     iprocess->detectVoidLines();                                                        // detect void lines on hough lines in mono image
+
     iprocess->voidThreshold = voidThreshold;                                            // void threshold to decide max void as primary
     iprocess->detectPrimaryVoid();                                                      // decide primary void line & corners/center
+
+    //----- Sub Image Processing
+    if (subImageProcessingSwitch && iprocess->detected) {
+        int tStartX = 0;
+        int tCenterX = iprocess->trackCenterX;
+        int tEndX = frameWidth - 1;
+
+        QImage targetLeft = targetArea.copy(tStartX, 0, tCenterX - tStartX, frameHeight);
+        QImage targetRight = targetArea.copy(tCenterX, 0, tEndX + 1 - tCenterX, frameHeight);
+
+        // left image process
+        imgProcess *iprocessLeft = new imgProcess(targetLeft, targetLeft.width(), targetLeft.height()); // new imgProcess object
+        iprocessLeft->toMono();                                     // convert target to mono
+        iprocessLeft->constructValueMatrix(iprocessLeft->imgMono);  // construct mono matrix
+        iprocessLeft->detectEdgeSobel();                            // detect edges of the mono image
+
+        iprocessLeft->thetaMin = thetaMinSub;
+        iprocessLeft->thetaMax = thetaMaxSub;
+        iprocessLeft->thetaStep = thetaStepSub;
+        iprocessLeft->houghTransform();                             // detect lines in edge image
+
+        iprocessLeft->calculateHoughMaxs(50);                       // get max voted line(s)
+        iprocessLeft->calcAvgDistAndAngleOfMajors();
+
+        iprocessLeft->primaryLineDetected = true;                  // bypass line vote check
+        iprocessLeft->detectVoidLinesEdge();                       // detect void lines on hough lines in edge image
+
+        iprocessLeft->voidThreshold = 0;                           // bypass void length check
+        iprocessLeft->errorEdgeLimit = 0;                          // bypass corner void check
+        iprocessLeft->angleAvg = 0;                                // bypass angle value check
+        iprocessLeft->detectPrimaryVoid();                         // decide primary void line & corners/center
+
+        // right image process
+        imgProcess *iprocessRight = new imgProcess(targetRight, targetRight.width(), targetRight.height()); // new imgProcess object
+        iprocessRight->toMono();                                    // convert target to mono
+        iprocessRight->constructValueMatrix(iprocessRight->imgMono);// construct mono matrix
+        iprocessRight->detectEdgeSobel();                           // detect edges of the mono image
+
+        iprocessRight->thetaMin = thetaMinSub;
+        iprocessRight->thetaMax = thetaMaxSub;
+        iprocessRight->thetaStep = thetaStepSub;
+        iprocessRight->houghTransform();                            // detect lines in edge image
+
+        iprocessRight->calculateHoughMaxs(50);                       // get max voted line(s)
+        iprocessRight->calcAvgDistAndAngleOfMajors();
+
+        iprocessRight->primaryLineDetected = true;                  // bypass line vote check
+        iprocessRight->detectVoidLinesEdge();                       // detect void lines on hough lines in edge image
+
+        iprocessRight->voidThreshold = 0;                           // bypass void length check
+        iprocessRight->errorEdgeLimit = 0;                          // bypass corner void check
+        iprocessRight->angleAvg = 0;                                // bypass angle value check
+        iprocessRight->detectPrimaryVoid();                         // decide primary void line & corners/center
+
+        if (iprocessLeft->detected && iprocessRight->detected){
+            iprocess->leftCornerX = tStartX + iprocessLeft->rightMostCornerX;
+            iprocess->leftCornerY = iprocessLeft->rightMostCornerY;
+            iprocess->rightCornerX = tCenterX + iprocessRight->leftMostCornerX;
+            iprocess->rightCornerY = iprocessRight->leftMostCornerY;
+            iprocess->trackCenterX = (iprocess->leftCornerX + iprocess->rightCornerX) / 2;
+            iprocess->trackCenterY = (iprocess->leftCornerY + iprocess->rightCornerY) / 2;
+        }
+
+        delete iprocessLeft;
+        delete iprocessRight;
+    }
+    //----- Sub Image Processing End
     // END IMAGE PROCESSING
 
     // if center of track is not an error, append dev. to trend data list OR append error code to list
@@ -890,6 +931,7 @@ void MainWindow::readSettings(){
         settings->beginGroup("kamera");
             urlCam.setUrl(settings->value("urlCam", _URL_CAM).toString());
             playCamonBoot = settings->value("play", _PLAY_CAM_ONBOOT).toBool();
+            fpsTarget = settings->value("fps", _FPS).toInt();
         settings->endGroup();
 
         settings->beginGroup("plc");
@@ -909,10 +951,15 @@ void MainWindow::readSettings(){
         settings->endGroup();
 
         settings->beginGroup("ipro");
+            iprocessInterval = settings->value("ipi", _IPROCESS_INT).toInt();
             frameWidth = settings->value("frw", _FRAME_WIDTH).toInt();
             thetaMin = settings->value("tmn", _THETA_MIN).toInt();
             thetaMax = settings->value("tmx", _THETA_MAX).toInt();
             thetaStep = settings->value("tst", _THETA_STEP).toFloat();
+            subImageProcessingSwitch = settings->value("subi", _SUB_IPROCESS).toBool();
+            thetaMinSub = settings->value("tmns", _THETA_MIN_SUB).toInt();
+            thetaMaxSub = settings->value("tmxs", _THETA_MAX_SUB).toInt();
+            thetaStepSub = settings->value("tsts", _THETA_STEP_SUB).toFloat();
             houghLineNo = settings->value("hln", _HOUGH_LINE_NO).toInt();
             voteThreshold = settings->value("vth", _VOTE_THRESHOLD).toInt();
             voidThreshold = settings->value("vdth", _VOID_THRESHOLD).toInt();
@@ -927,6 +974,7 @@ void MainWindow::readSettings(){
     } else {    // assign default values if file not exist
         urlCam.setUrl(_URL_CAM);
         playCamonBoot = _PLAY_CAM_ONBOOT;
+        fpsTarget = _FPS;
 
         urlPLC.setUrl(_URL_PLC);
         plcType = _PLC_TYPE;
@@ -942,10 +990,15 @@ void MainWindow::readSettings(){
         connectRequestedonBoot = _PLC_CONN_ONBOOT;
         controlDelay = _CONTROL_DELAY;
 
+        iprocessInterval = _IPROCESS_INT;
         frameWidth = _FRAME_WIDTH;
         thetaMin = _THETA_MIN;
         thetaMax = _THETA_MAX;
         thetaStep = _THETA_STEP;
+        subImageProcessingSwitch = _SUB_IPROCESS;
+        thetaMinSub = _THETA_MIN_SUB;
+        thetaMaxSub = _THETA_MAX_SUB;
+        thetaStepSub = _THETA_STEP_SUB;
         houghLineNo = _HOUGH_LINE_NO;
         voteThreshold = _VOTE_THRESHOLD;
         voidThreshold = _VOID_THRESHOLD;
@@ -962,7 +1015,8 @@ void MainWindow::writeSettings(){
     settings->beginGroup("kamera");
         settings->setValue("urlCam", urlCam.toString());
         QVariant play(playCamonBoot);
-        settings->setValue("play", play.toString());
+            settings->setValue("play", play.toString());
+        settings->setValue("fps", QString::number(fpsTarget));
     settings->endGroup();
 
     settings->beginGroup("plc");
@@ -983,10 +1037,16 @@ void MainWindow::writeSettings(){
     settings->endGroup();
 
     settings->beginGroup("ipro");
+        settings->setValue("ipi", QString::number(iprocessInterval));
         settings->setValue("frw", QString::number(frameWidth));
         settings->setValue("tmn", QString::number(thetaMin));
         settings->setValue("tmx", QString::number(thetaMax));
         settings->setValue("tst", QString::number(thetaStep));
+        QVariant subimagesw(subImageProcessingSwitch);
+            settings->setValue("subi", subimagesw.toString());
+        settings->setValue("tmns", QString::number(thetaMinSub));
+        settings->setValue("tmxs", QString::number(thetaMaxSub));
+        settings->setValue("tsts", QString::number(thetaStepSub));
         settings->setValue("hln", QString::number(houghLineNo));
         settings->setValue("vth", QString::number(voteThreshold));
         settings->setValue("vdth", QString::number(voidThreshold));
@@ -1061,7 +1121,7 @@ void MainWindow::playCam(){
                 timeDelayTotal += timeDelay;  // overall delay
 
                 // if joint is tracked for some???? interval
-                if (trackOn && (fpsReal % 1) == 0 ){
+                if (trackOn && (fpsReal % iprocessInterval) == 0 ){
                     processImage();  // detect deviation
 
                     if (deviationData.size() >= 2) drawTrack();   // draw deviation trend

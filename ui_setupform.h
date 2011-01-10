@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'setupform.ui'
 **
-** Created: Sun Jan 2 12:30:02 2011
+** Created: Mon Jan 10 02:15:22 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -15,6 +15,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
+#include <QtGui/QFrame>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -66,20 +67,34 @@ public:
     QPushButton *saveExitButton;
     QPushButton *exitButton;
     QPushButton *clearButton;
+    QCheckBox *checkSubImage;
+    QLabel *label_11;
+    QLineEdit *editHoughThetaMinSub;
+    QLabel *label_12;
+    QLineEdit *editHoughThetaStepSub;
+    QLineEdit *editHoughThetaMaxSub;
+    QFrame *line;
+    QFrame *line_2;
+    QFrame *line_3;
+    QFrame *line_4;
+    QLabel *label_13;
+    QLabel *label_14;
+    QLineEdit *editIPI;
+    QLineEdit *editFPS;
 
     void setupUi(QWidget *setupForm)
     {
         if (setupForm->objectName().isEmpty())
             setupForm->setObjectName(QString::fromUtf8("setupForm"));
         setupForm->setWindowModality(Qt::WindowModal);
-        setupForm->resize(1019, 497);
+        setupForm->resize(1019, 505);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(setupForm->sizePolicy().hasHeightForWidth());
         setupForm->setSizePolicy(sizePolicy);
-        setupForm->setMinimumSize(QSize(1019, 497));
-        setupForm->setMaximumSize(QSize(1019, 497));
+        setupForm->setMinimumSize(QSize(1019, 505));
+        setupForm->setMaximumSize(QSize(1019, 505));
         setupForm->setContextMenuPolicy(Qt::DefaultContextMenu);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -247,45 +262,73 @@ public:
         clearButton->setObjectName(QString::fromUtf8("clearButton"));
         clearButton->setGeometry(QRect(800, 440, 80, 25));
         clearButton->setFont(font);
-        label_9->raise();
-        label_7->raise();
-        label_6->raise();
-        label_8->raise();
-        label_10->raise();
-        labelTarget->raise();
-        labelMono->raise();
-        labelEdge->raise();
-        labelHough->raise();
-        labelAnalyze->raise();
-        label->raise();
-        label_2->raise();
-        label_3->raise();
-        label_4->raise();
-        label_5->raise();
-        captureButton->raise();
-        checkSaveTarget->raise();
-        checkSaveMono->raise();
-        checkSaveEdge->raise();
-        checkSaveHough->raise();
-        checkSaveAnalyze->raise();
-        checkSaveMonoMatrix->raise();
-        checkSaveEdgeMatrix->raise();
-        checkSaveHoughMatrix->raise();
-        saveButton->raise();
-        checkSaveHoughLines->raise();
-        checkSaveHoughSpace->raise();
-        labelVoteAvg->raise();
-        labelPrimaryLine->raise();
-        plainTextEdit->raise();
-        saveExitButton->raise();
-        exitButton->raise();
-        clearButton->raise();
-        editHoughThetaMax->raise();
-        editHoughThetaMin->raise();
-        editHoughThreshold->raise();
-        editHoughThetaStep->raise();
-        editVoidThreshold->raise();
-        editHoughLineNo->raise();
+        checkSubImage = new QCheckBox(setupForm);
+        checkSubImage->setObjectName(QString::fromUtf8("checkSubImage"));
+        checkSubImage->setGeometry(QRect(360, 360, 181, 17));
+        label_11 = new QLabel(setupForm);
+        label_11->setObjectName(QString::fromUtf8("label_11"));
+        label_11->setGeometry(QRect(360, 410, 111, 21));
+        label_11->setFont(font);
+        label_11->setFrameShape(QFrame::Box);
+        label_11->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+        editHoughThetaMinSub = new QLineEdit(setupForm);
+        editHoughThetaMinSub->setObjectName(QString::fromUtf8("editHoughThetaMinSub"));
+        editHoughThetaMinSub->setGeometry(QRect(480, 380, 42, 20));
+        editHoughThetaMinSub->setAlignment(Qt::AlignCenter);
+        label_12 = new QLabel(setupForm);
+        label_12->setObjectName(QString::fromUtf8("label_12"));
+        label_12->setGeometry(QRect(360, 380, 111, 21));
+        label_12->setFont(font);
+        label_12->setFrameShape(QFrame::Box);
+        label_12->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+        editHoughThetaStepSub = new QLineEdit(setupForm);
+        editHoughThetaStepSub->setObjectName(QString::fromUtf8("editHoughThetaStepSub"));
+        editHoughThetaStepSub->setGeometry(QRect(480, 410, 42, 20));
+        editHoughThetaStepSub->setAlignment(Qt::AlignCenter);
+        editHoughThetaMaxSub = new QLineEdit(setupForm);
+        editHoughThetaMaxSub->setObjectName(QString::fromUtf8("editHoughThetaMaxSub"));
+        editHoughThetaMaxSub->setGeometry(QRect(530, 380, 42, 20));
+        editHoughThetaMaxSub->setAlignment(Qt::AlignCenter);
+        line = new QFrame(setupForm);
+        line->setObjectName(QString::fromUtf8("line"));
+        line->setGeometry(QRect(350, 350, 231, 16));
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+        line_2 = new QFrame(setupForm);
+        line_2->setObjectName(QString::fromUtf8("line_2"));
+        line_2->setGeometry(QRect(349, 430, 231, 16));
+        line_2->setFrameShape(QFrame::HLine);
+        line_2->setFrameShadow(QFrame::Sunken);
+        line_3 = new QFrame(setupForm);
+        line_3->setObjectName(QString::fromUtf8("line_3"));
+        line_3->setGeometry(QRect(347, 358, 8, 80));
+        line_3->setFrameShape(QFrame::VLine);
+        line_3->setFrameShadow(QFrame::Sunken);
+        line_4 = new QFrame(setupForm);
+        line_4->setObjectName(QString::fromUtf8("line_4"));
+        line_4->setGeometry(QRect(577, 358, 8, 80));
+        line_4->setFrameShape(QFrame::VLine);
+        line_4->setFrameShadow(QFrame::Sunken);
+        label_13 = new QLabel(setupForm);
+        label_13->setObjectName(QString::fromUtf8("label_13"));
+        label_13->setGeometry(QRect(360, 444, 111, 21));
+        label_13->setFont(font);
+        label_13->setFrameShape(QFrame::Box);
+        label_13->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+        label_14 = new QLabel(setupForm);
+        label_14->setObjectName(QString::fromUtf8("label_14"));
+        label_14->setGeometry(QRect(360, 474, 111, 21));
+        label_14->setFont(font);
+        label_14->setFrameShape(QFrame::Box);
+        label_14->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+        editIPI = new QLineEdit(setupForm);
+        editIPI->setObjectName(QString::fromUtf8("editIPI"));
+        editIPI->setGeometry(QRect(480, 474, 42, 20));
+        editIPI->setAlignment(Qt::AlignCenter);
+        editFPS = new QLineEdit(setupForm);
+        editFPS->setObjectName(QString::fromUtf8("editFPS"));
+        editFPS->setGeometry(QRect(480, 444, 42, 20));
+        editFPS->setAlignment(Qt::AlignCenter);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -293,6 +336,7 @@ public:
         QObject::connect(clearButton, SIGNAL(clicked()), setupForm, SLOT(clearButton()));
         QObject::connect(exitButton, SIGNAL(clicked()), setupForm, SLOT(exitButton()));
         QObject::connect(saveExitButton, SIGNAL(clicked()), setupForm, SLOT(saveExitButton()));
+        QObject::connect(checkSubImage, SIGNAL(clicked()), setupForm, SLOT(subImageCheck()));
 
         QMetaObject::connectSlotsByName(setupForm);
     } // setupUi
@@ -346,6 +390,21 @@ public:
         saveExitButton->setText(QApplication::translate("setupForm", "Kaydet & \303\207\304\261k", 0, QApplication::UnicodeUTF8));
         exitButton->setText(QApplication::translate("setupForm", "\303\207\304\261k", 0, QApplication::UnicodeUTF8));
         clearButton->setText(QApplication::translate("setupForm", "Temizle", 0, QApplication::UnicodeUTF8));
+        checkSubImage->setText(QApplication::translate("setupForm", "Alt \304\260maj Algoritmas\304\261", 0, QApplication::UnicodeUTF8));
+        label_11->setText(QApplication::translate("setupForm", "A\303\247\304\261 \303\207\303\266z.", 0, QApplication::UnicodeUTF8));
+        editHoughThetaMinSub->setInputMask(QApplication::translate("setupForm", "999; ", 0, QApplication::UnicodeUTF8));
+        editHoughThetaMinSub->setText(QApplication::translate("setupForm", "80", 0, QApplication::UnicodeUTF8));
+        label_12->setText(QApplication::translate("setupForm", "A\303\247\304\261 Aral\304\261\304\237\304\261", 0, QApplication::UnicodeUTF8));
+        editHoughThetaStepSub->setInputMask(QApplication::translate("setupForm", "9.9; ", 0, QApplication::UnicodeUTF8));
+        editHoughThetaStepSub->setText(QApplication::translate("setupForm", "1.0", 0, QApplication::UnicodeUTF8));
+        editHoughThetaMaxSub->setInputMask(QApplication::translate("setupForm", "999; ", 0, QApplication::UnicodeUTF8));
+        editHoughThetaMaxSub->setText(QApplication::translate("setupForm", "100", 0, QApplication::UnicodeUTF8));
+        label_13->setText(QApplication::translate("setupForm", "FPS", 0, QApplication::UnicodeUTF8));
+        label_14->setText(QApplication::translate("setupForm", "\304\260.\304\260\305\237leme Aral\304\261\304\237\304\261", 0, QApplication::UnicodeUTF8));
+        editIPI->setInputMask(QApplication::translate("setupForm", "9; ", 0, QApplication::UnicodeUTF8));
+        editIPI->setText(QApplication::translate("setupForm", "3", 0, QApplication::UnicodeUTF8));
+        editFPS->setInputMask(QApplication::translate("setupForm", "99; ", 0, QApplication::UnicodeUTF8));
+        editFPS->setText(QApplication::translate("setupForm", "10", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

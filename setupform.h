@@ -37,6 +37,8 @@ public:
     // image processing vars
     int thetaMin, thetaMax;
     float thetaStep;
+    int thetaMinSub, thetaMaxSub;
+    float thetaStepSub;
     int houghLineNo;
     int voteThreshold, voteAvg;
     int voidThreshold;
@@ -53,6 +55,7 @@ public slots:
     void clearButton();         // clear plain text edit frame
     void saveExitButton();      // transfer paramteres to mainwindow
     void exitButton();          // exit without changing parameters
+    void subImageCheck();       // sub image processing algorithm selection
 
 private:
     Ui::setupForm *ui;

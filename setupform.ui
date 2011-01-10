@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1019</width>
-    <height>497</height>
+    <height>505</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,13 +22,13 @@
   <property name="minimumSize">
    <size>
     <width>1019</width>
-    <height>497</height>
+    <height>505</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1019</width>
-    <height>497</height>
+    <height>505</height>
    </size>
   </property>
   <property name="contextMenuPolicy">
@@ -727,45 +727,266 @@
     <string>Temizle</string>
    </property>
   </widget>
-  <zorder>label_9</zorder>
-  <zorder>label_7</zorder>
-  <zorder>label_6</zorder>
-  <zorder>label_8</zorder>
-  <zorder>label_10</zorder>
-  <zorder>labelTarget</zorder>
-  <zorder>labelMono</zorder>
-  <zorder>labelEdge</zorder>
-  <zorder>labelHough</zorder>
-  <zorder>labelAnalyze</zorder>
-  <zorder>label</zorder>
-  <zorder>label_2</zorder>
-  <zorder>label_3</zorder>
-  <zorder>label_4</zorder>
-  <zorder>label_5</zorder>
-  <zorder>captureButton</zorder>
-  <zorder>checkSaveTarget</zorder>
-  <zorder>checkSaveMono</zorder>
-  <zorder>checkSaveEdge</zorder>
-  <zorder>checkSaveHough</zorder>
-  <zorder>checkSaveAnalyze</zorder>
-  <zorder>checkSaveMonoMatrix</zorder>
-  <zorder>checkSaveEdgeMatrix</zorder>
-  <zorder>checkSaveHoughMatrix</zorder>
-  <zorder>saveButton</zorder>
-  <zorder>checkSaveHoughLines</zorder>
-  <zorder>checkSaveHoughSpace</zorder>
-  <zorder>labelVoteAvg</zorder>
-  <zorder>labelPrimaryLine</zorder>
-  <zorder>plainTextEdit</zorder>
-  <zorder>saveExitButton</zorder>
-  <zorder>exitButton</zorder>
-  <zorder>clearButton</zorder>
-  <zorder>editHoughThetaMax</zorder>
-  <zorder>editHoughThetaMin</zorder>
-  <zorder>editHoughThreshold</zorder>
-  <zorder>editHoughThetaStep</zorder>
-  <zorder>editVoidThreshold</zorder>
-  <zorder>editHoughLineNo</zorder>
+  <widget class="QCheckBox" name="checkSubImage">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>360</y>
+     <width>181</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Alt İmaj Algoritması</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_11">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>410</y>
+     <width>111</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string>Açı Çöz.</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editHoughThetaMinSub">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>380</y>
+     <width>42</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="inputMask">
+    <string>999; </string>
+   </property>
+   <property name="text">
+    <string>80</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_12">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>380</y>
+     <width>111</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string>Açı Aralığı</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editHoughThetaStepSub">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>410</y>
+     <width>42</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="inputMask">
+    <string>9.9; </string>
+   </property>
+   <property name="text">
+    <string>1.0</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editHoughThetaMaxSub">
+   <property name="geometry">
+    <rect>
+     <x>530</x>
+     <y>380</y>
+     <width>42</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="inputMask">
+    <string>999; </string>
+   </property>
+   <property name="text">
+    <string>100</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>350</y>
+     <width>231</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_2">
+   <property name="geometry">
+    <rect>
+     <x>349</x>
+     <y>430</y>
+     <width>231</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_3">
+   <property name="geometry">
+    <rect>
+     <x>347</x>
+     <y>358</y>
+     <width>8</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_4">
+   <property name="geometry">
+    <rect>
+     <x>577</x>
+     <y>358</y>
+     <width>8</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_13">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>444</y>
+     <width>111</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string>FPS</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_14">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>474</y>
+     <width>111</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string>İ.İşleme Aralığı</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editIPI">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>474</y>
+     <width>42</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="inputMask">
+    <string>9; </string>
+   </property>
+   <property name="text">
+    <string>3</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editFPS">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>444</y>
+     <width>42</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="inputMask">
+    <string>99; </string>
+   </property>
+   <property name="text">
+    <string>10</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="icons.qrc"/>
@@ -851,6 +1072,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>checkSubImage</sender>
+   <signal>clicked()</signal>
+   <receiver>setupForm</receiver>
+   <slot>subImageCheck()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>457</x>
+     <y>361</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>347</x>
+     <y>357</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>captureButton()</slot>
@@ -858,5 +1095,6 @@
   <slot>clearButton()</slot>
   <slot>saveExitButton()</slot>
   <slot>exitButton()</slot>
+  <slot>subImageCheck()</slot>
  </slots>
 </ui>
