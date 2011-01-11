@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'helpdialog.ui'
 **
-** Created: Mon Jan 10 22:11:34 2011
+** Created: Tue 11. Jan 10:00:07 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

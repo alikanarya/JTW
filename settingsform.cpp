@@ -108,7 +108,7 @@ void settingsForm::getParameters(){
             ui->radio200->setChecked(false);
             ui->radio300->setChecked(true);
             ui->editDBNo->setText(QString::number(w->DB_NO));
-            ui->editDBNo->setEnabled(false);
+            ui->editDBNo->setEnabled(true);
             break;
     }
 
@@ -161,6 +161,7 @@ void settingsForm::saveExitButton(){
 
 void settingsForm::exitButton(){
     this->close();
+    w->writeSettings();
 }
 
 void settingsForm::saveExit(){

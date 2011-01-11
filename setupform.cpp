@@ -319,6 +319,8 @@ void setupForm::saveExitButton(){
     w->frameInterval = 1000 / w->fpsTarget;
     w->iprocessInterval = ui->editIPI->text().toInt();
 
+    w->writeSettings();
+
     this->close();
 }
 

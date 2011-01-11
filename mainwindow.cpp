@@ -33,7 +33,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     cmd2RightIcon.addFile(":/resources/forward.png");
     cmd2LeftIcon.addFile(":/resources/backward.png");
 
-    //************ui->controlButton->setEnabled(false);
     ui->trackButton->setEnabled(false);
 
     statusMessage = "";
@@ -43,25 +42,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // orginal and target image parameters
     imageWidth = 640;   //image->width();
     imageHeight = 480;  //image->height();
-    frameHeight = 100;
-    //offsetX = (imageWidth - frameWidth)/2;
-    //offsetY = (imageHeight - frameHeight)/2;
 
     imageFrameRect = ui->imageFrame->geometry();
     guideFrameRect = ui->guideFrame->geometry();
     gfBoxRect = ui->frame->geometry();
     gfLineHorRect = ui->guideLineHorz->geometry();
     gfLineVerRect = ui->guideLineVert->geometry();
-    gfTolLeftRect = ui->guideTolLeft->geometry();
-    gfTolRightRect = ui->guideTolRight->geometry();
+    //gfTolLeftRect = ui->guideTolLeft->geometry();
+    //gfTolRightRect = ui->guideTolRight->geometry();
 
     showGuide = true;       // show guide initially
     repaintGuide();
 
     sceneRect = ui->trackView->geometry();
     sceneCenterX = (sceneRect.width() - 4)/ 2;  // 4: total border thickness
-    //ui->plainTextEdit->appendPlainText(QString::number(sceneCenterX));
-
 
     // play video controls
     play = playCamonBoot;
@@ -828,29 +822,15 @@ void MainWindow::drawTrack(){
 
 void MainWindow::repaintGuide(){
     // update & show/hide guide
-    ui->guideFrame->setEnabled(false);
-
     offsetX = (imageWidth - frameWidth)/2;
     offsetY = (imageHeight - frameHeight)/2;
 
     guideFrameRect.setX(imageFrameRect.x() + offsetX);
     guideFrameRect.setWidth(frameWidth + 4);
     ui->guideFrame->setGeometry(guideFrameRect);
+    //ui->guideFrame->update();
 
-    ui->guideLineVert->setGeometry(frameWidth/2 + 1, gfLineVerRect.y(), gfLineVerRect.width(), gfLineVerRect.height());
-    centerX = ui->guideLineVert->x();   // x coor. of center vert. guide line
-
-    gfTolLeftRect.setX(centerX - errorLimit + 1);
-    gfTolLeftRect.setY(offsetY);
-    gfTolLeftRect.setHeight(frameHeight);
-    ui->guideTolLeft->setGeometry(gfTolLeftRect);
-
-    gfTolRightRect.setX(centerX + errorLimit);
-    gfTolRightRect.setY(offsetY);
-    gfTolRightRect.setHeight(frameHeight);
-    ui->guideTolRight->setGeometry(gfTolRightRect);
-
-    gfBoxRect.setY(offsetY);
+    gfBoxRect.setY(offsetY - 2);
     gfBoxRect.setWidth(frameWidth + 4);     // 4: total line edges thickness
     gfBoxRect.setHeight(frameHeight + 4);   // 4: total line edges thickness
     ui->frame->setGeometry(gfBoxRect);
@@ -858,24 +838,20 @@ void MainWindow::repaintGuide(){
     gfLineHorRect.setWidth(frameWidth);
     ui->guideLineHorz->setGeometry(gfLineHorRect);
 
+    ui->guideLineVert->setGeometry(frameWidth/2 + 1, gfLineVerRect.y(), gfLineVerRect.width(), gfLineVerRect.height());
+    //centerX = ui->guideLineVert->x();   // x coor. of center vert. guide line
+
 /*
     ui->guideLineVert->setGeometry(frameWidth/2 + 1, gfLineVerRect.y(), gfLineVerRect.width(), gfLineVerRect.height());
     centerX = ui->guideLineVert->x();   // x coor. of center vert. guide line
-
     ui->guideTolLeft->setGeometry(centerX - errorLimit + 1, gfTolLeftRect.y(), gfTolLeftRect.width(), gfTolLeftRect.height());
-
     ui->guideTolRight->setGeometry(centerX + errorLimit, gfTolRightRect.y(), gfTolRightRect.width(), gfTolRightRect.height());
-
     gfBoxRect.setWidth(frameWidth + 4);   // 4: total line edges thickness
     ui->frame->setGeometry(gfBoxRect);
-
     gfLineHorRect.setWidth(frameWidth);
     ui->guideLineHorz->setGeometry(gfLineHorRect);
 */
-    ui->guideFrame->setEnabled(true);
-
     ui->guideFrame->setVisible(showGuide);
-
 }
 
 void MainWindow::repaintDevTrend(){
@@ -979,6 +955,7 @@ void MainWindow::readSettings(){
         settings->beginGroup("ipro");
             iprocessInterval = settings->value("ipi", _IPROCESS_INT).toInt();
             frameWidth = settings->value("frw", _FRAME_WIDTH).toInt();
+            frameHeight = settings->value("frh", _FRAME_HEIGHT).toInt();
             thetaMin = settings->value("tmn", _THETA_MIN).toInt();
             thetaMax = settings->value("tmx", _THETA_MAX).toInt();
             thetaStep = settings->value("tst", _THETA_STEP).toFloat();
@@ -1018,6 +995,7 @@ void MainWindow::readSettings(){
 
         iprocessInterval = _IPROCESS_INT;
         frameWidth = _FRAME_WIDTH;
+        frameHeight = _FRAME_HEIGHT;
         thetaMin = _THETA_MIN;
         thetaMax = _THETA_MAX;
         thetaStep = _THETA_STEP;
@@ -1065,6 +1043,7 @@ void MainWindow::writeSettings(){
     settings->beginGroup("ipro");
         settings->setValue("ipi", QString::number(iprocessInterval));
         settings->setValue("frw", QString::number(frameWidth));
+        settings->setValue("frh", QString::number(frameHeight));
         settings->setValue("tmn", QString::number(thetaMin));
         settings->setValue("tmx", QString::number(thetaMax));
         settings->setValue("tst", QString::number(thetaStep));
@@ -1158,7 +1137,8 @@ void MainWindow::playCam(){
 }
 
 MainWindow::~MainWindow(){
-    threadPLCControl->disconnect();
+    if (threadPLCControl->plc->plcInteract)
+        threadPLCControl->disconnect();
 
 //    delete settings;
     delete ui;

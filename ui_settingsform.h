@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'settingsform.ui'
 **
-** Created: Mon Jan 10 22:11:33 2011
+** Created: Tue 11. Jan 16:35:39 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -98,7 +98,7 @@ public:
         errorLimitSlider->setOrientation(Qt::Horizontal);
         labelErrorLimit = new QLabel(settingsForm);
         labelErrorLimit->setObjectName(QString::fromUtf8("labelErrorLimit"));
-        labelErrorLimit->setGeometry(QRect(270, 21, 30, 16));
+        labelErrorLimit->setGeometry(QRect(125, 20, 21, 16));
         QFont font1;
         font1.setPointSize(10);
         font1.setBold(true);
@@ -107,7 +107,7 @@ public:
         labelErrorLimit->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
         saveExitButton = new QPushButton(settingsForm);
         saveExitButton->setObjectName(QString::fromUtf8("saveExitButton"));
-        saveExitButton->setGeometry(QRect(160, 420, 100, 25));
+        saveExitButton->setGeometry(QRect(150, 420, 100, 25));
         saveExitButton->setFont(font);
         saveExitButton->setFocusPolicy(Qt::NoFocus);
         saveExitButton->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
@@ -181,7 +181,7 @@ public:
         table->horizontalHeader()->setDefaultSectionSize(200);
         table->horizontalHeader()->setHighlightSections(true);
         table->horizontalHeader()->setMinimumSectionSize(200);
-        table->verticalHeader()->setVisible(false);
+        table->verticalHeader()->setVisible(true);
         table->verticalHeader()->setCascadingSectionResizes(false);
         table->verticalHeader()->setDefaultSectionSize(25);
         table->verticalHeader()->setHighlightSections(true);
@@ -248,7 +248,7 @@ public:
         editControlDelay = new QLineEdit(settingsForm);
         editControlDelay->setObjectName(QString::fromUtf8("editControlDelay"));
         editControlDelay->setEnabled(false);
-        editControlDelay->setGeometry(QRect(310, 20, 80, 20));
+        editControlDelay->setGeometry(QRect(310, 18, 80, 20));
         editControlDelay->setFont(font2);
         editControlDelay->setFocusPolicy(Qt::StrongFocus);
         editControlDelay->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);\n"
@@ -280,7 +280,7 @@ public:
         label_5->setFont(font);
         labelTarget = new QLabel(settingsForm);
         labelTarget->setObjectName(QString::fromUtf8("labelTarget"));
-        labelTarget->setGeometry(QRect(110, 53, 30, 16));
+        labelTarget->setGeometry(QRect(125, 53, 25, 16));
         labelTarget->setFont(font1);
         labelTarget->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
         label_6 = new QLabel(settingsForm);
@@ -289,7 +289,7 @@ public:
         label_6->setFont(font);
         labelTargetVert = new QLabel(settingsForm);
         labelTargetVert->setObjectName(QString::fromUtf8("labelTargetVert"));
-        labelTargetVert->setGeometry(QRect(110, 83, 30, 16));
+        labelTargetVert->setGeometry(QRect(125, 83, 30, 16));
         labelTargetVert->setFont(font1);
         labelTargetVert->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
         targetVertSlider = new QSlider(settingsForm);
@@ -324,10 +324,10 @@ public:
         setupButton->setText(QApplication::translate("settingsForm", "Kurulum", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("settingsForm", "Kontrol Tolerans\304\261", 0, QApplication::UnicodeUTF8));
         labelErrorLimit->setText(QApplication::translate("settingsForm", "10", 0, QApplication::UnicodeUTF8));
-        saveExitButton->setText(QApplication::translate("settingsForm", "Kaydet & \303\207\304\261k", 0, QApplication::UnicodeUTF8));
+        saveExitButton->setText(QApplication::translate("settingsForm", "Kaydet ve \303\207\304\261k", 0, QApplication::UnicodeUTF8));
         exitButton->setText(QApplication::translate("settingsForm", "\303\207\304\261k", 0, QApplication::UnicodeUTF8));
         QTableWidgetItem *___qtablewidgetitem = table->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QApplication::translate("settingsForm", "Value", 0, QApplication::UnicodeUTF8));
+        ___qtablewidgetitem->setText(QApplication::translate("settingsForm", "Deger", 0, QApplication::UnicodeUTF8));
         QTableWidgetItem *___qtablewidgetitem1 = table->verticalHeaderItem(0);
         ___qtablewidgetitem1->setText(QApplication::translate("settingsForm", "Kamera IP Adresi", 0, QApplication::UnicodeUTF8));
         QTableWidgetItem *___qtablewidgetitem2 = table->verticalHeaderItem(1);

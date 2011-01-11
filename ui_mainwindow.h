@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Jan 10 22:11:33 2011
+** Created: Tue 11. Jan 16:34:13 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -41,8 +41,6 @@ public:
     QFrame *guideFrame;
     QFrame *guideLineVert;
     QFrame *guideLineHorz;
-    QFrame *guideTolRight;
-    QFrame *guideTolLeft;
     QFrame *frame;
     QPushButton *guideButton;
     QGraphicsView *trackView;
@@ -172,20 +170,6 @@ public:
         guideLineHorz->setFrameShadow(QFrame::Plain);
         guideLineHorz->setLineWidth(2);
         guideLineHorz->setFrameShape(QFrame::HLine);
-        guideTolRight = new QFrame(guideFrame);
-        guideTolRight->setObjectName(QString::fromUtf8("guideTolRight"));
-        guideTolRight->setGeometry(QRect(172, 190, 1, 100));
-        guideTolRight->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
-        guideTolRight->setFrameShadow(QFrame::Plain);
-        guideTolRight->setLineWidth(1);
-        guideTolRight->setFrameShape(QFrame::VLine);
-        guideTolLeft = new QFrame(guideFrame);
-        guideTolLeft->setObjectName(QString::fromUtf8("guideTolLeft"));
-        guideTolLeft->setGeometry(QRect(151, 190, 1, 100));
-        guideTolLeft->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
-        guideTolLeft->setFrameShadow(QFrame::Plain);
-        guideTolLeft->setLineWidth(1);
-        guideTolLeft->setFrameShape(QFrame::VLine);
         frame = new QFrame(guideFrame);
         frame->setObjectName(QString::fromUtf8("frame"));
         frame->setGeometry(QRect(0, 188, 324, 104));
@@ -440,7 +424,7 @@ public:
         emergencyButton->setText(QString());
         cameraStatus->setText(QString());
         label_2->setText(QApplication::translate("MainWindow", "Bilgi", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("MainWindow", "\302\251Aykurt Elektrik Hendek/Sakarya, 2010", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("MainWindow", "\302\251Aykurt Elektrik Hendek/Sakarya", 0, QApplication::UnicodeUTF8));
         clearMsgBoxButton->setText(QApplication::translate("MainWindow", "Temizle", 0, QApplication::UnicodeUTF8));
         helpButton->setText(QString());
         reportButton->setText(QString());

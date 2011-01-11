@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'setupform.ui'
 **
-** Created: Mon Jan 10 22:11:33 2011
+** Created: Tue 11. Jan 15:14:17 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -250,17 +250,17 @@ public:
         label_10->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         saveExitButton = new QPushButton(setupForm);
         saveExitButton->setObjectName(QString::fromUtf8("saveExitButton"));
-        saveExitButton->setGeometry(QRect(800, 470, 80, 25));
+        saveExitButton->setGeometry(QRect(800, 470, 85, 25));
         saveExitButton->setFont(font);
         saveExitButton->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
         exitButton = new QPushButton(setupForm);
         exitButton->setObjectName(QString::fromUtf8("exitButton"));
-        exitButton->setGeometry(QRect(920, 470, 80, 25));
+        exitButton->setGeometry(QRect(917, 470, 85, 25));
         exitButton->setFont(font);
         exitButton->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
         clearButton = new QPushButton(setupForm);
         clearButton->setObjectName(QString::fromUtf8("clearButton"));
-        clearButton->setGeometry(QRect(800, 440, 80, 25));
+        clearButton->setGeometry(QRect(800, 440, 85, 25));
         clearButton->setFont(font);
         checkSubImage = new QCheckBox(setupForm);
         checkSubImage->setObjectName(QString::fromUtf8("checkSubImage"));
@@ -387,7 +387,7 @@ public:
         editVoidThreshold->setInputMask(QApplication::translate("setupForm", "99; ", 0, QApplication::UnicodeUTF8));
         editVoidThreshold->setText(QApplication::translate("setupForm", "30", 0, QApplication::UnicodeUTF8));
         label_10->setText(QApplication::translate("setupForm", "Void E\305\237i\304\237i", 0, QApplication::UnicodeUTF8));
-        saveExitButton->setText(QApplication::translate("setupForm", "Kaydet & \303\207\304\261k", 0, QApplication::UnicodeUTF8));
+        saveExitButton->setText(QApplication::translate("setupForm", "Kaydet ve \303\207\304\261k", 0, QApplication::UnicodeUTF8));
         exitButton->setText(QApplication::translate("setupForm", "\303\207\304\261k", 0, QApplication::UnicodeUTF8));
         clearButton->setText(QApplication::translate("setupForm", "Temizle", 0, QApplication::UnicodeUTF8));
         checkSubImage->setText(QApplication::translate("setupForm", "Alt \304\260maj Algoritmas\304\261", 0, QApplication::UnicodeUTF8));
