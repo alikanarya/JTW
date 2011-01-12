@@ -255,6 +255,7 @@ void MainWindow:: plcControl(){
 
     if (!controlPause){
 
+        // prepare plc command
         if (controlThreadCount == controlThreadCountSize) {
             state = _CMD_CHECK;
             controlThreadCount = 0;
@@ -273,7 +274,8 @@ void MainWindow:: plcControl(){
             }
         }
 
-        if (state != cmdStatePrev) {
+
+        if (state != cmdStatePrev || !cmdSended) {
             if (state == _CMD_RIGHT)
                 ui->cmdStatus->setIcon(cmd2LeftIcon);
             else if (state == _CMD_LEFT)
@@ -281,11 +283,19 @@ void MainWindow:: plcControl(){
             else if (state != _CMD_CHECK)
                 ui->cmdStatus->setIcon(QIcon());
 
-            if (state != _CMD_CHECK || state != _CMD_EMERGENCY_ACT || state != _CMD_RESET) {
+            cmdSended = false;
+            if (!threadPLCControl->isRunning()){
+                threadPLCControl->commandState = state;
+                threadPLCControl->start();
+                cmdSended = true;
+            }
+/*
+            if (state != _CMD_CHECK || state != _CMD_EMERGENCY_ACT) {
                 if (controlDelay == 0){
                     if (!threadPLCControl->isRunning()){
                         threadPLCControl->commandState = state;
                         threadPLCControl->start();
+                        cmdSended = true;
                     }
                 } else if (controlDelayValid){
                     weldData wd;
@@ -300,6 +310,7 @@ void MainWindow:: plcControl(){
                         if (!threadPLCControl->isRunning()){
                             threadPLCControl->commandState = first;
                             threadPLCControl->start();
+                            cmdSended = true;
                         }
                         weldCommands.removeFirst();
                         //ui->plainTextEdit->appendPlainText(QString::number(cmdState)+"plc "+QString::number(timeSystem.getSystemTimeMsec()));
@@ -309,11 +320,16 @@ void MainWindow:: plcControl(){
                 if (!threadPLCControl->isRunning()){
                     threadPLCControl->commandState = state;
                     threadPLCControl->start();
+                    cmdSended = true;
                 }
             }
+*/
         }
 
-        if (state!= _CMD_CHECK) cmdStatePrev = state;
+        if (state!= _CMD_CHECK) {
+            cmdStatePrev = state;
+        }
+
     }
 }
 
@@ -356,10 +372,10 @@ void MainWindow::updateSn(){
     if (!plcInteractPrev && threadPLCControl->plc->plcInteract){           // 0 -> 1
         permPLC = true;
         ui->plainTextEdit->appendPlainText(timeString() + MESSAGE6);
-    } else
-        if (plcInteractPrev && !threadPLCControl->plc->plcInteract){       // 1 -> 0
-            permPLC = false;
-            ui->plainTextEdit->appendPlainText(timeString() + MESSAGE4);
+    }
+    else if (plcInteractPrev && !threadPLCControl->plc->plcInteract){       // 1 -> 0
+        permPLC = false;
+        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE4);
     }
 
     plcInteractPrev = threadPLCControl->plc->plcInteract;
@@ -406,6 +422,7 @@ void MainWindow::startTimer(){
         cmdState = _CMD_CHECK;
         threadPLCControl->commandState = cmdState;
         threadPLCControl->start();
+        cmdSended = true;
     }
     cmdStatePrev = cmdState;
 

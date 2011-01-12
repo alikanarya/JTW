@@ -23,6 +23,8 @@ plcControlThread::plcControlThread(s7 &_plc){
 }
 
 void plcControlThread::run(){
+    //QTimer::singleShot(0, this, SLOT(terminateThis()));
+
     if (!stopped){
 
         if (commandState == _CMD_CHECK){            // reset cmds
@@ -71,8 +73,9 @@ void plcControlThread::run(){
                 }
             }
     }
-
+    //for(;;);
     stopped = false;
+    //exec();
 }
 
 void plcControlThread::stop(){
@@ -167,6 +170,13 @@ void plcControlThread::check(){
 
 void plcControlThread::disconnect(){
     plc->disconnect();
+}
+
+void plcControlThread::terminateThis(){
+    //plc->plcInteract = true;
+    //QThread::quit();
+    //this->terminate();
+    //qDebug() << "Timer event!!";
 }
 
 plcControlThread::~plcControlThread(){

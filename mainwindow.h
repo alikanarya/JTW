@@ -163,6 +163,7 @@ public:
     bool connectRequestedonBoot;            // plc connection request on app. start
     bool plcInteractPrev;
     int cmdState, cmdStatePrev;
+    bool cmdSended;
     int DB_NO;
     int right_VMEM_BYTE, right_BITofBYTE;
     int left_VMEM_BYTE, left_BITofBYTE;

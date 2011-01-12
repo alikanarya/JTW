@@ -44,6 +44,9 @@ protected:
 private:
     volatile bool stopped;
 
+private slots:
+    void terminateThis();
+
 };
 
 #endif // PLCCONTROLTHREAD_H
