@@ -266,7 +266,7 @@ void MainWindow:: plcControl(){
                 if (cameraChecker->cameraDown || !play || detectionError || !permOperator){
                     state = _CMD_STOP;
                 } else {
-                    if (play && trackOn && controlOn){
+                    if (play && trackOn && controlOn && permPLC){
                         state = cmdState;   // Weld Command from image processing
                     } else
                         state = _CMD_STOP;

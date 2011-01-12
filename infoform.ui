@@ -146,7 +146,7 @@
     </font>
    </property>
    <property name="text">
-    <string>ver 1.3.09, ©Aykurt Elektrik Hendek/Sakarya, 2011</string>
+    <string>ver 1.3.10, ©Aykurt Elektrik Hendek/Sakarya, 2011</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
