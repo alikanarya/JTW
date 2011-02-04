@@ -153,6 +153,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // weld commands init.
     cmdState = _CMD_STOP;
+    cmdStatePrev2 = _CMD_CENTER;
     ui->cmdStatus->setIcon(QIcon());
 
     controlDelay = QString::number(controlDelay).toInt(&controlDelayValid, 10);
@@ -769,13 +770,29 @@ void MainWindow::processImage(){
         detectionError = false;
 
         int index = deviationData.size() - 1;
-        if ((deviationData[index] > errorLimit) && (deviationData[index] != eCodeDev)){
-            cmdState = _CMD_RIGHT;
-        } else if ((deviationData[index] < (-1*errorLimit)) && (deviationData[index] != eCodeDev) ){
-            cmdState = _CMD_LEFT;
+
+        if (deviationData[index] != eCodeDev){
+            if (deviationData[index] >= errorLimit){
+                cmdState = _CMD_RIGHT;
+            } else
+            if (deviationData[index] <= errorLimitNeg){
+                cmdState = _CMD_LEFT;
+            } else
+            if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= 0)){
+                cmdState = _CMD_CENTER;
+            } else
+            if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= 0)){
+                cmdState = _CMD_CENTER;
+            } else
+            if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
+                cmdState = _CMD_CENTER;
+            }
         } else {
             cmdState = _CMD_CENTER;
         }
+
+        cmdStatePrev2 = cmdState;
+
     } else {
         detectionError = true;
     }
@@ -984,6 +1001,7 @@ void MainWindow::readSettings(){
             voteThreshold = settings->value("vth", _VOTE_THRESHOLD).toInt();
             voidThreshold = settings->value("vdth", _VOID_THRESHOLD).toInt();
             errorLimit = settings->value("elm", _ERROR_LIMIT).toInt();
+                errorLimitNeg = -1 * errorLimit;
         settings->endGroup();
 
         settings->beginGroup("oth");
@@ -1024,6 +1042,7 @@ void MainWindow::readSettings(){
         voteThreshold = _VOTE_THRESHOLD;
         voidThreshold = _VOID_THRESHOLD;
         errorLimit = _ERROR_LIMIT;
+            errorLimitNeg = -1 * errorLimit;
 
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
@@ -1142,7 +1161,7 @@ void MainWindow::playCam(){
                 timeDelay = displayTime - requestTime;
                 timeDelayTotal += timeDelay;  // overall delay
 
-                // if joint is tracked for some???? interval
+                // if joint is tracked for some interval
                 if (trackOn && (fpsReal % iprocessInterval) == 0 ){
                     processImage();  // detect deviation
 

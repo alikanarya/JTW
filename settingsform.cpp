@@ -54,6 +54,7 @@ void settingsForm::showSetupForm(){
 
 void settingsForm::errorLimitSlider(){
     w->errorLimit = ui->errorLimitSlider->sliderPosition();
+    w->errorLimitNeg = -1 * w->errorLimit;
     ui->labelErrorLimit->setText(QString::number(w->errorLimit));
     w->repaintGuide();
     w->repaintDevTrend();

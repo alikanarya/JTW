@@ -152,7 +152,7 @@ public:
     float thetaStepSub;
     int houghLineNo;
     int voteThreshold, voidThreshold;
-    int errorLimit;                     // deviation from center in pixels
+    int errorLimit, errorLimitNeg;      // deviation from center in pixels
     bool subImageProcessingSwitch;
 
 
@@ -162,7 +162,7 @@ public:
     bool connectRequested;                  // plc connection request
     bool connectRequestedonBoot;            // plc connection request on app. start
     bool plcInteractPrev;
-    int cmdState, cmdStatePrev;
+    int cmdState, cmdStatePrev, cmdStatePrev2;
     bool cmdSended;
     int DB_NO;
     int right_VMEM_BYTE, right_BITofBYTE;
