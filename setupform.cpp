@@ -150,6 +150,26 @@ void setupForm::captureButton(){
                 iprocess->trackCenterY = (iprocess->leftCornerY + iprocess->rightCornerY) / 2;
             }
 
+            // ------ LEFT AND RIGHT IMAGES SAVE
+            fileName = savePath + "Left_org" + fileExt;
+            iprocessLeft->imgOrginal.save(fileName);
+
+            iprocessLeft->constructHoughMatrix();
+            QImage *houghLeft = iprocessLeft->getImage(iprocessLeft->houghMatrix,iprocessLeft->edgeWidth,iprocessLeft->edgeHeight); // produce hough image
+            fileName = savePath + "Left_hough" + fileExt;
+            houghLeft->save(fileName);
+            delete houghLeft;
+
+            fileName = savePath + "Right_org" + fileExt;
+            iprocessRight->imgOrginal.save(fileName);
+
+            iprocessRight->constructHoughMatrix();
+            QImage *houghRight = iprocessLeft->getImage(iprocessRight->houghMatrix,iprocessRight->edgeWidth,iprocessRight->edgeHeight); // produce hough image
+            fileName = savePath + "Right_hough" + fileExt;
+            houghRight->save(fileName);
+            delete houghRight;
+            // ------ LEFT AND RIGHT IMAGES SAVE
+
             delete iprocessLeft;
             delete iprocessRight;
         }
