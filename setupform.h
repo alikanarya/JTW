@@ -57,6 +57,9 @@ public slots:
     void exitButton();          // exit without changing parameters
     void subImageCheck();       // sub image processing algorithm selection
 
+    void processClassical();
+    void processExtSubImage();
+
 private:
     Ui::setupForm *ui;
 };
