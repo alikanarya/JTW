@@ -11,10 +11,11 @@ int main(int argc, char *argv[]){
     QTextCodec::setCodecForCStrings( QTextCodec::codecForName("ISO-8859-9") );
 
     w = new MainWindow();
+    w->show();
 
     //w->showMaximized();
     //settingsGui->move(rectScreen.center() - settingsGui->rect().center());
-    w->showFullScreen();
+    //w->showFullScreen();
 
     return a.exec();
 }

@@ -20,7 +20,8 @@ settingsForm::settingsForm(QWidget *parent) : QDialog(parent), ui(new Ui::settin
 
     itemR0C0 = new QTableWidgetItem("camera ip");
     itemR1C0 = new QTableWidgetItem("plc ip");
-    itemR2C0 = new QTableWidgetItem("right byte");
+    itemR2C0 = new QTableWidgetItem("byte");
+    /*
     itemR3C0 = new QTableWidgetItem("right bit");
     itemR4C0 = new QTableWidgetItem("left byte");
     itemR5C0 = new QTableWidgetItem("left bit");
@@ -28,9 +29,11 @@ settingsForm::settingsForm(QWidget *parent) : QDialog(parent), ui(new Ui::settin
     itemR7C0 = new QTableWidgetItem("stop bit");
     itemR8C0 = new QTableWidgetItem("emer byte");
     itemR9C0 = new QTableWidgetItem("emer bit");
+    */
     ui->table->setItem(0,0,itemR0C0);
     ui->table->setItem(1,0,itemR1C0);
     ui->table->setItem(2,0,itemR2C0);
+    /*
     ui->table->setItem(3,0,itemR3C0);
     ui->table->setItem(4,0,itemR4C0);
     ui->table->setItem(5,0,itemR5C0);
@@ -38,6 +41,12 @@ settingsForm::settingsForm(QWidget *parent) : QDialog(parent), ui(new Ui::settin
     ui->table->setItem(7,0,itemR7C0);
     ui->table->setItem(8,0,itemR8C0);
     ui->table->setItem(9,0,itemR9C0);
+    */
+
+    ui->table->verticalHeader()->setVisible(true);
+
+    ui->label_4->hide();
+    ui->editControlDelay->hide();
 
   /*
     QIntValidator *validEditHoughLineNo = new QIntValidator(01, 10, this);
@@ -48,15 +57,30 @@ settingsForm::settingsForm(QWidget *parent) : QDialog(parent), ui(new Ui::settin
 }
 
 void settingsForm::showSetupForm(){
+    w->errorStopLimitLineVisible = false;
+    w->repaintDevTrend();
+
     w->showSetupForm();
-    this->close();
+    //this->close();
 }
 
 void settingsForm::errorLimitSlider(){
     w->errorLimit = ui->errorLimitSlider->sliderPosition();
     w->errorLimitNeg = -1 * w->errorLimit;
     ui->labelErrorLimit->setText(QString::number(w->errorLimit));
-    w->repaintGuide();
+
+    w->errorStopLimit = w->errorLimit * w->errorStopScale;
+    w->errorStopLimitNeg = -1 * w->errorStopLimit;
+
+    w->repaintDevTrend();
+}
+
+void settingsForm::errorScaleSlider(){
+    w->errorStopScale = ui->errorScaleSlider->sliderPosition() / 100.0;
+    w->errorStopLimit = w->errorLimit * w->errorStopScale;
+    w->errorStopLimitNeg = -1 * w->errorStopLimit;
+    ui->labelErrorScale->setText(QString::number(w->errorStopScale * 100));
+
     w->repaintDevTrend();
 }
 
@@ -82,11 +106,16 @@ void settingsForm::getParameters(){
     ui->labelErrorLimit->setText(QString::number(w->errorLimit));
     ui->errorLimitSlider->setSliderPosition(w->errorLimit);
 
+    ui->errorScaleSlider->setSliderPosition(w->errorStopScale * 100);
+    ui->labelErrorScale->setText(QString::number(w->errorStopScale * 100));
+
     ui->labelTarget->setText(QString::number(w->frameWidth));
     ui->targetSlider->setSliderPosition(w->frameWidth);
 
     ui->labelTargetVert->setText(QString::number(w->frameHeight));
     ui->targetVertSlider->setSliderPosition(w->frameHeight);
+
+    ui->editTitle->setText(w->title);
 
     ui->labelyRes->setText(QString::number(w->yRes));
     ui->yResIndexSlider->setSliderPosition(w->yResIndex);
@@ -97,6 +126,8 @@ void settingsForm::getParameters(){
     ui->checkCamonBoot->setChecked(w->playCamonBoot);
 
     ui->checkPLConBoot->setChecked(w->connectRequestedonBoot);
+
+    ui->checkErrorStopVisible->setChecked(w->errorStopLimitLineVisible);
 
     switch (w->plcType){
         case 0:
@@ -115,7 +146,8 @@ void settingsForm::getParameters(){
 
     itemR0C0->setText(w->urlCam.toString());
     itemR1C0->setText(w->urlPLC.toString());
-    itemR2C0->setText(QString::number(w->right_VMEM_BYTE));
+    itemR2C0->setText(QString::number(w->BYTE_NO));
+    /*
     itemR3C0->setText(QString::number(w->right_BITofBYTE));
     itemR4C0->setText(QString::number(w->left_VMEM_BYTE));
     itemR5C0->setText(QString::number(w->left_BITofBYTE));
@@ -123,6 +155,7 @@ void settingsForm::getParameters(){
     itemR7C0->setText(QString::number(w->stop_BITofBYTE));
     itemR8C0->setText(QString::number(w->emergency_VMEM_BYTE));
     itemR9C0->setText(QString::number(w->emergency_BITofBYTE));
+    */
 }
 
 void settingsForm::commitChanges(){
@@ -140,7 +173,8 @@ void settingsForm::commitChanges(){
             break;
     }
 
-    w->right_VMEM_BYTE = itemR2C0->text().toInt();
+    w->BYTE_NO = itemR2C0->text().toInt();
+    /*
     w->right_BITofBYTE = itemR3C0->text().toInt();
     w->left_VMEM_BYTE = itemR4C0->text().toInt();
     w->left_BITofBYTE = itemR5C0->text().toInt();
@@ -148,6 +182,7 @@ void settingsForm::commitChanges(){
     w->stop_BITofBYTE = itemR7C0->text().toInt();
     w->emergency_VMEM_BYTE = itemR8C0->text().toInt();
     w->emergency_BITofBYTE = itemR9C0->text().toInt();
+    */
 
     w->yResIndex = ui->yResIndexSlider->sliderPosition();
     w->yRes = yResArray[w->yResIndex];
@@ -188,6 +223,11 @@ void settingsForm::checkCamonBoot(){
     w->playCamonBoot = ui->checkCamonBoot->isChecked();
 }
 
+void settingsForm::checkErrorStopLimitVisible(){
+    w->errorStopLimitLineVisible = ui->checkErrorStopVisible->isChecked();
+    w->repaintDevTrend();
+}
+
 void settingsForm::changePLCtype(){
     switch (ui->radioGroup->checkedId()){
         case -2:    // S7-200
@@ -212,6 +252,10 @@ void settingsForm::getControlDelay(){
         } else
             w->ui->plainTextEdit->appendPlainText(message4 + QString::number(w->controlDelay) + " mili saniye");
     }
+}
+
+void settingsForm::setTitle(){
+    w->title = ui->editTitle->text();
 }
 
 settingsForm::~settingsForm(){

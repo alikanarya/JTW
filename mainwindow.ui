@@ -12,7 +12,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1300</width>
+    <width>664</width>
     <height>768</height>
    </rect>
   </property>
@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>JTW - Kaynak için Birleşme Yeri Takibi</string>
+   <string>JTW - Kaynak için Birleşme Yeri Takipçisi</string>
   </property>
   <property name="windowIcon">
    <iconset resource="icons.qrc">
@@ -64,10 +64,10 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>10</y>
-      <width>48</width>
-      <height>48</height>
+      <x>90</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -88,8 +88,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -99,8 +99,8 @@
    <widget class="QLabel" name="labelTime">
     <property name="geometry">
      <rect>
-      <x>612</x>
-      <y>556</y>
+      <x>570</x>
+      <y>559</y>
       <width>85</width>
       <height>23</height>
      </rect>
@@ -113,7 +113,7 @@
      </font>
     </property>
     <property name="frameShape">
-     <enum>QFrame::Box</enum>
+     <enum>QFrame::NoFrame</enum>
     </property>
     <property name="lineWidth">
      <number>2</number>
@@ -129,9 +129,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
-      <width>48</width>
-      <height>48</height>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -147,8 +147,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -161,10 +161,10 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>10</y>
-      <width>48</width>
-      <height>48</height>
+      <x>50</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -179,8 +179,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -190,19 +190,19 @@
    <widget class="QPlainTextEdit" name="plainTextEdit">
     <property name="geometry">
      <rect>
-      <x>500</x>
-      <y>580</y>
-      <width>310</width>
-      <height>140</height>
+      <x>10</x>
+      <y>560</y>
+      <width>158</width>
+      <height>160</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>8</pointsize>
+      <pointsize>7</pointsize>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(170, 255, 127);</string>
+     <string notr="true">background-color: rgb(255, 255, 127);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>
@@ -211,7 +211,7 @@
      <enum>QFrame::Sunken</enum>
     </property>
     <property name="lineWidth">
-     <number>2</number>
+     <number>1</number>
     </property>
     <property name="readOnly">
      <bool>true</bool>
@@ -220,10 +220,10 @@
    <widget class="QPushButton" name="analyzeButton">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>10</y>
-      <width>48</width>
-      <height>48</height>
+      <x>170</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -238,8 +238,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -340,10 +340,10 @@
    <widget class="QPushButton" name="guideButton">
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>10</y>
-      <width>48</width>
-      <height>48</height>
+      <x>130</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -358,8 +358,8 @@
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -370,7 +370,7 @@
     <property name="geometry">
      <rect>
       <x>170</x>
-      <y>560</y>
+      <y>559</y>
       <width>324</width>
       <height>160</height>
      </rect>
@@ -386,7 +386,7 @@ background-color: rgb(236, 233, 216);</string>
      <enum>QFrame::Plain</enum>
     </property>
     <property name="lineWidth">
-     <number>2</number>
+     <number>1</number>
     </property>
     <property name="verticalScrollBarPolicy">
      <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -409,10 +409,10 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QPushButton" name="settingsButton">
     <property name="geometry">
      <rect>
-      <x>590</x>
-      <y>10</y>
-      <width>48</width>
-      <height>48</height>
+      <x>330</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -427,8 +427,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -441,10 +441,10 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>10</y>
-      <width>48</width>
-      <height>48</height>
+      <x>210</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -459,8 +459,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -473,10 +473,10 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>10</y>
-      <width>48</width>
-      <height>48</height>
+      <x>250</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -491,8 +491,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -502,11 +502,14 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QPushButton" name="plcStatus">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>680</y>
-      <width>48</width>
-      <height>48</height>
+      <x>500</x>
+      <y>640</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>PLC Bağlantı Durumu</string>
     </property>
     <property name="text">
      <string/>
@@ -517,8 +520,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -528,11 +531,14 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QPushButton" name="infoButton">
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>10</y>
-      <width>48</width>
-      <height>48</height>
+      <x>580</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Bilgi</string>
     </property>
     <property name="text">
      <string/>
@@ -543,8 +549,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="iconSize">
      <size>
-      <width>40</width>
-      <height>40</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -554,10 +560,10 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QPushButton" name="exitButton">
     <property name="geometry">
      <rect>
-      <x>1245</x>
-      <y>680</y>
-      <width>48</width>
-      <height>48</height>
+      <x>620</x>
+      <y>688</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -572,8 +578,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -583,10 +589,10 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
-      <x>940</x>
-      <y>10</y>
+      <x>10</x>
+      <y>3</y>
       <width>351</width>
-      <height>31</height>
+      <height>25</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -610,14 +616,14 @@ background-color: rgb(236, 233, 216);</string>
      <string>JTW - Kaynak için Birleşme Yeri Takipçisi</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="labelLogoCustomer">
     <property name="geometry">
      <rect>
-      <x>990</x>
-      <y>43</y>
+      <x>400</x>
+      <y>3</y>
       <width>24</width>
       <height>24</height>
      </rect>
@@ -641,10 +647,10 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QPushButton" name="emergencyButton">
     <property name="geometry">
      <rect>
-      <x>1175</x>
+      <x>500</x>
       <y>680</y>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -660,8 +666,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -671,11 +677,14 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QPushButton" name="cameraStatus">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>680</y>
-      <width>48</width>
-      <height>48</height>
+      <x>500</x>
+      <y>600</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Kamera Bağlantı Durumu</string>
     </property>
     <property name="text">
      <string/>
@@ -686,45 +695,21 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="iconSize">
      <size>
-      <width>48</width>
-      <height>48</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>500</x>
-      <y>560</y>
-      <width>111</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>10</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Bilgi</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>1030</x>
-      <y>50</y>
+      <x>390</x>
+      <y>3</y>
       <width>261</width>
-      <height>21</height>
+      <height>25</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -754,8 +739,8 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QPushButton" name="clearMsgBoxButton">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>555</y>
+      <x>70</x>
+      <y>680</y>
       <width>80</width>
       <height>25</height>
      </rect>
@@ -775,11 +760,14 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QPushButton" name="helpButton">
     <property name="geometry">
      <rect>
-      <x>710</x>
-      <y>10</y>
-      <width>48</width>
-      <height>48</height>
+      <x>620</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Yardım</string>
     </property>
     <property name="text">
      <string/>
@@ -790,8 +778,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="iconSize">
      <size>
-      <width>40</width>
-      <height>40</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
@@ -801,11 +789,14 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QPushButton" name="reportButton">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>10</y>
-      <width>48</width>
-      <height>48</height>
+      <x>290</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Rapor</string>
     </property>
     <property name="text">
      <string/>
@@ -816,40 +807,18 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="iconSize">
      <size>
-      <width>40</width>
-      <height>40</height>
+      <width>32</width>
+      <height>32</height>
      </size>
     </property>
     <property name="flat">
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="imageFrameIn">
-    <property name="geometry">
-     <rect>
-      <x>655</x>
-      <y>70</y>
-      <width>644</width>
-      <height>484</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="lineWidth">
-     <number>2</number>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="scaledContents">
-     <bool>false</bool>
-    </property>
-   </widget>
    <widget class="QPushButton" name="cmdStatus">
     <property name="geometry">
      <rect>
-      <x>130</x>
+      <x>500</x>
       <y>560</y>
       <width>32</width>
       <height>32</height>
@@ -884,8 +853,8 @@ background-color: rgb(236, 233, 216);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1300</width>
-     <height>20</height>
+     <width>664</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -911,8 +880,8 @@ color: rgb(0, 0, 255);</string>
    <slot>stopButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>117</x>
-     <y>77</y>
+     <x>81</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
      <x>396</x>
@@ -927,8 +896,8 @@ color: rgb(0, 0, 255);</string>
    <slot>playButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>77</y>
+     <x>41</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
      <x>368</x>
@@ -943,8 +912,8 @@ color: rgb(0, 0, 255);</string>
    <slot>getImageFromCam()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>130</x>
-     <y>77</y>
+     <x>121</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
      <x>283</x>
@@ -959,8 +928,8 @@ color: rgb(0, 0, 255);</string>
    <slot>analyzeButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>310</x>
-     <y>77</y>
+     <x>201</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
      <x>382</x>
@@ -975,8 +944,8 @@ color: rgb(0, 0, 255);</string>
    <slot>guideButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>237</x>
-     <y>76</y>
+     <x>161</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
      <x>527</x>
@@ -991,8 +960,8 @@ color: rgb(0, 0, 255);</string>
    <slot>showSettingsForm()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>590</x>
-     <y>77</y>
+     <x>361</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
      <x>506</x>
@@ -1007,8 +976,8 @@ color: rgb(0, 0, 255);</string>
    <slot>trackButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>407</x>
-     <y>77</y>
+     <x>241</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
      <x>635</x>
@@ -1023,8 +992,8 @@ color: rgb(0, 0, 255);</string>
    <slot>controlButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>465</x>
-     <y>77</y>
+     <x>281</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
      <x>512</x>
@@ -1039,8 +1008,8 @@ color: rgb(0, 0, 255);</string>
    <slot>infoButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>650</x>
-     <y>77</y>
+     <x>611</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
      <x>556</x>
@@ -1055,8 +1024,8 @@ color: rgb(0, 0, 255);</string>
    <slot>exitButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1245</x>
-     <y>720</y>
+     <x>651</x>
+     <y>740</y>
     </hint>
     <hint type="destinationlabel">
      <x>890</x>
@@ -1071,8 +1040,8 @@ color: rgb(0, 0, 255);</string>
    <slot>emergencyButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1199</x>
-     <y>753</y>
+     <x>531</x>
+     <y>732</y>
     </hint>
     <hint type="destinationlabel">
      <x>1040</x>
@@ -1087,8 +1056,8 @@ color: rgb(0, 0, 255);</string>
    <slot>clearMsgBoxButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>638</x>
-     <y>587</y>
+     <x>149</x>
+     <y>701</y>
     </hint>
     <hint type="destinationlabel">
      <x>564</x>
@@ -1103,8 +1072,8 @@ color: rgb(0, 0, 255);</string>
    <slot>helpButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>748</x>
-     <y>53</y>
+     <x>651</x>
+     <y>74</y>
     </hint>
     <hint type="destinationlabel">
      <x>735</x>
@@ -1119,8 +1088,8 @@ color: rgb(0, 0, 255);</string>
    <slot>showReport()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>559</x>
-     <y>54</y>
+     <x>321</x>
+     <y>75</y>
     </hint>
     <hint type="destinationlabel">
      <x>512</x>

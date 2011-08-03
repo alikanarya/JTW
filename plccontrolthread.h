@@ -1,6 +1,13 @@
 #ifndef PLCCONTROLTHREAD_H
 #define PLCCONTROLTHREAD_H
 
+#define MASK_CMD_CENTER 0   // 0000
+#define MASK_CMD_RIGHT  1   // 0001
+#define MASK_CMD_LEFT   2   // 0010
+#define MASK_CMD_STOP   4   // 0100
+#define MASK_CMD_EMG    12  // 1100
+
+
 #include <QThread>
 
 #include "../_Modules/S7/s7.h"
@@ -13,10 +20,13 @@ public:
     int plcType;
     QString plcUrl;
     int dbNo;
+    int byteNo;
+    /*
     int right_BYTE, right_BIT;
     int left_BYTE, left_BIT;
     int stop_BYTE, stop_BIT;
     int emergency_BYTE, emergency_BIT;
+    */
 
     int commandState;
     bool result;

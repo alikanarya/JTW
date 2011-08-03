@@ -18,6 +18,10 @@ public slots:
     void acceptButton();
     void cancelButton();
 
+    void wait2Stop();
+    void wait2Terminate();
+    void exitAction();
+
 private:
     Ui::exitDialog *ui;
 };

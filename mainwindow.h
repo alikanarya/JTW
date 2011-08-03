@@ -19,6 +19,7 @@
 #define _VOID_THRESHOLD     10
 #define _PLC_TYPE           1
 #define _DB_NO              1
+#define _BYTE_NO            0
 #define _RIGHT_VMEM_BYTE    0
 #define _RIGHT_BITofBYTE    0
 #define _LEFT_VMEM_BYTE     0
@@ -28,6 +29,7 @@
 #define _EMRGENCY_VMEM_BYTE 0
 #define _EMRGENCY_BITofBYTE 3
 #define _ERROR_LIMIT        5
+#define _ERROR_SCALE        1.0
 #define _YRES_ARRAY_INDEX   8
 #define _PLC_CONN_ONBOOT    true
 #define _PLAY_CAM_ONBOOT    true
@@ -45,6 +47,9 @@
 #define _CMD_EMERGENCY_PSV  5
 #define _CMD_RESET          6
 #define _CMD_CHECK          7
+
+#define _MAINTITLE "JTW - Kaynak için Birleþme Yeri Takipçisi :: "
+#define _TITLE "DIÞ KAYNAK"
 
 //const int yResArray[9] = {1, 2, 4, 6, 8, 10, 12, 16, 20}; // for height 240
 //const int yResArray[9] = {12, 12, 12, 12, 12, 12, 12, 16, 20};
@@ -92,6 +97,7 @@ class MainWindow : public QMainWindow {
 public:
 
     QRect rectScreen;                   // screen geometry
+    QString title;                      // window title
     bool settingsPWDOK;                 // to switch pwd dialog or settings form
     bool setupPWDOK;                    // to switch pwd dialog or setup form
 
@@ -121,6 +127,7 @@ public:
     QGraphicsScene *scene;      // to show devitation trend
     QPen penAxis;               // pen for dev. trend axis
     QPen penLimit;              // pen for dev. trend erorr limit lines
+    QPen penStopLimit;          // pen for dev. trend erorr stop limit lines
     QPen penTrack;              // pen for dev. trend
     QList<int> deviationData;   // dev. data list
     int yRes;                   // y coor resolution between 2 successive data in pixels
@@ -152,9 +159,11 @@ public:
     float thetaStepSub;
     int houghLineNo;
     int voteThreshold, voidThreshold;
-    int errorLimit, errorLimitNeg;      // deviation from center in pixels
+    int errorLimit, errorLimitNeg;          // deviation start limit from center in pixels
+    int errorStopLimit, errorStopLimitNeg;  // deviation stop limit from center in pixels
     bool subImageProcessingSwitch;
-
+    bool errorStopLimitLineVisible;
+    float errorStopScale;
 
     // plc vars
     QUrl urlPLC;                            // plc url
@@ -165,13 +174,16 @@ public:
     int cmdState, cmdStatePrev, cmdStatePrev2;
     bool cmdSended;
     int DB_NO;
+    int BYTE_NO;
+    int controlDelay;
+    int controlThreadCount, controlThreadCountSize;
+    bool controlPause;
+    /*
     int right_VMEM_BYTE, right_BITofBYTE;
     int left_VMEM_BYTE, left_BITofBYTE;
     int stop_VMEM_BYTE, stop_BITofBYTE;
     int emergency_VMEM_BYTE, emergency_BITofBYTE;
-    int controlDelay;
-    int controlThreadCount, controlThreadCountSize;
-    bool controlPause;
+    */
 
     struct weldData {
         int state;

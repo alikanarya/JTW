@@ -33,43 +33,28 @@ void plcControlThread::run(){
             if (plc->plcInteract) {         // if plc is successfully connected
 
                 if (commandState == _CMD_CENTER){           // action to center
-                    result = plcCmdCenter();                             // no action
-                    result = result & plcCmdStopReset();                          // reset stop cmd in case of existance
-                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
+                    result = plcCmdCenter();
                 } else
                 if (commandState == _CMD_RIGHT){            // action to right
-                    result = plcCmdRight();                              // right
-                    result = result & plcCmdStopReset();                          // reset stop cmd in case of existance
-                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
+                    result = plcCmdRight();
                 } else
                 if (commandState == _CMD_LEFT){             // action to left
-                    result = plcCmdLeft();                               // left
-                    result = result & plcCmdStopReset();                          // reset stop cmd in case of existance
-                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
+                    result = plcCmdLeft();
                 } else
                 if (commandState == _CMD_STOP){             // stop
-                    result = plcCmdCenter();                             // no action
-                    result = result & plcCmdStop();                               // stop
-                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
+                    result = plcCmdStop();
                 } else
                 if (commandState == _CMD_EMERGENCY_ACT){    // emergency active
-                    result = plcCmdCenter();                             // no action
-                    result = result & plcCmdStop();                               // stop
-                    result = result & plcCmdEmergencyAct();                       // Emergency active
+                    result = plcCmdEmergencyAct();
                 } else
                 if (commandState == _CMD_EMERGENCY_PSV){    // emergency passive
-                    result = plcCmdStopReset();                          // reset stop cmd in case of existance
-                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
+                    result = plcCmdEmergencyPsv();
                 } else
                 if (commandState == _CMD_RESET){            // reset cmds
                     result = plcCmdCenter();                             // no action
-                    result = result & plcCmdStopReset();                          // reset stop cmd in case of existance
-                    result = result & plcCmdEmergencyPsv();                       // Emergency passive
                 } else {
                     // state unknown, behave as emergency
-                    result = plcCmdCenter();             // no action
-                    result = result & plcCmdStop();               // stop
-                    result = result & plcCmdEmergencyAct();       // Emergency active
+                    result = plcCmdEmergencyAct();                       // Emergency active
                 }
             }
     }
@@ -83,69 +68,63 @@ void plcControlThread::stop(){
 }
 
 bool plcControlThread::plcCmdCenter(){
-    int result1 = plc->clrBit(dbNo, right_BYTE, right_BIT);
-    int result2 = plc->clrBit(dbNo, left_BYTE, left_BIT);
+    unsigned char buffer = MASK_CMD_CENTER;
 
-    if (result1 == 0 && result2 == 0)
-        return true;
-    else
-        return false;
+    int result = plc->writeBytes(dbNo, byteNo, 1, &buffer);
+
+    return (result == 0);
 }
 
 bool plcControlThread::plcCmdRight(){
+    /*
     int result1 = plc->clrBit(dbNo, left_BYTE, left_BIT);
     int result2 = plc->setBit(dbNo, right_BYTE, right_BIT);
+    */
+    unsigned char buffer = MASK_CMD_RIGHT;
 
-    if (result1 == 0 && result2 == 0)
-        return true;
-    else
-        return false;
+    int result = plc->writeBytes(dbNo, byteNo, 1, &buffer);
+
+    return (result == 0);
 }
 
 bool plcControlThread::plcCmdLeft(){
+    /*
     int result1 = plc->clrBit(dbNo, right_BYTE, right_BIT);
     int result2 = plc->setBit(dbNo, left_BYTE, left_BIT);
+    */
+    unsigned char buffer = MASK_CMD_LEFT;
 
-    if (result1 == 0 && result2 == 0)
-        return true;
-    else
-        return false;
+    int result = plc->writeBytes(dbNo, byteNo, 1, &buffer);
+
+    return (result == 0);
 }
 
 bool plcControlThread::plcCmdStop(){
-    int result = plc->setBit(dbNo, stop_BYTE, stop_BIT);
+    unsigned char buffer = MASK_CMD_STOP;
 
-    if (result == 0)
-        return true;
-    else
-        return false;
+    int result = plc->writeBytes(dbNo, byteNo, 1, &buffer);
+
+    return (result == 0);
 }
 
 bool plcControlThread::plcCmdStopReset(){
-    int result = plc->clrBit(dbNo, stop_BYTE, stop_BIT);
+    int result = plc->clrBit(dbNo, byteNo, 2);
 
-    if (result == 0)
-        return true;
-    else
-        return false;
+    return (result == 0);
 }
 
 bool plcControlThread::plcCmdEmergencyAct(){
-    int result = plc->setBit(dbNo, emergency_BYTE, emergency_BIT);
+    unsigned char buffer = MASK_CMD_EMG;
 
-    if (result == 0)
-        return true;
-    else
-        return false;
+    int result = plc->writeBytes(dbNo, byteNo, 1, &buffer);
+
+    return (result == 0);
 }
 
 bool plcControlThread::plcCmdEmergencyPsv(){
-    int result = plc->clrBit(dbNo, emergency_BYTE, emergency_BIT);
+    int result = plc->clrBit(dbNo, byteNo, 3);
 
-    if (result == 0)
-        return true;
-    else
-        return false;
+    return (result == 0);
 }
 
 void plcControlThread::check(){
@@ -153,7 +132,7 @@ void plcControlThread::check(){
 
     // check plc existance
     if (plcInteract){
-        checkResult = plc->readBits(dbNo, right_BYTE, right_BIT);      // test read
+        checkResult = plc->readBits(dbNo, byteNo, 0);      // test read
 
         // if not read
         if (checkResult < 0){

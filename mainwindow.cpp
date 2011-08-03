@@ -10,8 +10,20 @@
 #include "exitdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
-    //rectScreen = QApplication::desktop()->geometry();
+    rectScreen = QApplication::desktop()->geometry();
+
+    // only title on title bar
+    Qt::WindowFlags flags = 0;
+    flags |= Qt::Dialog;
+    flags |= Qt::FramelessWindowHint;
+    flags |= Qt::WindowTitleHint;
+    this->setWindowFlags(flags);
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
+
     ui->setupUi(this);
+
+    ui->clearMsgBoxButton->hide();  //  not used now
+    //ui->plainTextEdit->appendPlainText(QString::number(rectScreen.width())+"x"+QString::number(rectScreen.height()));
 
     // icon assignmets
     plcOnlineIcon.addFile(":/resources/s7_200-Enabled-Icon.png");
@@ -38,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     statusMessage = "";
     settings = new QSettings(INIFILENAME, QSettings::IniFormat);
     readSettings();
+
+    this->setWindowTitle(_MAINTITLE + title);
 
     // orginal and target image parameters
     imageWidth = 640;   //image->width();
@@ -94,8 +108,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // plc
     connectRequested = connectRequestedonBoot;
     threadPLCControl = new plcControlThread(plcType, urlPLC.toString());
+    threadPLCControl->plc->portNum = 102;
 
     threadPLCControl->dbNo = DB_NO;
+    threadPLCControl->byteNo = BYTE_NO;
+    /*
     threadPLCControl->right_BYTE = right_VMEM_BYTE;
     threadPLCControl->right_BIT = right_BITofBYTE;
     threadPLCControl->left_BYTE = left_VMEM_BYTE;
@@ -104,6 +121,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     threadPLCControl->stop_BIT = stop_BITofBYTE;
     threadPLCControl->emergency_BYTE = emergency_VMEM_BYTE;
     threadPLCControl->emergency_BIT = emergency_BITofBYTE;
+    */
 
     if (!threadPLCControl->plc->libraryLoaded){
         permPLC = false;
@@ -143,12 +161,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     penAxis.setColor(Qt::black);    penAxis.setWidth(2);
     penLimit.setColor(Qt::red);     penLimit.setWidth(1);
+    penStopLimit.setColor(Qt::green);     penStopLimit.setWidth(1);
     penTrack.setColor(Qt::blue);    penTrack.setWidth(1);
 
     deviationDataSize = sceneRect.height() / yRes + 2;     // sceneRect.height()/yRes+1 + 1 past data to draw first line
     deviationData.clear();
     eCodeDev = 200;
 
+    errorStopLimitLineVisible = false;
     addAxis();
 
     // weld commands init.
@@ -158,7 +178,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     controlDelay = QString::number(controlDelay).toInt(&controlDelayValid, 10);
     timerControlInterval = 100;
-    controlThreadCountSize = 1000 / timerControlInterval;   // timer shot count for 1sec plc check
+    controlThreadCountSize = 60000 / timerControlInterval;   // timer shot count for 60sec plc check
     weldCommandsSize = controlDelay / timerControlInterval;
 
     // start message
@@ -655,7 +675,6 @@ void MainWindow::emergencyButton(){
         ui->plainTextEdit->appendPlainText(timeString() + alarm10);
         ui->emergencyButton->setIcon(emergencyOnIcon);
     }
-
 }
 
 void MainWindow::processImage(){
@@ -778,10 +797,10 @@ void MainWindow::processImage(){
             if (deviationData[index] <= errorLimitNeg){
                 cmdState = _CMD_LEFT;
             } else
-            if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= 0)){
+            if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
                 cmdState = _CMD_CENTER;
             } else
-            if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= 0)){
+            if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
                 cmdState = _CMD_CENTER;
             } else
             if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
@@ -826,8 +845,14 @@ int MainWindow::calcTotalMsec(int hour, int min, int second, int msec){
 
 void MainWindow::addAxis(){
     scene->addLine(sceneCenterX, 0, sceneCenterX, sceneRect.height(), penAxis);
+
     scene->addLine(sceneCenterX - errorLimit, 0, sceneCenterX - errorLimit, sceneRect.height(), penLimit);
     scene->addLine((sceneCenterX - 1) + errorLimit, 0, (sceneCenterX - 1) + errorLimit, sceneRect.height(), penLimit);
+
+    if (errorStopLimitLineVisible && errorStopLimit > 1 && errorStopLimit < errorLimit){
+        scene->addLine(sceneCenterX - errorStopLimit, 0, sceneCenterX - errorStopLimit, sceneRect.height(), penStopLimit);
+        scene->addLine((sceneCenterX - 1) + errorStopLimit, 0, (sceneCenterX - 1) + errorStopLimit, sceneRect.height(), penStopLimit);
+    }
 }
 
 void MainWindow::clearTrack(){
@@ -974,6 +999,8 @@ void MainWindow::readSettings(){
             urlPLC.setUrl(settings->value("urlPLC", _URL_PLC).toString());
             plcType = settings->value("type", _PLC_TYPE).toInt();
             DB_NO = settings->value("dbno", _DB_NO).toInt();
+            BYTE_NO = settings->value("byte", _BYTE_NO).toInt();
+            /*
             right_VMEM_BYTE = settings->value("rbyt", _RIGHT_VMEM_BYTE).toInt();
             right_BITofBYTE = settings->value("rbit", _RIGHT_BITofBYTE).toInt();
             left_VMEM_BYTE = settings->value("lbyt", _LEFT_VMEM_BYTE).toInt();
@@ -982,6 +1009,7 @@ void MainWindow::readSettings(){
             stop_BITofBYTE = settings->value("stpbit", _STOP_BITofBYTE).toInt();
             emergency_VMEM_BYTE = settings->value("emrbyt", _EMRGENCY_VMEM_BYTE).toInt();
             emergency_BITofBYTE = settings->value("emrbit", _EMRGENCY_BITofBYTE).toInt();
+            */
             connectRequestedonBoot = settings->value("pcon", _PLC_CONN_ONBOOT).toBool();
             controlDelay = 0;   //settings->value("ctd", _CONTROL_DELAY).toInt();
         settings->endGroup();
@@ -1002,11 +1030,18 @@ void MainWindow::readSettings(){
             voidThreshold = settings->value("vdth", _VOID_THRESHOLD).toInt();
             errorLimit = settings->value("elm", _ERROR_LIMIT).toInt();
                 errorLimitNeg = -1 * errorLimit;
+
+            errorStopScale = settings->value("esc", _ERROR_SCALE).toFloat();
+                if (errorStopScale > 1.0) errorStopScale = 1.0;
+                errorStopLimit = errorLimit * errorStopScale;
+                errorStopLimitNeg = -1 * errorStopLimit;
+
         settings->endGroup();
 
         settings->beginGroup("oth");
             yResIndex = settings->value("yresi", _YRES_ARRAY_INDEX).toInt();
                 yRes = yResArray[yResIndex];
+            title = settings->value("title", _TITLE).toString();
         settings->endGroup();
 
     } else {    // assign default values if file not exist
@@ -1017,6 +1052,8 @@ void MainWindow::readSettings(){
         urlPLC.setUrl(_URL_PLC);
         plcType = _PLC_TYPE;
         DB_NO = _DB_NO;
+        BYTE_NO = _BYTE_NO;
+        /*
         right_VMEM_BYTE = _RIGHT_VMEM_BYTE;
         right_BITofBYTE = _RIGHT_BITofBYTE;
         left_VMEM_BYTE = _LEFT_VMEM_BYTE;
@@ -1025,6 +1062,7 @@ void MainWindow::readSettings(){
         stop_BITofBYTE = _STOP_BITofBYTE;
         emergency_VMEM_BYTE = _EMRGENCY_VMEM_BYTE;
         emergency_BITofBYTE = _EMRGENCY_BITofBYTE;
+        */
         connectRequestedonBoot = _PLC_CONN_ONBOOT;
         controlDelay = _CONTROL_DELAY;
 
@@ -1044,8 +1082,13 @@ void MainWindow::readSettings(){
         errorLimit = _ERROR_LIMIT;
             errorLimitNeg = -1 * errorLimit;
 
+        errorStopScale = _ERROR_SCALE;
+            errorStopLimit = errorLimit * errorStopScale;
+            errorStopLimitNeg = -1 * errorStopLimit;
+
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
+        title = _TITLE;
 
         statusMessage = "ini dosyasý bulunamadý";
     }
@@ -1063,6 +1106,8 @@ void MainWindow::writeSettings(){
         settings->setValue("urlPLC", urlPLC.toString());
         settings->setValue("type", QString::number(plcType));
         settings->setValue("dbno", QString::number(DB_NO));
+        settings->setValue("byte", QString::number(BYTE_NO));
+        /*
         settings->setValue("rbyt", QString::number(right_VMEM_BYTE));
         settings->setValue("rbit", QString::number(right_BITofBYTE));
         settings->setValue("lbyt", QString::number(left_VMEM_BYTE));
@@ -1071,6 +1116,7 @@ void MainWindow::writeSettings(){
         settings->setValue("stpbit", QString::number(stop_BITofBYTE));
         settings->setValue("emrbyt", QString::number(emergency_VMEM_BYTE));
         settings->setValue("emrbit", QString::number(emergency_BITofBYTE));
+        */
         QVariant pcon(connectRequestedonBoot);
             settings->setValue("pcon", pcon.toString());
         settings->setValue("ctd", QString::number(controlDelay));
@@ -1092,10 +1138,12 @@ void MainWindow::writeSettings(){
         settings->setValue("vth", QString::number(voteThreshold));
         settings->setValue("vdth", QString::number(voidThreshold));
         settings->setValue("elm", QString::number(errorLimit));
+        settings->setValue("esc", QString::number(errorStopScale));
     settings->endGroup();
 
     settings->beginGroup("oth");
         settings->setValue("yresi", QString::number(yResIndex));
+        settings->setValue("title", title);
     settings->endGroup();
 
     settings->sync();

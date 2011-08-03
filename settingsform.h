@@ -34,12 +34,14 @@ public:
 
 public slots:
     void showSetupForm();       // show system setup form
-    void errorLimitSlider();    // get error limit of deviation in pixels from slider
+    void errorLimitSlider();    // get error limit of deviation in pixels from slider >> command start
+    void errorScaleSlider();    // get error scale to calculate stop limit value
     void saveExitButton();      // display restart dialog to commit changes
     void exitButton();          // exit without changing parameters
     void yResIndexSlider();     // returns index of yRes array to get yRes value
     void checkPLConBoot();      // is plc be connected on app. start
     void checkCamonBoot();      // is camara be played on app. start
+    void checkErrorStopLimitVisible();
     void saveExit();            // commit changes & restart app.
     void targetSlider();        // target area horizontal size adjustment
     void targetVertSlider();    // target area vertical size adjustment
@@ -50,6 +52,7 @@ private:
 private slots:
     void changePLCtype();
     void getControlDelay();     // get control delay from gui
+    void setTitle();
 
 };
 

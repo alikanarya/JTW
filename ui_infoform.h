@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'infoform.ui'
 **
-** Created: Fri 4. Feb 14:59:39 2011
+** Created: Sun 1. May 14:09:34 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -102,7 +102,7 @@ public:
         label->setText(QApplication::translate("infoForm", "JTW", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("infoForm", "Joint Tracker for Welding", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("infoForm", "Kaynak i\303\247in Birle\305\237me Yeri Takip\303\247isi", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("infoForm", "ver 1.4.01, \302\251Aykurt Elektrik Hendek/Sakarya, 2011", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("infoForm", "ver 1.5.00, \302\251Aykurt Elektrik Hendek/Sakarya, 2011", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("infoForm", "T\303\274m haklar\304\261 sakl\304\261d\304\261r. All rights reserved.", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
