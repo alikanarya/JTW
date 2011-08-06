@@ -151,16 +151,57 @@ void setupForm::processExtSubImage(){
     int subWidth = w->frameWidth / 4;
     int lastWidth = w->frameWidth - 3 * subWidth;
 
-    QImage target1 = target.copy(0, 0, subWidth, w->frameHeight);
-    QImage target2 = target.copy(subWidth, 0, subWidth, w->frameHeight);
-    QImage target3 = target.copy(2 * subWidth, 0, subWidth, w->frameHeight);
-    QImage target4 = target.copy(3 * subWidth, 0, lastWidth, w->frameHeight);
+    QImage targetSub[4];
+    targetSub[0] = target.copy(0, 0, subWidth, w->frameHeight);
+    targetSub[1] = target.copy(subWidth, 0, subWidth, w->frameHeight);
+    targetSub[2] = target.copy(2 * subWidth, 0, subWidth, w->frameHeight);
+    targetSub[3] = target.copy(3 * subWidth, 0, lastWidth, w->frameHeight);
 
-    target.save(savePath + "target0" + fileExt);
-    target1.save(savePath + "target1" + fileExt);
-    target2.save(savePath + "target2" + fileExt);
-    target3.save(savePath + "target3" + fileExt);
-    target4.save(savePath + "target4" + fileExt);
+    imgProcess *iprocessSub[4];
+
+    for (int i = 0; i < 4; i++) {
+
+        iprocessSub[i] = new imgProcess(targetSub[i], targetSub[i].width(), targetSub[i].height()); // new imgProcess object
+        iprocessSub[i]->toMono();                                     // convert target to mono
+        iprocessSub[i]->constructValueMatrix(iprocessSub[i]->imgMono);  // construct mono matrix
+        iprocessSub[i]->detectEdgeSobel();                            // detect edges of the mono image
+
+        iprocessSub[i]->thetaMin = thetaMinSub;
+        iprocessSub[i]->thetaMax = thetaMaxSub;
+        iprocessSub[i]->thetaStep = thetaStepSub;
+        iprocessSub[i]->houghTransform();                             // detect lines in edge image
+
+        iprocessSub[i]->calculateHoughMaxs(10);                       // get max voted line(s)
+        iprocessSub[i]->calcAvgDistAndAngleOfMajors();
+        //ui->plainTextEdit->appendPlainText(QString::number(iprocessSub[i]->distanceAvg,'f',3) + " " + QString::number(iprocessSub[i]->thetaAvg,'f',3));
+    }
+
+
+    QImage *houghImage[4];
+    QImage *lineImage[4];
+
+    target.save(savePath + "target" + fileExt);
+
+    for (int i = 0; i < 4; i++) {
+
+        iprocessSub[i]->constructHoughMatrixAvgLine();
+        houghImage[i] = iprocessSub[i]->getImage(iprocessSub[i]->houghMatrix, iprocessSub[i]->edgeWidth, iprocessSub[i]->edgeHeight); // produce hough image
+        fileName = savePath + "t" + QString::number(i) + "_hough" + fileExt;
+        houghImage[i]->save(fileName);
+
+        lineImage[i] = iprocessSub[i]->getImage(iprocessSub[i]->valueMatrix, iprocessSub[i]->imageWidth, iprocessSub[i]->imageHeight); // produce line image
+        fileName = savePath + "t" + QString::number(i) + "_line" + fileExt;
+        lineImage[i]->save(fileName);
+
+        targetSub[i].save(savePath + "target" + QString::number(i)+ fileExt);
+
+        iprocessSub[i]->detectLongestSolidLine(iprocessSub[i]->distanceAvg, iprocessSub[i]->thetaAvg);
+        iprocessSub[i]->saveList(iprocessSub[i]->solidSpace, savePath + "solidspace" + QString::number(i)+ ".csv");
+    }
+
+
+    //delete []houghImage;
+    //delete []iprocessSub;
 }
 
 void setupForm::captureButton(){
