@@ -171,7 +171,12 @@ void setupForm::processExtSubImage(){
         iprocessSub[i]->thetaStep = thetaStepSub;
         iprocessSub[i]->houghTransform();                             // detect lines in edge image
 
-        iprocessSub[i]->calculateHoughMaxs(10);                       // get max voted line(s)
+
+        iprocessSub[i]->calculateHoughMaxs(50);                       // get max voted line(s)
+
+        fileName = savePath + "t" + QString::number(i) + "_houghlines" + ".csv";
+        iprocessSub[i]->saveMatrix(iprocessSub[i]->houghLines, 3, iprocessSub[i]->houghLineNo, fileName);
+
         iprocessSub[i]->calcAvgDistAndAngleOfMajors();
         //ui->plainTextEdit->appendPlainText(QString::number(iprocessSub[i]->distanceAvg,'f',3) + " " + QString::number(iprocessSub[i]->thetaAvg,'f',3));
     }
@@ -180,7 +185,8 @@ void setupForm::processExtSubImage(){
     QImage *houghImage[4];
     QImage *lineImage[4];
 
-    target.save(savePath + "target" + fileExt);
+    //target.save(savePath + "target" + fileExt);
+    QList<solidLine> longest;
 
     for (int i = 0; i < 4; i++) {
 
@@ -193,9 +199,11 @@ void setupForm::processExtSubImage(){
         fileName = savePath + "t" + QString::number(i) + "_line" + fileExt;
         lineImage[i]->save(fileName);
 
-        targetSub[i].save(savePath + "target" + QString::number(i)+ fileExt);
+        //targetSub[i].save(savePath + "target" + QString::number(i)+ fileExt);
 
-        iprocessSub[i]->detectLongestSolidLine(iprocessSub[i]->distanceAvg, iprocessSub[i]->thetaAvg);
+        longest.clear();
+        longest.append( iprocessSub[i]->detectLongestSolidLine(iprocessSub[i]->distanceAvg, iprocessSub[i]->thetaAvg) );
+        iprocessSub[i]->saveList(longest, savePath + "solidlongest" + QString::number(i)+ ".csv");
         iprocessSub[i]->saveList(iprocessSub[i]->solidSpace, savePath + "solidspace" + QString::number(i)+ ".csv");
     }
 
