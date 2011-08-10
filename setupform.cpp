@@ -166,31 +166,34 @@ void setupForm::processExtSubImage(){
         iprocessSub[i]->constructValueMatrix(iprocessSub[i]->imgMono);  // construct mono matrix
         iprocessSub[i]->detectEdgeSobel();                            // detect edges of the mono image
 
+        iprocessSub[i]->thickenEdges();
+
         iprocessSub[i]->thetaMin = thetaMinSub;
         iprocessSub[i]->thetaMax = thetaMaxSub;
         iprocessSub[i]->thetaStep = thetaStepSub;
         iprocessSub[i]->houghTransform();                             // detect lines in edge image
 
 
-        iprocessSub[i]->calculateHoughMaxs(200);                       // get max voted line(s)
+        iprocessSub[i]->calculateHoughMaxs(500);                       // get max voted line(s)
         iprocessSub[i]->detectLongestSolidLines();
 
         //fileName = savePath + "t" + QString::number(i) + "_houghlines" + ".csv";
         //iprocessSub[i]->saveMatrix(iprocessSub[i]->houghLines, 3, iprocessSub[i]->houghLineNo, fileName);
 
-        iprocessSub[i]->calcAvgDistAndAngleOfMajors();
+        //iprocessSub[i]->calcAvgDistAndAngleOfMajors();
         //ui->plainTextEdit->appendPlainText(QString::number(iprocessSub[i]->distanceAvg,'f',3) + " " + QString::number(iprocessSub[i]->thetaAvg,'f',3));
     }
 
 
     QImage *houghImage[4];
     QImage *lineImage[4];
+    QImage *edgeImage[4];
+    QImage *edgeThickenedImage[4];
 
     //target.save(savePath + "target" + fileExt);
-    QList<solidLine> longest;
 
     for (int i = 0; i < 4; i++) {
-
+        /*
         iprocessSub[i]->constructHoughMatrixAvgLine();
         houghImage[i] = iprocessSub[i]->getImage(iprocessSub[i]->houghMatrix, iprocessSub[i]->edgeWidth, iprocessSub[i]->edgeHeight); // produce hough image
         fileName = savePath + "t" + QString::number(i) + "_hough" + fileExt;
@@ -199,12 +202,17 @@ void setupForm::processExtSubImage(){
         lineImage[i] = iprocessSub[i]->getImage(iprocessSub[i]->valueMatrix, iprocessSub[i]->imageWidth, iprocessSub[i]->imageHeight); // produce line image
         fileName = savePath + "t" + QString::number(i) + "_line" + fileExt;
         lineImage[i]->save(fileName);
+        */
+        edgeImage[i] = iprocessSub[i]->getImage(iprocessSub[i]->edgeMatrix, iprocessSub[i]->edgeWidth, iprocessSub[i]->edgeHeight); // produce line image
+        fileName = savePath + "edge" + QString::number(i) + fileExt;
+        edgeImage[i]->save(fileName);
+
+        edgeThickenedImage[i] = iprocessSub[i]->getImage(iprocessSub[i]->edgeThickenedMatrix, iprocessSub[i]->edgeWidth, iprocessSub[i]->edgeHeight); // produce line image
+        fileName = savePath + "edgethickened" + QString::number(i) + fileExt;
+        edgeThickenedImage[i]->save(fileName);
 
         //targetSub[i].save(savePath + "target" + QString::number(i)+ fileExt);
 
-        //longest.clear();
-        //longest.append( iprocessSub[i]->detectLongestSolidLine(iprocessSub[i]->distanceAvg, iprocessSub[i]->thetaAvg) );
-        //iprocessSub[i]->saveList(longest, savePath + "solidlongest" + QString::number(i)+ ".csv");
         iprocessSub[i]->saveList(iprocessSub[i]->solidSpaceMain, savePath + "solidspace" + QString::number(i)+ ".csv");
     }
 
