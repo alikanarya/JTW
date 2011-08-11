@@ -174,7 +174,7 @@ void setupForm::processExtSubImage(){
         iprocessSub[i]->houghTransform();                             // detect lines in edge image
 
 
-        iprocessSub[i]->calculateHoughMaxs(500);                       // get max voted line(s)
+        //iprocessSub[i]->calculateHoughMaxs(500);                       // get max voted line(s)
         iprocessSub[i]->detectLongestSolidLines();
 
         //fileName = savePath + "t" + QString::number(i) + "_houghlines" + ".csv";
@@ -213,7 +213,7 @@ void setupForm::processExtSubImage(){
 
         //targetSub[i].save(savePath + "target" + QString::number(i)+ fileExt);
 
-        iprocessSub[i]->saveList(iprocessSub[i]->solidSpaceMain, savePath + "solidspace" + QString::number(i)+ ".csv");
+        iprocessSub[i]->saveList(iprocessSub[i]->solidSpaceMainOrdered, savePath + "solidspace" + QString::number(i)+ ".csv");
     }
 
 
