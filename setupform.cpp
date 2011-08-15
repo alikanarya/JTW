@@ -215,6 +215,12 @@ void setupForm::processExtSubImage(){
 
         iprocessSub[i]->saveList(iprocessSub[i]->solidSpaceMainTrimmed, savePath + "solidSpaceMainTrimmed" + QString::number(i)+ ".csv");
         iprocessSub[i]->saveList(iprocessSub[i]->solidSpaceMainMaximums, savePath + "solidSpaceMainMaximums" + QString::number(i)+ ".csv");
+
+        ui->plainTextEdit->appendPlainText("image: " + QString::number(i));
+        ui->plainTextEdit->appendPlainText("maxlength: " + QString::number(iprocessSub[i]->maxSolidLineLength));
+
+        for (int j = 0; j < iprocessSub[i]->majorList.size(); j++)
+            ui->plainTextEdit->appendPlainText("start: " + QString::number(iprocessSub[i]->majorList[j]->startIndex) + " end: " + QString::number(iprocessSub[i]->majorList[j]->endIndex));
     }
 
 
