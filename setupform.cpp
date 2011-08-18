@@ -233,9 +233,9 @@ void setupForm::processExtSubImage(){
 
 void setupForm::captureButton(){
 
-    processExtSubImage();
+    //processExtSubImage();
 
-    /*
+
     if (!w->imageGetter->imageList.isEmpty()){  // if any image is get
         ui->labelPrimaryLine->hide();   // hide PRIMARY LINE NOT DETECTED message
 
@@ -312,7 +312,7 @@ void setupForm::captureButton(){
     } else {
         ui->plainTextEdit->appendPlainText(alarm6);
    }
-    */
+
 }
 
 bool setupForm::saveButton(){
