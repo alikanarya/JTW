@@ -33,6 +33,8 @@ public:
     QImage target;              // original image
     QImage *edge;               // edge detection image
     QImage *hough;              // hough transformed image (with red hough lines)
+    QImage *leftImage;          // edge image with red primary line
+    QImage *rightImage;          // edge image with red primary line
 
     // image processing vars
     int thetaMin, thetaMax;
@@ -44,6 +46,7 @@ public:
     int voidThreshold;
 
     imgProcess *iprocess;       // image processing class
+    imgProcess *iprocessLeft, *iprocessRight;
 
     explicit setupForm(QWidget *parent = 0);    // constructor
     void getParameters();       // get parameters from mainwindow
@@ -59,6 +62,7 @@ public slots:
 
     void processClassical();
     void processExtSubImage();
+    void processExtSubImageTest();
 
 private:
     Ui::setupForm *ui;

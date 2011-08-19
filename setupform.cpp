@@ -148,6 +148,82 @@ void setupForm::processExtSubImage(){
 
     target = w->lastData->image->copy(w->offsetX,w->offsetY,w->frameWidth,w->frameHeight);      // take target image
 
+    iprocess = new imgProcess(target, target.width(),target.height());                          // new imgProcess object
+    iprocess->toMono();                                                                         // convert target to mono
+    iprocess->constructValueMatrix(iprocess->imgMono);                                          // construct mono matrix
+    iprocess->detectEdgeSobel();                                                                // detect edges of the mono image
+
+    iprocess->thetaMin = thetaMin;
+    iprocess->thetaMax = thetaMax;
+    iprocess->thetaStep = thetaStep;
+    iprocess->houghTransform();                                                                 // detect lines in edge image
+
+    iprocess->calculateHoughMaxs(houghLineNo);                                                  // get max voted line(s)
+    iprocess->calcAvgDistAndAngle(houghLineNo);
+    voteAvg = iprocess->calcVoteAvg();                                                          // ave value of max voted line(s)
+
+    iprocess->voteThreshold = voteThreshold;                                                    // acceptable vote value low-limit
+    if (!iprocess->checkPrimaryLine())                                                          // is max voted line  above the low-limit?
+        ui->labelPrimaryLine->show();
+    iprocess->detectVoidLines();                                                                // detect void lines on hough lines in mono image
+
+    iprocess->voidThreshold = voidThreshold;                                                    // void threshold to decide max void as primary
+    iprocess->detectPrimaryVoid();                                                              // decide primary void line & corners/center
+
+    if (w->subImageProcessingSwitch && iprocess->detected) {
+        int tStartX = 0;
+        int tCenterX = iprocess->trackCenterX;
+        int tEndX = w->frameWidth - 1;
+
+        QImage targetLeft = target.copy(tStartX, 0, tCenterX - tStartX, w->frameHeight);
+        QImage targetRight = target.copy(tCenterX, 0, tEndX + 1 - tCenterX, w->frameHeight);
+
+        // left image process
+        iprocessLeft = new imgProcess(targetLeft, targetLeft.width(), targetLeft.height()); // new imgProcess object
+        iprocessLeft->toMono();                                     // convert target to mono
+        iprocessLeft->constructValueMatrix(iprocessLeft->imgMono);  // construct mono matrix
+        iprocessLeft->detectEdgeSobel();                            // detect edges of the mono image
+        iprocessLeft->thickenEdges();
+
+        iprocessLeft->thetaMin = thetaMinSub;
+        iprocessLeft->thetaMax = thetaMaxSub;
+        iprocessLeft->thetaStep = thetaStepSub;
+        iprocessLeft->houghTransform();                             // detect lines in edge image
+        iprocessLeft->detectLongestSolidLines();
+
+
+        // right image process
+        iprocessRight = new imgProcess(targetRight, targetRight.width(), targetRight.height()); // new imgProcess object
+        iprocessRight->toMono();                                    // convert target to mono
+        iprocessRight->constructValueMatrix(iprocessRight->imgMono);// construct mono matrix
+        iprocessRight->detectEdgeSobel();                           // detect edges of the mono image
+        iprocessRight->thickenEdges();
+
+        iprocessRight->thetaMin = thetaMinSub;
+        iprocessRight->thetaMax = thetaMaxSub;
+        iprocessRight->thetaStep = thetaStepSub;
+        iprocessRight->houghTransform();                            // detect lines in edge image
+        iprocessRight->detectLongestSolidLines();
+/*
+        if (iprocessLeft->detected && iprocessRight->detected){
+            iprocess->leftCornerX = tStartX + iprocessLeft->rightMostCornerX;
+            iprocess->leftCornerY = iprocessLeft->rightMostCornerY;
+            iprocess->rightCornerX = tCenterX + iprocessRight->leftMostCornerX;
+            iprocess->rightCornerY = iprocessRight->leftMostCornerY;
+            iprocess->trackCenterX = (iprocess->leftCornerX + iprocess->rightCornerX) / 2;
+            iprocess->trackCenterY = (iprocess->leftCornerY + iprocess->rightCornerY) / 2;
+        }
+*/
+
+        //delete iprocessLeft;
+        //delete iprocessRight;
+    }
+}
+
+void setupForm::processExtSubImageTest(){
+
+    target = w->lastData->image->copy(w->offsetX,w->offsetY,w->frameWidth,w->frameHeight);      // take target image
+
     int subWidth = w->frameWidth / 4;
     int lastWidth = w->frameWidth - 3 * subWidth;
 
@@ -269,13 +345,63 @@ void setupForm::captureButton(){
         startTime = w->timeSystem.getSystemTimeMsec();
         // START IMAGE PROCESSING
 
-        processClassical();
+        processExtSubImage();
 
         // END IMAGE PROCESSING
         endTime = w->timeSystem.getSystemTimeMsec();
 
         processElapsed = endTime - startTime;
 
+        // produce images
+        edge = iprocess->getImage(iprocess->edgeMatrix,iprocess->edgeWidth,iprocess->edgeHeight);   // produce edge image
+
+        iprocessLeft->constructHoughMatrixPrimaryLine(iprocessLeft->primaryLine.start.x(), iprocessLeft->primaryLine.end.x());
+        leftImage = iprocessLeft->getImage(iprocessLeft->houghMatrix, iprocessLeft->edgeWidth, iprocessLeft->edgeHeight); // produce hough image
+
+        iprocessRight->constructHoughMatrixPrimaryLine(iprocessRight->primaryLine.start.x(), iprocessRight->primaryLine.end.x());
+        rightImage = iprocessRight->getImage(iprocessRight->houghMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight); // produce hough image
+
+        // update GUI
+        ui->labelTarget->setPixmap(QPixmap::fromImage(iprocess->imgOrginal));
+        ui->labelMono->setPixmap(QPixmap::fromImage(iprocess->imgMono));
+        ui->labelEdge->setPixmap(QPixmap::fromImage(*edge));
+        ui->labelHough->setPixmap(QPixmap::fromImage(*leftImage));
+        ui->labelAnalyze->setPixmap(QPixmap::fromImage(*rightImage));
+
+
+
+        QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleþtirildi.";
+        ui->plainTextEdit->appendPlainText(message);
+
+        ui->plainTextEdit->appendPlainText("1.aþama:");
+        ui->plainTextEdit->appendPlainText("Merkez (x,y): " + QString::number(iprocess->trackCenterX) + "," + QString::number(iprocess->trackCenterY));
+
+        ui->plainTextEdit->appendPlainText("2.aþama:");
+
+        ui->plainTextEdit->appendPlainText("Sol Ýmaj {Uzunluk-Mesafe-Açý-Baþlagýç(x,y)-Bitiþ(x,y)}");
+        message = QString::number(iprocessLeft->primaryLine.length) + " - " +
+                  QString::number(iprocessLeft->primaryLine.distance) + " - " +
+                  QString::number(iprocessLeft->primaryLine.angle) + " -   ( " +
+                  QString::number(iprocessLeft->primaryLine.start.x()) + " ," +
+                  QString::number(iprocessLeft->primaryLine.start.y()) + " ) - ( " +
+                  QString::number(iprocessLeft->primaryLine.end.x()) + " , " +
+                  QString::number(iprocessLeft->primaryLine.end.y()) + " )";
+        ui->plainTextEdit->appendPlainText(message);
+
+        ui->plainTextEdit->appendPlainText("Sað Ýmaj {Uzunluk-Mesafe-Açý-Baþlagýç(x,y)-Bitiþ(x,y)}");
+        message = QString::number(iprocessRight->primaryLine.length) + " - " +
+                  QString::number(iprocessRight->primaryLine.distance) + " - " +
+                  QString::number(iprocessRight->primaryLine.angle) + " -   ( " +
+                  QString::number(iprocessRight->primaryLine.start.x()) + " ," +
+                  QString::number(iprocessRight->primaryLine.start.y()) + " ) - ( " +
+                  QString::number(iprocessRight->primaryLine.end.x()) + " , " +
+                  QString::number(iprocessRight->primaryLine.end.y()) + " )";
+        ui->plainTextEdit->appendPlainText(message);
+
+        //ui->plainTextEdit->appendPlainText(iprocess->statusMessage);    // display message about detection process
+        ui->plainTextEdit->appendPlainText("------------------------------------------------------------");
+
+        /*
         // produce images
         edge = iprocess->getImage(iprocess->edgeMatrix,iprocess->edgeWidth,iprocess->edgeHeight);   // produce edge image
         iprocess->constructHoughMatrix();                                                           // construct hough matrix = edge matrix + coded lines
@@ -307,7 +433,7 @@ void setupForm::captureButton(){
         }
         ui->plainTextEdit->appendPlainText(iprocess->statusMessage);    // display message about detection process
         ui->plainTextEdit->appendPlainText("------------------------------------------------------------");
-
+*/
         captured = true;
     } else {
         ui->plainTextEdit->appendPlainText(alarm6);
