@@ -29,13 +29,21 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     getParameters();
     captured = false;
     ui->labelPrimaryLine->hide();   // hide PRIMARY LINE NOT DETECTED message
+
+    iprocessInitSwitch = iprocessLeftInitSwitch = iprocessRightInitSwitch = false;
 }
 
 void setupForm::processClassical(){
 
     target = w->lastData->image->copy(w->offsetX,w->offsetY,w->frameWidth,w->frameHeight);      // take target image
 
+    if (iprocessInitSwitch) {
+        delete iprocess;
+        iprocessInitSwitch = false;
+    }
     iprocess = new imgProcess(target, target.width(),target.height());                          // new imgProcess object
+    iprocessInitSwitch = true;
+
     iprocess->toMono();                                                                         // convert target to mono
     iprocess->constructValueMatrix(iprocess->imgMono);                                          // construct mono matrix
     iprocess->detectEdgeSobel();                                                                // detect edges of the mono image
@@ -58,6 +66,16 @@ void setupForm::processClassical(){
     iprocess->detectPrimaryVoid();                                                              // decide primary void line & corners/center
 
     if (w->subImageProcessingSwitch && iprocess->detected) {
+
+        if (iprocessLeftInitSwitch) {
+            delete iprocessLeft;
+            iprocessLeftInitSwitch = false;
+        }
+        if (iprocessRightInitSwitch) {
+            delete iprocessRight;
+            iprocessRightInitSwitch = false;
+        }
+
         int tStartX = 0;
         int tCenterX = iprocess->trackCenterX;
         int tEndX = w->frameWidth - 1;
@@ -66,7 +84,8 @@ void setupForm::processClassical(){
         QImage targetRight = target.copy(tCenterX, 0, tEndX + 1 - tCenterX, w->frameHeight);
 
         // left image process
-        imgProcess *iprocessLeft = new imgProcess(targetLeft, targetLeft.width(), targetLeft.height()); // new imgProcess object
+        iprocessLeft = new imgProcess(targetLeft, targetLeft.width(), targetLeft.height()); // new imgProcess object
+        iprocessLeftInitSwitch = true;
         iprocessLeft->toMono();                                     // convert target to mono
         iprocessLeft->constructValueMatrix(iprocessLeft->imgMono);  // construct mono matrix
         iprocessLeft->detectEdgeSobel();                            // detect edges of the mono image
@@ -88,7 +107,8 @@ void setupForm::processClassical(){
         iprocessLeft->detectPrimaryVoid();                         // decide primary void line & corners/center
 
         // right image process
-        imgProcess *iprocessRight = new imgProcess(targetRight, targetRight.width(), targetRight.height()); // new imgProcess object
+        iprocessRight = new imgProcess(targetRight, targetRight.width(), targetRight.height()); // new imgProcess object
+        iprocessRightInitSwitch = true;
         iprocessRight->toMono();                                    // convert target to mono
         iprocessRight->constructValueMatrix(iprocessRight->imgMono);// construct mono matrix
         iprocessRight->detectEdgeSobel();                           // detect edges of the mono image
@@ -139,8 +159,6 @@ void setupForm::processClassical(){
         delete houghRight;
         // ------ LEFT AND RIGHT IMAGES SAVE
 
-        delete iprocessLeft;
-        delete iprocessRight;
     }
 }
 
@@ -148,7 +166,12 @@ void setupForm::processExtSubImage(){
 
     target = w->lastData->image->copy(w->offsetX,w->offsetY,w->frameWidth,w->frameHeight);      // take target image
 
+    if (iprocessInitSwitch) {
+        delete iprocess;
+        iprocessInitSwitch = false;
+    }
     iprocess = new imgProcess(target, target.width(),target.height());                          // new imgProcess object
+    iprocessInitSwitch = true;
     iprocess->toMono();                                                                         // convert target to mono
     iprocess->constructValueMatrix(iprocess->imgMono);                                          // construct mono matrix
     iprocess->detectEdgeSobel();                                                                // detect edges of the mono image
@@ -170,7 +193,17 @@ void setupForm::processExtSubImage(){
     iprocess->voidThreshold = voidThreshold;                                                    // void threshold to decide max void as primary
     iprocess->detectPrimaryVoid();                                                              // decide primary void line & corners/center
 
+
     if (w->subImageProcessingSwitch && iprocess->detected) {
+
+        if (iprocessLeftInitSwitch) {
+            delete iprocessLeft;
+            iprocessLeftInitSwitch = false;
+        }
+        if (iprocessRightInitSwitch) {
+            delete iprocessRight;
+            iprocessRightInitSwitch = false;
+        }
         int tStartX = 0;
         int tCenterX = iprocess->trackCenterX;
         int tEndX = w->frameWidth - 1;
@@ -180,6 +213,7 @@ void setupForm::processExtSubImage(){
 
         // left image process
         iprocessLeft = new imgProcess(targetLeft, targetLeft.width(), targetLeft.height()); // new imgProcess object
+        iprocessLeftInitSwitch = true;
         iprocessLeft->toMono();                                     // convert target to mono
         iprocessLeft->constructValueMatrix(iprocessLeft->imgMono);  // construct mono matrix
         iprocessLeft->detectEdgeSobel();                            // detect edges of the mono image
@@ -194,6 +228,7 @@ void setupForm::processExtSubImage(){
 
         // right image process
         iprocessRight = new imgProcess(targetRight, targetRight.width(), targetRight.height()); // new imgProcess object
+        iprocessRightInitSwitch = true;
         iprocessRight->toMono();                                    // convert target to mono
         iprocessRight->constructValueMatrix(iprocessRight->imgMono);// construct mono matrix
         iprocessRight->detectEdgeSobel();                           // detect edges of the mono image
@@ -213,7 +248,12 @@ void setupForm::processExtSubImage(){
 
             targetRight = target.copy(tCenterX, 0, tEndX + 1 - tCenterX, w->frameHeight);
 
+            if (iprocessRightInitSwitch) {
+                delete iprocessRight;
+                iprocessRightInitSwitch = false;
+            }
             iprocessRight = new imgProcess(targetRight, targetRight.width(), targetRight.height()); // new imgProcess object
+            iprocessRightInitSwitch = true;
             iprocessRight->toMono();                                    // convert target to mono
             iprocessRight->constructValueMatrix(iprocessRight->imgMono);// construct mono matrix
             iprocessRight->detectEdgeSobel();                           // detect edges of the mono image
@@ -225,69 +265,21 @@ void setupForm::processExtSubImage(){
             iprocessRight->houghTransform();                            // detect lines in edge image
             iprocessRight->detectLongestSolidLines();
         }
-/*
-        if (iprocessLeft->detected && iprocessRight->detected){
-            iprocess->leftCornerX = tStartX + iprocessLeft->rightMostCornerX;
-            iprocess->leftCornerY = iprocessLeft->rightMostCornerY;
-            iprocess->rightCornerX = tCenterX + iprocessRight->leftMostCornerX;
-            iprocess->rightCornerY = iprocessRight->leftMostCornerY;
-            iprocess->trackCenterX = (iprocess->leftCornerX + iprocess->rightCornerX) / 2;
-            iprocess->trackCenterY = (iprocess->leftCornerY + iprocess->rightCornerY) / 2;
-        }
-*/
 
     }
 }
 
 void setupForm::processExtSubImageTest(){
 
-    target = w->lastData->image->copy(w->offsetX,w->offsetY,w->frameWidth,w->frameHeight);      // take target image
-
-    int subWidth = w->frameWidth / 4;
-    int lastWidth = w->frameWidth - 3 * subWidth;
-
-    QImage targetSub[4];
-    targetSub[0] = target.copy(0, 0, subWidth, w->frameHeight);
-    targetSub[1] = target.copy(subWidth, 0, subWidth, w->frameHeight);
-    targetSub[2] = target.copy(2 * subWidth, 0, subWidth, w->frameHeight);
-    targetSub[3] = target.copy(3 * subWidth, 0, lastWidth, w->frameHeight);
-
-    imgProcess *iprocessSub[4];
-
-    for (int i = 0; i < 4; i++) {
-
-        iprocessSub[i] = new imgProcess(targetSub[i], targetSub[i].width(), targetSub[i].height()); // new imgProcess object
-        iprocessSub[i]->toMono();                                     // convert target to mono
-        iprocessSub[i]->constructValueMatrix(iprocessSub[i]->imgMono);  // construct mono matrix
-        iprocessSub[i]->detectEdgeSobel();                            // detect edges of the mono image
-
-        iprocessSub[i]->thickenEdges();
-
-        iprocessSub[i]->thetaMin = thetaMinSub;
-        iprocessSub[i]->thetaMax = thetaMaxSub;
-        iprocessSub[i]->thetaStep = thetaStepSub;
-        iprocessSub[i]->houghTransform();                             // detect lines in edge image
-
-
-        //iprocessSub[i]->calculateHoughMaxs(500);                       // get max voted line(s)
-        iprocessSub[i]->detectLongestSolidLines();
-
         //fileName = savePath + "t" + QString::number(i) + "_houghlines" + ".csv";
         //iprocessSub[i]->saveMatrix(iprocessSub[i]->houghLines, 3, iprocessSub[i]->houghLineNo, fileName);
 
         //iprocessSub[i]->calcAvgDistAndAngleOfMajors();
         //ui->plainTextEdit->appendPlainText(QString::number(iprocessSub[i]->distanceAvg,'f',3) + " " + QString::number(iprocessSub[i]->thetaAvg,'f',3));
-    }
 
-
-    QImage *houghImage[4];
-    QImage *lineImage[4];
-    QImage *edgeImage[4];
-    QImage *edgeThickenedImage[4];
 
     //target.save(savePath + "target" + fileExt);
 
-    for (int i = 0; i < 4; i++) {
         /*
         iprocessSub[i]->constructHoughMatrixAvgLine();
         houghImage[i] = iprocessSub[i]->getImage(iprocessSub[i]->houghMatrix, iprocessSub[i]->edgeWidth, iprocessSub[i]->edgeHeight); // produce hough image
@@ -297,7 +289,6 @@ void setupForm::processExtSubImageTest(){
         lineImage[i] = iprocessSub[i]->getImage(iprocessSub[i]->valueMatrix, iprocessSub[i]->imageWidth, iprocessSub[i]->imageHeight); // produce line image
         fileName = savePath + "t" + QString::number(i) + "_line" + fileExt;
         lineImage[i]->save(fileName);
-        */
         edgeImage[i] = iprocessSub[i]->getImage(iprocessSub[i]->edgeMatrix, iprocessSub[i]->edgeWidth, iprocessSub[i]->edgeHeight); // produce line image
         fileName = savePath + "edge" + QString::number(i) + fileExt;
         edgeImage[i]->save(fileName);
@@ -319,20 +310,13 @@ void setupForm::processExtSubImageTest(){
 
         iprocessSub[i]->saveList(iprocessSub[i]->majorLines, savePath + "majorLines" + QString::number(i)+ ".csv");
         iprocessSub[i]->saveList(iprocessSub[i]->major2Lines, savePath + "major2Lines" + QString::number(i)+ ".csv");
-    }
-
-
-    //delete []houghImage;
-    //delete []iprocessSub;
+        */
 }
 
 void setupForm::captureButton(){
 
-    //processExtSubImage();
-
-
     if (!w->imageGetter->imageList.isEmpty()){  // if any image is get
-        ui->labelPrimaryLine->hide();   // hide PRIMARY LINE NOT DETECTED message
+        ui->labelPrimaryLine->hide();           // hide PRIMARY LINE NOT DETECTED message
 
         // get & check hough parameters from ui
         thetaMin = ui->editHoughThetaMin->text().toInt();
@@ -387,8 +371,7 @@ void setupForm::captureButton(){
         ui->labelHough->setPixmap(QPixmap::fromImage(*leftImage));
         ui->labelAnalyze->setPixmap(QPixmap::fromImage(*rightImage));
 
-
-
+        // update text message
         QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleþtirildi.";
         ui->plainTextEdit->appendPlainText(message);
 
@@ -525,6 +508,7 @@ bool setupForm::saveButton(){
 }
 
 void setupForm::getParameters(){
+
     thetaMin = w->thetaMin;
     thetaMax = w->thetaMax;
     thetaStep = w->thetaStep;
@@ -595,10 +579,19 @@ void setupForm::exitButton(){
 }
 
 setupForm::~setupForm(){
-    //delete iprocessRight;
 
     delete ui;
 
-    delete iprocess;
-    //delete iprocessLeft;
+    if (iprocessInitSwitch) {
+        delete iprocess;
+        iprocessInitSwitch = false;
+    }
+    if (iprocessLeftInitSwitch) {
+        delete iprocessLeft;
+        iprocessLeftInitSwitch = false;
+    }
+    if (iprocessRightInitSwitch) {
+        delete iprocessRight;
+        iprocessRightInitSwitch = false;
+    }
 }
