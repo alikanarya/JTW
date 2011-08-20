@@ -204,6 +204,27 @@ void setupForm::processExtSubImage(){
         iprocessRight->thetaStep = thetaStepSub;
         iprocessRight->houghTransform();                            // detect lines in edge image
         iprocessRight->detectLongestSolidLines();
+
+        if ( iprocessLeft->primaryLine.length > iprocessRight->primaryLine.length) {
+            //delete iprocessRight;
+
+            // right image re-process
+            tCenterX = iprocessLeft->primaryLine.end.x();
+
+            targetRight = target.copy(tCenterX, 0, tEndX + 1 - tCenterX, w->frameHeight);
+
+            iprocessRight = new imgProcess(targetRight, targetRight.width(), targetRight.height()); // new imgProcess object
+            iprocessRight->toMono();                                    // convert target to mono
+            iprocessRight->constructValueMatrix(iprocessRight->imgMono);// construct mono matrix
+            iprocessRight->detectEdgeSobel();                           // detect edges of the mono image
+            iprocessRight->thickenEdges();
+
+            iprocessRight->thetaMin = thetaMinSub;
+            iprocessRight->thetaMax = thetaMaxSub;
+            iprocessRight->thetaStep = thetaStepSub;
+            iprocessRight->houghTransform();                            // detect lines in edge image
+            iprocessRight->detectLongestSolidLines();
+        }
 /*
         if (iprocessLeft->detected && iprocessRight->detected){
             iprocess->leftCornerX = tStartX + iprocessLeft->rightMostCornerX;
@@ -215,8 +236,6 @@ void setupForm::processExtSubImage(){
         }
 */
 
-        //delete iprocessLeft;
-        //delete iprocessRight;
     }
 }
 
@@ -382,7 +401,7 @@ void setupForm::captureButton(){
         message = QString::number(iprocessLeft->primaryLine.length) + " - " +
                   QString::number(iprocessLeft->primaryLine.distance) + " - " +
                   QString::number(iprocessLeft->primaryLine.angle) + " -   ( " +
-                  QString::number(iprocessLeft->primaryLine.start.x()) + " ," +
+                  QString::number(iprocessLeft->primaryLine.start.x()) + ", " +
                   QString::number(iprocessLeft->primaryLine.start.y()) + " ) - ( " +
                   QString::number(iprocessLeft->primaryLine.end.x()) + " , " +
                   QString::number(iprocessLeft->primaryLine.end.y()) + " )";
@@ -392,7 +411,7 @@ void setupForm::captureButton(){
         message = QString::number(iprocessRight->primaryLine.length) + " - " +
                   QString::number(iprocessRight->primaryLine.distance) + " - " +
                   QString::number(iprocessRight->primaryLine.angle) + " -   ( " +
-                  QString::number(iprocessRight->primaryLine.start.x()) + " ," +
+                  QString::number(iprocessRight->primaryLine.start.x()) + ", " +
                   QString::number(iprocessRight->primaryLine.start.y()) + " ) - ( " +
                   QString::number(iprocessRight->primaryLine.end.x()) + " , " +
                   QString::number(iprocessRight->primaryLine.end.y()) + " )";
@@ -401,6 +420,8 @@ void setupForm::captureButton(){
         //ui->plainTextEdit->appendPlainText(iprocess->statusMessage);    // display message about detection process
         ui->plainTextEdit->appendPlainText("------------------------------------------------------------");
 
+        //delete iprocessLeft;
+        //delete iprocessRight;
         /*
         // produce images
         edge = iprocess->getImage(iprocess->edgeMatrix,iprocess->edgeWidth,iprocess->edgeHeight);   // produce edge image
@@ -574,5 +595,10 @@ void setupForm::exitButton(){
 }
 
 setupForm::~setupForm(){
+    //delete iprocessRight;
+
     delete ui;
+
+    delete iprocess;
+    //delete iprocessLeft;
 }
