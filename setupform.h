@@ -44,6 +44,7 @@ public:
     int houghLineNo;
     int voteThreshold, voteAvg;
     int voidThreshold;
+    int tCenterX;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;

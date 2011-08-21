@@ -205,7 +205,7 @@ void setupForm::processExtSubImage(){
             iprocessRightInitSwitch = false;
         }
         int tStartX = 0;
-        int tCenterX = iprocess->trackCenterX;
+        tCenterX = iprocess->trackCenterX;
         int tEndX = w->frameWidth - 1;
 
         QImage targetLeft = target.copy(tStartX, 0, tCenterX - tStartX, w->frameHeight);
@@ -241,8 +241,6 @@ void setupForm::processExtSubImage(){
         iprocessRight->detectLongestSolidLines();
 
         if ( iprocessLeft->primaryLine.length > iprocessRight->primaryLine.length) {
-            //delete iprocessRight;
-
             // right image re-process
             tCenterX = iprocessLeft->primaryLine.end.x();
 
@@ -264,6 +262,35 @@ void setupForm::processExtSubImage(){
             iprocessRight->thetaStep = thetaStepSub;
             iprocessRight->houghTransform();                            // detect lines in edge image
             iprocessRight->detectLongestSolidLines();
+        } else
+        if ( iprocessLeft->primaryLine.length < iprocessRight->primaryLine.length) {
+            // left image re-process
+            tCenterX = iprocess->trackCenterX + iprocessRight->primaryLine.start.x();
+
+            targetLeft = target.copy(tStartX, 0, tCenterX - tStartX, w->frameHeight);
+
+            if (iprocessLeftInitSwitch) {
+                delete iprocessLeft;
+                iprocessLeftInitSwitch = false;
+            }
+            iprocessLeft = new imgProcess(targetLeft, targetLeft.width(), targetLeft.height()); // new imgProcess object
+            iprocessLeftInitSwitch = true;
+            iprocessLeft->toMono();                                     // convert target to mono
+            iprocessLeft->constructValueMatrix(iprocessLeft->imgMono);  // construct mono matrix
+            iprocessLeft->detectEdgeSobel();                            // detect edges of the mono image
+            iprocessLeft->thickenEdges();
+
+            iprocessLeft->thetaMin = thetaMinSub;
+            iprocessLeft->thetaMax = thetaMaxSub;
+            iprocessLeft->thetaStep = thetaStepSub;
+            iprocessLeft->houghTransform();                             // detect lines in edge image
+            iprocessLeft->detectLongestSolidLines();
+
+            // for primary lines image generation offset
+            tCenterX = iprocess->trackCenterX;
+        } else {
+            // equality in lengths
+
         }
 
     }
@@ -358,18 +385,23 @@ void setupForm::captureButton(){
         // produce images
         edge = iprocess->getImage(iprocess->edgeMatrix,iprocess->edgeWidth,iprocess->edgeHeight);   // produce edge image
 
+        iprocess->constructHoughMatrix();                                                           // construct hough matrix = edge matrix + coded lines
+        //iprocess->constructHoughMatrixPrimaryLines(iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX);
+        hough = iprocess->getImage(iprocess->houghMatrix,iprocess->edgeWidth,iprocess->edgeHeight); // produce hough image
+
+        /*
         iprocessLeft->constructHoughMatrixPrimaryLine(iprocessLeft->primaryLine.start.x(), iprocessLeft->primaryLine.end.x());
         leftImage = iprocessLeft->getImage(iprocessLeft->houghMatrix, iprocessLeft->edgeWidth, iprocessLeft->edgeHeight); // produce hough image
 
         iprocessRight->constructHoughMatrixPrimaryLine(iprocessRight->primaryLine.start.x(), iprocessRight->primaryLine.end.x());
         rightImage = iprocessRight->getImage(iprocessRight->houghMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight); // produce hough image
-
+        */
         // update GUI
         ui->labelTarget->setPixmap(QPixmap::fromImage(iprocess->imgOrginal));
         ui->labelMono->setPixmap(QPixmap::fromImage(iprocess->imgMono));
         ui->labelEdge->setPixmap(QPixmap::fromImage(*edge));
-        ui->labelHough->setPixmap(QPixmap::fromImage(*leftImage));
-        ui->labelAnalyze->setPixmap(QPixmap::fromImage(*rightImage));
+        ui->labelHough->setPixmap(QPixmap::fromImage(*hough));
+        //ui->labelAnalyze->setPixmap(QPixmap::fromImage(*rightImage));
 
         // update text message
         QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleþtirildi.";
