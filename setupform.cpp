@@ -240,7 +240,17 @@ void setupForm::processExtSubImage(){
         iprocessRight->houghTransform();                            // detect lines in edge image
         iprocessRight->detectLongestSolidLines();
 
-        if ( iprocessLeft->primaryLine.length > iprocessRight->primaryLine.length) {
+
+        // ------ ORG IMAGE SAVE
+        fileName = savePath + "org" + fileExt;
+        iprocess->imgMono.save(fileName);
+
+
+        // ------ ORG IMAGE SAVE
+
+/*
+        if ( iprocessLeft->primaryLine.length > iprocessRight->primaryLine.length ) {
+
             // right image re-process
             tCenterX = iprocessLeft->primaryLine.end.x();
 
@@ -262,8 +272,10 @@ void setupForm::processExtSubImage(){
             iprocessRight->thetaStep = thetaStepSub;
             iprocessRight->houghTransform();                            // detect lines in edge image
             iprocessRight->detectLongestSolidLines();
+
         } else
-        if ( iprocessLeft->primaryLine.length < iprocessRight->primaryLine.length) {
+        if ( iprocessLeft->primaryLine.length < iprocessRight->primaryLine.length ) {
+
             // left image re-process
             tCenterX = iprocess->trackCenterX + iprocessRight->primaryLine.start.x();
 
@@ -288,11 +300,26 @@ void setupForm::processExtSubImage(){
 
             // for primary lines image generation offset
             tCenterX = iprocess->trackCenterX;
+
         } else {
             // equality in lengths
 
         }
+*/
+        // ------ LEFT AND RIGHT IMAGES SAVE
+        fileName = savePath + "org_Left" + fileExt;
+        iprocessLeft->imgMono.save(fileName);
 
+        fileName = savePath + "org_Right" + fileExt;
+        iprocessRight->imgMono.save(fileName);
+
+        fileName = savePath + "edge_right" + fileExt;
+        iprocessRight->getImage(iprocessRight->edgeThickenedMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight)->save(fileName);
+
+        fileName = savePath + "major2_right" + fileExt;
+        iprocessRight->constructHoughMatrixMajor2Lines();
+        iprocessRight->getImage(iprocessRight->houghMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight)->save(fileName);
+        // ------ LEFT AND RIGHT IMAGES SAVE
     }
 }
 
@@ -388,6 +415,7 @@ void setupForm::captureButton(){
         iprocess->constructHoughMatrix();                                                           // construct hough matrix = edge matrix + coded lines
         //iprocess->constructHoughMatrixPrimaryLines(iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX);
         hough = iprocess->getImage(iprocess->houghMatrix,iprocess->edgeWidth,iprocess->edgeHeight); // produce hough image
+        iprocess->cornerImage();                                                                    // produce corner image
 
         /*
         iprocessLeft->constructHoughMatrixPrimaryLine(iprocessLeft->primaryLine.start.x(), iprocessLeft->primaryLine.end.x());
@@ -402,13 +430,18 @@ void setupForm::captureButton(){
         ui->labelEdge->setPixmap(QPixmap::fromImage(*edge));
         ui->labelHough->setPixmap(QPixmap::fromImage(*hough));
         //ui->labelAnalyze->setPixmap(QPixmap::fromImage(*rightImage));
+        ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCorner));
 
         // update text message
         QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleþtirildi.";
         ui->plainTextEdit->appendPlainText(message);
 
         ui->plainTextEdit->appendPlainText("1.aþama:");
-        ui->plainTextEdit->appendPlainText("Merkez (x,y): " + QString::number(iprocess->trackCenterX) + "," + QString::number(iprocess->trackCenterY));
+        ui->plainTextEdit->appendPlainText("Sol Köþe (x,y) - Merkez (x,y) - Sað Köþe (x,y): ");
+        message = "( " + QString::number(iprocess->leftCornerX) + " , " + QString::number(iprocess->leftCornerY) + " )  -  ( " +
+                         QString::number(iprocess->trackCenterX) + " , " + QString::number(iprocess->trackCenterY) + " )  -  ( " +
+                         QString::number(iprocess->rightCornerX) + " , " + QString::number(iprocess->rightCornerY) + " )";
+        ui->plainTextEdit->appendPlainText(message);
 
         ui->plainTextEdit->appendPlainText("2.aþama:");
 
