@@ -248,7 +248,7 @@ void setupForm::processExtSubImage(){
 
         // ------ ORG IMAGE SAVE
 
-/*
+
         if ( iprocessLeft->primaryLine.length > iprocessRight->primaryLine.length ) {
 
             // right image re-process
@@ -305,7 +305,7 @@ void setupForm::processExtSubImage(){
             // equality in lengths
 
         }
-*/
+
         // ------ LEFT AND RIGHT IMAGES SAVE
         fileName = savePath + "org_Left" + fileExt;
         iprocessLeft->imgMono.save(fileName);
@@ -313,12 +313,16 @@ void setupForm::processExtSubImage(){
         fileName = savePath + "org_Right" + fileExt;
         iprocessRight->imgMono.save(fileName);
 
-        fileName = savePath + "edge_right" + fileExt;
-        iprocessRight->getImage(iprocessRight->edgeThickenedMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight)->save(fileName);
+        fileName = savePath + "edge_left" + fileExt;
+        iprocessLeft->getImage(iprocessLeft->edgeThickenedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save(fileName);
 
+        fileName = savePath + "edge_right" + fileExt;
+        iprocessRight->getImage(iprocessRight->edgeThickenedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save(fileName);
+/*
         fileName = savePath + "major2_right" + fileExt;
         iprocessRight->constructHoughMatrixMajor2Lines();
         iprocessRight->getImage(iprocessRight->houghMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight)->save(fileName);
+*/
         // ------ LEFT AND RIGHT IMAGES SAVE
     }
 }
@@ -415,7 +419,8 @@ void setupForm::captureButton(){
         iprocess->constructHoughMatrix();                                                           // construct hough matrix = edge matrix + coded lines
         //iprocess->constructHoughMatrixPrimaryLines(iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX);
         hough = iprocess->getImage(iprocess->houghMatrix,iprocess->edgeWidth,iprocess->edgeHeight); // produce hough image
-        iprocess->cornerImage();                                                                    // produce corner image
+        //iprocess->cornerImage();                                                                    // produce corner image
+        iprocess->cornerAndPrimaryLineImage(iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX);
 
         /*
         iprocessLeft->constructHoughMatrixPrimaryLine(iprocessLeft->primaryLine.start.x(), iprocessLeft->primaryLine.end.x());
@@ -430,7 +435,7 @@ void setupForm::captureButton(){
         ui->labelEdge->setPixmap(QPixmap::fromImage(*edge));
         ui->labelHough->setPixmap(QPixmap::fromImage(*hough));
         //ui->labelAnalyze->setPixmap(QPixmap::fromImage(*rightImage));
-        ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCorner));
+        ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCornerAndPrimaryLines));
 
         // update text message
         QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleþtirildi.";
