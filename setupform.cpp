@@ -318,11 +318,13 @@ void setupForm::processExtSubImage(){
 
         fileName = savePath + "edge_right" + fileExt;
         iprocessRight->getImage(iprocessRight->edgeThickenedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save(fileName);
-/*
+
         fileName = savePath + "major2_right" + fileExt;
-        iprocessRight->constructHoughMatrixMajor2Lines();
-        iprocessRight->getImage(iprocessRight->houghMatrix, iprocessRight->edgeWidth, iprocessRight->edgeHeight)->save(fileName);
-*/
+        iprocessRight->constructHoughExtendedMatrixMajor2Lines();
+        iprocessRight->getImage(iprocessRight->houghExtendedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save(fileName);
+        iprocessRight->saveList(iprocessRight->major2Lines, savePath + "major2Lines_right.csv");
+        iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, savePath + "solidSpaceMainMaximums_right.csv");
+
         // ------ LEFT AND RIGHT IMAGES SAVE
     }
 }
