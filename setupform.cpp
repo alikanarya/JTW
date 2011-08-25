@@ -164,7 +164,7 @@ void setupForm::processClassical(){
 
 void setupForm::processExtSubImage(){
 
-    target = w->lastData->image->copy(w->offsetX,w->offsetY,w->frameWidth,w->frameHeight);      // take target image
+    target = w->lastData->image->copy(w->offsetX, w->offsetY, w->frameWidth, w->frameHeight);   // take target image
 
     if (iprocessInitSwitch) {
         delete iprocess;
@@ -204,12 +204,12 @@ void setupForm::processExtSubImage(){
             delete iprocessRight;
             iprocessRightInitSwitch = false;
         }
-        int tStartX = 0;
+        //int tStartX = 0;
         tCenterX = iprocess->trackCenterX;
-        int tEndX = w->frameWidth - 1;
+        int tWidth = w->frameWidth;
 
-        QImage targetLeft = target.copy(tStartX, 0, tCenterX - tStartX, w->frameHeight);
-        QImage targetRight = target.copy(tCenterX, 0, tEndX + 1 - tCenterX, w->frameHeight);
+        QImage targetLeft = target.copy(0, 0, tCenterX, w->frameHeight);
+        QImage targetRight = target.copy(tCenterX, 0, tWidth - tCenterX, w->frameHeight);
 
         // left image process
         iprocessLeft = new imgProcess(targetLeft, targetLeft.width(), targetLeft.height()); // new imgProcess object
@@ -254,7 +254,7 @@ void setupForm::processExtSubImage(){
             // right image re-process
             tCenterX = iprocessLeft->primaryLine.end.x();
 
-            targetRight = target.copy(tCenterX, 0, tEndX + 1 - tCenterX, w->frameHeight);
+            targetRight = target.copy(tCenterX, 0, tWidth - tCenterX, w->frameHeight);
 
             if (iprocessRightInitSwitch) {
                 delete iprocessRight;
@@ -279,7 +279,7 @@ void setupForm::processExtSubImage(){
             // left image re-process
             tCenterX = iprocess->trackCenterX + iprocessRight->primaryLine.start.x();
 
-            targetLeft = target.copy(tStartX, 0, tCenterX - tStartX, w->frameHeight);
+            targetLeft = target.copy(0, 0, tCenterX, w->frameHeight);
 
             if (iprocessLeftInitSwitch) {
                 delete iprocessLeft;
@@ -303,8 +303,47 @@ void setupForm::processExtSubImage(){
 
         } else {
             // equality in lengths
-
         }
+
+        // if no left line
+        if ( iprocessLeft->primaryLine.length == -1){
+
+            iprocessLeft->primaryLine.start.setX( 0 );
+            iprocessLeft->primaryLine.end.setX( 0 );
+
+            if ( iprocessRight->primaryLine.length != -1 ){
+                iprocessLeft->primaryLine.start.setY( iprocessRight->primaryLine.start.y() );
+                iprocessLeft->primaryLine.end.setY( iprocessRight->primaryLine.start.y() );
+            } else {
+                iprocessLeft->primaryLine.start.setY( iprocessLeft->imageHeight / 2 );
+                iprocessLeft->primaryLine.end.setY( iprocessLeft->imageHeight / 2 );
+            }
+        }
+
+        // if no right line
+        if ( iprocessRight->primaryLine.length == -1){
+
+            iprocessRight->primaryLine.start.setX( iprocessRight->imageWidth - 1 );
+            iprocessRight->primaryLine.end.setX( iprocessRight->imageWidth - 1 );
+
+            if ( iprocessLeft->primaryLine.length != -1 ){
+                iprocessRight->primaryLine.start.setY( iprocessLeft->primaryLine.end.y() );
+                iprocessRight->primaryLine.end.setY( iprocessLeft->primaryLine.end.y() );
+            } else {
+                iprocessRight->primaryLine.start.setY( iprocessRight->imageHeight / 2 );
+                iprocessRight->primaryLine.end.setY( iprocessRight->imageHeight / 2 );
+            }
+        }
+
+        iprocess->leftCornerX = iprocessLeft->primaryLine.end.x();
+        iprocess->leftCornerY = iprocessLeft->primaryLine.end.y();
+
+        iprocess->rightCornerX = tCenterX + iprocessRight->primaryLine.start.x();
+        iprocess->rightCornerY = iprocessRight->primaryLine.start.y();
+
+        iprocess->trackCenterX = ( iprocess->leftCornerX + iprocess->rightCornerX ) / 2;
+        iprocess->trackCenterY = ( iprocess->leftCornerY + iprocess->rightCornerY ) / 2;
+
 
         // ------ LEFT AND RIGHT IMAGES SAVE
         fileName = savePath + "org_Left" + fileExt;
@@ -438,6 +477,9 @@ void setupForm::captureButton(){
         ui->labelHough->setPixmap(QPixmap::fromImage(*hough));
         //ui->labelAnalyze->setPixmap(QPixmap::fromImage(*rightImage));
         ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCornerAndPrimaryLines));
+
+     fileName = savePath + "corner" + fileExt;
+     iprocess->imgCornerAndPrimaryLines.save(fileName);
 
         // update text message
         QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleþtirildi.";
