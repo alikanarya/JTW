@@ -1022,6 +1022,7 @@ void MainWindow::readSettings(){
             thetaMax = settings->value("tmx", _THETA_MAX).toInt();
             thetaStep = settings->value("tst", _THETA_STEP).toFloat();
             subImageProcessingSwitch = settings->value("subi", _SUB_IPROCESS).toBool();
+            subImageProcessingType = settings->value("subt", _SUB_TYPE).toInt();
             thetaMinSub = settings->value("tmns", _THETA_MIN_SUB).toInt();
             thetaMaxSub = settings->value("tmxs", _THETA_MAX_SUB).toInt();
             thetaStepSub = settings->value("tsts", _THETA_STEP_SUB).toFloat();
@@ -1073,6 +1074,7 @@ void MainWindow::readSettings(){
         thetaMax = _THETA_MAX;
         thetaStep = _THETA_STEP;
         subImageProcessingSwitch = _SUB_IPROCESS;
+        subImageProcessingType = _SUB_TYPE;
         thetaMinSub = _THETA_MIN_SUB;
         thetaMaxSub = _THETA_MAX_SUB;
         thetaStepSub = _THETA_STEP_SUB;
@@ -1131,6 +1133,7 @@ void MainWindow::writeSettings(){
         settings->setValue("tst", QString::number(thetaStep));
         QVariant subimagesw(subImageProcessingSwitch);
             settings->setValue("subi", subimagesw.toString());
+        settings->setValue("subt", QString::number(subImageProcessingType));
         settings->setValue("tmns", QString::number(thetaMinSub));
         settings->setValue("tmxs", QString::number(thetaMaxSub));
         settings->setValue("tsts", QString::number(thetaStepSub));

@@ -61,10 +61,12 @@ public slots:
     void saveExitButton();      // transfer paramteres to mainwindow
     void exitButton();          // exit without changing parameters
     void subImageCheck();       // sub image processing algorithm selection
+    void subType();
 
-    void processClassical();
-    void processExtSubImage();
-    void processExtSubImageTest();
+    // image processing fns
+    void processStandardHT();           // standard hough transform
+    void processSubImageVoidness();     // sub image based on VOID areas
+    void processSubImageSolidness();    // sub image based on SOLID lines
 
 private:
     Ui::setupForm *ui;

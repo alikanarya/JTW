@@ -34,6 +34,7 @@
 #define _PLC_CONN_ONBOOT    true
 #define _PLAY_CAM_ONBOOT    true
 #define _SUB_IPROCESS       true
+#define _SUB_TYPE           0
 #define _CONTROL_DELAY      0
 
 #define _PWD_SETTINGS       "nokts"
@@ -161,7 +162,8 @@ public:
     int voteThreshold, voidThreshold;
     int errorLimit, errorLimitNeg;          // deviation start limit from center in pixels
     int errorStopLimit, errorStopLimitNeg;  // deviation stop limit from center in pixels
-    bool subImageProcessingSwitch;
+    bool subImageProcessingSwitch;          // sub image processing
+    int subImageProcessingType;                       // 0: Void Based, 1: Solid Based
     bool errorStopLimitLineVisible;
     float errorStopScale;
 

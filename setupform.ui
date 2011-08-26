@@ -745,7 +745,7 @@
     <rect>
      <x>360</x>
      <y>410</y>
-     <width>111</width>
+     <width>71</width>
      <height>21</height>
     </rect>
    </property>
@@ -768,7 +768,7 @@
   <widget class="QLineEdit" name="editHoughThetaMinSub">
    <property name="geometry">
     <rect>
-     <x>480</x>
+     <x>450</x>
      <y>380</y>
      <width>42</width>
      <height>20</height>
@@ -789,7 +789,7 @@
     <rect>
      <x>360</x>
      <y>380</y>
-     <width>111</width>
+     <width>71</width>
      <height>21</height>
     </rect>
    </property>
@@ -812,7 +812,7 @@
   <widget class="QLineEdit" name="editHoughThetaStepSub">
    <property name="geometry">
     <rect>
-     <x>480</x>
+     <x>450</x>
      <y>410</y>
      <width>42</width>
      <height>20</height>
@@ -831,7 +831,7 @@
   <widget class="QLineEdit" name="editHoughThetaMaxSub">
    <property name="geometry">
     <rect>
-     <x>530</x>
+     <x>500</x>
      <y>380</y>
      <width>42</width>
      <height>20</height>
@@ -852,7 +852,7 @@
     <rect>
      <x>350</x>
      <y>350</y>
-     <width>231</width>
+     <width>311</width>
      <height>16</height>
     </rect>
    </property>
@@ -865,38 +865,12 @@
     <rect>
      <x>349</x>
      <y>430</y>
-     <width>231</width>
+     <width>311</width>
      <height>16</height>
     </rect>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
-  <widget class="Line" name="line_3">
-   <property name="geometry">
-    <rect>
-     <x>347</x>
-     <y>358</y>
-     <width>8</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Vertical</enum>
-   </property>
-  </widget>
-  <widget class="Line" name="line_4">
-   <property name="geometry">
-    <rect>
-     <x>577</x>
-     <y>358</y>
-     <width>8</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Vertical</enum>
    </property>
   </widget>
   <widget class="QLabel" name="label_13">
@@ -986,6 +960,26 @@
    <property name="alignment">
     <set>Qt::AlignCenter</set>
    </property>
+  </widget>
+  <widget class="QComboBox" name="subTypeBox">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>380</y>
+     <width>111</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Boşluk Algo</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Doluluk Algo</string>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources>
@@ -1088,6 +1082,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>subTypeBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>setupForm</receiver>
+   <slot>subType()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>622</x>
+     <y>384</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>671</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>captureButton()</slot>
@@ -1096,5 +1106,6 @@
   <slot>saveExitButton()</slot>
   <slot>exitButton()</slot>
   <slot>subImageCheck()</slot>
+  <slot>subType()</slot>
  </slots>
 </ui>
