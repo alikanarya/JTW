@@ -938,6 +938,9 @@
    <property name="text">
     <string>3</string>
    </property>
+   <property name="maxLength">
+    <number>1</number>
+   </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
    </property>

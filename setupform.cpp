@@ -451,6 +451,7 @@ void setupForm::captureButton(){
         if (!w->subImageProcessingSwitch) {
 
             processStandardHT();
+
         } else {
 
             switch ( w->subImageProcessingType ) {

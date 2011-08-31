@@ -151,7 +151,8 @@ public:
     int sceneCenterX;
 
     // image processing parameters
-    imgProcess *iprocess;               // image processing object
+    imgProcess *iprocess, *iprocessLeft, *iprocessRight;    // image processing objects
+    bool iprocessInitSwitch;
     QImage targetArea;                  // target area image
     int iprocessInterval;
     int thetaMin, thetaMax;
@@ -252,6 +253,9 @@ public:
     void drawTrack();                               // draws dev. trend
     QImage* takeTargetAreaImage();                  // get target image from current image as a new object
     void processImage();                            // detect corners and plc command
+    void processStandardHT();                       // standard hough transform
+    void processSubImageVoidness();                 // sub image based on VOID areas
+    void processSubImageSolidness();                // sub image based on SOLID lines
     void repaintGuide();                            // update guide
     void repaintDevTrend();                         // update deviation trend
 
