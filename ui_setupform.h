@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'setupform.ui'
 **
-** Created: Thu 1. Sep 01:02:45 2011
+** Created: Fri 2. Sep 01:57:14 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -314,7 +314,7 @@ public:
         editIPI = new QLineEdit(setupForm);
         editIPI->setObjectName(QString::fromUtf8("editIPI"));
         editIPI->setGeometry(QRect(480, 474, 42, 20));
-        editIPI->setMaxLength(1);
+        editIPI->setMaxLength(2);
         editIPI->setAlignment(Qt::AlignCenter);
         editFPS = new QLineEdit(setupForm);
         editFPS->setObjectName(QString::fromUtf8("editFPS"));
@@ -396,7 +396,7 @@ public:
         editHoughThetaMaxSub->setText(QApplication::translate("setupForm", "100", 0, QApplication::UnicodeUTF8));
         label_13->setText(QApplication::translate("setupForm", "FPS", 0, QApplication::UnicodeUTF8));
         label_14->setText(QApplication::translate("setupForm", "\304\260.\304\260\305\237leme Aral\304\261\304\237\304\261", 0, QApplication::UnicodeUTF8));
-        editIPI->setInputMask(QApplication::translate("setupForm", "9; ", 0, QApplication::UnicodeUTF8));
+        editIPI->setInputMask(QApplication::translate("setupForm", "99; ", 0, QApplication::UnicodeUTF8));
         editIPI->setText(QApplication::translate("setupForm", "3", 0, QApplication::UnicodeUTF8));
         editFPS->setInputMask(QApplication::translate("setupForm", "99; ", 0, QApplication::UnicodeUTF8));
         editFPS->setText(QApplication::translate("setupForm", "10", 0, QApplication::UnicodeUTF8));

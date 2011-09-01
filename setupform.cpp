@@ -7,6 +7,7 @@
 extern MainWindow *w;
 
 setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
+
     fileBaseTarget = "target";
     fileBaseMono = "mono";
     fileBaseEdge = "edge";

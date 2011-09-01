@@ -933,13 +933,13 @@
     </rect>
    </property>
    <property name="inputMask">
-    <string>9; </string>
+    <string>99; </string>
    </property>
    <property name="text">
     <string>3</string>
    </property>
    <property name="maxLength">
-    <number>1</number>
+    <number>2</number>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

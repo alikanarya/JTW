@@ -10,6 +10,7 @@
 #include "exitdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
+
     rectScreen = QApplication::desktop()->geometry();
 
     // only title on title bar
@@ -191,19 +192,25 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 }
 
+
 void MainWindow::checker(){
+
     permWeld = !emergencyStop && permOperator && permPLC && play && !cameraChecker->cameraDown && trackOn && controlDelayValid;
 
     ui->controlButton->setEnabled(permWeld);
 }
 
+
 QImage* MainWindow::takeTargetAreaImage(){
+
     QImage *image = new QImage(*lastData->image);
     targetArea = image->copy(offsetX, offsetY, frameWidth, frameHeight);
     return image;
 }
 
+
 void MainWindow::getImageFromCam(){
+
     fileName = fileBase + "_" + QDateTime::currentDateTime().toString("hhmmss_zzz") + fileExt;
 
     if (lastData->image->save(savePath + fileName))
@@ -212,7 +219,9 @@ void MainWindow::getImageFromCam(){
         ui->plainTextEdit->appendPlainText(fileName + " kayýt edilemedi !!!");
 }
 
+
 void MainWindow::playButton(){
+
     // inited vars ?????
     fpsRequest = 0;
     fpsReal = 0;
@@ -230,7 +239,9 @@ void MainWindow::playButton(){
     ui->controlButton->setEnabled(false);
 }
 
+
 void MainWindow::stopButton(){
+
     // reseted vars ????
     play = false;
     imageGetter->reset();
@@ -243,7 +254,9 @@ void MainWindow::stopButton(){
 
 }
 
+
 void MainWindow::update(){
+
     msecCount++;
 
     if (play && !pause){
@@ -267,7 +280,9 @@ void MainWindow::update(){
     }
 }
 
+
 void MainWindow:: plcControl(){
+
     controlThreadCount++;
 
     checker();
@@ -354,7 +369,9 @@ void MainWindow:: plcControl(){
     }
 }
 
+
 void MainWindow::updateSn(){
+
     // blink emergency stop button in case of emergency
     if (emergencyStop){
         emergencyBlink = !emergencyBlink;
@@ -409,6 +426,7 @@ void MainWindow::updateSn(){
 
     // if video is played
     if (play){
+
         if (fpsReal != 0) timeDelayAvg = timeDelayTotal / fpsReal;      // calc. ave time delay
 
         // status bar message
@@ -438,7 +456,9 @@ void MainWindow::updateSn(){
     pause = false;
 }
 
+
 void MainWindow::startTimer(){
+
     if (!threadPLCControl->isRunning()){
         cmdState = _CMD_CHECK;
         threadPLCControl->commandState = cmdState;
@@ -451,7 +471,9 @@ void MainWindow::startTimer(){
     QTimer::singleShot(2000, this, SLOT(initPlcTimer()));
 }
 
+
 void MainWindow::initPlcTimer(){
+
     ui->plainTextEdit->appendPlainText(timeString() + threadPLCControl->plc->message);
     if (threadPLCControl->plc->plcInteract) ui->plcStatus->setIcon(plcOnlineIcon);
 
@@ -464,10 +486,13 @@ void MainWindow::initPlcTimer(){
 
 }
 
+
 void  MainWindow::cameraDownAction(){
+
     ui->plainTextEdit->appendPlainText(timeString() + alarm7);
     alarmCameraDownLock = true;
 }
+
 
 void MainWindow::analyzeButton(){
 
@@ -516,6 +541,7 @@ void MainWindow::analyzeButton(){
     }
 }
 
+
 void MainWindow::guideButton(){
 
     //QApplication::beep();
@@ -525,7 +551,9 @@ void MainWindow::guideButton(){
     repaintGuide();
 }
 
+
 void MainWindow::trackButton(){
+
     trackOn = !trackOn;
 
     if (trackOn){
@@ -535,7 +563,9 @@ void MainWindow::trackButton(){
     }
 }
 
+
 void MainWindow::controlButton(){
+
     controlOn = !controlOn;
 
     if (controlOn){
@@ -581,7 +611,9 @@ void MainWindow::controlButton(){
     ui->analyzeButton->setEnabled(!controlOn);
 }
 
+
 void MainWindow::emergencyButton(){
+
     emergencyStop = !emergencyStop;
 
     if (!emergencyStop){
@@ -592,6 +624,7 @@ void MainWindow::emergencyButton(){
         ui->emergencyButton->setIcon(emergencyOnIcon);
     }
 }
+
 
 void MainWindow::processImage(){
 
@@ -778,7 +811,7 @@ void MainWindow::processSubImageSolidness(){
     processStandardHT();
 
     if ( iprocessInitSwitch ) {
-/*
+
         if ( iprocess->detected ) {
 
             int tCenterX = iprocess->trackCenterX;
@@ -906,7 +939,7 @@ void MainWindow::processSubImageSolidness(){
 
             delete iprocessLeft;
             delete iprocessRight;
-        }*/
+        }
     }
 }
 
