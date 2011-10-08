@@ -270,9 +270,15 @@ void setupForm::processSubImageSolidness(){
         iprocessLeft->thetaMin = thetaMinSub;
         iprocessLeft->thetaMax = thetaMaxSub;
         iprocessLeft->thetaStep = thetaStepSub;
-        iprocessLeft->houghTransform();                                 // detect lines in edge image
+        //iprocessLeft->houghTransform();                                 // detect lines in edge image
         iprocessLeft->detectLongestSolidLines();
 
+            iprocessLeft->saveList(iprocessLeft->solidSpaceMain, "data/solidSpaceMain_left.csv");
+            iprocessLeft->saveList(iprocessLeft->solidSpaceMainTrimmed, "data/solidSpaceMainTrimmed_left.csv");
+            iprocessLeft->saveList(iprocessLeft->solidSpaceMainMaximums, "data/solidSpaceMainMaximums_left.csv");
+            iprocessLeft->imgMono.save("data/left1.jpg");
+            iprocessLeft->constructHoughExtendedMatrixMajor2Lines();
+            iprocessLeft->getImage(iprocessLeft->houghExtendedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save("data/major2_left.jpg");
 
         // right image process
         iprocessRight = new imgProcess( targetRight, targetRight.width(), targetRight.height() );   // new imgProcess object
@@ -285,10 +291,9 @@ void setupForm::processSubImageSolidness(){
         iprocessRight->thetaMin = thetaMinSub;
         iprocessRight->thetaMax = thetaMaxSub;
         iprocessRight->thetaStep = thetaStepSub;
-        iprocessRight->houghTransform();                                // detect lines in edge image
+        //iprocessRight->houghTransform();                                // detect lines in edge image
         iprocessRight->detectLongestSolidLines();
 
-        iprocessLeft->imgMono.save("data/left1.jpg");
         iprocessRight->imgMono.save("data/right1.jpg");
 
         if ( iprocessLeft->primaryLine.length > iprocessRight->primaryLine.length  && iprocessRight->primaryLine.length != -1 ) {
@@ -312,7 +317,7 @@ void setupForm::processSubImageSolidness(){
             iprocessRight->thetaMin = thetaMinSub;
             iprocessRight->thetaMax = thetaMaxSub;
             iprocessRight->thetaStep = thetaStepSub;
-            iprocessRight->houghTransform();                                // detect lines in edge image
+            //iprocessRight->houghTransform();                                // detect lines in edge image
             iprocessRight->detectLongestSolidLines();
 
             iprocessRight->imgMono.save("data/right2.jpg");
@@ -339,7 +344,7 @@ void setupForm::processSubImageSolidness(){
             iprocessLeft->thetaMin = thetaMinSub;
             iprocessLeft->thetaMax = thetaMaxSub;
             iprocessLeft->thetaStep = thetaStepSub;
-            iprocessLeft->houghTransform();                                 // detect lines in edge image
+            //iprocessLeft->houghTransform();                                 // detect lines in edge image
             iprocessLeft->detectLongestSolidLines();
 
             // to recover for right image coord.
@@ -390,8 +395,8 @@ void setupForm::processSubImageSolidness(){
         iprocess->trackCenterY = ( iprocess->leftCornerY + iprocess->rightCornerY ) / 2;
 
 
-        iprocessRight->saveList(iprocessRight->major2Lines, savePath + "major2Lines_right.csv");
-        iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, savePath + "solidSpaceMainMaximums_right.csv");
+        //iprocessRight->saveList(iprocessRight->major2Lines, savePath + "major2Lines_right.csv");
+        //iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, savePath + "solidSpaceMainMaximums_right.csv");
 
 /*
         // ------ LEFT AND RIGHT IMAGES SAVE
