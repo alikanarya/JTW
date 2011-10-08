@@ -241,6 +241,7 @@ void setupForm::processSubImageSolidness(){
     iprocess->voidThreshold = voidThreshold;            // void threshold to decide max void as primary
     iprocess->detectPrimaryVoid();                      // decide primary void line & corners/center
 
+    iprocess->imgMono.save("data/0.jpg");
 
     if ( w->subImageProcessingSwitch && iprocess->detected ) {
 
@@ -287,6 +288,8 @@ void setupForm::processSubImageSolidness(){
         iprocessRight->houghTransform();                                // detect lines in edge image
         iprocessRight->detectLongestSolidLines();
 
+        iprocessLeft->imgMono.save("data/left1.jpg");
+        iprocessRight->imgMono.save("data/right1.jpg");
 
         if ( iprocessLeft->primaryLine.length > iprocessRight->primaryLine.length  && iprocessRight->primaryLine.length != -1 ) {
 
@@ -311,6 +314,8 @@ void setupForm::processSubImageSolidness(){
             iprocessRight->thetaStep = thetaStepSub;
             iprocessRight->houghTransform();                                // detect lines in edge image
             iprocessRight->detectLongestSolidLines();
+
+            iprocessRight->imgMono.save("data/right2.jpg");
 
         } else
         if ( iprocessLeft->primaryLine.length < iprocessRight->primaryLine.length && iprocessLeft->primaryLine.length != -1 ) {
@@ -340,6 +345,7 @@ void setupForm::processSubImageSolidness(){
             // to recover for right image coord.
             tCenterX = iprocess->trackCenterX;
 
+            iprocessLeft->imgMono.save("data/left2.jpg");
         } else {
             // equality in lengths
         }
@@ -387,26 +393,18 @@ void setupForm::processSubImageSolidness(){
         iprocessRight->saveList(iprocessRight->major2Lines, savePath + "major2Lines_right.csv");
         iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, savePath + "solidSpaceMainMaximums_right.csv");
 
-        /*
+/*
         // ------ LEFT AND RIGHT IMAGES SAVE
-        fileName = savePath + "org_Left" + fileExt;
-        iprocessLeft->imgMono.save(fileName);
+        iprocessLeft->imgMono.save("data/left.jpg");
+        iprocessRight->imgMono.save("data/right.jpg");
+        iprocessLeft->getImage(iprocessLeft->edgeThickenedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save("data/left_edgethickned.jpg");
+        iprocessRight->getImage(iprocessRight->edgeThickenedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right_edgethickned.jpg");
 
-        fileName = savePath + "org_Right" + fileExt;
-        iprocessRight->imgMono.save(fileName);
-
-        fileName = savePath + "edge_left" + fileExt;
-        iprocessLeft->getImage(iprocessLeft->edgeThickenedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save(fileName);
-
-        fileName = savePath + "edge_right" + fileExt;
-        iprocessRight->getImage(iprocessRight->edgeThickenedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save(fileName);
-
-        fileName = savePath + "major2_right" + fileExt;
         iprocessRight->constructHoughExtendedMatrixMajor2Lines();
-        iprocessRight->getImage(iprocessRight->houghExtendedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save(fileName);
+        iprocessRight->getImage(iprocessRight->houghExtendedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right_major2.jpg");
 
         // ------ LEFT AND RIGHT IMAGES SAVE
-        */
+*/
     }
 }
 
