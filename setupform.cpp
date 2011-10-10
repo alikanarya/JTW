@@ -273,12 +273,12 @@ void setupForm::processSubImageSolidness(){
         //iprocessLeft->houghTransform();                                 // detect lines in edge image
         iprocessLeft->detectLongestSolidLines();
 
-            iprocessLeft->saveList(iprocessLeft->solidSpaceMain, "data/solidSpaceMain_left.csv");
-            iprocessLeft->saveList(iprocessLeft->solidSpaceMainTrimmed, "data/solidSpaceMainTrimmed_left.csv");
-            iprocessLeft->saveList(iprocessLeft->solidSpaceMainMaximums, "data/solidSpaceMainMaximums_left.csv");
+            //iprocessLeft->saveList(iprocessLeft->solidSpaceMain, "data/left1_solidSpaceMain.csv");
+            iprocessLeft->saveList(iprocessLeft->solidSpaceMainTrimmed, "data/left1_solidSpaceMainTrimmed.csv");
+            iprocessLeft->saveList(iprocessLeft->solidSpaceMainMaximums, "data/left1_solidSpaceMainMaximums.csv");
             iprocessLeft->imgMono.save("data/left1.jpg");
             iprocessLeft->constructHoughExtendedMatrixMajor2Lines();
-            iprocessLeft->getImage(iprocessLeft->houghExtendedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save("data/major2_left.jpg");
+            iprocessLeft->getImage(iprocessLeft->houghExtendedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save("data/left1_major2.jpg");
 
         // right image process
         iprocessRight = new imgProcess( targetRight, targetRight.width(), targetRight.height() );   // new imgProcess object
@@ -294,7 +294,12 @@ void setupForm::processSubImageSolidness(){
         //iprocessRight->houghTransform();                                // detect lines in edge image
         iprocessRight->detectLongestSolidLines();
 
-        iprocessRight->imgMono.save("data/right1.jpg");
+            //iprocessRight->saveList(iprocessRight->solidSpaceMain, "data/right1_solidSpaceMain.csv");
+            iprocessRight->saveList(iprocessRight->solidSpaceMainTrimmed, "data/right1_solidSpaceMainTrimmed.csv");
+            iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, "data/right1_solidSpaceMainMaximums.csv");
+            iprocessRight->imgMono.save("data/right1.jpg");
+            iprocessRight->constructHoughExtendedMatrixMajor2Lines();
+            iprocessRight->getImage(iprocessRight->houghExtendedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right1_major2.jpg");
 
         if ( iprocessLeft->primaryLine.length > iprocessRight->primaryLine.length  && iprocessRight->primaryLine.length != -1 ) {
 
@@ -320,7 +325,12 @@ void setupForm::processSubImageSolidness(){
             //iprocessRight->houghTransform();                                // detect lines in edge image
             iprocessRight->detectLongestSolidLines();
 
-            iprocessRight->imgMono.save("data/right2.jpg");
+                //iprocessRight->saveList(iprocessRight->solidSpaceMain, "data/right2_solidSpaceMain.csv");
+                iprocessRight->saveList(iprocessRight->solidSpaceMainTrimmed, "data/right2_solidSpaceMainTrimmed.csv");
+                iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, "data/right2_solidSpaceMainMaximums.csv");
+                iprocessRight->imgMono.save("data/right2.jpg");
+                iprocessRight->constructHoughExtendedMatrixMajor2Lines();
+                iprocessRight->getImage(iprocessRight->houghExtendedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right2_major2.jpg");
 
         } else
         if ( iprocessLeft->primaryLine.length < iprocessRight->primaryLine.length && iprocessLeft->primaryLine.length != -1 ) {
@@ -350,7 +360,11 @@ void setupForm::processSubImageSolidness(){
             // to recover for right image coord.
             tCenterX = iprocess->trackCenterX;
 
-            iprocessLeft->imgMono.save("data/left2.jpg");
+                iprocessLeft->saveList(iprocessLeft->solidSpaceMainTrimmed, "data/left2_solidSpaceMainTrimmed.csv");
+                iprocessLeft->saveList(iprocessLeft->solidSpaceMainMaximums, "data/left2_solidSpaceMainMaximums.csv");
+                iprocessLeft->imgMono.save("data/left2.jpg");
+                iprocessLeft->constructHoughExtendedMatrixMajor2Lines();
+                iprocessLeft->getImage(iprocessLeft->houghExtendedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save("data/left2_major2.jpg");
         } else {
             // equality in lengths
         }
