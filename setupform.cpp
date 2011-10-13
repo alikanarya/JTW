@@ -223,152 +223,24 @@ void setupForm::processSubImageSolidness(){
     iprocess->toMono();                                 // convert target to mono
     iprocess->constructValueMatrix(iprocess->imgMono);  // construct mono matrix
     iprocess->detectEdgeSobel();                        // detect edges of the mono image
+    iprocess->thickenEdges();
 
-    iprocess->thetaMin = thetaMin;
-    iprocess->thetaMax = thetaMax;
-    iprocess->thetaStep = thetaStep;
-    iprocess->houghTransform();                         // detect lines in edge image
+    iprocess->thetaMin = thetaMinSub;
+    iprocess->thetaMax = thetaMaxSub;
+    iprocess->thetaStep = thetaStepSub;
+    iprocess->detectLongestSolidLines();
 
-    iprocess->calculateHoughMaxs( houghLineNo );        // get max voted line(s)
-    iprocess->calcAvgDistAndAngle( houghLineNo );       // calc. avg. distance and theta
-    voteAvg = iprocess->calcVoteAvg();                  // ave value of max voted line(s)
+    iprocess->imgMono.save("data/mono.jpg");
+    //iprocess->saveList(iprocess->iprocess, "data/solidSpaceMain.csv");
+    iprocess->saveList(iprocess->solidSpaceMainTrimmed, "data/solidSpaceMainTrimmed.csv");
+    //iprocess->saveList(iprocess->solidSpaceMainMaximums, "data/solidSpaceMainMaximums.csv");
+    iprocess->saveList(iprocess->primaryGroup, "data/primaryGroup.csv");
+    iprocess->saveList(iprocess->secondaryGroup, "data/secondaryGroup.csv");
 
-    iprocess->voteThreshold = voteThreshold;            // acceptable vote value low-limit
-    if ( !iprocess->checkPrimaryLine() )                // is max voted line  above the low-limit?
-        ui->labelPrimaryLine->show();
-    iprocess->detectVoidLines();                        // detect void lines on hough lines in MONO image
+    //iprocess->constructHoughExtendedMatrixMajor2Lines();
+    //iprocess->getImage(iprocess->houghExtendedMatrix, iprocess->imageWidth, iprocess->imageHeight)->save("data/major2.jpg");
 
-    iprocess->voidThreshold = voidThreshold;            // void threshold to decide max void as primary
-    iprocess->detectPrimaryVoid();                      // decide primary void line & corners/center
-
-    iprocess->imgMono.save("data/0.jpg");
-
-    if ( w->subImageProcessingSwitch && iprocess->detected ) {
-
-        if (iprocessLeftInitSwitch) {
-            delete iprocessLeft;
-            iprocessLeftInitSwitch = false;
-        }
-        if (iprocessRightInitSwitch) {
-            delete iprocessRight;
-            iprocessRightInitSwitch = false;
-        }
-        tCenterX = iprocess->trackCenterX;
-        int tWidth = w->frameWidth;
-
-        QImage targetLeft = target.copy( 0, 0, tCenterX, w->frameHeight );
-        QImage targetRight = target.copy( tCenterX, 0, tWidth - tCenterX, w->frameHeight );
-
-        // left image process
-        iprocessLeft = new imgProcess( targetLeft, targetLeft.width(), targetLeft.height() );   // new imgProcess object
-        iprocessLeftInitSwitch = true;
-        iprocessLeft->toMono();                                         // convert target to mono
-        iprocessLeft->constructValueMatrix( iprocessLeft->imgMono );    // construct mono matrix
-        iprocessLeft->detectEdgeSobel();                                // detect edges of the mono image
-        iprocessLeft->thickenEdges();
-
-        iprocessLeft->thetaMin = thetaMinSub;
-        iprocessLeft->thetaMax = thetaMaxSub;
-        iprocessLeft->thetaStep = thetaStepSub;
-        //iprocessLeft->houghTransform();                                 // detect lines in edge image
-        iprocessLeft->detectLongestSolidLines();
-
-            //iprocessLeft->saveList(iprocessLeft->solidSpaceMain, "data/left1_solidSpaceMain.csv");
-            iprocessLeft->saveList(iprocessLeft->solidSpaceMainTrimmed, "data/left1_solidSpaceMainTrimmed.csv");
-            iprocessLeft->saveList(iprocessLeft->solidSpaceMainMaximums, "data/left1_solidSpaceMainMaximums.csv");
-            iprocessLeft->imgMono.save("data/left1.jpg");
-            iprocessLeft->constructHoughExtendedMatrixMajor2Lines();
-            iprocessLeft->getImage(iprocessLeft->houghExtendedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save("data/left1_major2.jpg");
-
-        // right image process
-        iprocessRight = new imgProcess( targetRight, targetRight.width(), targetRight.height() );   // new imgProcess object
-        iprocessRightInitSwitch = true;
-        iprocessRight->toMono();                                        // convert target to mono
-        iprocessRight->constructValueMatrix( iprocessRight->imgMono );  // construct mono matrix
-        iprocessRight->detectEdgeSobel();                               // detect edges of the mono image
-        iprocessRight->thickenEdges();
-
-        iprocessRight->thetaMin = thetaMinSub;
-        iprocessRight->thetaMax = thetaMaxSub;
-        iprocessRight->thetaStep = thetaStepSub;
-        //iprocessRight->houghTransform();                                // detect lines in edge image
-        iprocessRight->detectLongestSolidLines();
-
-            //iprocessRight->saveList(iprocessRight->solidSpaceMain, "data/right1_solidSpaceMain.csv");
-            iprocessRight->saveList(iprocessRight->solidSpaceMainTrimmed, "data/right1_solidSpaceMainTrimmed.csv");
-            iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, "data/right1_solidSpaceMainMaximums.csv");
-            iprocessRight->imgMono.save("data/right1.jpg");
-            iprocessRight->constructHoughExtendedMatrixMajor2Lines();
-            iprocessRight->getImage(iprocessRight->houghExtendedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right1_major2.jpg");
-
-        if ( iprocessLeft->primaryLine.length > iprocessRight->primaryLine.length  && iprocessRight->primaryLine.length != -1 ) {
-
-            // right image re-process
-            tCenterX = iprocessLeft->primaryLine.end.x() + 5;
-
-            targetRight = target.copy( tCenterX, 0, tWidth - tCenterX, w->frameHeight );
-
-            if (iprocessRightInitSwitch) {
-                delete iprocessRight;
-                iprocessRightInitSwitch = false;
-            }
-            iprocessRight = new imgProcess( targetRight, targetRight.width(), targetRight.height() );   // new imgProcess object
-            iprocessRightInitSwitch = true;
-            iprocessRight->toMono();                                        // convert target to mono
-            iprocessRight->constructValueMatrix( iprocessRight->imgMono );  // construct mono matrix
-            iprocessRight->detectEdgeSobel();                               // detect edges of the mono image
-            iprocessRight->thickenEdges();
-
-            iprocessRight->thetaMin = thetaMinSub;
-            iprocessRight->thetaMax = thetaMaxSub;
-            iprocessRight->thetaStep = thetaStepSub;
-            //iprocessRight->houghTransform();                                // detect lines in edge image
-            iprocessRight->detectLongestSolidLines();
-
-                //iprocessRight->saveList(iprocessRight->solidSpaceMain, "data/right2_solidSpaceMain.csv");
-                iprocessRight->saveList(iprocessRight->solidSpaceMainTrimmed, "data/right2_solidSpaceMainTrimmed.csv");
-                iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, "data/right2_solidSpaceMainMaximums.csv");
-                iprocessRight->imgMono.save("data/right2.jpg");
-                iprocessRight->constructHoughExtendedMatrixMajor2Lines();
-                iprocessRight->getImage(iprocessRight->houghExtendedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right2_major2.jpg");
-
-        } else
-        if ( iprocessLeft->primaryLine.length < iprocessRight->primaryLine.length && iprocessLeft->primaryLine.length != -1 ) {
-
-            // left image re-process
-            tCenterX = iprocess->trackCenterX + iprocessRight->primaryLine.start.x() - 5;
-
-            targetLeft = target.copy( 0, 0, tCenterX, w->frameHeight );
-
-            if (iprocessLeftInitSwitch) {
-                delete iprocessLeft;
-                iprocessLeftInitSwitch = false;
-            }
-            iprocessLeft = new imgProcess( targetLeft, targetLeft.width(), targetLeft.height() );   // new imgProcess object
-            iprocessLeftInitSwitch = true;
-            iprocessLeft->toMono();                                         // convert target to mono
-            iprocessLeft->constructValueMatrix( iprocessLeft->imgMono );    // construct mono matrix
-            iprocessLeft->detectEdgeSobel();                                // detect edges of the mono image
-            iprocessLeft->thickenEdges();
-
-            iprocessLeft->thetaMin = thetaMinSub;
-            iprocessLeft->thetaMax = thetaMaxSub;
-            iprocessLeft->thetaStep = thetaStepSub;
-            //iprocessLeft->houghTransform();                                 // detect lines in edge image
-            iprocessLeft->detectLongestSolidLines();
-
-            // to recover for right image coord.
-            tCenterX = iprocess->trackCenterX;
-
-                iprocessLeft->saveList(iprocessLeft->solidSpaceMainTrimmed, "data/left2_solidSpaceMainTrimmed.csv");
-                iprocessLeft->saveList(iprocessLeft->solidSpaceMainMaximums, "data/left2_solidSpaceMainMaximums.csv");
-                iprocessLeft->imgMono.save("data/left2.jpg");
-                iprocessLeft->constructHoughExtendedMatrixMajor2Lines();
-                iprocessLeft->getImage(iprocessLeft->houghExtendedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save("data/left2_major2.jpg");
-        } else {
-            // equality in lengths
-        }
-
+/*
         // if no left line
         if ( iprocessLeft->primaryLine.length == -1){
 
@@ -398,7 +270,8 @@ void setupForm::processSubImageSolidness(){
                 iprocessRight->primaryLine.end.setY( iprocessRight->imageHeight / 2 );
             }
         }
-
+*/
+/*
         iprocess->leftCornerX = iprocessLeft->primaryLine.end.x();
         iprocess->leftCornerY = iprocessLeft->primaryLine.end.y();
 
@@ -407,7 +280,7 @@ void setupForm::processSubImageSolidness(){
 
         iprocess->trackCenterX = ( iprocess->leftCornerX + iprocess->rightCornerX ) / 2;
         iprocess->trackCenterY = ( iprocess->leftCornerY + iprocess->rightCornerY ) / 2;
-
+*/
 
         //iprocessRight->saveList(iprocessRight->major2Lines, savePath + "major2Lines_right.csv");
         //iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, savePath + "solidSpaceMainMaximums_right.csv");
@@ -424,7 +297,7 @@ void setupForm::processSubImageSolidness(){
 
         // ------ LEFT AND RIGHT IMAGES SAVE
 */
-    }
+    //}
 }
 
 
@@ -490,18 +363,8 @@ void setupForm::captureButton(){
 
 
         // UPDATE GUI
-
         ui->labelTarget->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
         ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->imgMono ) );
-        edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
-        ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
-
-        iprocess->constructHoughMatrix();   // construct hough matrix = edge matrix + coded #houghLineNo lines
-        //iprocess->constructHoughMatrixPrimaryLines(iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX);
-        hough = iprocess->getImage( iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight );     // produce hough image
-        ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
-
-        ui->labelVoteAvg->setText( QString::number( voteAvg ) );
 
 
         QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleþtirildi.";
@@ -514,21 +377,44 @@ void setupForm::captureButton(){
                          QString::number(iprocess->rightCornerX) + " , " + QString::number(iprocess->rightCornerY) + " )";
         ui->plainTextEdit->appendPlainText(message);
 
-
         if ( w->subImageProcessingSwitch ) {
 
             switch ( w->subImageProcessingType ) {
 
                 case 0:     // VOID AREAS
+                    edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
+                    ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
+
+                    iprocess->constructHoughMatrix();   // construct hough matrix = edge matrix + coded #houghLineNo lines
+                    //iprocess->constructHoughMatrixPrimaryLines(iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX);
+                    hough = iprocess->getImage( iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight );     // produce hough image
+                    ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
+
+                    ui->labelVoteAvg->setText( QString::number( voteAvg ) );
+
                     iprocess->cornerImage();
                     ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
+
                     break;
 
                 case 1:     // SOLID LINES
-                    //iprocess->cornerAndPrimaryLineImage( iprocessLeft->major2Lines[0], iprocessRight->major2Lines[0], tCenterX );
-                    iprocess->cornerAndPrimaryLineImage( iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX );
-                    ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
+                    edge = iprocess->getImage( iprocess->edgeThickenedMatrix, iprocess->imageWidth, iprocess->imageHeight );   // produce edge image
+                    ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
 
+                    ui->plainTextEdit->appendPlainText(QString::number(iprocess->distanceAvgPrimary, 'f', 1) + " - " + QString::number(iprocess->thetaAvgPrimary, 'f', 1));
+                    ui->plainTextEdit->appendPlainText(QString::number(iprocess->distanceAvgSecondary, 'f', 1) + " - " + QString::number(iprocess->thetaAvgSecondary, 'f', 1));
+
+                    iprocess->detected = true;
+                    if ( iprocess->primaryLineFound && iprocess->secondaryLineFound )
+                        iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[1], 0 );
+                    else
+                        if ( iprocess->primaryLineFound )
+                            iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[0], 0 );
+                    //iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[0], 0 );
+
+                    //iprocess->cornerAndPrimaryLineImage( iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX );
+                    ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
+/*
                     ui->plainTextEdit->appendPlainText("2.aþama:");
                     ui->plainTextEdit->appendPlainText("Sol Ýmaj {Uzunluk-Mesafe-Açý-Baþlagýç(x,y)-Bitiþ(x,y)}");
                     message = QString::number(iprocessLeft->primaryLine.length) + " - " +
@@ -549,11 +435,20 @@ void setupForm::captureButton(){
                               QString::number(iprocessRight->primaryLine.end.x()) + " , " +
                               QString::number(iprocessRight->primaryLine.end.y()) + " )";
                     ui->plainTextEdit->appendPlainText(message);
-
+*/
                     break;
             }
 
         } else {    // standard HT
+
+
+            edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
+            ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
+
+            iprocess->constructHoughMatrix();   // construct hough matrix = edge matrix + coded #houghLineNo lines
+            //iprocess->constructHoughMatrixPrimaryLines(iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX);
+            hough = iprocess->getImage( iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight );     // produce hough image
+            ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
 
             iprocess->cornerImage();
             ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
@@ -571,7 +466,8 @@ void setupForm::captureButton(){
                           QString::number(iprocess->voidSpace[i]->length);
                 ui->plainTextEdit->appendPlainText(message);
             }
-        }
+
+       }
 
         ui->plainTextEdit->appendPlainText("------------------------------------------------------------");
 
@@ -802,3 +698,223 @@ setupForm::~setupForm(){
         iprocessSub[i]->saveList(iprocessSub[i]->majorLines, savePath + "majorLines" + QString::number(i)+ ".csv");
         iprocessSub[i]->saveList(iprocessSub[i]->major2Lines, savePath + "major2Lines" + QString::number(i)+ ".csv");
         */
+
+
+
+
+/*
+void setupForm::processSubImageSolidness(){
+
+    target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight ); // take target image
+
+    if (iprocessInitSwitch) {
+        delete iprocess;
+        iprocessInitSwitch = false;
+    }
+    iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+    iprocessInitSwitch = true;
+    iprocess->toMono();                                 // convert target to mono
+    iprocess->constructValueMatrix(iprocess->imgMono);  // construct mono matrix
+    iprocess->detectEdgeSobel();                        // detect edges of the mono image
+
+    iprocess->thetaMin = thetaMin;
+    iprocess->thetaMax = thetaMax;
+    iprocess->thetaStep = thetaStep;
+    iprocess->houghTransform();                         // detect lines in edge image
+
+    iprocess->calculateHoughMaxs( houghLineNo );        // get max voted line(s)
+    iprocess->calcAvgDistAndAngle( houghLineNo );       // calc. avg. distance and theta
+    voteAvg = iprocess->calcVoteAvg();                  // ave value of max voted line(s)
+
+    iprocess->voteThreshold = voteThreshold;            // acceptable vote value low-limit
+    if ( !iprocess->checkPrimaryLine() )                // is max voted line  above the low-limit?
+        ui->labelPrimaryLine->show();
+    iprocess->detectVoidLines();                        // detect void lines on hough lines in MONO image
+
+    iprocess->voidThreshold = voidThreshold;            // void threshold to decide max void as primary
+    iprocess->detectPrimaryVoid();                      // decide primary void line & corners/center
+
+    iprocess->imgMono.save("data/0.jpg");
+
+    if ( w->subImageProcessingSwitch && iprocess->detected ) {
+
+        if (iprocessLeftInitSwitch) {
+            delete iprocessLeft;
+            iprocessLeftInitSwitch = false;
+        }
+        if (iprocessRightInitSwitch) {
+            delete iprocessRight;
+            iprocessRightInitSwitch = false;
+        }
+        tCenterX = iprocess->trackCenterX;
+        int tWidth = w->frameWidth;
+
+        QImage targetLeft = target.copy( 0, 0, tCenterX, w->frameHeight );
+        QImage targetRight = target.copy( tCenterX, 0, tWidth - tCenterX, w->frameHeight );
+
+        // left image process
+        iprocessLeft = new imgProcess( targetLeft, targetLeft.width(), targetLeft.height() );   // new imgProcess object
+        iprocessLeftInitSwitch = true;
+        iprocessLeft->toMono();                                         // convert target to mono
+        iprocessLeft->constructValueMatrix( iprocessLeft->imgMono );    // construct mono matrix
+        iprocessLeft->detectEdgeSobel();                                // detect edges of the mono image
+        iprocessLeft->thickenEdges();
+
+        iprocessLeft->thetaMin = thetaMinSub;
+        iprocessLeft->thetaMax = thetaMaxSub;
+        iprocessLeft->thetaStep = thetaStepSub;
+        //iprocessLeft->houghTransform();                                 // detect lines in edge image
+        iprocessLeft->detectLongestSolidLines();
+
+            //iprocessLeft->saveList(iprocessLeft->solidSpaceMain, "data/left1_solidSpaceMain.csv");
+            iprocessLeft->saveList(iprocessLeft->solidSpaceMainTrimmed, "data/left1_solidSpaceMainTrimmed.csv");
+            iprocessLeft->saveList(iprocessLeft->solidSpaceMainMaximums, "data/left1_solidSpaceMainMaximums.csv");
+            iprocessLeft->imgMono.save("data/left1.jpg");
+            iprocessLeft->constructHoughExtendedMatrixMajor2Lines();
+            iprocessLeft->getImage(iprocessLeft->houghExtendedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save("data/left1_major2.jpg");
+
+        // right image process
+        iprocessRight = new imgProcess( targetRight, targetRight.width(), targetRight.height() );   // new imgProcess object
+        iprocessRightInitSwitch = true;
+        iprocessRight->toMono();                                        // convert target to mono
+        iprocessRight->constructValueMatrix( iprocessRight->imgMono );  // construct mono matrix
+        iprocessRight->detectEdgeSobel();                               // detect edges of the mono image
+        iprocessRight->thickenEdges();
+
+        iprocessRight->thetaMin = thetaMinSub;
+        iprocessRight->thetaMax = thetaMaxSub;
+        iprocessRight->thetaStep = thetaStepSub;
+        //iprocessRight->houghTransform();                                // detect lines in edge image
+        iprocessRight->detectLongestSolidLines();
+
+            //iprocessRight->saveList(iprocessRight->solidSpaceMain, "data/right1_solidSpaceMain.csv");
+            iprocessRight->saveList(iprocessRight->solidSpaceMainTrimmed, "data/right1_solidSpaceMainTrimmed.csv");
+            iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, "data/right1_solidSpaceMainMaximums.csv");
+            iprocessRight->imgMono.save("data/right1.jpg");
+            iprocessRight->constructHoughExtendedMatrixMajor2Lines();
+            iprocessRight->getImage(iprocessRight->houghExtendedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right1_major2.jpg");
+
+        if ( iprocessLeft->primaryLine.length > iprocessRight->primaryLine.length  && iprocessRight->primaryLine.length != -1 ) {
+
+            // right image re-process
+            tCenterX = iprocessLeft->primaryLine.end.x() + 5;
+
+            targetRight = target.copy( tCenterX, 0, tWidth - tCenterX, w->frameHeight );
+
+            if (iprocessRightInitSwitch) {
+                delete iprocessRight;
+                iprocessRightInitSwitch = false;
+            }
+            iprocessRight = new imgProcess( targetRight, targetRight.width(), targetRight.height() );   // new imgProcess object
+            iprocessRightInitSwitch = true;
+            iprocessRight->toMono();                                        // convert target to mono
+            iprocessRight->constructValueMatrix( iprocessRight->imgMono );  // construct mono matrix
+            iprocessRight->detectEdgeSobel();                               // detect edges of the mono image
+            iprocessRight->thickenEdges();
+
+            iprocessRight->thetaMin = thetaMinSub;
+            iprocessRight->thetaMax = thetaMaxSub;
+            iprocessRight->thetaStep = thetaStepSub;
+            //iprocessRight->houghTransform();                                // detect lines in edge image
+            iprocessRight->detectLongestSolidLines();
+
+                //iprocessRight->saveList(iprocessRight->solidSpaceMain, "data/right2_solidSpaceMain.csv");
+                iprocessRight->saveList(iprocessRight->solidSpaceMainTrimmed, "data/right2_solidSpaceMainTrimmed.csv");
+                iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, "data/right2_solidSpaceMainMaximums.csv");
+                iprocessRight->imgMono.save("data/right2.jpg");
+                iprocessRight->constructHoughExtendedMatrixMajor2Lines();
+                iprocessRight->getImage(iprocessRight->houghExtendedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right2_major2.jpg");
+
+        } else
+        if ( iprocessLeft->primaryLine.length < iprocessRight->primaryLine.length && iprocessLeft->primaryLine.length != -1 ) {
+
+            // left image re-process
+            tCenterX = iprocess->trackCenterX + iprocessRight->primaryLine.start.x() - 5;
+
+            targetLeft = target.copy( 0, 0, tCenterX, w->frameHeight );
+
+            if (iprocessLeftInitSwitch) {
+                delete iprocessLeft;
+                iprocessLeftInitSwitch = false;
+            }
+            iprocessLeft = new imgProcess( targetLeft, targetLeft.width(), targetLeft.height() );   // new imgProcess object
+            iprocessLeftInitSwitch = true;
+            iprocessLeft->toMono();                                         // convert target to mono
+            iprocessLeft->constructValueMatrix( iprocessLeft->imgMono );    // construct mono matrix
+            iprocessLeft->detectEdgeSobel();                                // detect edges of the mono image
+            iprocessLeft->thickenEdges();
+
+            iprocessLeft->thetaMin = thetaMinSub;
+            iprocessLeft->thetaMax = thetaMaxSub;
+            iprocessLeft->thetaStep = thetaStepSub;
+            //iprocessLeft->houghTransform();                                 // detect lines in edge image
+            iprocessLeft->detectLongestSolidLines();
+
+            // to recover for right image coord.
+            tCenterX = iprocess->trackCenterX;
+
+                iprocessLeft->saveList(iprocessLeft->solidSpaceMainTrimmed, "data/left2_solidSpaceMainTrimmed.csv");
+                iprocessLeft->saveList(iprocessLeft->solidSpaceMainMaximums, "data/left2_solidSpaceMainMaximums.csv");
+                iprocessLeft->imgMono.save("data/left2.jpg");
+                iprocessLeft->constructHoughExtendedMatrixMajor2Lines();
+                iprocessLeft->getImage(iprocessLeft->houghExtendedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save("data/left2_major2.jpg");
+        } else {
+            // equality in lengths
+        }
+
+        // if no left line
+        if ( iprocessLeft->primaryLine.length == -1){
+
+            iprocessLeft->primaryLine.start.setX( 0 );
+            iprocessLeft->primaryLine.end.setX( 0 );
+
+            if ( iprocessRight->primaryLine.length != -1 ){
+                iprocessLeft->primaryLine.start.setY( iprocessRight->primaryLine.start.y() );
+                iprocessLeft->primaryLine.end.setY( iprocessRight->primaryLine.start.y() );
+            } else {
+                iprocessLeft->primaryLine.start.setY( iprocessLeft->imageHeight / 2 );
+                iprocessLeft->primaryLine.end.setY( iprocessLeft->imageHeight / 2 );
+            }
+        }
+
+        // if no right line
+        if ( iprocessRight->primaryLine.length == -1){
+
+            iprocessRight->primaryLine.start.setX( iprocessRight->imageWidth - 1 );
+            iprocessRight->primaryLine.end.setX( iprocessRight->imageWidth - 1 );
+
+            if ( iprocessLeft->primaryLine.length != -1 ){
+                iprocessRight->primaryLine.start.setY( iprocessLeft->primaryLine.end.y() );
+                iprocessRight->primaryLine.end.setY( iprocessLeft->primaryLine.end.y() );
+            } else {
+                iprocessRight->primaryLine.start.setY( iprocessRight->imageHeight / 2 );
+                iprocessRight->primaryLine.end.setY( iprocessRight->imageHeight / 2 );
+            }
+        }
+
+        iprocess->leftCornerX = iprocessLeft->primaryLine.end.x();
+        iprocess->leftCornerY = iprocessLeft->primaryLine.end.y();
+
+        iprocess->rightCornerX = tCenterX + iprocessRight->primaryLine.start.x();
+        iprocess->rightCornerY = iprocessRight->primaryLine.start.y();
+
+        iprocess->trackCenterX = ( iprocess->leftCornerX + iprocess->rightCornerX ) / 2;
+        iprocess->trackCenterY = ( iprocess->leftCornerY + iprocess->rightCornerY ) / 2;
+
+
+        //iprocessRight->saveList(iprocessRight->major2Lines, savePath + "major2Lines_right.csv");
+        //iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, savePath + "solidSpaceMainMaximums_right.csv");
+
+        // ------ LEFT AND RIGHT IMAGES SAVE
+        iprocessLeft->imgMono.save("data/left.jpg");
+        iprocessRight->imgMono.save("data/right.jpg");
+        iprocessLeft->getImage(iprocessLeft->edgeThickenedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save("data/left_edgethickned.jpg");
+        iprocessRight->getImage(iprocessRight->edgeThickenedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right_edgethickned.jpg");
+
+        iprocessRight->constructHoughExtendedMatrixMajor2Lines();
+        iprocessRight->getImage(iprocessRight->houghExtendedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right_major2.jpg");
+
+        // ------ LEFT AND RIGHT IMAGES SAVE
+    }
+}
+*/
