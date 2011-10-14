@@ -222,82 +222,21 @@ void setupForm::processSubImageSolidness(){
     iprocessInitSwitch = true;
     iprocess->toMono();                                 // convert target to mono
     iprocess->constructValueMatrix(iprocess->imgMono);  // construct mono matrix
-    iprocess->detectEdgeSobel();                        // detect edges of the mono image
-    iprocess->thickenEdges();
+    //iprocess->detectEdgeSobel();                        // detect edges of the mono image
+    //iprocess->thickenEdges();
 
     iprocess->thetaMin = thetaMinSub;
     iprocess->thetaMax = thetaMaxSub;
     iprocess->thetaStep = thetaStepSub;
     iprocess->detectLongestSolidLines();
 
-    iprocess->imgMono.save("data/mono.jpg");
-    //iprocess->saveList(iprocess->iprocess, "data/solidSpaceMain.csv");
-    iprocess->saveList(iprocess->solidSpaceMainTrimmed, "data/solidSpaceMainTrimmed.csv");
-    //iprocess->saveList(iprocess->solidSpaceMainMaximums, "data/solidSpaceMainMaximums.csv");
-    iprocess->saveList(iprocess->primaryGroup, "data/primaryGroup.csv");
-    iprocess->saveList(iprocess->secondaryGroup, "data/secondaryGroup.csv");
-
-    //iprocess->constructHoughExtendedMatrixMajor2Lines();
-    //iprocess->getImage(iprocess->houghExtendedMatrix, iprocess->imageWidth, iprocess->imageHeight)->save("data/major2.jpg");
-
-/*
-        // if no left line
-        if ( iprocessLeft->primaryLine.length == -1){
-
-            iprocessLeft->primaryLine.start.setX( 0 );
-            iprocessLeft->primaryLine.end.setX( 0 );
-
-            if ( iprocessRight->primaryLine.length != -1 ){
-                iprocessLeft->primaryLine.start.setY( iprocessRight->primaryLine.start.y() );
-                iprocessLeft->primaryLine.end.setY( iprocessRight->primaryLine.start.y() );
-            } else {
-                iprocessLeft->primaryLine.start.setY( iprocessLeft->imageHeight / 2 );
-                iprocessLeft->primaryLine.end.setY( iprocessLeft->imageHeight / 2 );
-            }
-        }
-
-        // if no right line
-        if ( iprocessRight->primaryLine.length == -1){
-
-            iprocessRight->primaryLine.start.setX( iprocessRight->imageWidth - 1 );
-            iprocessRight->primaryLine.end.setX( iprocessRight->imageWidth - 1 );
-
-            if ( iprocessLeft->primaryLine.length != -1 ){
-                iprocessRight->primaryLine.start.setY( iprocessLeft->primaryLine.end.y() );
-                iprocessRight->primaryLine.end.setY( iprocessLeft->primaryLine.end.y() );
-            } else {
-                iprocessRight->primaryLine.start.setY( iprocessRight->imageHeight / 2 );
-                iprocessRight->primaryLine.end.setY( iprocessRight->imageHeight / 2 );
-            }
-        }
-*/
-/*
-        iprocess->leftCornerX = iprocessLeft->primaryLine.end.x();
-        iprocess->leftCornerY = iprocessLeft->primaryLine.end.y();
-
-        iprocess->rightCornerX = tCenterX + iprocessRight->primaryLine.start.x();
-        iprocess->rightCornerY = iprocessRight->primaryLine.start.y();
-
-        iprocess->trackCenterX = ( iprocess->leftCornerX + iprocess->rightCornerX ) / 2;
-        iprocess->trackCenterY = ( iprocess->leftCornerY + iprocess->rightCornerY ) / 2;
-*/
-
-        //iprocessRight->saveList(iprocessRight->major2Lines, savePath + "major2Lines_right.csv");
-        //iprocessRight->saveList(iprocessRight->solidSpaceMainMaximums, savePath + "solidSpaceMainMaximums_right.csv");
-
-/*
-        // ------ LEFT AND RIGHT IMAGES SAVE
-        iprocessLeft->imgMono.save("data/left.jpg");
-        iprocessRight->imgMono.save("data/right.jpg");
-        iprocessLeft->getImage(iprocessLeft->edgeThickenedMatrix, iprocessLeft->imageWidth, iprocessLeft->imageHeight)->save("data/left_edgethickned.jpg");
-        iprocessRight->getImage(iprocessRight->edgeThickenedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right_edgethickned.jpg");
-
-        iprocessRight->constructHoughExtendedMatrixMajor2Lines();
-        iprocessRight->getImage(iprocessRight->houghExtendedMatrix, iprocessRight->imageWidth, iprocessRight->imageHeight)->save("data/right_major2.jpg");
-
-        // ------ LEFT AND RIGHT IMAGES SAVE
-*/
-    //}
+        /*
+        iprocess->imgMono.save("data/mono.jpg");
+        //iprocess->saveList(iprocess->iprocess, "data/solidSpaceMain.csv");
+        iprocess->saveList(iprocess->solidSpaceMainTrimmed, "data/solidSpaceMainTrimmed.csv");
+        iprocess->saveList(iprocess->primaryGroup, "data/primaryGroup.csv");
+        iprocess->saveList(iprocess->secondaryGroup, "data/secondaryGroup.csv");
+        */
 }
 
 
@@ -398,44 +337,47 @@ void setupForm::captureButton(){
                     break;
 
                 case 1:     // SOLID LINES
-                    edge = iprocess->getImage( iprocess->edgeThickenedMatrix, iprocess->imageWidth, iprocess->imageHeight );   // produce edge image
-                    ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
+                    //edge = iprocess->getImage( iprocess->edgeThickenedMatrix, iprocess->imageWidth, iprocess->imageHeight );   // produce edge image
+                    //ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
+                    ui->labelEdge->clear();
 
-                    ui->plainTextEdit->appendPlainText(QString::number(iprocess->distanceAvgPrimary, 'f', 1) + " - " + QString::number(iprocess->thetaAvgPrimary, 'f', 1));
-                    ui->plainTextEdit->appendPlainText(QString::number(iprocess->distanceAvgSecondary, 'f', 1) + " - " + QString::number(iprocess->thetaAvgSecondary, 'f', 1));
+                    ui->labelHough->clear();
 
-                    iprocess->detected = true;
                     if ( iprocess->primaryLineFound && iprocess->secondaryLineFound )
                         iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[1], 0 );
                     else
                         if ( iprocess->primaryLineFound )
                             iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[0], 0 );
-                    //iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[0], 0 );
 
-                    //iprocess->cornerAndPrimaryLineImage( iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX );
                     ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
-/*
-                    ui->plainTextEdit->appendPlainText("2.aþama:");
-                    ui->plainTextEdit->appendPlainText("Sol Ýmaj {Uzunluk-Mesafe-Açý-Baþlagýç(x,y)-Bitiþ(x,y)}");
-                    message = QString::number(iprocessLeft->primaryLine.length) + " - " +
-                              QString::number(iprocessLeft->primaryLine.distance) + " - " +
-                              QString::number(iprocessLeft->primaryLine.angle) + " -   ( " +
-                              QString::number(iprocessLeft->primaryLine.start.x()) + ", " +
-                              QString::number(iprocessLeft->primaryLine.start.y()) + " ) - ( " +
-                              QString::number(iprocessLeft->primaryLine.end.x()) + " , " +
-                              QString::number(iprocessLeft->primaryLine.end.y()) + " )";
-                    ui->plainTextEdit->appendPlainText(message);
 
-                    ui->plainTextEdit->appendPlainText("Sað Ýmaj {Uzunluk-Mesafe-Açý-Baþlagýç(x,y)-Bitiþ(x,y)}");
-                    message = QString::number(iprocessRight->primaryLine.length) + " - " +
-                              QString::number(iprocessRight->primaryLine.distance) + " - " +
-                              QString::number(iprocessRight->primaryLine.angle) + " -   ( " +
-                              QString::number(iprocessRight->primaryLine.start.x()) + ", " +
-                              QString::number(iprocessRight->primaryLine.start.y()) + " ) - ( " +
-                              QString::number(iprocessRight->primaryLine.end.x()) + " , " +
-                              QString::number(iprocessRight->primaryLine.end.y()) + " )";
-                    ui->plainTextEdit->appendPlainText(message);
-*/
+                    if ( iprocess->primaryLineFound ) {
+                        ui->plainTextEdit->appendPlainText("1. Çizgi {Uzunluk-Mesafe-Açý-Baþlagýç(x,y)-Bitiþ(x,y)}");
+                        message = QString::number(iprocess->major2Lines[0].length) + " - " +
+                                  QString::number(iprocess->major2Lines[0].distance, 'f', 1) + " - " +
+                                  QString::number(iprocess->major2Lines[0].angle, 'f', 1) + " -   ( " +
+                                  QString::number(iprocess->major2Lines[0].start.x()) + ", " +
+                                  QString::number(iprocess->major2Lines[0].start.y()) + " ) - ( " +
+                                  QString::number(iprocess->major2Lines[0].end.x()) + " , " +
+                                  QString::number(iprocess->major2Lines[0].end.y()) + " )";
+                        ui->plainTextEdit->appendPlainText(message);
+                    }
+
+                    if ( iprocess->secondaryLineFound ) {
+                        ui->plainTextEdit->appendPlainText("2. Çizgi {Uzunluk-Mesafe-Açý-Baþlagýç(x,y)-Bitiþ(x,y)}");
+                        message = QString::number(iprocess->major2Lines[1].length) + " - " +
+                                  QString::number(iprocess->major2Lines[1].distance, 'f', 1) + " - " +
+                                  QString::number(iprocess->major2Lines[1].angle, 'f', 1) + " -   ( " +
+                                  QString::number(iprocess->major2Lines[1].start.x()) + ", " +
+                                  QString::number(iprocess->major2Lines[1].start.y()) + " ) - ( " +
+                                  QString::number(iprocess->major2Lines[1].end.x()) + " , " +
+                                  QString::number(iprocess->major2Lines[1].end.y()) + " )";
+                        ui->plainTextEdit->appendPlainText(message);
+                    }
+                    if ( iprocess->primaryLineFound ) {
+                        ui->plainTextEdit->appendPlainText("Ortalama Açý: " + QString::number(iprocess->angleAvg));
+                    }
+
                     break;
             }
 
