@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->setupUi(this);
 
+
     ui->clearMsgBoxButton->hide();  //  not used now
     //ui->plainTextEdit->appendPlainText(QString::number(rectScreen.width())+"x"+QString::number(rectScreen.height()));
 
@@ -65,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     gfLineVerRect = ui->guideLineVert->geometry();
     //gfTolLeftRect = ui->guideTolLeft->geometry();
     //gfTolRightRect = ui->guideTolRight->geometry();
+    offsetXpos = 0;
 
     showGuide = true;       // show guide initially
     repaintGuide();
@@ -549,6 +551,9 @@ void MainWindow::guideButton(){
 
     showGuide = !showGuide;
     repaintGuide();
+
+    ui->leftButton->setEnabled( showGuide && !trackOn );
+    ui->rightButton->setEnabled( showGuide && !trackOn );
 }
 
 
@@ -561,6 +566,10 @@ void MainWindow::trackButton(){
     } else {
         ui->trackButton->setIcon(trackOffIcon);
     }
+
+    ui->leftButton->setEnabled( showGuide && !trackOn );
+    ui->rightButton->setEnabled( showGuide && !trackOn );
+
 }
 
 
@@ -900,10 +909,26 @@ void MainWindow::drawTrack(){
 }
 
 
+void MainWindow::target2Left(){
+
+    offsetXpos--;
+
+    repaintGuide();
+}
+
+
+void MainWindow::target2Right(){
+
+    offsetXpos++;
+
+    repaintGuide();
+}
+
+
 void MainWindow::repaintGuide(){
 
     // update & show/hide guide
-    offsetX = (imageWidth - frameWidth)/2;
+    offsetX = (imageWidth - frameWidth)/2 + offsetXpos;
     offsetY = (imageHeight - frameHeight)/2;
 
     guideFrameRect.setX(imageFrameRect.x() + offsetX);

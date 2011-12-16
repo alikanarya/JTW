@@ -100,7 +100,7 @@
     <property name="geometry">
      <rect>
       <x>570</x>
-      <y>559</y>
+      <y>645</y>
       <width>85</width>
       <height>23</height>
      </rect>
@@ -620,6 +620,9 @@ background-color: rgb(236, 233, 216);</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelLogoCustomer">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>400</x>
@@ -706,9 +709,9 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>390</x>
+      <x>430</x>
       <y>3</y>
-      <width>261</width>
+      <width>221</width>
       <height>25</height>
      </rect>
     </property>
@@ -836,6 +839,64 @@ background-color: rgb(236, 233, 216);</string>
     <property name="icon">
      <iconset resource="icons.qrc">
       <normaloff>:/resources/backward.png</normaloff>:/resources/backward.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="leftButton">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>560</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Ayarlar</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="icons.qrc">
+      <normaloff>:/resources/left.png</normaloff>:/resources/left.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="rightButton">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>560</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Ayarlar</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="icons.qrc">
+      <normaloff>:/resources/right.png</normaloff>:/resources/right.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -1097,6 +1158,38 @@ color: rgb(0, 0, 255);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>leftButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>target2Left()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>599</x>
+     <y>597</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>618</x>
+     <y>608</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rightButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>target2Right()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>634</x>
+     <y>592</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>642</x>
+     <y>617</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>getImageFromCam()</slot>
@@ -1116,5 +1209,7 @@ color: rgb(0, 0, 255);</string>
   <slot>helpButton()</slot>
   <slot>reportButton()</slot>
   <slot>showReport()</slot>
+  <slot>target2Left()</slot>
+  <slot>target2Right()</slot>
  </slots>
 </ui>

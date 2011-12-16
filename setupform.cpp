@@ -230,13 +230,13 @@ void setupForm::processSubImageSolidness(){
     iprocess->thetaStep = thetaStepSub;
     iprocess->detectLongestSolidLines();
 
-        /*
+        // *
         iprocess->imgMono.save("data/mono.jpg");
         //iprocess->saveList(iprocess->iprocess, "data/solidSpaceMain.csv");
         iprocess->saveList(iprocess->solidSpaceMainTrimmed, "data/solidSpaceMainTrimmed.csv");
         iprocess->saveList(iprocess->primaryGroup, "data/primaryGroup.csv");
         iprocess->saveList(iprocess->secondaryGroup, "data/secondaryGroup.csv");
-        */
+        // * /
 }
 
 

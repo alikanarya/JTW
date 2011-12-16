@@ -146,6 +146,7 @@ public:
     int offsetX, offsetY;               // upper left corner coor. of target image
     int centerX;                        // image center x coor.
     QRect imageFrameRect;
+    int offsetXpos;
     QRect guideFrameRect, gfBoxRect, gfLineHorRect, gfLineVerRect, gfTolLeftRect, gfTolRightRect;
     QRect sceneRect;
     int sceneCenterX;
@@ -267,6 +268,8 @@ public slots:
     void showSettingsForm();                        // show settings GUI
     void showSetupForm();                           // show system setup form
     void plcControl();
+    void target2Left();
+    void target2Right();
 
 signals:
     void cameraDown();

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat 20. Aug 03:20:58 2011
+** Created: Fri 16. Dec 12:06:05 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -59,6 +59,8 @@ public:
     QPushButton *helpButton;
     QPushButton *reportButton;
     QPushButton *cmdStatus;
+    QPushButton *leftButton;
+    QPushButton *rightButton;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -99,7 +101,7 @@ public:
         screenShotButton->setFlat(true);
         labelTime = new QLabel(centralWidget);
         labelTime->setObjectName(QString::fromUtf8("labelTime"));
-        labelTime->setGeometry(QRect(570, 559, 85, 23));
+        labelTime->setGeometry(QRect(570, 645, 85, 23));
         QFont font;
         font.setPointSize(12);
         font.setBold(true);
@@ -259,6 +261,7 @@ public:
         label_3->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
         labelLogoCustomer = new QLabel(centralWidget);
         labelLogoCustomer->setObjectName(QString::fromUtf8("labelLogoCustomer"));
+        labelLogoCustomer->setEnabled(false);
         labelLogoCustomer->setGeometry(QRect(400, 3, 24, 24));
         labelLogoCustomer->setFrameShape(QFrame::Box);
         labelLogoCustomer->setLineWidth(1);
@@ -283,7 +286,7 @@ public:
         cameraStatus->setFlat(true);
         label_4 = new QLabel(centralWidget);
         label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setGeometry(QRect(390, 3, 261, 25));
+        label_4->setGeometry(QRect(430, 3, 221, 25));
         sizePolicy.setHeightForWidth(label_4->sizePolicy().hasHeightForWidth());
         label_4->setSizePolicy(sizePolicy);
         QFont font3;
@@ -329,6 +332,22 @@ public:
         cmdStatus->setIcon(icon16);
         cmdStatus->setIconSize(QSize(32, 32));
         cmdStatus->setFlat(true);
+        leftButton = new QPushButton(centralWidget);
+        leftButton->setObjectName(QString::fromUtf8("leftButton"));
+        leftButton->setGeometry(QRect(580, 560, 32, 32));
+        QIcon icon17;
+        icon17.addFile(QString::fromUtf8(":/resources/left.png"), QSize(), QIcon::Normal, QIcon::Off);
+        leftButton->setIcon(icon17);
+        leftButton->setIconSize(QSize(32, 32));
+        leftButton->setFlat(true);
+        rightButton = new QPushButton(centralWidget);
+        rightButton->setObjectName(QString::fromUtf8("rightButton"));
+        rightButton->setGeometry(QRect(620, 560, 32, 32));
+        QIcon icon18;
+        icon18.addFile(QString::fromUtf8(":/resources/right.png"), QSize(), QIcon::Normal, QIcon::Off);
+        rightButton->setIcon(icon18);
+        rightButton->setIconSize(QSize(32, 32));
+        rightButton->setFlat(true);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -356,6 +375,8 @@ public:
         QObject::connect(clearMsgBoxButton, SIGNAL(clicked()), MainWindow, SLOT(clearMsgBoxButton()));
         QObject::connect(helpButton, SIGNAL(clicked()), MainWindow, SLOT(helpButton()));
         QObject::connect(reportButton, SIGNAL(clicked()), MainWindow, SLOT(showReport()));
+        QObject::connect(leftButton, SIGNAL(clicked()), MainWindow, SLOT(target2Left()));
+        QObject::connect(rightButton, SIGNAL(clicked()), MainWindow, SLOT(target2Right()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -430,6 +451,14 @@ public:
 #endif // QT_NO_TOOLTIP
         reportButton->setText(QString());
         cmdStatus->setText(QString());
+#ifndef QT_NO_TOOLTIP
+        leftButton->setToolTip(QApplication::translate("MainWindow", "Ayarlar", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        leftButton->setText(QString());
+#ifndef QT_NO_TOOLTIP
+        rightButton->setToolTip(QApplication::translate("MainWindow", "Ayarlar", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        rightButton->setText(QString());
     } // retranslateUi
 
 };

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'infoform.ui'
 **
-** Created: Fri 14. Oct 14:58:25 2011
+** Created: Fri 16. Dec 10:12:05 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
