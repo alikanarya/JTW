@@ -913,6 +913,9 @@ void MainWindow::target2Left(){
 
     offsetXpos--;
 
+    if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) )
+        offsetXpos++;
+
     repaintGuide();
 }
 
@@ -920,6 +923,9 @@ void MainWindow::target2Left(){
 void MainWindow::target2Right(){
 
     offsetXpos++;
+
+    if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) )
+        offsetXpos--;
 
     repaintGuide();
 }
