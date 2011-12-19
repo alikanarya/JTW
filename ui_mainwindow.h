@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri 16. Dec 12:06:05 2011
+** Created: Mon 19. Dec 09:37:37 2011
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -440,7 +440,7 @@ public:
         cameraStatus->setToolTip(QApplication::translate("MainWindow", "Kamera Ba\304\237lant\304\261 Durumu", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         cameraStatus->setText(QString());
-        label_4->setText(QApplication::translate("MainWindow", "\302\251Aykurt Elektrik Hendek/Sakarya", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("MainWindow", "\302\251Orun Elektronik", 0, QApplication::UnicodeUTF8));
         clearMsgBoxButton->setText(QApplication::translate("MainWindow", "Temizle", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         helpButton->setToolTip(QApplication::translate("MainWindow", "Yard\304\261m", 0, QApplication::UnicodeUTF8));
@@ -452,11 +452,11 @@ public:
         reportButton->setText(QString());
         cmdStatus->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        leftButton->setToolTip(QApplication::translate("MainWindow", "Ayarlar", 0, QApplication::UnicodeUTF8));
+        leftButton->setToolTip(QApplication::translate("MainWindow", "Rehber Sola", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         leftButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        rightButton->setToolTip(QApplication::translate("MainWindow", "Ayarlar", 0, QApplication::UnicodeUTF8));
+        rightButton->setToolTip(QApplication::translate("MainWindow", "Rehber Sa\304\237a", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         rightButton->setText(QString());
     } // retranslateUi

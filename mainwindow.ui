@@ -733,7 +733,7 @@ background-color: rgb(236, 233, 216);</string>
      <string notr="true">color: rgb(0, 0, 0);</string>
     </property>
     <property name="text">
-     <string>©Aykurt Elektrik Hendek/Sakarya</string>
+     <string>©Orun Elektronik</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -860,7 +860,7 @@ background-color: rgb(236, 233, 216);</string>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Ayarlar</string>
+     <string>Rehber Sola</string>
     </property>
     <property name="text">
      <string/>
@@ -889,7 +889,7 @@ background-color: rgb(236, 233, 216);</string>
      </rect>
     </property>
     <property name="toolTip">
-     <string>Ayarlar</string>
+     <string>Rehber Sağa</string>
     </property>
     <property name="text">
      <string/>

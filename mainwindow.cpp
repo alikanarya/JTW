@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->clearMsgBoxButton->hide();  //  not used now
     //ui->plainTextEdit->appendPlainText(QString::number(rectScreen.width())+"x"+QString::number(rectScreen.height()));
+    ui->labelLogoCustomer->hide();
 
     // icon assignmets
     plcOnlineIcon.addFile(":/resources/s7_200-Enabled-Icon.png");
@@ -301,7 +302,8 @@ void MainWindow:: plcControl(){
             if (emergencyStop){
                 state = _CMD_EMERGENCY_ACT;
             } else {
-                if (cameraChecker->cameraDown || !play || detectionError || !permOperator){
+//                if (cameraChecker->cameraDown || !play || detectionError || !permOperator){
+                if (cameraChecker->cameraDown || !play || !permOperator){
                     state = _CMD_STOP;
                 } else {
                     if (play && trackOn && controlOn && permPLC){
@@ -567,8 +569,8 @@ void MainWindow::trackButton(){
         ui->trackButton->setIcon(trackOffIcon);
     }
 
-    ui->leftButton->setEnabled( showGuide && !trackOn );
-    ui->rightButton->setEnabled( showGuide && !trackOn );
+    //ui->leftButton->setEnabled( showGuide && !trackOn );
+    //ui->rightButton->setEnabled( showGuide && !trackOn );
 
 }
 
@@ -676,29 +678,27 @@ void MainWindow::processImage(){
 
         int index = deviationData.size() - 1;
 
-        if (deviationData[index] != eCodeDev){
-            if (deviationData[index] >= errorLimit){
-                cmdState = _CMD_RIGHT;
-            } else
-            if (deviationData[index] <= errorLimitNeg){
-                cmdState = _CMD_LEFT;
-            } else
-            if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
-                cmdState = _CMD_CENTER;
-            } else
-            if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
-                cmdState = _CMD_CENTER;
-            } else
-            if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
-                cmdState = _CMD_CENTER;
-            }
-        } else {
+        if (deviationData[index] >= errorLimit){
+            cmdState = _CMD_RIGHT;
+        } else
+        if (deviationData[index] <= errorLimitNeg){
+            cmdState = _CMD_LEFT;
+        } else
+        if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
+            cmdState = _CMD_CENTER;
+        } else
+        if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
+            cmdState = _CMD_CENTER;
+        } else
+        if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
             cmdState = _CMD_CENTER;
         }
 
         cmdStatePrev2 = cmdState;
 
     } else {
+        //if (deviationData[index] != eCodeDev){
+        cmdState = cmdStatePrev2;
         detectionError = true;
     }
 
@@ -912,9 +912,12 @@ void MainWindow::drawTrack(){
 void MainWindow::target2Left(){
 
     offsetXpos--;
+    offsetX--;
 
-    if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) )
+    if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) ){
         offsetXpos++;
+        offsetX++;
+    }
 
     repaintGuide();
 }
@@ -923,9 +926,12 @@ void MainWindow::target2Left(){
 void MainWindow::target2Right(){
 
     offsetXpos++;
+    offsetX++;
 
-    if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) )
+    if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) ){
         offsetXpos--;
+        offsetX--;
+    }
 
     repaintGuide();
 }
