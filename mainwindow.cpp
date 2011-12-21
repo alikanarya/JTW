@@ -569,8 +569,8 @@ void MainWindow::trackButton(){
         ui->trackButton->setIcon(trackOffIcon);
     }
 
-    //ui->leftButton->setEnabled( showGuide && !trackOn );
-    //ui->rightButton->setEnabled( showGuide && !trackOn );
+    ui->leftButton->setEnabled( showGuide && !trackOn );
+    ui->rightButton->setEnabled( showGuide && !trackOn );
 
 }
 
