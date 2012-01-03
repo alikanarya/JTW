@@ -556,6 +556,59 @@ void MainWindow::guideButton(){
 
     ui->leftButton->setEnabled( showGuide && !trackOn );
     ui->rightButton->setEnabled( showGuide && !trackOn );
+
+
+    if ( !imageGetter->imageList.isEmpty() ){
+
+        targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+
+        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
+
+        iprocess->constructValueMatrix( iprocess->imgOrginal );
+
+        iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "valuematrix.csv" );
+
+        int min,index;
+        for (int y = 0; y < iprocess->imgOrginal.height(); y++){
+            min = 255, index = 0;
+            for (int x = 0; x < iprocess->imgOrginal.width(); x++){
+                if (iprocess->valueMatrix[y][x]<min){
+                    index = x;
+                    min = iprocess->valueMatrix[y][x];
+                }
+            }
+            iprocess->valueMatrix[y][index] = 0;
+        }
+        iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "valuematrix2.csv" );
+
+
+
+/*
+        iprocess->toMono();                                     // convert target to mono
+        iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
+
+        iprocess->detectEdgeSobel();                            // detect edges of the mono image
+
+        iprocess->thetaMin = thetaMin;
+        iprocess->thetaMax = thetaMax;
+        iprocess->thetaStep = thetaStep;
+        iprocess->houghTransform();                             // detect lines in edge image
+
+        iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+        iprocess->calcAvgDistAndAngle( houghLineNo );           // calc. avg. distance and theta
+
+        iprocess->voteThreshold = voteThreshold;                // acceptable vote value low-limit
+        iprocess->checkPrimaryLine();                           // is max voted line  above the low-limit?
+        iprocess->detectVoidLines();                            // detect void lines on hough lines in MONO image
+
+        iprocess->voidThreshold = voidThreshold;                // void threshold to decide max void as primary
+        iprocess->detectPrimaryVoid();                          // decide primary void line & corners/center
+*/
+        delete iprocess;
+        iprocessInitSwitch = false;
+    }
+
 }
 
 
