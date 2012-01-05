@@ -567,8 +567,37 @@ void MainWindow::guideButton(){
 
         iprocess->constructValueMatrix( iprocess->imgOrginal );
 
-        iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "valuematrix.csv" );
+        iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "orgvaluematrix.csv" );
 
+        iprocess->imgOrginal.save(savePath + "org.jpg");
+
+        int globalMin = 255;
+        int globalMax = 0;
+        for (int y = 0; y < iprocess->imgOrginal.height(); y++){
+            for (int x = 0; x < iprocess->imgOrginal.width(); x++){
+                if (iprocess->valueMatrix[y][x]<globalMin){
+                    globalMin = iprocess->valueMatrix[y][x];
+                }
+
+                if (iprocess->valueMatrix[y][x]>globalMax){
+                    globalMax = iprocess->valueMatrix[y][x];
+                }
+
+            }
+        }
+
+        int diff = globalMax - globalMin;
+        if (diff==0) diff=1;
+        int **scaled = new int*[iprocess->imgOrginal.height()];
+        for (int i = 0; i < iprocess->imgOrginal.height(); i++) scaled[i] = new int[iprocess->imgOrginal.width()];
+
+        for (int y = 0; y < iprocess->imgOrginal.height(); y++){
+            for (int x = 0; x < iprocess->imgOrginal.width(); x++){
+                scaled[y][x] = ((iprocess->valueMatrix[y][x]-globalMin)*255)/diff;
+            }
+        }
+
+        /*
         int min,index;
         for (int y = 0; y < iprocess->imgOrginal.height(); y++){
             min = 255, index = 0;
@@ -581,8 +610,12 @@ void MainWindow::guideButton(){
             iprocess->valueMatrix[y][index] = 0;
         }
         iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "valuematrix2.csv" );
+        */
+        iprocess->saveMatrix( scaled, iprocess->imageWidth, iprocess->imageHeight, savePath + "scaled.csv" );
 
+        iprocess->getImage(scaled,iprocess->imageWidth,iprocess->imageHeight)->save(savePath + "scaled.jpg");
 
+        ui->plainTextEdit->appendPlainText("diff: "+QString::number(diff));
 
 /*
         iprocess->toMono();                                     // convert target to mono
