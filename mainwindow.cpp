@@ -571,6 +571,43 @@ void MainWindow::guideButton(){
 
         iprocess->imgOrginal.save(savePath + "org.jpg");
 
+
+        int cost[21][2];
+        float slope[21];
+        for (int i=1;i<=21;i++)
+            if (i != 11)
+                slope[i-1] = tan ( R2D * (90+(i-11)/2.0) );
+            else
+                slope[10] = 0;
+
+        for (int i=0;i<21;i++)
+            ui->plainTextEdit->appendPlainText(QString::number(i) + ": "+QString::number(slope[i],'f',3));
+
+        int sum,y;
+
+
+
+
+        QList<minCostedLines> thelist;
+
+        for (int m = 0; m < 21; m++){
+            for (int c = 0; c < iprocess->imageWidth; c++){
+                sum = 0;
+                thelist.clear();
+
+                for (int x = 0; x < iprocess->imageWidth; x++){
+
+                    y = slope[m] * x + c;
+
+                }
+            }
+
+        }
+
+        for (int y = 0; y < iprocess->imageHeight; y++){
+        }
+
+        /*
         int globalMin = 255;
         int globalMax = 0;
         for (int y = 0; y < iprocess->imgOrginal.height(); y++){
@@ -596,7 +633,12 @@ void MainWindow::guideButton(){
                 scaled[y][x] = ((iprocess->valueMatrix[y][x]-globalMin)*255)/diff;
             }
         }
+        iprocess->saveMatrix( scaled, iprocess->imageWidth, iprocess->imageHeight, savePath + "scaled.csv" );
 
+        iprocess->getImage(scaled,iprocess->imageWidth,iprocess->imageHeight)->save(savePath + "scaled.jpg");
+
+        ui->plainTextEdit->appendPlainText("diff: "+QString::number(diff));
+*/
         /*
         int min,index;
         for (int y = 0; y < iprocess->imgOrginal.height(); y++){
@@ -611,33 +653,7 @@ void MainWindow::guideButton(){
         }
         iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "valuematrix2.csv" );
         */
-        iprocess->saveMatrix( scaled, iprocess->imageWidth, iprocess->imageHeight, savePath + "scaled.csv" );
 
-        iprocess->getImage(scaled,iprocess->imageWidth,iprocess->imageHeight)->save(savePath + "scaled.jpg");
-
-        ui->plainTextEdit->appendPlainText("diff: "+QString::number(diff));
-
-/*
-        iprocess->toMono();                                     // convert target to mono
-        iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
-
-        iprocess->detectEdgeSobel();                            // detect edges of the mono image
-
-        iprocess->thetaMin = thetaMin;
-        iprocess->thetaMax = thetaMax;
-        iprocess->thetaStep = thetaStep;
-        iprocess->houghTransform();                             // detect lines in edge image
-
-        iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
-        iprocess->calcAvgDistAndAngle( houghLineNo );           // calc. avg. distance and theta
-
-        iprocess->voteThreshold = voteThreshold;                // acceptable vote value low-limit
-        iprocess->checkPrimaryLine();                           // is max voted line  above the low-limit?
-        iprocess->detectVoidLines();                            // detect void lines on hough lines in MONO image
-
-        iprocess->voidThreshold = voidThreshold;                // void threshold to decide max void as primary
-        iprocess->detectPrimaryVoid();                          // decide primary void line & corners/center
-*/
         delete iprocess;
         iprocessInitSwitch = false;
     }
