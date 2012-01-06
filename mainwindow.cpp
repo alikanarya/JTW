@@ -572,7 +572,6 @@ void MainWindow::guideButton(){
         iprocess->imgOrginal.save(savePath + "org.jpg");
 
 
-        int cost[21][2];
         float slope[21];
         for (int i=1;i<=21;i++)
             if (i != 11)
@@ -580,33 +579,79 @@ void MainWindow::guideButton(){
             else
                 slope[10] = 0;
 
-        for (int i=0;i<21;i++)
-            ui->plainTextEdit->appendPlainText(QString::number(i) + ": "+QString::number(slope[i],'f',3));
-
-        int sum,y;
+//        for (int i=0;i<21;i++)
+//            ui->plainTextEdit->appendPlainText(QString::number(i) + ": "+QString::number(slope[i],'f',3));
 
 
 
 
-        QList<minCostedLines> thelist;
 
-        for (int m = 0; m < 21; m++){
+        QList<minCostedLines> lineList;
+        int sum,x,min,index;
+        bool accept;
+        minCostedLines *bestLines = new minCostedLines[21];
+
+        for (int m = 0; m < 21; m++) {
+
+            lineList.clear();
+
             for (int c = 0; c < iprocess->imageWidth; c++){
                 sum = 0;
-                thelist.clear();
 
-                for (int x = 0; x < iprocess->imageWidth; x++){
+                accept = true;
+                for (int y = 0; y < iprocess->imageHeight; y++){
 
-                    y = slope[m] * x + c;
+                    //y = slope[m] * x + c;
+                    if (slope[m] != 0 || m != 10)
+                        x = (y - c)/slope[m];
+                    else
+                        x = c;
 
+                    if (x < 0 || x >= iprocess->imageWidth) {
+                        accept = false;
+                    } else {
+                        sum += iprocess->valueMatrix[y][x];
+                    }
+
+                }
+
+                if (accept) {
+
+                    minCostedLines z;
+                    z.c = c;
+                    z.cost = sum;
+                    lineList.append(z);
+                }
+
+            }
+
+            min = 255 * iprocess->imageHeight;
+
+            for (int i = 0; i < lineList.size(); i++) {
+
+                if (lineList[i].cost < min){
+                    index = i;
+                    min = lineList[i].cost;
                 }
             }
 
+            if (lineList.size() != 0){
+                bestLines[m].c = lineList[index].c;
+                bestLines[m].cost = lineList[index].cost;
+            } else {
+                bestLines[m].c = 0;
+                bestLines[m].cost = min;
+            }
+
+
         }
 
-        for (int y = 0; y < iprocess->imageHeight; y++){
-        }
+        for (int i=0;i<21;i++)
+            ui->plainTextEdit->appendPlainText(QString::number(i) + ": (c,cost) "+ QString::number(bestLines[i].c) + " , " + QString::number(bestLines[i].cost));
 
+        iprocess->drawLines(bestLines, 21).save(savePath + "bestLines.jpg");
+
+        delete []bestLines;
         /*
         int globalMin = 255;
         int globalMax = 0;
