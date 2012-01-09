@@ -575,7 +575,7 @@ void MainWindow::guideButton(){
         float slope[21];
         for (int i=1;i<=21;i++)
             if (i != 11)
-                slope[i-1] = tan ( R2D * (90+(i-11)/2.0) );
+                slope[i-1] = tan ( R2D * (90+(i-11)/4.0) );
             else
                 slope[10] = 0;
 
@@ -603,7 +603,7 @@ void MainWindow::guideButton(){
 
                     //y = slope[m] * x + c;
                     if (slope[m] != 0 || m != 10)
-                        x = (y - c)/slope[m];
+                        x = round ( (float)( y + slope[m] * c ) / slope[m] );
                     else
                         x = c;
 
@@ -649,7 +649,16 @@ void MainWindow::guideButton(){
         for (int i=0;i<21;i++)
             ui->plainTextEdit->appendPlainText(QString::number(i) + ": (c,cost) "+ QString::number(bestLines[i].c) + " , " + QString::number(bestLines[i].cost));
 
-        iprocess->drawLines(bestLines, 21).save(savePath + "bestLines.jpg");
+//        iprocess->drawLines(bestLines, 21).save(savePath + "bestLines.jpg");
+
+        minCostedLines *pointer = new minCostedLines();
+
+        for (int i=0;i<21;i++){
+            pointer->c = bestLines[i].c;
+            pointer->cost = bestLines[i].cost;
+            iprocess->drawLine(pointer, slope[i]).save(savePath + "bestLines"+QString::number(i)+".jpg");
+        }
+        delete pointer;
 
         delete []bestLines;
         /*
