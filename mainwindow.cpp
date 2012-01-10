@@ -646,10 +646,94 @@ void MainWindow::guideButton(){
 
         }
 
+        min = 255 * iprocess->imageHeight;
+        index = 0;
+        for (int m=0;m<21;m++){
+            if (bestLines[m].cost < min){
+                index = m;
+                min = bestLines[m].cost;
+            }
+        }
+
+
+        float slopeBest = slope[index];
+        lineList.clear();
+
+        for (int c = 0; c < iprocess->imageWidth; c++){
+            sum = 0;
+
+            accept = true;
+            for (int y = 0; y < iprocess->imageHeight; y++){
+
+                //y = slope[m] * x + c;
+                if (slopeBest != 0)
+                    x = round ( (float)( y + slopeBest * c ) / slopeBest );
+                else
+                    x = c;
+
+                if (x < 0 || x >= iprocess->imageWidth) {
+                    accept = false;
+                } else {
+                    sum += iprocess->valueMatrix[y][x];
+                }
+
+            }
+
+            if (accept) {
+
+                minCostedLines z;
+                z.c = c;
+                z.cost = sum;
+                lineList.append(z);
+            }
+        }
+
+        QList<minCostedLines> deepLines;
+
+        int threshold = bestLines[index].cost * 1.5;
+
+        for(int i = 0; i < lineList.size(); i++)
+            if (lineList[i].cost <= threshold)
+                deepLines.append(lineList[i]);
+
+        int minX = iprocess->imageWidth;
+        int maxX = 0;
+        for(int i = 0; i < deepLines.size(); i++){
+
+            if (deepLines[i].c < minX)
+                minX = deepLines[i].c;
+
+            if (deepLines[i].c > maxX)
+                maxX = deepLines[i].c;
+        }
+
+        int center = (minX + maxX)/2;
+
+
+        minCostedLines *centerline = new minCostedLines();
+        centerline->c = center;
+        centerline->cost = 0;
+        iprocess->drawLine(centerline, slopeBest).save(savePath + "_centerLine.jpg");
+
+
         for (int i=0;i<21;i++)
             ui->plainTextEdit->appendPlainText(QString::number(i) + ": (c,cost) "+ QString::number(bestLines[i].c) + " , " + QString::number(bestLines[i].cost));
 
+        ui->plainTextEdit->appendPlainText("best: "+QString::number(index));
+
 //        iprocess->drawLines(bestLines, 21).save(savePath + "bestLines.jpg");
+
+
+
+        QFile file(savePath + "bestScan.csv");
+
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text)){
+            QTextStream out(&file);
+
+            for(int i = 0; i < lineList.size(); i++) out << lineList[i].c << "," << lineList[i].cost << "\n";
+            file.close();
+        };
+
 
         minCostedLines *pointer = new minCostedLines();
 
