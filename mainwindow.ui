@@ -908,6 +908,44 @@ background-color: rgb(236, 233, 216);</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="thinJointButton">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string>İnce Kaynak Ağzı Uygulaması</string>
+    </property>
+    <property name="text">
+     <string>İKA</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -1190,6 +1228,22 @@ color: rgb(0, 0, 255);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>thinJointButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>thinJointButton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>396</x>
+     <y>79</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>421</x>
+     <y>82</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>getImageFromCam()</slot>
@@ -1211,5 +1265,6 @@ color: rgb(0, 0, 255);</string>
   <slot>showReport()</slot>
   <slot>target2Left()</slot>
   <slot>target2Right()</slot>
+  <slot>thinJointButton()</slot>
  </slots>
 </ui>

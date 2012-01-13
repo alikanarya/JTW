@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon 19. Dec 09:37:37 2011
+** Created: Fri 13. Jan 01:17:23 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -61,6 +61,7 @@ public:
     QPushButton *cmdStatus;
     QPushButton *leftButton;
     QPushButton *rightButton;
+    QPushButton *thinJointButton;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -348,6 +349,18 @@ public:
         rightButton->setIcon(icon18);
         rightButton->setIconSize(QSize(32, 32));
         rightButton->setFlat(true);
+        thinJointButton = new QPushButton(centralWidget);
+        thinJointButton->setObjectName(QString::fromUtf8("thinJointButton"));
+        thinJointButton->setEnabled(true);
+        thinJointButton->setGeometry(QRect(370, 30, 32, 32));
+        QFont font5;
+        font5.setPointSize(10);
+        font5.setBold(true);
+        font5.setWeight(75);
+        thinJointButton->setFont(font5);
+        thinJointButton->setIconSize(QSize(32, 32));
+        thinJointButton->setDefault(false);
+        thinJointButton->setFlat(false);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -377,6 +390,7 @@ public:
         QObject::connect(reportButton, SIGNAL(clicked()), MainWindow, SLOT(showReport()));
         QObject::connect(leftButton, SIGNAL(clicked()), MainWindow, SLOT(target2Left()));
         QObject::connect(rightButton, SIGNAL(clicked()), MainWindow, SLOT(target2Right()));
+        QObject::connect(thinJointButton, SIGNAL(clicked()), MainWindow, SLOT(thinJointButton()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -459,6 +473,10 @@ public:
         rightButton->setToolTip(QApplication::translate("MainWindow", "Rehber Sa\304\237a", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         rightButton->setText(QString());
+#ifndef QT_NO_TOOLTIP
+        thinJointButton->setToolTip(QApplication::translate("MainWindow", "\304\260nce Kaynak A\304\237z\304\261 Uygulamas\304\261", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        thinJointButton->setText(QApplication::translate("MainWindow", "\304\260KA", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

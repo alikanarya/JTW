@@ -50,11 +50,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->trackButton->setEnabled(false);
 
+
     statusMessage = "";
     settings = new QSettings(INIFILENAME, QSettings::IniFormat);
     readSettings();
 
     this->setWindowTitle(_MAINTITLE + title);
+
+    if ( thinJointAlgoActive ) {
+        ui->thinJointButton->setStyleSheet("color: rgb(255, 0, 0)");
+
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+
+        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+        msgBox.setText(str);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
+    } else
+        ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
 
     // orginal and target image parameters
     imageWidth = 640;   //image->width();
@@ -116,16 +131,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     threadPLCControl->dbNo = DB_NO;
     threadPLCControl->byteNo = BYTE_NO;
-    /*
-    threadPLCControl->right_BYTE = right_VMEM_BYTE;
-    threadPLCControl->right_BIT = right_BITofBYTE;
-    threadPLCControl->left_BYTE = left_VMEM_BYTE;
-    threadPLCControl->left_BIT = left_BITofBYTE;
-    threadPLCControl->stop_BYTE = stop_VMEM_BYTE;
-    threadPLCControl->stop_BIT = stop_BITofBYTE;
-    threadPLCControl->emergency_BYTE = emergency_VMEM_BYTE;
-    threadPLCControl->emergency_BIT = emergency_BITofBYTE;
-    */
 
     if (!threadPLCControl->plc->libraryLoaded){
         permPLC = false;
@@ -504,25 +509,31 @@ void MainWindow::analyzeButton(){
 
         int startTime = timeSystem.getSystemTimeMsec();
 
-        if ( !subImageProcessingSwitch ) {
+        if ( thinJointAlgoActive ) {
 
-            processStandardHT();
+            processThinJoint();
 
         } else {
 
-            switch ( subImageProcessingType ) {
-                case 0:
-                    processSubImageVoidness();
-                    break;
-                case 1:
-                    processSubImageSolidness();
-                    break;
+            if ( !subImageProcessingSwitch ) {
+
+                processStandardHT();
+                iprocess->calcAngleAvg();   // ave angle value of max voted line(s)
+
+            } else {
+
+                switch ( subImageProcessingType ) {
+                    case 0:
+                        processSubImageVoidness();
+                        iprocess->calcAngleAvg();   // ave angle value of max voted line(s)
+                        break;
+                    case 1:
+                        processSubImageSolidness();
+                        break;
+                }
             }
         }
 
-        if ( iprocessInitSwitch ) {
-            iprocess->calcAngleAvg();   // ave angle value of max voted line(s)
-        }
 
         int endTime = timeSystem.getSystemTimeMsec();
 
@@ -557,21 +568,14 @@ void MainWindow::guideButton(){
     ui->leftButton->setEnabled( showGuide && !trackOn );
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
-
+    /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
-
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
-
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
         iprocessInitSwitch = true;
-
         iprocess->constructValueMatrix( iprocess->imgOrginal );
-
         iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "orgvaluematrix.csv" );
-
-        iprocess->imgOrginal.save(savePath + "org.jpg");
-
-
+        //iprocess->imgOrginal.save(savePath + "org.jpg");
         iprocess->detectThinJointCenter(3, 31);
 
         for (int i=0;i<31;i++)
@@ -582,18 +586,12 @@ void MainWindow::guideButton(){
         centerline->cost = 0;
         iprocess->drawLine(centerline, iprocess->slopeBest).save(savePath + "_centerLine.jpg");
 
-
         for (int i=0;i<31;i++)
             ui->plainTextEdit->appendPlainText(QString::number(i) + ": (c,cost) "+ QString::number(iprocess->bestLines[i].c) + " , " + QString::number(iprocess->bestLines[i].cost));
 
         ui->plainTextEdit->appendPlainText("best slope: "+QString::number(iprocess->slopeBest));
 
-//        iprocess->drawLines(bestLines, 21).save(savePath + "bestLines.jpg");
-
-
-
         QFile file(savePath + "bestScan.csv");
-
         if (file.open(QIODevice::WriteOnly | QIODevice::Text)){
             QTextStream out(&file);
 
@@ -601,9 +599,8 @@ void MainWindow::guideButton(){
             file.close();
         };
 
-
+        //        iprocess->drawLines(bestLines, 21).save(savePath + "bestLines.jpg");
         minCostedLines *pointer = new minCostedLines();
-
         for (int i=0;i<31;i++){
             pointer->c = iprocess->bestLines[i].c;
             pointer->cost = iprocess->bestLines[i].cost;
@@ -613,6 +610,7 @@ void MainWindow::guideButton(){
         delete iprocess;
         iprocessInitSwitch = false;
     }
+    */
 
 }
 
@@ -630,6 +628,7 @@ void MainWindow::trackButton(){
     ui->leftButton->setEnabled( showGuide && !trackOn );
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
+    ui->thinJointButton->setEnabled(!trackOn);
 }
 
 
@@ -695,23 +694,53 @@ void MainWindow::emergencyButton(){
 }
 
 
+void MainWindow::thinJointButton(){
+
+    thinJointAlgoActive = !thinJointAlgoActive;
+
+    if ( thinJointAlgoActive ) {
+        ui->thinJointButton->setStyleSheet("color: rgb(255, 0, 0)");
+
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+
+        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+        msgBox.setText(str);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
+
+    } else {
+        ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
+    }
+
+}
+
 void MainWindow::processImage(){
 
-    if ( !subImageProcessingSwitch ) {
+    if ( thinJointAlgoActive ) {
 
-        processStandardHT();
+        processThinJoint();
 
     } else {
 
-        switch ( subImageProcessingType ) {
-            case 0:
-                processSubImageVoidness();
-                break;
-            case 1:
-                processSubImageSolidness();
-                break;
+        if ( !subImageProcessingSwitch ) {
+
+            processStandardHT();
+
+        } else {
+
+            switch ( subImageProcessingType ) {
+                case 0:
+                    processSubImageVoidness();
+                    break;
+                case 1:
+                    processSubImageSolidness();
+                    break;
+            }
         }
     }
+
 
     // if center of track is not an error, append dev. to trend data list OR append error code to list
     if (iprocess->detected){
@@ -889,6 +918,22 @@ void MainWindow::processSubImageSolidness(){
         iprocess->thetaMax = thetaMaxSub;
         iprocess->thetaStep = thetaStepSub;
         iprocess->detectLongestSolidLines();
+    }
+}
+
+
+void MainWindow::processThinJoint(){
+
+    if ( !imageGetter->imageList.isEmpty() ){
+
+        targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+
+        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
+
+        iprocess->constructValueMatrix( iprocess->imgOrginal );
+
+        iprocess->detectThinJointCenter(3, 31);
     }
 }
 
@@ -1137,16 +1182,6 @@ void MainWindow::readSettings(){
             plcType = settings->value("type", _PLC_TYPE).toInt();
             DB_NO = settings->value("dbno", _DB_NO).toInt();
             BYTE_NO = settings->value("byte", _BYTE_NO).toInt();
-            /*
-            right_VMEM_BYTE = settings->value("rbyt", _RIGHT_VMEM_BYTE).toInt();
-            right_BITofBYTE = settings->value("rbit", _RIGHT_BITofBYTE).toInt();
-            left_VMEM_BYTE = settings->value("lbyt", _LEFT_VMEM_BYTE).toInt();
-            left_BITofBYTE = settings->value("lbit", _LEFT_BITofBYTE).toInt();
-            stop_VMEM_BYTE = settings->value("stpbyt", _STOP_VMEM_BYTE).toInt();
-            stop_BITofBYTE = settings->value("stpbit", _STOP_BITofBYTE).toInt();
-            emergency_VMEM_BYTE = settings->value("emrbyt", _EMRGENCY_VMEM_BYTE).toInt();
-            emergency_BITofBYTE = settings->value("emrbit", _EMRGENCY_BITofBYTE).toInt();
-            */
             connectRequestedonBoot = settings->value("pcon", _PLC_CONN_ONBOOT).toBool();
             controlDelay = 0;   //settings->value("ctd", _CONTROL_DELAY).toInt();
         settings->endGroup();
@@ -1174,6 +1209,8 @@ void MainWindow::readSettings(){
                 errorStopLimit = errorLimit * errorStopScale;
                 errorStopLimitNeg = -1 * errorStopLimit;
 
+            thinJointAlgoActive = settings->value("thin", _THIN_JOINT).toBool();
+
         settings->endGroup();
 
         settings->beginGroup("oth");
@@ -1191,16 +1228,6 @@ void MainWindow::readSettings(){
         plcType = _PLC_TYPE;
         DB_NO = _DB_NO;
         BYTE_NO = _BYTE_NO;
-        /*
-        right_VMEM_BYTE = _RIGHT_VMEM_BYTE;
-        right_BITofBYTE = _RIGHT_BITofBYTE;
-        left_VMEM_BYTE = _LEFT_VMEM_BYTE;
-        left_BITofBYTE = _LEFT_BITofBYTE;
-        stop_VMEM_BYTE = _STOP_VMEM_BYTE;
-        stop_BITofBYTE = _STOP_BITofBYTE;
-        emergency_VMEM_BYTE = _EMRGENCY_VMEM_BYTE;
-        emergency_BITofBYTE = _EMRGENCY_BITofBYTE;
-        */
         connectRequestedonBoot = _PLC_CONN_ONBOOT;
         controlDelay = _CONTROL_DELAY;
 
@@ -1225,6 +1252,8 @@ void MainWindow::readSettings(){
             errorStopLimit = errorLimit * errorStopScale;
             errorStopLimitNeg = -1 * errorStopLimit;
 
+        thinJointAlgoActive = _THIN_JOINT;
+
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
         title = _TITLE;
@@ -1248,16 +1277,6 @@ void MainWindow::writeSettings(){
         settings->setValue("type", QString::number(plcType));
         settings->setValue("dbno", QString::number(DB_NO));
         settings->setValue("byte", QString::number(BYTE_NO));
-        /*
-        settings->setValue("rbyt", QString::number(right_VMEM_BYTE));
-        settings->setValue("rbit", QString::number(right_BITofBYTE));
-        settings->setValue("lbyt", QString::number(left_VMEM_BYTE));
-        settings->setValue("lbit", QString::number(left_BITofBYTE));
-        settings->setValue("stpbyt", QString::number(stop_VMEM_BYTE));
-        settings->setValue("stpbit", QString::number(stop_BITofBYTE));
-        settings->setValue("emrbyt", QString::number(emergency_VMEM_BYTE));
-        settings->setValue("emrbit", QString::number(emergency_BITofBYTE));
-        */
         QVariant pcon(connectRequestedonBoot);
             settings->setValue("pcon", pcon.toString());
         settings->setValue("ctd", QString::number(controlDelay));
@@ -1281,6 +1300,10 @@ void MainWindow::writeSettings(){
         settings->setValue("vdth", QString::number(voidThreshold));
         settings->setValue("elm", QString::number(errorLimit));
         settings->setValue("esc", QString::number(errorStopScale));
+
+        QVariant thinjointsw(thinJointAlgoActive);
+            settings->setValue("thin", thinjointsw.toString());
+
     settings->endGroup();
 
     settings->beginGroup("oth");

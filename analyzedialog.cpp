@@ -34,7 +34,7 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
     ui->plainTextEdit->appendPlainText("YAPTIÐI TESPÝTÝN DOÐRULUÐUNA KENDÝLÝÐÝNDEN KARAR VEREMEZ !");
     ui->plainTextEdit->appendPlainText("BU SEBEPLE YUKARIDAKÝ GÖRÜNTÜLERÝN OPERATÖR TARAFINDAN ONAYLANMASI GEREKMEKTEDÝR.\n");
     ui->plainTextEdit->appendPlainText("1. Yukarýda soldaki resimde, görüntüde PARLAMA olup olmadýðý ve");
-    ui->plainTextEdit->appendPlainText("lazer çizgisinin NET bir þekilde seçilebilir olup olmadýðýna dikkat edilir.\n");
+    ui->plainTextEdit->appendPlainText("lazer çizgisinin NET bir þekilde seçilebilir olup olmadýðýna dikkat edilir.(KÜÇÜK BORU UYGULMASI HARÝÇ)\n");
     ui->plainTextEdit->appendPlainText("2. Yukarýda saðdaki resimde ise KÖÞElerin ve");
     ui->plainTextEdit->appendPlainText("MERKEZ noktasýnýn doðru tespit edilip edilemediðine dikkat edilir.\n");
     ui->plainTextEdit->appendPlainText("Eðer bu iki kritere göre doðru algýlama yapýlamadýysa, kamera kurulumunda bir hata var demektir.");
@@ -42,6 +42,8 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
     ui->plainTextEdit->appendPlainText("Hata durumunda veya tespit doðruluðundaki anormalliklerde TEKNÝK SERVÝSÝNÝZ ile irtibata geçiniz.");
 
     if (!iprocess->detected) ui->acceptButton->setEnabled(false);
+
+    if (w->thinJointAlgoActive) ui->cancelButton_2->setEnabled(false);  // disable sample button
 }
 
 void analyzeDialog::acceptButton(){

@@ -20,14 +20,6 @@
 #define _PLC_TYPE           1
 #define _DB_NO              1
 #define _BYTE_NO            0
-#define _RIGHT_VMEM_BYTE    0
-#define _RIGHT_BITofBYTE    0
-#define _LEFT_VMEM_BYTE     0
-#define _LEFT_BITofBYTE     1
-#define _STOP_VMEM_BYTE     0
-#define _STOP_BITofBYTE     2
-#define _EMRGENCY_VMEM_BYTE 0
-#define _EMRGENCY_BITofBYTE 3
 #define _ERROR_LIMIT        5
 #define _ERROR_SCALE        1.0
 #define _YRES_ARRAY_INDEX   8
@@ -36,6 +28,7 @@
 #define _SUB_IPROCESS       true
 #define _SUB_TYPE           0
 #define _CONTROL_DELAY      0
+#define _THIN_JOINT         false
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -166,6 +159,7 @@ public:
     int errorStopLimit, errorStopLimitNeg;  // deviation stop limit from center in pixels
     bool subImageProcessingSwitch;          // sub image processing
     int subImageProcessingType;                       // 0: Void Based, 1: Solid Based
+    bool thinJointAlgoActive;
     bool errorStopLimitLineVisible;
     float errorStopScale;
 
@@ -257,6 +251,7 @@ public:
     void processStandardHT();                       // standard hough transform
     void processSubImageVoidness();                 // sub image based on VOID areas
     void processSubImageSolidness();                // sub image based on SOLID lines
+    void processThinJoint();                        // darkness analsis for thin joint
     void repaintGuide();                            // update guide
     void repaintDevTrend();                         // update deviation trend
 
@@ -293,6 +288,7 @@ private slots:
     void helpButton();
     void showLicenseDialog();
     void showReport();
+    void thinJointButton();
 
     // process controls
     void update();                                  // 1msec timer actions
