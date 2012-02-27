@@ -568,14 +568,14 @@ void MainWindow::guideButton(){
     ui->leftButton->setEnabled( showGuide && !trackOn );
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
-    /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    // /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
         iprocessInitSwitch = true;
         iprocess->constructValueMatrix( iprocess->imgOrginal );
         iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "orgvaluematrix.csv" );
-        //iprocess->imgOrginal.save(savePath + "org.jpg");
+        iprocess->imgOrginal.save(savePath + "org.jpg");
         iprocess->detectThinJointCenter(3, 31);
 
         for (int i=0;i<31;i++)
@@ -591,7 +591,7 @@ void MainWindow::guideButton(){
 
         ui->plainTextEdit->appendPlainText("best slope: "+QString::number(iprocess->slopeBest));
 
-        QFile file(savePath + "bestScan.csv");
+        QFile file(savePath + "lineListScanForBestAngle.csv");
         if (file.open(QIODevice::WriteOnly | QIODevice::Text)){
             QTextStream out(&file);
 
@@ -610,7 +610,7 @@ void MainWindow::guideButton(){
         delete iprocess;
         iprocessInitSwitch = false;
     }
-    */
+    // */
 
 }
 
