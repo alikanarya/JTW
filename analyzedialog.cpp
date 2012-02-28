@@ -33,8 +33,8 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
     ui->plainTextEdit->appendPlainText("BU YAZILIM;");
     ui->plainTextEdit->appendPlainText("YAPTIÐI TESPÝTÝN DOÐRULUÐUNA KENDÝLÝÐÝNDEN KARAR VEREMEZ !");
     ui->plainTextEdit->appendPlainText("BU SEBEPLE YUKARIDAKÝ GÖRÜNTÜLERÝN OPERATÖR TARAFINDAN ONAYLANMASI GEREKMEKTEDÝR.\n");
-    ui->plainTextEdit->appendPlainText("1. Yukarýda soldaki resimde, görüntüde PARLAMA olup olmadýðý ve");
-    ui->plainTextEdit->appendPlainText("lazer çizgisinin NET bir þekilde seçilebilir olup olmadýðýna dikkat edilir.(KÜÇÜK BORU UYGULMASI HARÝÇ)\n");
+    ui->plainTextEdit->appendPlainText("1. Yukarýda soldaki resimde, görüntüde PARLAMA olup olmadýðý ve lazer çizgisinin");
+    ui->plainTextEdit->appendPlainText("NET bir þekilde seçilebilir olup olmadýðýna dikkat edilir.(ÝNCE KAYNAK AÐZI UYGULMASI HARÝÇ)\n");
     ui->plainTextEdit->appendPlainText("2. Yukarýda saðdaki resimde ise KÖÞElerin ve");
     ui->plainTextEdit->appendPlainText("MERKEZ noktasýnýn doðru tespit edilip edilemediðine dikkat edilir.\n");
     ui->plainTextEdit->appendPlainText("Eðer bu iki kritere göre doðru algýlama yapýlamadýysa, kamera kurulumunda bir hata var demektir.");

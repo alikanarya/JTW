@@ -568,7 +568,7 @@ void MainWindow::guideButton(){
     ui->leftButton->setEnabled( showGuide && !trackOn );
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
-    // /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -595,8 +595,16 @@ void MainWindow::guideButton(){
         if (file.open(QIODevice::WriteOnly | QIODevice::Text)){
             QTextStream out(&file);
 
-            for(int i = 0; i < iprocess->lineList.size(); i++) out << iprocess->lineList[i].c << "," << iprocess->lineList[i].cost << "\n";
+            for(int i = 0; i < iprocess->lineList.size(); i++) out << i << "," << iprocess->lineList[i].c << "," << iprocess->lineList[i].cost << "\n";
             file.close();
+        };
+
+        QFile file2(savePath + "peakPoints.csv");
+        if (file2.open(QIODevice::WriteOnly | QIODevice::Text)){
+            QTextStream out(&file2);
+
+            for(int i = 0; i < iprocess->peakPoints.size(); i++) out << i << "," << iprocess->lineList[ iprocess->peakPoints[i] ].cost << "\n";
+            file2.close();
         };
 
         //        iprocess->drawLines(bestLines, 21).save(savePath + "bestLines.jpg");
@@ -604,13 +612,13 @@ void MainWindow::guideButton(){
         for (int i=0;i<31;i++){
             pointer->c = iprocess->bestLines[i].c;
             pointer->cost = iprocess->bestLines[i].cost;
-            iprocess->drawLine(pointer, iprocess->slope[i]).save(savePath + "bestLines"+QString::number(i)+".jpg");
+            iprocess->drawLine(pointer, iprocess->slope[i]).save(savePath + "bestLineOfEachAngle"+QString::number(i)+".jpg");
         }
         delete pointer;
         delete iprocess;
         iprocessInitSwitch = false;
     }
-    // */
+    */
 
 }
 
