@@ -99,8 +99,8 @@
    <widget class="QLabel" name="labelTime">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>645</y>
+      <x>530</x>
+      <y>690</y>
       <width>85</width>
       <height>23</height>
      </rect>
@@ -946,6 +946,232 @@ background-color: rgb(236, 233, 216);</string>
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="zControlButton">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>30</y>
+      <width>32</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string>İnce Kaynak Ağzı Uygulaması</string>
+    </property>
+    <property name="text">
+     <string>Z</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelDistanceCap">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>600</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(170, 0, 0);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>H :</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelDistance">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>600</y>
+      <width>51</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 255);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>000.0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelDistanceCap_2">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>630</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(170, 0, 0);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>Ü :</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelDistanceCap_3">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>660</y>
+      <width>31</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(170, 0, 0);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="lineWidth">
+     <number>2</number>
+    </property>
+    <property name="text">
+     <string>A :</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="distanceUpTolEdit">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>630</y>
+      <width>51</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="inputMask">
+     <string>0.0;0</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="distanceDownTolEdit">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>660</y>
+      <width>51</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="inputMask">
+     <string>0.0;0</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="testEdit">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>10</y>
+      <width>51</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="inputMask">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -1244,6 +1470,70 @@ color: rgb(0, 0, 255);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>zControlButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>zControlButton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>438</x>
+     <y>64</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>459</x>
+     <y>67</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>distanceUpTolEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>getUpTol()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>633</x>
+     <y>655</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>659</x>
+     <y>658</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>distanceDownTolEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>getDownTol()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>607</x>
+     <y>683</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>659</x>
+     <y>690</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>testEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>testEdit()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>470</x>
+     <y>34</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>385</x>
+     <y>28</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>getImageFromCam()</slot>
@@ -1266,5 +1556,10 @@ color: rgb(0, 0, 255);</string>
   <slot>target2Left()</slot>
   <slot>target2Right()</slot>
   <slot>thinJointButton()</slot>
+  <slot>zControlButton()</slot>
+  <slot>getUpTol()</slot>
+  <slot>getDownTol()</slot>
+  <slot>testButton()</slot>
+  <slot>testEdit()</slot>
  </slots>
 </ui>

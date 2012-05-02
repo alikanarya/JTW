@@ -7,6 +7,9 @@
 #define MASK_CMD_STOP   4   // 0100
 #define MASK_CMD_EMG    12  // 1100
 
+#define MASK_CMD_Z_CENTER   0   // 0000
+#define MASK_CMD_Z_UP       1   // 0001
+#define MASK_CMD_Z_DOWN     2   // 0010
 
 #include <QThread>
 
@@ -33,6 +36,9 @@ public:
     int checkResult;
     bool plcInteract;
 
+    unsigned char* readBufferInt;
+    int distanceRaw;
+
 
     plcControlThread(int type, QString url);
     plcControlThread(s7 &_plc);
@@ -44,6 +50,12 @@ public:
     bool plcCmdStopReset();
     bool plcCmdEmergencyAct();
     bool plcCmdEmergencyPsv();
+
+    bool plcCmd_Z_Center();
+    bool plcCmd_Z_Up();
+    bool plcCmd_Z_Down();
+    bool readDistanceValue();
+
     void check();
     void disconnect();
     ~plcControlThread();

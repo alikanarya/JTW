@@ -71,6 +71,23 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     } else
         ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
 
+    if ( zControlActive ) {
+        ui->zControlButton->setStyleSheet("color: rgb(255, 0, 0)");
+
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+
+        QString str = "Yükseklik Kontrolü Aktif!";
+        msgBox.setText(str);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
+    } else
+        ui->zControlButton->setStyleSheet("color: rgb(0, 0, 0)");
+
+    ui->distanceUpTolEdit->setText( QString::number(distanceUpTol, 'f', 1) );
+    ui->distanceDownTolEdit->setText( QString::number(distanceDownTol, 'f', 1) );
+
     // orginal and target image parameters
     imageWidth = 640;   //image->width();
     imageHeight = 480;  //image->height();
@@ -286,6 +303,13 @@ void MainWindow::update(){
 
         //if (msecCount % 5 == 0){  if (!cameraChecker->cameraDown && !threadPlay.isRunning()) threadPlay.run();        }
     }
+
+    if (msecCount % 450 == 0){
+
+        distance = ((distanceRaw * 1.0) / 27648.0) * 500.0 + 250.0;
+        ui->labelDistance->setText( QString::number(distance, 'f', 1) );
+    }
+
 }
 
 
@@ -723,6 +747,41 @@ void MainWindow::thinJointButton(){
     }
 
 }
+
+
+void MainWindow::zControlButton(){
+
+    zControlActive = !zControlActive;
+
+    if ( zControlActive ) {
+        ui->zControlButton->setStyleSheet("color: rgb(255, 0, 0)");
+
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+
+        QString str = "Yükseklik Kontrolü Aktif!";
+        msgBox.setText(str);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
+
+    } else {
+        ui->zControlButton->setStyleSheet("color: rgb(0, 0, 0)");
+    }
+}
+
+
+void MainWindow::getUpTol(){
+
+    distanceUpTol = ui->distanceUpTolEdit->text().toFloat();
+}
+
+
+void MainWindow::getDownTol(){
+
+    distanceDownTol = ui->distanceDownTolEdit->text().toFloat();
+}
+
 
 void MainWindow::processImage(){
 
@@ -1225,6 +1284,11 @@ void MainWindow::readSettings(){
             yResIndex = settings->value("yresi", _YRES_ARRAY_INDEX).toInt();
                 yRes = yResArray[yResIndex];
             title = settings->value("title", _TITLE).toString();
+
+            zControlActive = settings->value("zctrl", _Z_CONTROL).toBool();
+            distanceUpTol = settings->value("uptol", _UP_TOL).toFloat();
+            distanceDownTol = settings->value("dwtol", _DOWN_TOL).toFloat();
+
         settings->endGroup();
 
     } else {    // assign default values if file not exist
@@ -1265,6 +1329,10 @@ void MainWindow::readSettings(){
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
         title = _TITLE;
+
+        zControlActive = _Z_CONTROL;
+        distanceUpTol = _UP_TOL;
+        distanceDownTol = _DOWN_TOL;
 
         statusMessage = "ini dosyasý bulunamadý";
     }
@@ -1312,11 +1380,18 @@ void MainWindow::writeSettings(){
         QVariant thinjointsw(thinJointAlgoActive);
             settings->setValue("thin", thinjointsw.toString());
 
+
     settings->endGroup();
 
     settings->beginGroup("oth");
         settings->setValue("yresi", QString::number(yResIndex));
         settings->setValue("title", title);
+
+        QVariant zcontrolsw(zControlActive);
+            settings->setValue("zctrl", zcontrolsw.toString());
+
+        settings->setValue("uptol", QString::number(distanceUpTol));
+        settings->setValue("dwtol", QString::number(distanceDownTol));
     settings->endGroup();
 
     settings->sync();
@@ -1401,6 +1476,10 @@ void MainWindow::playCam(){
     }
 }
 
+void MainWindow::testEdit(){
+
+    distanceRaw = ui->testEdit->text().toInt();
+}
 
 MainWindow::~MainWindow(){
 

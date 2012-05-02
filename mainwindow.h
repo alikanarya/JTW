@@ -29,6 +29,9 @@
 #define _SUB_TYPE           0
 #define _CONTROL_DELAY      0
 #define _THIN_JOINT         false
+#define _Z_CONTROL          false
+#define _UP_TOL             1.0
+#define _DOWN_TOL           1.0
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -163,6 +166,13 @@ public:
     bool errorStopLimitLineVisible;
     float errorStopScale;
 
+    // Z-Control
+    bool zControlActive;
+    float distanceUpTol;
+    float distanceDownTol;
+    float distance;
+    int distanceRaw;
+
     // plc vars
     QUrl urlPLC;                            // plc url
     int plcType;                            // selection for S7-200, S7-300, etc
@@ -289,6 +299,9 @@ private slots:
     void showLicenseDialog();
     void showReport();
     void thinJointButton();
+    void zControlButton();
+    void getUpTol();
+    void getDownTol();
 
     // process controls
     void update();                                  // 1msec timer actions
@@ -297,6 +310,7 @@ private slots:
     void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
     void cameraDownAction();                        // actions handled when camera is not accesible
 
+    void testEdit();
 
 private:
     protect lic;
