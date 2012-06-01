@@ -2,6 +2,8 @@
 
 #include "mainwindow.h"
 
+extern MainWindow *w;
+
 plcControlThread::plcControlThread(int type, QString url){
     plcType = type;
     plcUrl = url;
@@ -14,6 +16,11 @@ plcControlThread::plcControlThread(int type, QString url){
 
     stopped = false;
     result = false;
+
+    // z control additions
+    readBufferInt = new unsigned char[2];
+    //for (int i = 0; i < 4; i++) readBufferInt[i] = 0;
+
 }
 
 plcControlThread::plcControlThread(s7 &_plc){
@@ -32,7 +39,8 @@ void plcControlThread::run(){
         } else
             if (plc->plcInteract) {         // if plc is successfully connected
 
-                if (commandState == _CMD_CENTER){           // action to center
+            if (w->goX) {
+                if (commandState == _CMD_CENTER){           // no action
                     result = plcCmdCenter();
                 } else
                 if (commandState == _CMD_RIGHT){            // action to right
@@ -56,8 +64,34 @@ void plcControlThread::run(){
                     // state unknown, behave as emergency
                     result = plcCmdEmergencyAct();                       // Emergency active
                 }
+
+                commandRead = true;
             }
+
+            if (w->goZ) {
+                if (commandZState == _CMD_Z_CENTER){           // no action
+                    result = plcCmd_Z_Center();
+                } else
+                    if (commandZState == _CMD_Z_UP){           // action to up
+                        result = plcCmd_Z_Up();
+                    } else
+                        if (commandZState == _CMD_Z_DOWN){           // action to down
+                            result = plcCmd_Z_Down();
+
+                        }
+                commandRead = true;
+            }
+
+            if (commandRead) {
+
+                readDistanceValue();
+            }
+
+            commandRead = false;
+        }
+
     }
+
     //for(;;);
     stopped = false;
     //exec();
@@ -127,6 +161,52 @@ bool plcControlThread::plcCmdEmergencyPsv(){
     return (result == 0);
 }
 
+
+bool plcControlThread::plcCmd_Z_Center(){
+    unsigned char buffer = MASK_CMD_Z_CENTER;
+
+    int result = plc->writeBytes(dbNo, 1, 1, &buffer);
+
+    return (result == 0);
+}
+
+bool plcControlThread::plcCmd_Z_Up(){
+    unsigned char buffer = MASK_CMD_Z_UP;
+
+    int result = plc->writeBytes(dbNo, 1, 1, &buffer);
+
+    return (result == 0);
+}
+
+bool plcControlThread::plcCmd_Z_Down(){
+    unsigned char buffer = MASK_CMD_Z_DOWN;
+
+    int result = plc->writeBytes(dbNo, 1, 1, &buffer);
+
+    return (result == 0);
+}
+
+
+bool plcControlThread::readDistanceValue(){
+// customized for s7200 address:VW2
+
+    int result;
+
+    result = plc->readBytes(dbNo, 2, 2, readBufferInt);
+
+    if (result == 0){
+
+        distanceRaw = plc->getS16(readBufferInt);
+        w->distanceRaw = distanceRaw;
+
+    } else {
+        return false;
+    }
+
+    return true;
+}
+
+
 void plcControlThread::check(){
     plcInteract = plc->plcInteract;
 
@@ -146,6 +226,7 @@ void plcControlThread::check(){
      }
 
 }
+
 
 void plcControlThread::disconnect(){
     plc->disconnect();

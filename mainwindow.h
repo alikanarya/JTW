@@ -29,6 +29,9 @@
 #define _SUB_TYPE           0
 #define _CONTROL_DELAY      0
 #define _THIN_JOINT         false
+#define _Z_CONTROL          false
+#define _UP_TOL             1.0
+#define _DOWN_TOL           1.0
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -41,6 +44,10 @@
 #define _CMD_EMERGENCY_PSV  5
 #define _CMD_RESET          6
 #define _CMD_CHECK          7
+
+#define _CMD_Z_CENTER       10
+#define _CMD_Z_UP           11
+#define _CMD_Z_DOWN         12
 
 #define _MAINTITLE "JTW - Kaynak için Birleþme Yeri Takipçisi :: "
 #define _TITLE "DIÞ KAYNAK"
@@ -163,14 +170,35 @@ public:
     bool errorStopLimitLineVisible;
     float errorStopScale;
 
+    // Z-Control
+    bool zControlActive;
+    float distanceUpTol;
+    float distanceDownTol;
+    float distance;
+    int distanceRaw;
+    float distanceTarget;
+    float distanceUpStart,      // start action
+          distanceUpStop,       // stop action
+          distanceDownStart,    // start action
+          distanceDownStop;     // stop action
+    float zStartStopRate;
+
+
     // plc vars
     QUrl urlPLC;                            // plc url
     int plcType;                            // selection for S7-200, S7-300, etc
     bool connectRequested;                  // plc connection request
     bool connectRequestedonBoot;            // plc connection request on app. start
     bool plcInteractPrev;
-    int cmdState, cmdStatePrev, cmdStatePrev2;
+    int cmdState,
+        cmdStatePrev,                       // to send cmd plc if cmd is changed
+        cmdStatePrev2,                      // to make it histeryzisis between start/stop
+        cmdZState,
+        cmdZStatePrev,                      // to send cmd plc if cmd is changed
+        cmdZStatePrev2;                     // to make it histeryzisis between start/stop
     bool cmdSended;
+    bool goX;
+    bool goZ;
     int DB_NO;
     int BYTE_NO;
     int controlDelay;
@@ -254,6 +282,7 @@ public:
     void processThinJoint();                        // darkness analsis for thin joint
     void repaintGuide();                            // update guide
     void repaintDevTrend();                         // update deviation trend
+    void calcZParameters();
 
     void readSettings();                            // read settings from ini file
     void writeSettings();                           // write settings to ini file
@@ -289,6 +318,9 @@ private slots:
     void showLicenseDialog();
     void showReport();
     void thinJointButton();
+    void zControlButton();
+    void getUpTol();
+    void getDownTol();
 
     // process controls
     void update();                                  // 1msec timer actions
@@ -297,6 +329,7 @@ private slots:
     void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
     void cameraDownAction();                        // actions handled when camera is not accesible
 
+    void testEdit();
 
 private:
     protect lic;
