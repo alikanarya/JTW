@@ -960,16 +960,20 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
+      <pointsize>8</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
      </font>
     </property>
     <property name="toolTip">
-     <string>İnce Kaynak Ağzı Uygulaması</string>
+     <string>Yükseklik Kontrol</string>
     </property>
     <property name="text">
-     <string>Z</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="icons.qrc">
+      <normaloff>:/resources/height-icon.png</normaloff>:/resources/height-icon.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -977,11 +981,17 @@ background-color: rgb(236, 233, 216);</string>
       <height>32</height>
      </size>
     </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
     <property name="default">
      <bool>false</bool>
     </property>
     <property name="flat">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="labelDistanceCap">

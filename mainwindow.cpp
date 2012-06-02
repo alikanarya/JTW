@@ -47,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     calculatorOffIcon.addFile(":/resources/calculator-Disabled-icon.png");
     cmd2RightIcon.addFile(":/resources/forward.png");
     cmd2LeftIcon.addFile(":/resources/backward.png");
+    zIconDisabled.addFile(":/resources/height-icon.png");
+    zIconEnabled.addFile(":/resources/height-icon-ON.png");
 
     ui->trackButton->setEnabled(false);
 
@@ -200,10 +202,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     if ( zControlActive ) {
 
-        ui_zctrl = new zctrlDialog(this);
-        ui_zctrl->show();
-
-        ui->zControlButton->setStyleSheet("color: rgb(255, 0, 0)");
+        ui->zControlButton->setIcon(zIconEnabled);
 
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
@@ -835,11 +834,17 @@ void MainWindow::thinJointButton(){
 
 void MainWindow::zControlButton(){
 
-    zControlActive = !zControlActive;
+    //zControlActive = !zControlActive;
+
+
+
+    ui_zctrl = new zctrlDialog(this);
+    ui_zctrl->show();
 
     if ( zControlActive ) {
-        ui->zControlButton->setStyleSheet("color: rgb(255, 0, 0)");
 
+
+/*
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
 
@@ -848,6 +853,7 @@ void MainWindow::zControlButton(){
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setDefaultButton(QMessageBox::Ok);
         msgBox.exec();
+        */
 
     } else {
         ui->zControlButton->setStyleSheet("color: rgb(0, 0, 0)");

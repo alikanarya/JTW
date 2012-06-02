@@ -32,6 +32,8 @@
         <file>resources/backward.png</file>
         <file>resources/left.png</file>
         <file>resources/right.png</file>
+        <file>resources/height-icon.png</file>
+        <file>resources/height-icon-ON.png</file>
     </qresource>
     <qresource prefix="/pixmaps">
         <file>resources/bad_corner.jpg</file>

@@ -126,6 +126,7 @@ public:
     QIcon emergencyOnIcon, emergencyOffIcon;
     QIcon calculatorOnIcon, calculatorOffIcon;
     QIcon cmd2LeftIcon, cmd2RightIcon;
+    QIcon zIconDisabled, zIconEnabled;
 
     // deviation trend vars
     QGraphicsScene *scene;      // to show devitation trend

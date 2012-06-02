@@ -17,6 +17,10 @@ public:
 
 private:
     Ui::zctrlDialog *ui;
+
+private slots:
+
+    void zctrlBox();
 };
 
 #endif // ZCTRLDIALOG_H

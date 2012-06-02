@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 3. May 16:05:40 2012
+** Created: Sat 2. Jun 18:34:29 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -374,18 +374,27 @@ public:
         zControlButton->setObjectName(QString::fromUtf8("zControlButton"));
         zControlButton->setEnabled(true);
         zControlButton->setGeometry(QRect(410, 30, 32, 32));
-        zControlButton->setFont(font5);
+        QFont font6;
+        font6.setPointSize(8);
+        font6.setBold(false);
+        font6.setWeight(50);
+        zControlButton->setFont(font6);
+        QIcon icon19;
+        icon19.addFile(QString::fromUtf8(":/resources/height-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        zControlButton->setIcon(icon19);
         zControlButton->setIconSize(QSize(32, 32));
+        zControlButton->setCheckable(false);
+        zControlButton->setChecked(false);
         zControlButton->setDefault(false);
-        zControlButton->setFlat(false);
+        zControlButton->setFlat(true);
         labelDistanceCap = new QLabel(centralWidget);
         labelDistanceCap->setObjectName(QString::fromUtf8("labelDistanceCap"));
         labelDistanceCap->setGeometry(QRect(570, 600, 31, 23));
-        QFont font6;
-        font6.setPointSize(11);
-        font6.setBold(true);
-        font6.setWeight(75);
-        labelDistanceCap->setFont(font6);
+        QFont font7;
+        font7.setPointSize(11);
+        font7.setBold(true);
+        font7.setWeight(75);
+        labelDistanceCap->setFont(font7);
         labelDistanceCap->setStyleSheet(QString::fromUtf8("color: rgb(170, 0, 0);"));
         labelDistanceCap->setFrameShape(QFrame::NoFrame);
         labelDistanceCap->setLineWidth(2);
@@ -393,7 +402,7 @@ public:
         labelDistance = new QLabel(centralWidget);
         labelDistance->setObjectName(QString::fromUtf8("labelDistance"));
         labelDistance->setGeometry(QRect(600, 600, 51, 23));
-        labelDistance->setFont(font6);
+        labelDistance->setFont(font7);
         labelDistance->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
         labelDistance->setFrameShape(QFrame::NoFrame);
         labelDistance->setLineWidth(2);
@@ -401,7 +410,7 @@ public:
         labelDistanceCap_2 = new QLabel(centralWidget);
         labelDistanceCap_2->setObjectName(QString::fromUtf8("labelDistanceCap_2"));
         labelDistanceCap_2->setGeometry(QRect(570, 630, 31, 23));
-        labelDistanceCap_2->setFont(font6);
+        labelDistanceCap_2->setFont(font7);
         labelDistanceCap_2->setStyleSheet(QString::fromUtf8("color: rgb(170, 0, 0);"));
         labelDistanceCap_2->setFrameShape(QFrame::NoFrame);
         labelDistanceCap_2->setLineWidth(2);
@@ -409,7 +418,7 @@ public:
         labelDistanceCap_3 = new QLabel(centralWidget);
         labelDistanceCap_3->setObjectName(QString::fromUtf8("labelDistanceCap_3"));
         labelDistanceCap_3->setGeometry(QRect(570, 660, 31, 23));
-        labelDistanceCap_3->setFont(font6);
+        labelDistanceCap_3->setFont(font7);
         labelDistanceCap_3->setStyleSheet(QString::fromUtf8("color: rgb(170, 0, 0);"));
         labelDistanceCap_3->setFrameShape(QFrame::NoFrame);
         labelDistanceCap_3->setLineWidth(2);
@@ -417,20 +426,20 @@ public:
         distanceUpTolEdit = new QLineEdit(centralWidget);
         distanceUpTolEdit->setObjectName(QString::fromUtf8("distanceUpTolEdit"));
         distanceUpTolEdit->setGeometry(QRect(600, 630, 51, 20));
-        QFont font7;
-        font7.setPointSize(9);
-        font7.setBold(true);
-        font7.setWeight(75);
-        distanceUpTolEdit->setFont(font7);
+        QFont font8;
+        font8.setPointSize(9);
+        font8.setBold(true);
+        font8.setWeight(75);
+        distanceUpTolEdit->setFont(font8);
         distanceDownTolEdit = new QLineEdit(centralWidget);
         distanceDownTolEdit->setObjectName(QString::fromUtf8("distanceDownTolEdit"));
         distanceDownTolEdit->setGeometry(QRect(600, 660, 51, 20));
-        distanceDownTolEdit->setFont(font7);
+        distanceDownTolEdit->setFont(font8);
         testEdit = new QLineEdit(centralWidget);
         testEdit->setObjectName(QString::fromUtf8("testEdit"));
         testEdit->setEnabled(false);
         testEdit->setGeometry(QRect(430, 10, 51, 20));
-        testEdit->setFont(font7);
+        testEdit->setFont(font8);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -552,9 +561,9 @@ public:
 #endif // QT_NO_TOOLTIP
         thinJointButton->setText(QApplication::translate("MainWindow", "\304\260KA", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        zControlButton->setToolTip(QApplication::translate("MainWindow", "\304\260nce Kaynak A\304\237z\304\261 Uygulamas\304\261", 0, QApplication::UnicodeUTF8));
+        zControlButton->setToolTip(QApplication::translate("MainWindow", "Y\303\274kseklik Kontrol", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        zControlButton->setText(QApplication::translate("MainWindow", "Z", 0, QApplication::UnicodeUTF8));
+        zControlButton->setText(QString());
         labelDistanceCap->setText(QApplication::translate("MainWindow", "H :", 0, QApplication::UnicodeUTF8));
         labelDistance->setText(QApplication::translate("MainWindow", "000.0", 0, QApplication::UnicodeUTF8));
         labelDistanceCap_2->setText(QApplication::translate("MainWindow", "\303\234 :", 0, QApplication::UnicodeUTF8));
