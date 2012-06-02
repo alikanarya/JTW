@@ -71,26 +71,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     } else
         ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
 
-    if ( zControlActive ) {
-        ui->zControlButton->setStyleSheet("color: rgb(255, 0, 0)");
-
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-
-        QString str = "Yükseklik Kontrolü Aktif!";
-        msgBox.setText(str);
-        msgBox.setStandardButtons(QMessageBox::Ok);
-        msgBox.setDefaultButton(QMessageBox::Ok);
-        msgBox.exec();
-    } else
-        ui->zControlButton->setStyleSheet("color: rgb(0, 0, 0)");
-
-    // z control
-    distanceRaw = -13824;  // to make it zero distance read initially
-    ui->distanceUpTolEdit->setText( QString::number(distanceUpTol, 'f', 1) );
-    ui->distanceDownTolEdit->setText( QString::number(distanceDownTol, 'f', 1) );
-    zStartStopRate = 0.3;
-
     // orginal and target image parameters
     imageWidth = 640;   //image->width();
     imageHeight = 480;  //image->height();
@@ -217,6 +197,31 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     if (lic.licenseState != _LIC2){
         QTimer::singleShot(500, this, SLOT(showLicenseDialog()));
     }
+
+    if ( zControlActive ) {
+
+        ui_zctrl = new zctrlDialog(this);
+        ui_zctrl->show();
+
+        ui->zControlButton->setStyleSheet("color: rgb(255, 0, 0)");
+
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+
+        QString str = "Yükseklik Kontrolü Aktif!";
+        msgBox.setText(str);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
+    } else
+        ui->zControlButton->setStyleSheet("color: rgb(0, 0, 0)");
+
+    // z control
+    distanceRaw = -13824;  // to make it zero distance read initially
+    ui->distanceUpTolEdit->setText( QString::number(distanceUpTol, 'f', 1) );
+    ui->distanceDownTolEdit->setText( QString::number(distanceDownTol, 'f', 1) );
+    zStartStopRate = 0.3;
+
 
 }
 
