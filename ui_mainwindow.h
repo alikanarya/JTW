@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat 2. Jun 18:34:29 2012
+** Created: Sat 2. Jun 21:35:56 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -64,13 +64,12 @@ public:
     QPushButton *rightButton;
     QPushButton *thinJointButton;
     QPushButton *zControlButton;
-    QLabel *labelDistanceCap;
+    QLabel *labelDistanceTag;
     QLabel *labelDistance;
-    QLabel *labelDistanceCap_2;
-    QLabel *labelDistanceCap_3;
     QLineEdit *distanceUpTolEdit;
     QLineEdit *distanceDownTolEdit;
     QLineEdit *testEdit;
+    QLabel *labelDistanceTag2;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -111,7 +110,8 @@ public:
         screenShotButton->setFlat(true);
         labelTime = new QLabel(centralWidget);
         labelTime->setObjectName(QString::fromUtf8("labelTime"));
-        labelTime->setGeometry(QRect(530, 690, 85, 23));
+        labelTime->setEnabled(false);
+        labelTime->setGeometry(QRect(380, 0, 85, 23));
         QFont font;
         font.setPointSize(12);
         font.setBold(true);
@@ -234,7 +234,7 @@ public:
         controlButton->setFlat(true);
         plcStatus = new QPushButton(centralWidget);
         plcStatus->setObjectName(QString::fromUtf8("plcStatus"));
-        plcStatus->setGeometry(QRect(500, 640, 32, 32));
+        plcStatus->setGeometry(QRect(500, 690, 32, 32));
         QIcon icon9;
         icon9.addFile(QString::fromUtf8(":/resources/s7_200-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         plcStatus->setIcon(icon9);
@@ -272,14 +272,15 @@ public:
         labelLogoCustomer = new QLabel(centralWidget);
         labelLogoCustomer->setObjectName(QString::fromUtf8("labelLogoCustomer"));
         labelLogoCustomer->setEnabled(false);
-        labelLogoCustomer->setGeometry(QRect(400, 3, 24, 24));
+        labelLogoCustomer->setGeometry(QRect(370, 0, 24, 24));
         labelLogoCustomer->setFrameShape(QFrame::Box);
         labelLogoCustomer->setLineWidth(1);
         labelLogoCustomer->setPixmap(QPixmap(QString::fromUtf8(":/resources/NokselLogo.bmp")));
         labelLogoCustomer->setScaledContents(true);
         emergencyButton = new QPushButton(centralWidget);
         emergencyButton->setObjectName(QString::fromUtf8("emergencyButton"));
-        emergencyButton->setGeometry(QRect(500, 680, 32, 32));
+        emergencyButton->setEnabled(false);
+        emergencyButton->setGeometry(QRect(330, 0, 32, 32));
         QIcon icon12;
         icon12.addFile(QString::fromUtf8(":/resources/Emergency-Stop-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         icon12.addFile(QString::fromUtf8(":/resources/Emergency-Stop-Enabled-Icon.png"), QSize(), QIcon::Normal, QIcon::On);
@@ -288,7 +289,7 @@ public:
         emergencyButton->setFlat(true);
         cameraStatus = new QPushButton(centralWidget);
         cameraStatus->setObjectName(QString::fromUtf8("cameraStatus"));
-        cameraStatus->setGeometry(QRect(500, 600, 32, 32));
+        cameraStatus->setGeometry(QRect(540, 690, 32, 32));
         QIcon icon13;
         icon13.addFile(QString::fromUtf8(":/resources/Camera-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         cameraStatus->setIcon(icon13);
@@ -309,6 +310,7 @@ public:
         label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         clearMsgBoxButton = new QPushButton(centralWidget);
         clearMsgBoxButton->setObjectName(QString::fromUtf8("clearMsgBoxButton"));
+        clearMsgBoxButton->setEnabled(false);
         clearMsgBoxButton->setGeometry(QRect(70, 680, 80, 25));
         QFont font4;
         font4.setFamily(QString::fromUtf8("Arial"));
@@ -387,45 +389,31 @@ public:
         zControlButton->setChecked(false);
         zControlButton->setDefault(false);
         zControlButton->setFlat(true);
-        labelDistanceCap = new QLabel(centralWidget);
-        labelDistanceCap->setObjectName(QString::fromUtf8("labelDistanceCap"));
-        labelDistanceCap->setGeometry(QRect(570, 600, 31, 23));
+        labelDistanceTag = new QLabel(centralWidget);
+        labelDistanceTag->setObjectName(QString::fromUtf8("labelDistanceTag"));
+        labelDistanceTag->setGeometry(QRect(560, 600, 43, 44));
         QFont font7;
         font7.setPointSize(11);
         font7.setBold(true);
         font7.setWeight(75);
-        labelDistanceCap->setFont(font7);
-        labelDistanceCap->setStyleSheet(QString::fromUtf8("color: rgb(170, 0, 0);"));
-        labelDistanceCap->setFrameShape(QFrame::NoFrame);
-        labelDistanceCap->setLineWidth(2);
-        labelDistanceCap->setAlignment(Qt::AlignCenter);
+        labelDistanceTag->setFont(font7);
+        labelDistanceTag->setStyleSheet(QString::fromUtf8("color: rgb(170, 0, 0);"));
+        labelDistanceTag->setFrameShape(QFrame::NoFrame);
+        labelDistanceTag->setLineWidth(2);
+        labelDistanceTag->setPixmap(QPixmap(QString::fromUtf8(":/pixmaps/resources/distance.png")));
+        labelDistanceTag->setScaledContents(true);
+        labelDistanceTag->setAlignment(Qt::AlignCenter);
         labelDistance = new QLabel(centralWidget);
         labelDistance->setObjectName(QString::fromUtf8("labelDistance"));
-        labelDistance->setGeometry(QRect(600, 600, 51, 23));
-        labelDistance->setFont(font7);
+        labelDistance->setGeometry(QRect(610, 600, 41, 23));
+        labelDistance->setFont(font5);
         labelDistance->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
         labelDistance->setFrameShape(QFrame::NoFrame);
         labelDistance->setLineWidth(2);
         labelDistance->setAlignment(Qt::AlignCenter);
-        labelDistanceCap_2 = new QLabel(centralWidget);
-        labelDistanceCap_2->setObjectName(QString::fromUtf8("labelDistanceCap_2"));
-        labelDistanceCap_2->setGeometry(QRect(570, 630, 31, 23));
-        labelDistanceCap_2->setFont(font7);
-        labelDistanceCap_2->setStyleSheet(QString::fromUtf8("color: rgb(170, 0, 0);"));
-        labelDistanceCap_2->setFrameShape(QFrame::NoFrame);
-        labelDistanceCap_2->setLineWidth(2);
-        labelDistanceCap_2->setAlignment(Qt::AlignCenter);
-        labelDistanceCap_3 = new QLabel(centralWidget);
-        labelDistanceCap_3->setObjectName(QString::fromUtf8("labelDistanceCap_3"));
-        labelDistanceCap_3->setGeometry(QRect(570, 660, 31, 23));
-        labelDistanceCap_3->setFont(font7);
-        labelDistanceCap_3->setStyleSheet(QString::fromUtf8("color: rgb(170, 0, 0);"));
-        labelDistanceCap_3->setFrameShape(QFrame::NoFrame);
-        labelDistanceCap_3->setLineWidth(2);
-        labelDistanceCap_3->setAlignment(Qt::AlignCenter);
         distanceUpTolEdit = new QLineEdit(centralWidget);
         distanceUpTolEdit->setObjectName(QString::fromUtf8("distanceUpTolEdit"));
-        distanceUpTolEdit->setGeometry(QRect(600, 630, 51, 20));
+        distanceUpTolEdit->setGeometry(QRect(560, 660, 51, 20));
         QFont font8;
         font8.setPointSize(9);
         font8.setBold(true);
@@ -433,13 +421,21 @@ public:
         distanceUpTolEdit->setFont(font8);
         distanceDownTolEdit = new QLineEdit(centralWidget);
         distanceDownTolEdit->setObjectName(QString::fromUtf8("distanceDownTolEdit"));
-        distanceDownTolEdit->setGeometry(QRect(600, 660, 51, 20));
+        distanceDownTolEdit->setGeometry(QRect(610, 660, 51, 20));
         distanceDownTolEdit->setFont(font8);
         testEdit = new QLineEdit(centralWidget);
         testEdit->setObjectName(QString::fromUtf8("testEdit"));
         testEdit->setEnabled(false);
-        testEdit->setGeometry(QRect(430, 10, 51, 20));
+        testEdit->setGeometry(QRect(520, 30, 51, 20));
         testEdit->setFont(font8);
+        labelDistanceTag2 = new QLabel(centralWidget);
+        labelDistanceTag2->setObjectName(QString::fromUtf8("labelDistanceTag2"));
+        labelDistanceTag2->setGeometry(QRect(610, 620, 41, 23));
+        labelDistanceTag2->setFont(font5);
+        labelDistanceTag2->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
+        labelDistanceTag2->setFrameShape(QFrame::NoFrame);
+        labelDistanceTag2->setLineWidth(2);
+        labelDistanceTag2->setAlignment(Qt::AlignCenter);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -564,13 +560,12 @@ public:
         zControlButton->setToolTip(QApplication::translate("MainWindow", "Y\303\274kseklik Kontrol", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         zControlButton->setText(QString());
-        labelDistanceCap->setText(QApplication::translate("MainWindow", "H :", 0, QApplication::UnicodeUTF8));
+        labelDistanceTag->setText(QString());
         labelDistance->setText(QApplication::translate("MainWindow", "000.0", 0, QApplication::UnicodeUTF8));
-        labelDistanceCap_2->setText(QApplication::translate("MainWindow", "\303\234 :", 0, QApplication::UnicodeUTF8));
-        labelDistanceCap_3->setText(QApplication::translate("MainWindow", "A :", 0, QApplication::UnicodeUTF8));
         distanceUpTolEdit->setInputMask(QApplication::translate("MainWindow", "0.0;0", 0, QApplication::UnicodeUTF8));
         distanceDownTolEdit->setInputMask(QApplication::translate("MainWindow", "0.0;0", 0, QApplication::UnicodeUTF8));
         testEdit->setInputMask(QString());
+        labelDistanceTag2->setText(QApplication::translate("MainWindow", "(mm)", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -17,6 +17,9 @@ zctrlDialog::zctrlDialog(QWidget *parent) : QDialog(parent), ui(new Ui::zctrlDia
     this->setAttribute(Qt::WA_DeleteOnClose, true);
 
     ui->setupUi(this);
+
+    if (w->zControlActive)
+        ui->zctrlBox->setChecked(true);
 }
 
 void zctrlDialog::zctrlBox(){
@@ -28,8 +31,15 @@ zctrlDialog::~zctrlDialog(){
 
     if (w->zControlActive){
         w->ui->zControlButton->setIcon(w->zIconEnabled);
+        w->ui->labelDistance->show();
+        w->ui->labelDistanceTag->show();
+        w->ui->labelDistanceTag2->show();
+
     } else {
         w->ui->zControlButton->setIcon(w->zIconDisabled);
+        w->ui->labelDistance->hide();
+        w->ui->labelDistanceTag->hide();
+        w->ui->labelDistanceTag2->hide();
     }
 
     delete ui;

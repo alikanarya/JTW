@@ -27,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->clearMsgBoxButton->hide();  //  not used now
     //ui->plainTextEdit->appendPlainText(QString::number(rectScreen.width())+"x"+QString::number(rectScreen.height()));
     ui->labelLogoCustomer->hide();
+    ui->labelTime->hide();
+    ui->emergencyButton->hide();
+    ui->testEdit->hide();
 
     // icon assignmets
     plcOnlineIcon.addFile(":/resources/s7_200-Enabled-Icon.png");
@@ -203,6 +206,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     if ( zControlActive ) {
 
         ui->zControlButton->setIcon(zIconEnabled);
+        ui->labelDistance->show();
+        ui->labelDistanceTag->show();
+        ui->labelDistanceTag2->show();
 
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
@@ -212,8 +218,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setDefaultButton(QMessageBox::Ok);
         msgBox.exec();
-    } else
-        ui->zControlButton->setStyleSheet("color: rgb(0, 0, 0)");
+    } else {
+        ui->zControlButton->setIcon(zIconDisabled);
+        ui->labelDistance->hide();
+        ui->labelDistanceTag->hide();
+        ui->labelDistanceTag2->hide();
+
+    }
 
     // z control
     distanceRaw = -13824;  // to make it zero distance read initially
@@ -489,9 +500,11 @@ void MainWindow::updateSn(){
     QString message;
     QString seperator = "   ||   ";
 
+    /*
     // display: time
     currentDateTime = QDateTime::currentDateTime();
     ui->labelTime->setText(currentDateTime.toString("hh:mm:ss"));
+    */
 
     // check camera live state
     cameraChecker->checkHost();

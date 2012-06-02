@@ -40,5 +40,6 @@
         <file>resources/bad_mono.jpg</file>
         <file>resources/good_corner.jpg</file>
         <file>resources/good_mono.jpg</file>
+        <file>resources/distance.png</file>
     </qresource>
 </RCC>
