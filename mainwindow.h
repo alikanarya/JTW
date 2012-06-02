@@ -45,6 +45,10 @@
 #define _CMD_RESET          6
 #define _CMD_CHECK          7
 
+#define _CMD_Z_CENTER       10
+#define _CMD_Z_UP           11
+#define _CMD_Z_DOWN         12
+
 #define _MAINTITLE "JTW - Kaynak için Birleþme Yeri Takipçisi :: "
 #define _TITLE "DIÞ KAYNAK"
 
@@ -172,6 +176,13 @@ public:
     float distanceDownTol;
     float distance;
     int distanceRaw;
+    float distanceTarget;
+    float distanceUpStart,      // start action
+          distanceUpStop,       // stop action
+          distanceDownStart,    // start action
+          distanceDownStop;     // stop action
+    float zStartStopRate;
+
 
     // plc vars
     QUrl urlPLC;                            // plc url
@@ -179,8 +190,15 @@ public:
     bool connectRequested;                  // plc connection request
     bool connectRequestedonBoot;            // plc connection request on app. start
     bool plcInteractPrev;
-    int cmdState, cmdStatePrev, cmdStatePrev2;
+    int cmdState,
+        cmdStatePrev,                       // to send cmd plc if cmd is changed
+        cmdStatePrev2,                      // to make it histeryzisis between start/stop
+        cmdZState,
+        cmdZStatePrev,                      // to send cmd plc if cmd is changed
+        cmdZStatePrev2;                     // to make it histeryzisis between start/stop
     bool cmdSended;
+    bool goX;
+    bool goZ;
     int DB_NO;
     int BYTE_NO;
     int controlDelay;
@@ -264,6 +282,7 @@ public:
     void processThinJoint();                        // darkness analsis for thin joint
     void repaintGuide();                            // update guide
     void repaintDevTrend();                         // update deviation trend
+    void calcZParameters();
 
     void readSettings();                            // read settings from ini file
     void writeSettings();                           // write settings to ini file

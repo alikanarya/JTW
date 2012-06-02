@@ -39,7 +39,8 @@ void plcControlThread::run(){
         } else
             if (plc->plcInteract) {         // if plc is successfully connected
 
-                if (commandState == _CMD_CENTER){           // action to center
+            if (w->goX) {
+                if (commandState == _CMD_CENTER){           // no action
                     result = plcCmdCenter();
                 } else
                 if (commandState == _CMD_RIGHT){            // action to right
@@ -64,13 +65,33 @@ void plcControlThread::run(){
                     result = plcCmdEmergencyAct();                       // Emergency active
                 }
 
-                readDistanceValue();
-
-                if (w->zControlActive) {
-
-                }
+                commandRead = true;
             }
+
+            if (w->goZ) {
+                if (commandZState == _CMD_Z_CENTER){           // no action
+                    result = plcCmd_Z_Center();
+                } else
+                    if (commandZState == _CMD_Z_UP){           // action to up
+                        result = plcCmd_Z_Up();
+                    } else
+                        if (commandZState == _CMD_Z_DOWN){           // action to down
+                            result = plcCmd_Z_Down();
+
+                        }
+                commandRead = true;
+            }
+
+            if (commandRead) {
+
+                readDistanceValue();
+            }
+
+            commandRead = false;
+        }
+
     }
+
     //for(;;);
     stopped = false;
     //exec();
@@ -167,7 +188,7 @@ bool plcControlThread::plcCmd_Z_Down(){
 
 
 bool plcControlThread::readDistanceValue(){
-// customized for s7200
+// customized for s7200 address:VW2
 
     int result;
 

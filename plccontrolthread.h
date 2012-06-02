@@ -32,6 +32,8 @@ public:
     */
 
     int commandState;
+    int commandZState;
+    bool commandRead;
     bool result;
     int checkResult;
     bool plcInteract;

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 3. May 00:10:30 2012
+** Created: Thu 3. May 16:05:40 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -428,6 +428,7 @@ public:
         distanceDownTolEdit->setFont(font7);
         testEdit = new QLineEdit(centralWidget);
         testEdit->setObjectName(QString::fromUtf8("testEdit"));
+        testEdit->setEnabled(false);
         testEdit->setGeometry(QRect(430, 10, 51, 20));
         testEdit->setFont(font7);
         MainWindow->setCentralWidget(centralWidget);

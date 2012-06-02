@@ -85,8 +85,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     } else
         ui->zControlButton->setStyleSheet("color: rgb(0, 0, 0)");
 
+    // z control
+    distanceRaw = -13824;  // to make it zero distance read initially
     ui->distanceUpTolEdit->setText( QString::number(distanceUpTol, 'f', 1) );
     ui->distanceDownTolEdit->setText( QString::number(distanceDownTol, 'f', 1) );
+    zStartStopRate = 0.3;
 
     // orginal and target image parameters
     imageWidth = 640;   //image->width();
@@ -304,7 +307,14 @@ void MainWindow::update(){
         //if (msecCount % 5 == 0){  if (!cameraChecker->cameraDown && !threadPlay.isRunning()) threadPlay.run();        }
     }
 
-    if (msecCount % 450 == 0){
+    if (msecCount % 400 == 0){
+
+        if (!threadPLCControl->isRunning()){
+
+            threadPLCControl->commandRead = true;
+
+            threadPLCControl->start();
+        }
 
         distance = ((distanceRaw * 1.0) / 27648.0) * 500.0 + 250.0;
         ui->labelDistance->setText( QString::number(distance, 'f', 1) );
@@ -314,29 +324,41 @@ void MainWindow::update(){
 
 
 void MainWindow:: plcControl(){
-
     controlThreadCount++;
 
     checker();
 
     int state = _CMD_STOP;
+    int stateZ = _CMD_Z_CENTER;
 
+    /* DEBUG
+         if (cmdZState == _CMD_Z_UP) ui->plainTextEdit->appendPlainText("A");
+         if (cmdZState == _CMD_Z_DOWN) ui->plainTextEdit->appendPlainText("V");
+         if (cmdZState == _CMD_Z_CENTER) ui->plainTextEdit->appendPlainText("-");
+    */
     if (!controlPause){
 
         // prepare plc command
         if (controlThreadCount == controlThreadCountSize) {
+
             state = _CMD_CHECK;
+
             controlThreadCount = 0;
         } else {
             if (emergencyStop){
+
                 state = _CMD_EMERGENCY_ACT;
             } else {
+
 //                if (cameraChecker->cameraDown || !play || detectionError || !permOperator){
                 if (cameraChecker->cameraDown || !play || !permOperator){
+
                     state = _CMD_STOP;
                 } else {
                     if (play && trackOn && controlOn && permPLC){
                         state = cmdState;   // Weld Command from image processing
+
+                        stateZ = cmdZState; // Z-Control command
                     } else
                         state = _CMD_STOP;
                 }
@@ -344,7 +366,47 @@ void MainWindow:: plcControl(){
         }
 
 
-        if (state != cmdStatePrev || !cmdSended) {
+        goX = false;
+        if (state != cmdStatePrev) {
+
+            if (state == _CMD_RIGHT)
+                ui->cmdStatus->setIcon(cmd2LeftIcon);
+            else if (state == _CMD_LEFT)
+                ui->cmdStatus->setIcon(cmd2RightIcon);
+            else if (state != _CMD_CHECK)
+                ui->cmdStatus->setIcon(QIcon());
+
+            goX = true;
+        }
+
+        goZ = false;
+        if (stateZ != cmdZStatePrev) {
+
+            goZ = true;
+
+        }
+
+
+        if (goX || goZ || !cmdSended) {
+
+            cmdSended = false;
+
+            if (!threadPLCControl->isRunning()){
+
+                threadPLCControl->commandState = state;
+
+                threadPLCControl->commandZState = stateZ;
+
+                threadPLCControl->start();
+
+                cmdSended = true;
+
+
+
+            }
+        }
+
+/* the original
             if (state == _CMD_RIGHT)
                 ui->cmdStatus->setIcon(cmd2LeftIcon);
             else if (state == _CMD_LEFT)
@@ -358,7 +420,7 @@ void MainWindow:: plcControl(){
                 threadPLCControl->start();
                 cmdSended = true;
             }
-/*
+/ *
             if (state != _CMD_CHECK || state != _CMD_EMERGENCY_ACT) {
                 if (controlDelay == 0){
                     if (!threadPLCControl->isRunning()){
@@ -393,12 +455,13 @@ void MainWindow:: plcControl(){
                 }
             }
 */
-        }
+//        }
 
         if (state!= _CMD_CHECK) {
             cmdStatePrev = state;
         }
 
+        cmdZStatePrev = stateZ;
     }
 }
 
@@ -499,6 +562,7 @@ void MainWindow::startTimer(){
         cmdSended = true;
     }
     cmdStatePrev = cmdState;
+    cmdZStatePrev = _CMD_Z_CENTER;
 
     // wait 2sec. to check first init of plc connection
     QTimer::singleShot(2000, this, SLOT(initPlcTimer()));
@@ -683,6 +747,21 @@ void MainWindow::controlButton(){
         //QString line = timeString() + "Kaynak baþladý."
         fileData.clear();
         fileData.append(timeString() + "Kaynak baþlatýldý.");
+
+        // z control
+        if (zControlActive) {
+            distanceTarget = distance;
+            calcZParameters();
+
+            /* DEBUG
+            ui->plainTextEdit->appendPlainText("z-upstart: " + QString::number(distanceUpStart, 'f', 1));
+            ui->plainTextEdit->appendPlainText("z-upstop: " + QString::number(distanceUpStop, 'f', 1));
+            ui->plainTextEdit->appendPlainText("z-target: " + QString::number(distanceTarget, 'f', 1));
+            ui->plainTextEdit->appendPlainText("z-downstop: " + QString::number(distanceDownStop, 'f', 1));
+            ui->plainTextEdit->appendPlainText("z-downstart: " + QString::number(distanceDownStart, 'f', 1));
+            */
+        }
+
     } else {
         cmdState = _CMD_STOP;
 
@@ -860,6 +939,31 @@ void MainWindow::processImage(){
         iprocessInitSwitch = false;
         delete iprocess;
     }
+
+
+    // Z CONTROL
+
+    if ( zControlActive ) {
+
+        if ( distance >= distanceUpStart )
+            cmdZState = _CMD_Z_UP;
+        else
+        if ( distance <= distanceDownStart )
+            cmdZState = _CMD_Z_DOWN;
+        else
+        if ( cmdZStatePrev2 == _CMD_Z_UP && distance <= distanceUpStop )
+            cmdZState = _CMD_Z_CENTER;
+        else
+        if ( cmdZStatePrev2 == _CMD_Z_DOWN && distance >= distanceDownStop )
+            cmdZState = _CMD_Z_CENTER;
+        else
+        if ( cmdZStatePrev2 != _CMD_Z_UP && cmdZStatePrev2 != _CMD_Z_DOWN )
+            cmdZState = _CMD_Z_CENTER;
+        else;
+
+        cmdZStatePrev2 = cmdZState;
+    }
+
 }
 
 
@@ -1148,6 +1252,16 @@ void MainWindow::repaintDevTrend(){
     // updata dev. trend for error limit value changes
     if (!trackOn) clearTrack();
     if (deviationData.size() != 0) drawTrack();
+}
+
+
+void MainWindow::calcZParameters(){
+
+    distanceUpStart = distanceTarget + distanceUpTol;
+    distanceUpStop = distanceTarget + distanceUpTol * zStartStopRate;
+
+    distanceDownStart = distanceTarget - distanceDownTol;
+    distanceDownStop = distanceTarget - distanceDownTol * zStartStopRate;
 }
 
 
