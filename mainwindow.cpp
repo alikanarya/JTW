@@ -136,6 +136,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     threadPLCControl->dbNo = DB_NO;
     threadPLCControl->byteNo = BYTE_NO;
+    threadPLCControl->byteNo2 = threadPLCControl->byteNo + 1;
 
     if (!threadPLCControl->plc->libraryLoaded){
         permPLC = false;
@@ -227,7 +228,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     }
 
     // z control
-    distanceRaw = -13824;  // to make it zero distance read initially
+    distanceRaw = 32000;  // to make distance neg read initially
     ui->distanceUpTolEdit->setText( QString::number(distanceUpTol, 'f', 1) );
     ui->distanceDownTolEdit->setText( QString::number(distanceDownTol, 'f', 1) );
     zStartStopRate = 0.3;
@@ -322,19 +323,6 @@ void MainWindow::update(){
         //if (msecCount % 5 == 0){  if (!cameraChecker->cameraDown && !threadPlay.isRunning()) threadPlay.run();        }
     }
 
-    if (msecCount % 400 == 0){
-
-        if (!threadPLCControl->isRunning()){
-
-            threadPLCControl->commandRead = true;
-
-            threadPLCControl->start();
-        }
-
-        distance = ((distanceRaw * 1.0) / 27648.0) * 500.0 + 250.0;
-        ui->labelDistance->setText( QString::number(distance, 'f', 1) );
-    }
-
 }
 
 
@@ -346,11 +334,15 @@ void MainWindow:: plcControl(){
     int state = _CMD_STOP;
     int stateZ = _CMD_Z_CENTER;
 
-    /* DEBUG
-         if (cmdZState == _CMD_Z_UP) ui->plainTextEdit->appendPlainText("A");
-         if (cmdZState == _CMD_Z_DOWN) ui->plainTextEdit->appendPlainText("V");
-         if (cmdZState == _CMD_Z_CENTER) ui->plainTextEdit->appendPlainText("-");
-    */
+
+         if (controlThreadCount % 4 == 0){
+             threadPLCControl->commandRead = true;
+
+             distance = 300 - ((distanceRaw * 1.0) / 27648.0) * 220.0;
+             ui->labelDistance->setText( QString::number(distance, 'f', 1) );
+
+         }
+
     if (!controlPause){
 
         // prepare plc command
@@ -397,12 +389,18 @@ void MainWindow:: plcControl(){
         goZ = false;
         if (stateZ != cmdZStatePrev) {
 
+            ///* DEBUG
+                 if (cmdZState == _CMD_Z_UP) ui->plainTextEdit->appendPlainText("A");
+                 if (cmdZState == _CMD_Z_DOWN) ui->plainTextEdit->appendPlainText("V");
+                 if (cmdZState == _CMD_Z_CENTER) ui->plainTextEdit->appendPlainText("-");
+            //*/
+
             goZ = true;
 
         }
 
 
-        if (goX || goZ || !cmdSended) {
+        if (goX || goZ || !cmdSended || threadPLCControl->commandRead) {
 
             cmdSended = false;
 
@@ -416,10 +414,15 @@ void MainWindow:: plcControl(){
 
                 cmdSended = true;
 
-
-
             }
         }
+
+        if (state!= _CMD_CHECK) {
+            cmdStatePrev = state;
+        }
+
+        cmdZStatePrev = stateZ;
+    }
 
 /* the original
             if (state == _CMD_RIGHT)
@@ -472,12 +475,6 @@ void MainWindow:: plcControl(){
 */
 //        }
 
-        if (state!= _CMD_CHECK) {
-            cmdStatePrev = state;
-        }
-
-        cmdZStatePrev = stateZ;
-    }
 }
 
 
@@ -737,10 +734,10 @@ void MainWindow::trackButton(){
     } else {
         ui->trackButton->setIcon(trackOffIcon);
     }
-
+/*
     ui->leftButton->setEnabled( showGuide && !trackOn );
     ui->rightButton->setEnabled( showGuide && !trackOn );
-
+*/
     ui->thinJointButton->setEnabled(!trackOn);
 }
 
@@ -770,13 +767,13 @@ void MainWindow::controlButton(){
             distanceTarget = distance;
             calcZParameters();
 
-            /* DEBUG
+            ///* DEBUG
             ui->plainTextEdit->appendPlainText("z-upstart: " + QString::number(distanceUpStart, 'f', 1));
             ui->plainTextEdit->appendPlainText("z-upstop: " + QString::number(distanceUpStop, 'f', 1));
             ui->plainTextEdit->appendPlainText("z-target: " + QString::number(distanceTarget, 'f', 1));
             ui->plainTextEdit->appendPlainText("z-downstop: " + QString::number(distanceDownStop, 'f', 1));
             ui->plainTextEdit->appendPlainText("z-downstart: " + QString::number(distanceDownStart, 'f', 1));
-            */
+            //*/
         }
 
     } else {
@@ -967,7 +964,7 @@ void MainWindow::processImage(){
 
     // Z CONTROL
 
-    if ( zControlActive ) {
+    if ( zControlActive && controlOn ) {
 
         if ( distance >= distanceUpStart )
             cmdZState = _CMD_Z_UP;

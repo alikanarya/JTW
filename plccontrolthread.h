@@ -24,6 +24,7 @@ public:
     QString plcUrl;
     int dbNo;
     int byteNo;
+    int byteNo2;
     /*
     int right_BYTE, right_BIT;
     int left_BYTE, left_BIT;

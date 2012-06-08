@@ -64,8 +64,6 @@ void plcControlThread::run(){
                     // state unknown, behave as emergency
                     result = plcCmdEmergencyAct();                       // Emergency active
                 }
-
-                commandRead = true;
             }
 
             if (w->goZ) {
@@ -79,15 +77,14 @@ void plcControlThread::run(){
                             result = plcCmd_Z_Down();
 
                         }
-                commandRead = true;
             }
 
             if (commandRead) {
 
                 readDistanceValue();
+                commandRead = false;
             }
 
-            commandRead = false;
         }
 
     }
@@ -165,7 +162,7 @@ bool plcControlThread::plcCmdEmergencyPsv(){
 bool plcControlThread::plcCmd_Z_Center(){
     unsigned char buffer = MASK_CMD_Z_CENTER;
 
-    int result = plc->writeBytes(dbNo, 1, 1, &buffer);
+    int result = plc->writeBytes(dbNo, byteNo2, 1, &buffer);
 
     return (result == 0);
 }
@@ -173,7 +170,7 @@ bool plcControlThread::plcCmd_Z_Center(){
 bool plcControlThread::plcCmd_Z_Up(){
     unsigned char buffer = MASK_CMD_Z_UP;
 
-    int result = plc->writeBytes(dbNo, 1, 1, &buffer);
+    int result = plc->writeBytes(dbNo, byteNo2, 1, &buffer);
 
     return (result == 0);
 }
@@ -181,14 +178,15 @@ bool plcControlThread::plcCmd_Z_Up(){
 bool plcControlThread::plcCmd_Z_Down(){
     unsigned char buffer = MASK_CMD_Z_DOWN;
 
-    int result = plc->writeBytes(dbNo, 1, 1, &buffer);
+    int result = plc->writeBytes(dbNo, byteNo2, 1, &buffer);
 
     return (result == 0);
 }
 
 
 bool plcControlThread::readDistanceValue(){
-// customized for s7200 address:VW2
+// customized for s7-200 start address:VW2
+// customized for s7-300 start address:DBX.dbw2
 
     int result;
 
