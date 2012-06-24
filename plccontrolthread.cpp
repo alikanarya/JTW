@@ -66,19 +66,6 @@ void plcControlThread::run(){
                 }
             }
 
-            if (w->goZ) {
-                if (commandZState == _CMD_Z_CENTER){           // no action
-                    result = plcCmd_Z_Center();
-                } else
-                    if (commandZState == _CMD_Z_UP){           // action to up
-                        result = plcCmd_Z_Up();
-                    } else
-                        if (commandZState == _CMD_Z_DOWN){           // action to down
-                            result = plcCmd_Z_Down();
-
-                        }
-            }
-
             if (commandRead) {
 
                 readDistanceValue();

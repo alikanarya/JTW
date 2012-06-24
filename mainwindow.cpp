@@ -386,29 +386,14 @@ void MainWindow:: plcControl(){
             goX = true;
         }
 
-        goZ = false;
-        if (stateZ != cmdZStatePrev) {
 
-            ///* DEBUG
-                 if (cmdZState == _CMD_Z_UP) ui->plainTextEdit->appendPlainText("A");
-                 if (cmdZState == _CMD_Z_DOWN) ui->plainTextEdit->appendPlainText("V");
-                 if (cmdZState == _CMD_Z_CENTER) ui->plainTextEdit->appendPlainText("-");
-            //*/
-
-            goZ = true;
-
-        }
-
-
-        if (goX || goZ || !cmdSended || threadPLCControl->commandRead) {
+        if (goX || !cmdSended || threadPLCControl->commandRead) {
 
             cmdSended = false;
 
             if (!threadPLCControl->isRunning()){
 
                 threadPLCControl->commandState = state;
-
-                threadPLCControl->commandZState = stateZ;
 
                 threadPLCControl->start();
 
@@ -421,7 +406,6 @@ void MainWindow:: plcControl(){
             cmdStatePrev = state;
         }
 
-        cmdZStatePrev = stateZ;
     }
 
 /* the original
@@ -767,13 +751,6 @@ void MainWindow::controlButton(){
             distanceTarget = distance;
             calcZParameters();
 
-            ///* DEBUG
-            ui->plainTextEdit->appendPlainText("z-upstart: " + QString::number(distanceUpStart, 'f', 1));
-            ui->plainTextEdit->appendPlainText("z-upstop: " + QString::number(distanceUpStop, 'f', 1));
-            ui->plainTextEdit->appendPlainText("z-target: " + QString::number(distanceTarget, 'f', 1));
-            ui->plainTextEdit->appendPlainText("z-downstop: " + QString::number(distanceDownStop, 'f', 1));
-            ui->plainTextEdit->appendPlainText("z-downstart: " + QString::number(distanceDownStart, 'f', 1));
-            //*/
         }
 
     } else {
@@ -959,30 +936,6 @@ void MainWindow::processImage(){
     if ( iprocessInitSwitch ) {
         iprocessInitSwitch = false;
         delete iprocess;
-    }
-
-
-    // Z CONTROL
-
-    if ( zControlActive && controlOn ) {
-
-        if ( distance >= distanceUpStart )
-            cmdZState = _CMD_Z_UP;
-        else
-        if ( distance <= distanceDownStart )
-            cmdZState = _CMD_Z_DOWN;
-        else
-        if ( cmdZStatePrev2 == _CMD_Z_UP && distance <= distanceUpStop )
-            cmdZState = _CMD_Z_CENTER;
-        else
-        if ( cmdZStatePrev2 == _CMD_Z_DOWN && distance >= distanceDownStop )
-            cmdZState = _CMD_Z_CENTER;
-        else
-        if ( cmdZStatePrev2 != _CMD_Z_UP && cmdZStatePrev2 != _CMD_Z_DOWN )
-            cmdZState = _CMD_Z_CENTER;
-        else;
-
-        cmdZStatePrev2 = cmdZState;
     }
 
 }
