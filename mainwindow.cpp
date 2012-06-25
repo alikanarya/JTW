@@ -29,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->labelLogoCustomer->hide();
     ui->labelTime->hide();
     ui->emergencyButton->hide();
+    ui->zControlButton->hide();
     ui->testEdit->hide();
 
     // icon assignmets
@@ -229,8 +230,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // z control
     distanceRaw = 32000;  // to make distance neg read initially
-    ui->distanceUpTolEdit->setText( QString::number(distanceUpTol, 'f', 1) );
-    ui->distanceDownTolEdit->setText( QString::number(distanceDownTol, 'f', 1) );
     zStartStopRate = 0.3;
 
 
@@ -845,18 +844,6 @@ void MainWindow::zControlButton(){
     } else {
         ui->zControlButton->setStyleSheet("color: rgb(0, 0, 0)");
     }
-}
-
-
-void MainWindow::getUpTol(){
-
-    distanceUpTol = ui->distanceUpTolEdit->text().toFloat();
-}
-
-
-void MainWindow::getDownTol(){
-
-    distanceDownTol = ui->distanceDownTolEdit->text().toFloat();
 }
 
 

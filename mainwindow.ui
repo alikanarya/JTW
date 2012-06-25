@@ -957,12 +957,12 @@ background-color: rgb(236, 233, 216);</string>
    </widget>
    <widget class="QPushButton" name="zControlButton">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>30</y>
+      <x>440</x>
+      <y>0</y>
       <width>32</width>
       <height>32</height>
      </rect>
@@ -1071,46 +1071,6 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="distanceUpTolEdit">
-    <property name="geometry">
-     <rect>
-      <x>560</x>
-      <y>660</y>
-      <width>51</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="inputMask">
-     <string>0.0;0</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="distanceDownTolEdit">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>660</y>
-      <width>51</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>9</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="inputMask">
-     <string>0.0;0</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="testEdit">
@@ -1361,8 +1321,8 @@ color: rgb(0, 0, 255);</string>
    <slot>emergencyButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>531</x>
-     <y>732</y>
+     <x>361</x>
+     <y>52</y>
     </hint>
     <hint type="destinationlabel">
      <x>1040</x>
@@ -1483,46 +1443,14 @@ color: rgb(0, 0, 255);</string>
    </hints>
   </connection>
   <connection>
-   <sender>distanceUpTolEdit</sender>
-   <signal>returnPressed()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>getUpTol()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>633</x>
-     <y>655</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>659</x>
-     <y>658</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>distanceDownTolEdit</sender>
-   <signal>returnPressed()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>getDownTol()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>607</x>
-     <y>683</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>659</x>
-     <y>690</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>testEdit</sender>
    <signal>returnPressed()</signal>
    <receiver>MainWindow</receiver>
    <slot>testEdit()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>470</x>
-     <y>34</y>
+     <x>520</x>
+     <y>55</y>
     </hint>
     <hint type="destinationlabel">
      <x>385</x>

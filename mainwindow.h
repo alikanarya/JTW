@@ -324,8 +324,7 @@ private slots:
     void showReport();
     void thinJointButton();
     void zControlButton();
-    void getUpTol();
-    void getDownTol();
+
 
     // process controls
     void update();                                  // 1msec timer actions

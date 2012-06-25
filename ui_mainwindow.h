@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat 2. Jun 21:35:56 2012
+** Created: Mon 25. Jun 23:14:57 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -66,8 +66,6 @@ public:
     QPushButton *zControlButton;
     QLabel *labelDistanceTag;
     QLabel *labelDistance;
-    QLineEdit *distanceUpTolEdit;
-    QLineEdit *distanceDownTolEdit;
     QLineEdit *testEdit;
     QLabel *labelDistanceTag2;
     QMenuBar *menuBar;
@@ -374,8 +372,8 @@ public:
         thinJointButton->setFlat(false);
         zControlButton = new QPushButton(centralWidget);
         zControlButton->setObjectName(QString::fromUtf8("zControlButton"));
-        zControlButton->setEnabled(true);
-        zControlButton->setGeometry(QRect(410, 30, 32, 32));
+        zControlButton->setEnabled(false);
+        zControlButton->setGeometry(QRect(440, 0, 32, 32));
         QFont font6;
         font6.setPointSize(8);
         font6.setBold(false);
@@ -411,22 +409,14 @@ public:
         labelDistance->setFrameShape(QFrame::NoFrame);
         labelDistance->setLineWidth(2);
         labelDistance->setAlignment(Qt::AlignCenter);
-        distanceUpTolEdit = new QLineEdit(centralWidget);
-        distanceUpTolEdit->setObjectName(QString::fromUtf8("distanceUpTolEdit"));
-        distanceUpTolEdit->setGeometry(QRect(560, 660, 51, 20));
-        QFont font8;
-        font8.setPointSize(9);
-        font8.setBold(true);
-        font8.setWeight(75);
-        distanceUpTolEdit->setFont(font8);
-        distanceDownTolEdit = new QLineEdit(centralWidget);
-        distanceDownTolEdit->setObjectName(QString::fromUtf8("distanceDownTolEdit"));
-        distanceDownTolEdit->setGeometry(QRect(610, 660, 51, 20));
-        distanceDownTolEdit->setFont(font8);
         testEdit = new QLineEdit(centralWidget);
         testEdit->setObjectName(QString::fromUtf8("testEdit"));
         testEdit->setEnabled(false);
         testEdit->setGeometry(QRect(520, 30, 51, 20));
+        QFont font8;
+        font8.setPointSize(9);
+        font8.setBold(true);
+        font8.setWeight(75);
         testEdit->setFont(font8);
         labelDistanceTag2 = new QLabel(centralWidget);
         labelDistanceTag2->setObjectName(QString::fromUtf8("labelDistanceTag2"));
@@ -467,8 +457,6 @@ public:
         QObject::connect(rightButton, SIGNAL(clicked()), MainWindow, SLOT(target2Right()));
         QObject::connect(thinJointButton, SIGNAL(clicked()), MainWindow, SLOT(thinJointButton()));
         QObject::connect(zControlButton, SIGNAL(clicked()), MainWindow, SLOT(zControlButton()));
-        QObject::connect(distanceUpTolEdit, SIGNAL(returnPressed()), MainWindow, SLOT(getUpTol()));
-        QObject::connect(distanceDownTolEdit, SIGNAL(returnPressed()), MainWindow, SLOT(getDownTol()));
         QObject::connect(testEdit, SIGNAL(returnPressed()), MainWindow, SLOT(testEdit()));
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -562,8 +550,6 @@ public:
         zControlButton->setText(QString());
         labelDistanceTag->setText(QString());
         labelDistance->setText(QApplication::translate("MainWindow", "000.0", 0, QApplication::UnicodeUTF8));
-        distanceUpTolEdit->setInputMask(QApplication::translate("MainWindow", "0.0;0", 0, QApplication::UnicodeUTF8));
-        distanceDownTolEdit->setInputMask(QApplication::translate("MainWindow", "0.0;0", 0, QApplication::UnicodeUTF8));
         testEdit->setInputMask(QString());
         labelDistanceTag2->setText(QApplication::translate("MainWindow", "(mm)", 0, QApplication::UnicodeUTF8));
     } // retranslateUi

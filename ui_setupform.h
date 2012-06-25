@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'setupform.ui'
 **
-** Created: Fri 16. Dec 10:12:05 2011
+** Created: Mon 25. Jun 22:49:00 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -81,6 +81,7 @@ public:
     QLineEdit *editIPI;
     QLineEdit *editFPS;
     QComboBox *subTypeBox;
+    QCheckBox *zctrlBox;
 
     void setupUi(QWidget *setupForm)
     {
@@ -323,6 +324,14 @@ public:
         subTypeBox = new QComboBox(setupForm);
         subTypeBox->setObjectName(QString::fromUtf8("subTypeBox"));
         subTypeBox->setGeometry(QRect(550, 380, 111, 22));
+        zctrlBox = new QCheckBox(setupForm);
+        zctrlBox->setObjectName(QString::fromUtf8("zctrlBox"));
+        zctrlBox->setGeometry(QRect(540, 450, 131, 17));
+        QFont font2;
+        font2.setPointSize(10);
+        font2.setBold(false);
+        font2.setWeight(50);
+        zctrlBox->setFont(font2);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -332,6 +341,7 @@ public:
         QObject::connect(saveExitButton, SIGNAL(clicked()), setupForm, SLOT(saveExitButton()));
         QObject::connect(checkSubImage, SIGNAL(clicked()), setupForm, SLOT(subImageCheck()));
         QObject::connect(subTypeBox, SIGNAL(currentIndexChanged(int)), setupForm, SLOT(subType()));
+        QObject::connect(zctrlBox, SIGNAL(stateChanged(int)), setupForm, SLOT(zctrlBox()));
 
         QMetaObject::connectSlotsByName(setupForm);
     } // setupUi
@@ -405,6 +415,7 @@ public:
          << QApplication::translate("setupForm", "Bo\305\237luk Algo", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("setupForm", "Doluluk Algo", 0, QApplication::UnicodeUTF8)
         );
+        zctrlBox->setText(QApplication::translate("setupForm", "Y\303\274kseklik Kontrol\303\274", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

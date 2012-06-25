@@ -984,6 +984,26 @@
     </property>
    </item>
   </widget>
+  <widget class="QCheckBox" name="zctrlBox">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>450</y>
+     <width>131</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Yükseklik Kontrolü</string>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="icons.qrc"/>
@@ -1101,6 +1121,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>zctrlBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>setupForm</receiver>
+   <slot>zctrlBox()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>552</x>
+     <y>455</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>534</x>
+     <y>453</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>captureButton()</slot>
@@ -1110,5 +1146,6 @@
   <slot>exitButton()</slot>
   <slot>subImageCheck()</slot>
   <slot>subType()</slot>
+  <slot>zctrlBox()</slot>
  </slots>
 </ui>

@@ -2,6 +2,8 @@
 #include "ui_setupform.h"
 
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
+
 #include <QTextCodec>
 
 extern MainWindow *w;
@@ -41,6 +43,10 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
             ui->subTypeBox->setCurrentIndex(1);
             break;
     }
+
+    if (w->zControlActive)
+        ui->zctrlBox->setChecked(true);
+
 }
 
 
@@ -572,6 +578,10 @@ void setupForm::saveExitButton(){
     this->close();
 }
 
+void setupForm::zctrlBox(){
+    w->zControlActive = ui->zctrlBox->isChecked();
+}
+
 
 void setupForm::exitButton(){
 
@@ -594,6 +604,19 @@ setupForm::~setupForm(){
     if (iprocessRightInitSwitch) {
         delete iprocessRight;
         iprocessRightInitSwitch = false;
+    }
+
+    if (w->zControlActive){
+        //w->ui->zControlButton->setIcon(w->zIconEnabled);
+        w->ui->labelDistance->show();
+        w->ui->labelDistanceTag->show();
+        w->ui->labelDistanceTag2->show();
+
+    } else {
+        //w->ui->zControlButton->setIcon(w->zIconDisabled);
+        w->ui->labelDistance->hide();
+        w->ui->labelDistanceTag->hide();
+        w->ui->labelDistanceTag2->hide();
     }
 }
 

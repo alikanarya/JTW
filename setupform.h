@@ -70,6 +70,10 @@ public slots:
 
 private:
     Ui::setupForm *ui;
+
+private slots:
+    void zctrlBox();
+
 };
 
 #endif // SETUPFORM_H
