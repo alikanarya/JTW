@@ -653,7 +653,48 @@ void MainWindow::guideButton(){
     ui->leftButton->setEnabled( showGuide && !trackOn );
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
-    // /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+
+    // /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    if ( !imageGetter->imageList.isEmpty() ){
+        targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
+        iprocess->constructValueMatrix( iprocess->imgOrginal );
+        iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
+        iprocess->imgOrginal.save(savePath + "org.jpg");
+
+        iprocess->saveMatrix( iprocess->edgeThickenedMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_edge.csv" );
+        QImage img = iprocess->imgOrginal.copy();
+        QRgb black, white;
+        black = qRgb(0, 0, 0);
+        white = qRgb(255, 255, 255);
+        img.fill(black);
+
+        for(int y = 0; y < iprocess->imageHeight; y++)
+            for(int x = 0; x < iprocess->imageWidth; x++)
+                if (iprocess->edgeThickenedMatrix[y][x] == 1) img.setPixel(x, y, white);
+
+        img.save(savePath + "contrast.jpg");
+
+        iprocess->thetaMin = 80;
+        iprocess->thetaMax = 100;
+        iprocess->thetaStep = 0.1;
+
+        iprocess->houghTransformExtended();
+
+        iprocess->calculateHoughMaxs( 50 );            // get max voted line(s)
+        iprocess->calcAvgDistAndAngleOfMajors();    // calc. avg. distance and theta
+        iprocess->constructHoughExtendedMatrixMajor2Lines();
+        iprocess->getImage(iprocess->houghExtendedMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "lines.jpg");
+
+        delete iprocess;
+        iprocessInitSwitch = false;
+
+    }
+    // */
+
+
+    /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -661,21 +702,6 @@ void MainWindow::guideButton(){
         iprocess->constructValueMatrix( iprocess->imgOrginal );
         iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
 
-    iprocess->saveMatrix( iprocess->edgeThickenedMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_edge.csv" );
-    //QImage *img2 = new QImage( iprocess->imageWidth, iprocess->imageHeight, QImage::Format_Mono);
-    QImage img = iprocess->imgOrginal.copy();
-    QRgb black, white;
-    black = qRgb(0, 0, 0);
-    white = qRgb(255, 255, 255);
-    img.fill(black);
-
-    for(int y = 0; y < iprocess->imageHeight; y++)
-        for(int x = 0; x < iprocess->imageWidth; x++)
-            if (iprocess->edgeThickenedMatrix[y][x] == 255) img.setPixel(x, y, white);
-            //else
-              //  img->setPixel(x, y, white);
-
-    img.save(savePath + "edge.jpg");
 
         iprocess->imgOrginal.save(savePath + "org.jpg");
         iprocess->detectThinJointCenter(3, 31);
@@ -710,7 +736,6 @@ void MainWindow::guideButton(){
         };
 
         //        iprocess->drawLines(bestLines, 21).save(savePath + "bestLines.jpg");
-        /*
         minCostedLines *pointer = new minCostedLines();
         for (int i=0;i<31;i++){
             pointer->c = iprocess->bestLines[i].c;
@@ -718,11 +743,10 @@ void MainWindow::guideButton(){
             iprocess->drawLine(pointer, iprocess->slope[i]).save(savePath + "bestLineOfEachAngle"+QString::number(i)+".jpg");
         }
         delete pointer;
-        */
         delete iprocess;
         iprocessInitSwitch = false;
     }
-    // */
+    */
 
 }
 
