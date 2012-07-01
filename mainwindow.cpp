@@ -659,11 +659,15 @@ void MainWindow::guideButton(){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
         iprocessInitSwitch = true;
-        iprocess->constructValueMatrix( iprocess->imgOrginal );
-        iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
-        iprocess->imgOrginal.save(savePath + "org.jpg");
+        iprocess->imgOrginal.save(savePath + "image_org.jpg");
 
-        iprocess->saveMatrix( iprocess->edgeThickenedMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_edge.csv" );
+        iprocess->constructValueMatrix( iprocess->imgOrginal );
+        //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
+
+        iprocess->constructContrastMatix(3);
+        //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast.csv" );
+
+
         QImage img = iprocess->imgOrginal.copy();
         QRgb black, white;
         black = qRgb(0, 0, 0);
@@ -672,20 +676,29 @@ void MainWindow::guideButton(){
 
         for(int y = 0; y < iprocess->imageHeight; y++)
             for(int x = 0; x < iprocess->imageWidth; x++)
-                if (iprocess->edgeThickenedMatrix[y][x] == 1) img.setPixel(x, y, white);
+                if (iprocess->contrastMatrix[y][x] == 1) img.setPixel(x, y, white);
 
-        img.save(savePath + "contrast.jpg");
+        img.save(savePath + "image_contrast.jpg");
 
-        iprocess->thetaMin = 80;
-        iprocess->thetaMax = 100;
-        iprocess->thetaStep = 0.1;
 
-        iprocess->houghTransformExtended();
+        iprocess->thetaMin = -20;
+        iprocess->thetaMax = 20;
+        iprocess->thetaStep = 1;
 
-        iprocess->calculateHoughMaxs( 50 );            // get max voted line(s)
-        iprocess->calcAvgDistAndAngleOfMajors();    // calc. avg. distance and theta
+        iprocess->houghTransformContrast();;
+
+        iprocess->calculateHoughMaxs( 100 );            // get max voted line(s)
+        //iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines.csv");
+
+        iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
+        ui->plainTextEdit->appendPlainText(QString::number(iprocess->major2Lines[0].distance) + "," + QString::number(iprocess->major2Lines[0].angle));
+        ui->plainTextEdit->appendPlainText(QString::number(iprocess->major2Lines[1].distance) + "," + QString::number(iprocess->major2Lines[1].angle));
+
         iprocess->constructHoughExtendedMatrixMajor2Lines();
+        iprocess->saveMatrix( iprocess->houghExtendedMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_houghExtended.csv" );
         iprocess->getImage(iprocess->houghExtendedMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "lines.jpg");
+
+
 
         delete iprocess;
         iprocessInitSwitch = false;
@@ -1028,7 +1041,7 @@ void MainWindow::processSubImageVoidness(){
             iprocessLeft->houghTransform();                 // detect lines in edge image
 
             iprocessLeft->calculateHoughMaxs( 50 );         // get max voted line(s)
-            iprocessLeft->calcAvgDistAndAngleOfMajors();    // calc. avg. distance and theta
+            iprocessLeft->calcAvgDistAndAngleOfMajors(0.8);    // calc. avg. distance and theta
 
             iprocessLeft->primaryLineDetected = true;       // bypass line vote check
             iprocessLeft->detectVoidLinesEdge();            // detect void lines on hough lines in edge image
@@ -1050,7 +1063,7 @@ void MainWindow::processSubImageVoidness(){
             iprocessRight->houghTransform();                // detect lines in edge image
 
             iprocessRight->calculateHoughMaxs( 50 );        // get max voted line(s)
-            iprocessRight->calcAvgDistAndAngleOfMajors();   // calc. avg. distance and theta
+            iprocessRight->calcAvgDistAndAngleOfMajors(0.8);   // calc. avg. distance and theta
 
             iprocessRight->primaryLineDetected = true;      // bypass line vote check
             iprocessRight->detectVoidLinesEdge();           // detect void lines on hough lines in edge image

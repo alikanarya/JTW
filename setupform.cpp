@@ -147,7 +147,7 @@ void setupForm::processSubImageVoidness(){
         iprocessLeft->houghTransform();                 // detect lines in edge image
 
         iprocessLeft->calculateHoughMaxs( 50 );         // get max voted line(s)
-        iprocessLeft->calcAvgDistAndAngleOfMajors();    // calc. avg. distance and theta
+        iprocessLeft->calcAvgDistAndAngleOfMajors(0.8);    // calc. avg. distance and theta
 
         iprocessLeft->primaryLineDetected = true;       // bypass line vote check
         iprocessLeft->detectVoidLinesEdge();            // detect void lines on hough lines in EDGE image
@@ -170,7 +170,7 @@ void setupForm::processSubImageVoidness(){
         iprocessRight->houghTransform();                // detect lines in edge image
 
         iprocessRight->calculateHoughMaxs( 50 );        // get max voted line(s)
-        iprocessRight->calcAvgDistAndAngleOfMajors();   // calc. avg. distance and theta
+        iprocessRight->calcAvgDistAndAngleOfMajors(0.8);   // calc. avg. distance and theta
 
         iprocessRight->primaryLineDetected = true;      // bypass line vote check
         iprocessRight->detectVoidLinesEdge();           // detect void lines on hough lines in EDGE image
