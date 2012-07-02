@@ -596,7 +596,8 @@ void MainWindow::analyzeButton(){
 
         if ( thinJointAlgoActive ) {
 
-            processThinJoint();
+            //processThinJoint();
+            processContrastDetection();
 
         } else {
 
@@ -654,7 +655,7 @@ void MainWindow::guideButton(){
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
 
-    // /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -691,20 +692,20 @@ void MainWindow::guideButton(){
         //iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines.csv");
 
         iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
-        ui->plainTextEdit->appendPlainText(QString::number(iprocess->major2Lines[0].distance) + "," + QString::number(iprocess->major2Lines[0].angle));
-        ui->plainTextEdit->appendPlainText(QString::number(iprocess->major2Lines[1].distance) + "," + QString::number(iprocess->major2Lines[1].angle));
+        ui->plainTextEdit->appendPlainText("dist: " + QString::number(iprocess->major2Lines[0].distance) + ", angle: " + QString::number(iprocess->major2Lines[0].angle));
+        ui->plainTextEdit->appendPlainText("dist: " + QString::number(iprocess->major2Lines[1].distance) + ", angle: " + QString::number(iprocess->major2Lines[1].angle));
+        iprocess->constructContrastMatrixMajor2Lines();
+        //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast_lines.csv" );
+        iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "image_lines.jpg");
 
-        iprocess->constructHoughExtendedMatrixMajor2Lines();
-        iprocess->saveMatrix( iprocess->houghExtendedMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_houghExtended.csv" );
-        iprocess->getImage(iprocess->houghExtendedMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "lines.jpg");
-
-
+        iprocess->detectContrastCenter();
+        iprocess->cornerImage().save(savePath + "image_corner.jpg");
+        ui->plainTextEdit->appendPlainText("avg dist, angle: " + QString::number(iprocess->distanceAvg) + ", " + QString::number(iprocess->angleAvg));
 
         delete iprocess;
         iprocessInitSwitch = false;
-
     }
-    // */
+    */
 
 
     /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
@@ -773,10 +774,10 @@ void MainWindow::trackButton(){
     } else {
         ui->trackButton->setIcon(trackOffIcon);
     }
-/*
+
     ui->leftButton->setEnabled( showGuide && !trackOn );
     ui->rightButton->setEnabled( showGuide && !trackOn );
-*/
+
     ui->thinJointButton->setEnabled(!trackOn);
 }
 
@@ -907,7 +908,8 @@ void MainWindow::processImage(){
 
     if ( thinJointAlgoActive ) {
 
-        processThinJoint();
+//        processThinJoint();
+        processContrastDetection();
 
     } else {
 
@@ -1122,6 +1124,37 @@ void MainWindow::processThinJoint(){
         iprocess->constructValueMatrix( iprocess->imgOrginal );
 
         iprocess->detectThinJointCenter(3, 31);
+    }
+}
+
+
+void MainWindow::processContrastDetection(){
+
+    if ( !imageGetter->imageList.isEmpty() ){
+
+        targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+
+        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
+
+        iprocess->constructValueMatrix( iprocess->imgOrginal );
+
+        iprocess->constructContrastMatix(3);
+
+        iprocess->thetaMin = -10;
+        iprocess->thetaMax = 10;
+        iprocess->thetaStep = 0.5;
+
+        iprocess->houghTransformContrast();;
+
+        iprocess->calculateHoughMaxs( 100 );            // get max voted line(s)
+
+        iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
+
+        iprocess->constructContrastMatrixMajor2Lines();
+
+        iprocess->detectContrastCenter();
+
     }
 }
 
