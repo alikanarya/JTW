@@ -655,57 +655,60 @@ void MainWindow::guideButton(){
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
 
-    /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    // /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
         iprocessInitSwitch = true;
-        iprocess->imgOrginal.save(savePath + "image_org.jpg");
+            iprocess->imgOrginal.save(savePath + "image_org.jpg");
 
         iprocess->constructValueMatrix( iprocess->imgOrginal );
-        //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
+            //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
 
         iprocess->constructContrastMatix(3);
-        //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast.csv" );
+            //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast.csv" );
 
 
-        QImage img = iprocess->imgOrginal.copy();
-        QRgb black, white;
-        black = qRgb(0, 0, 0);
-        white = qRgb(255, 255, 255);
-        img.fill(black);
+            QImage img = iprocess->imgOrginal.copy();
+            QRgb black, white;
+            black = qRgb(0, 0, 0);
+            white = qRgb(255, 255, 255);
+            img.fill(black);
 
-        for(int y = 0; y < iprocess->imageHeight; y++)
-            for(int x = 0; x < iprocess->imageWidth; x++)
-                if (iprocess->contrastMatrix[y][x] == 1) img.setPixel(x, y, white);
+            for(int y = 0; y < iprocess->imageHeight; y++)
+                for(int x = 0; x < iprocess->imageWidth; x++)
+                    if (iprocess->contrastMatrix[y][x] == 1) img.setPixel(x, y, white);
 
-        img.save(savePath + "image_contrast.jpg");
+            img.save(savePath + "image_contrast.jpg");
 
 
-        iprocess->thetaMin = -20;
-        iprocess->thetaMax = 20;
+        iprocess->thetaMin = -6;
+        iprocess->thetaMax = 6;
         iprocess->thetaStep = 1;
 
         iprocess->houghTransformContrast();;
 
-        iprocess->calculateHoughMaxs( 100 );            // get max voted line(s)
-        //iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines.csv");
+        iprocess->calculateHoughMaxs( 200 );            // get max voted line(s)
 
         iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
-        ui->plainTextEdit->appendPlainText("dist: " + QString::number(iprocess->major2Lines[0].distance) + ", angle: " + QString::number(iprocess->major2Lines[0].angle));
-        ui->plainTextEdit->appendPlainText("dist: " + QString::number(iprocess->major2Lines[1].distance) + ", angle: " + QString::number(iprocess->major2Lines[1].angle));
+            ui->plainTextEdit->appendPlainText("dist: " + QString::number(iprocess->major2Lines[0].distance) + ", angle: " + QString::number(iprocess->major2Lines[0].angle));
+            ui->plainTextEdit->appendPlainText("dist: " + QString::number(iprocess->major2Lines[1].distance) + ", angle: " + QString::number(iprocess->major2Lines[1].angle));
+            ui->plainTextEdit->appendPlainText("losize: " + QString::number(iprocess->lowLinesList.size()));
+            iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines.csv");
+            iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines_distance.csv");
+
         iprocess->constructContrastMatrixMajor2Lines();
-        //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast_lines.csv" );
-        iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "image_lines.jpg");
+            //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast_lines.csv" );
+            iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "image_lines.jpg");
 
         iprocess->detectContrastCenter();
-        iprocess->cornerImage().save(savePath + "image_corner.jpg");
-        ui->plainTextEdit->appendPlainText("avg dist, angle: " + QString::number(iprocess->distanceAvg) + ", " + QString::number(iprocess->angleAvg));
+            iprocess->cornerImage().save(savePath + "image_corner.jpg");
+            ui->plainTextEdit->appendPlainText("avg dist, angle: " + QString::number(iprocess->distanceAvg) + ", " + QString::number(iprocess->angleAvg));
 
         delete iprocess;
         iprocessInitSwitch = false;
     }
-    */
+    // */
 
 
     /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
@@ -1141,13 +1144,13 @@ void MainWindow::processContrastDetection(){
 
         iprocess->constructContrastMatix(3);
 
-        iprocess->thetaMin = -10;
-        iprocess->thetaMax = 10;
-        iprocess->thetaStep = 0.5;
+        iprocess->thetaMin = -6;
+        iprocess->thetaMax = 6;
+        iprocess->thetaStep = 1;
 
         iprocess->houghTransformContrast();;
 
-        iprocess->calculateHoughMaxs( 100 );            // get max voted line(s)
+        iprocess->calculateHoughMaxs( 200 );            // get max voted line(s)
 
         iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
 
