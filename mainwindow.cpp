@@ -663,9 +663,9 @@ void MainWindow::guideButton(){
             iprocess->imgOrginal.save(savePath + "image_org.jpg");
 
         iprocess->constructValueMatrix( iprocess->imgOrginal );
-            //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
+            iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
 
-        iprocess->constructContrastMatix(3);
+        iprocess->constructContrastMatix(5);
             //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast.csv" );
 
 
@@ -684,11 +684,11 @@ void MainWindow::guideButton(){
 
         iprocess->thetaMin = -6;
         iprocess->thetaMax = 6;
-        iprocess->thetaStep = 1;
+        iprocess->thetaStep = 0.5;
 
-        iprocess->houghTransformContrast();;
+        iprocess->houghTransformContrast();
 
-        iprocess->calculateHoughMaxs( 200 );            // get max voted line(s)
+        iprocess->calculateHoughMaxs(200);              // get max voted line(s)
 
         iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
             ui->plainTextEdit->appendPlainText("dist: " + QString::number(iprocess->major2Lines[0].distance) + ", angle: " + QString::number(iprocess->major2Lines[0].angle));
