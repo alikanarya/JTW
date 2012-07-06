@@ -655,7 +655,7 @@ void MainWindow::guideButton(){
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
 
-    // /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+     /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -665,7 +665,7 @@ void MainWindow::guideButton(){
         iprocess->constructValueMatrix( iprocess->imgOrginal );
             iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
 
-        iprocess->constructContrastMatix(5);
+        iprocess->constructContrastMatix(3);
             //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast.csv" );
 
 
@@ -708,7 +708,7 @@ void MainWindow::guideButton(){
         delete iprocess;
         iprocessInitSwitch = false;
     }
-    // */
+     */
 
 
     /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
@@ -1146,7 +1146,7 @@ void MainWindow::processContrastDetection(){
 
         iprocess->thetaMin = -6;
         iprocess->thetaMax = 6;
-        iprocess->thetaStep = 1;
+        iprocess->thetaStep = 0.5;
 
         iprocess->houghTransformContrast();;
 
