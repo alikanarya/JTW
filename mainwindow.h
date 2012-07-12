@@ -143,6 +143,8 @@ public:
     // ui control vars
     bool play, pause, showGuide, trackOn, controlOn;
     bool controlDelayValid;
+    bool controlInitiated;
+    bool jointWidthControlActive;
 
     // image framing vars
     int imageWidth, imageHeight;
@@ -173,6 +175,9 @@ public:
     bool thinJointAlgoActive;
     bool errorStopLimitLineVisible;
     float errorStopScale;
+    int initialJointWidth;
+    int maxJointWidth;
+    int jointWidth;
 
     // Z-Control
     bool zControlActive;

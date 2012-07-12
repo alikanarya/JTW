@@ -188,6 +188,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     addAxis();
 
     // weld commands init.
+    controlInitiated = false;
+    initialJointWidth = jointWidth = 0;
+    maxJointWidth = 1000;
+    jointWidthControlActive = true;
+
     cmdState = _CMD_STOP;
     cmdStatePrev2 = _CMD_CENTER;
     ui->cmdStatus->setIcon(QIcon());
@@ -326,6 +331,7 @@ void MainWindow::update(){
 
 
 void MainWindow:: plcControl(){
+
     controlThreadCount++;
 
     checker();
@@ -790,6 +796,9 @@ void MainWindow::controlButton(){
     controlOn = !controlOn;
 
     if (controlOn){
+
+        controlInitiated = true;
+
         weldCommands.clear();
         weldCommandsSize = controlDelay / timerControlInterval;
 
@@ -813,6 +822,11 @@ void MainWindow::controlButton(){
         }
 
     } else {
+
+        controlInitiated = false;
+        initialJointWidth = jointWidth = 0;
+        maxJointWidth = 1000;
+
         cmdState = _CMD_STOP;
 
         ui->controlButton->setIcon(controlOffIcon);
@@ -937,6 +951,16 @@ void MainWindow::processImage(){
     // if center of track is not an error, append dev. to trend data list OR append error code to list
     if (iprocess->detected){
 
+        if (controlInitiated) {
+
+            initialJointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
+            maxJointWidth = initialJointWidth * 1.2;
+                //ui->plainTextEdit->appendPlainText(QString::number(initialJointWidth) + ", " + QString::number(maxJointWidth));
+            controlInitiated = false;
+        }
+
+        jointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
+
         int error = iprocess->trackCenterX - (frameWidth/2);
         deviationData.append(error);
 
@@ -955,22 +979,30 @@ void MainWindow::processImage(){
 
         detectionError = false;
 
-        int index = deviationData.size() - 1;
+        if (jointWidthControlActive && (jointWidth > maxJointWidth || jointWidth == 1) ) {
 
-        if (deviationData[index] >= errorLimit){
-            cmdState = _CMD_RIGHT;
-        } else
-        if (deviationData[index] <= errorLimitNeg){
-            cmdState = _CMD_LEFT;
-        } else
-        if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
             cmdState = _CMD_CENTER;
-        } else
-        if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
-            cmdState = _CMD_CENTER;
-        } else
-        if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
-            cmdState = _CMD_CENTER;
+                //ui->plainTextEdit->appendPlainText("error");
+
+        } else {
+
+            int index = deviationData.size() - 1;
+
+            if (deviationData[index] >= errorLimit ){
+                cmdState = _CMD_RIGHT;
+            } else
+            if (deviationData[index] <= errorLimitNeg){
+                cmdState = _CMD_LEFT;
+            } else
+            if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
+                cmdState = _CMD_CENTER;
+            } else
+            if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
+                cmdState = _CMD_CENTER;
+            } else
+            if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
+                cmdState = _CMD_CENTER;
+            }
         }
 
         cmdStatePrev2 = cmdState;
@@ -1154,7 +1186,7 @@ void MainWindow::processContrastDetection(){
 
         iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
 
-        iprocess->constructContrastMatrixMajor2Lines();
+        //iprocess->constructContrastMatrixMajor2Lines();
 
         iprocess->detectContrastCenter();
 
