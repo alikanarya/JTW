@@ -661,7 +661,7 @@ void MainWindow::guideButton(){
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
 
-     /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    // /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -671,8 +671,22 @@ void MainWindow::guideButton(){
         iprocess->constructValueMatrix( iprocess->imgOrginal );
             iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
 
+
+            iprocess->detectEdgeSobel();
+
+        for (int y = 0; y < iprocess->edgeHeight; y++)
+            for (int x = 0; x < iprocess->edgeWidth; x++)
+                if (iprocess->edgeMatrix[y][x] == 255)
+                    iprocess->edgeMatrix[y][x] = 1;
+                else
+                    iprocess->edgeMatrix[y][x] = 0;
+
+            iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge.csv");
+
+
         iprocess->constructContrastMatix(3);
             //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast.csv" );
+        /*
 
 
             QImage img = iprocess->imgOrginal.copy();
@@ -686,22 +700,24 @@ void MainWindow::guideButton(){
                     if (iprocess->contrastMatrix[y][x] == 1) img.setPixel(x, y, white);
 
             img.save(savePath + "image_contrast.jpg");
-
+        */
 
         iprocess->thetaMin = -6;
         iprocess->thetaMax = 6;
         iprocess->thetaStep = 0.5;
 
-        iprocess->houghTransformContrast();
+        iprocess->houghTransform();
+        //iprocess->houghTransformContrast();
 
         iprocess->calculateHoughMaxs(200);              // get max voted line(s)
 
-        iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
+        iprocess->calcAvgDistAndAngleOfMajors(0.80);    // calc. avg. distance and theta
+//        iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
             ui->plainTextEdit->appendPlainText("dist: " + QString::number(iprocess->major2Lines[0].distance) + ", angle: " + QString::number(iprocess->major2Lines[0].angle));
             ui->plainTextEdit->appendPlainText("dist: " + QString::number(iprocess->major2Lines[1].distance) + ", angle: " + QString::number(iprocess->major2Lines[1].angle));
             ui->plainTextEdit->appendPlainText("losize: " + QString::number(iprocess->lowLinesList.size()));
             iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines.csv");
-            iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines_distance.csv");
+            iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLinesSorted_size, savePath + "matrix_max_hough_lines_distance.csv");
 
         iprocess->constructContrastMatrixMajor2Lines();
             //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast_lines.csv" );
@@ -714,7 +730,7 @@ void MainWindow::guideButton(){
         delete iprocess;
         iprocessInitSwitch = false;
     }
-     */
+    // */
 
 
     /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
