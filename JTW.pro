@@ -29,8 +29,7 @@ SOURCES += main.cpp\
     ../_Modules/S7/s7.cpp \
     ../_Modules/Imgprocess/imgprocess.cpp \
     ../_Modules/Getsystemtime/getsystemtime.cpp \
-    ../_Modules/Getimage/getImage.cpp \
-    zctrldialog.cpp
+    ../_Modules/Getimage/getImage.cpp
 
 HEADERS  += mainwindow.h \
     setupform.h \
@@ -53,7 +52,8 @@ HEADERS  += mainwindow.h \
     ../_Modules/Imgprocess/imgprocess_msg.h \
     ../_Modules/Getsystemtime/getsystemtime.h \
     ../_Modules/Getimage/getImage.h \
-    zctrldialog.h
+    ../_Modules/Algo/datatypes.h \
+    ../_Modules/Algo/localMinimum.h
 
 FORMS    += mainwindow.ui \
     setupform.ui \
@@ -66,9 +66,7 @@ FORMS    += mainwindow.ui \
     helpdialog.ui \
     exitdialog.ui \
     licensedialog.ui \
-    reportdialog.ui \
-    zctrldialog.ui \
-    zctrldialog.ui
+    reportdialog.ui
 
 RESOURCES += \
     icons.qrc

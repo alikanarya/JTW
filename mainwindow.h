@@ -77,9 +77,6 @@ namespace Ui {
 #include "reportdialog.h"
 #include "ui_reportdialog.h"
 
-#include "zctrldialog.h"
-#include "ui_zctrldialog.h"
-
 #include <QPixmap>
 #include <QFile>
 #include <QTextStream>
@@ -271,7 +268,6 @@ public:
     bool detectionError;
 
     Ui::MainWindow *ui;                 // mainwindow
-    zctrlDialog *ui_zctrl;
 
     // functions ____________________________________________________________________________________
     explicit MainWindow(QWidget *parent = 0);       // constructor
