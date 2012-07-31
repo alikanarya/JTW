@@ -701,8 +701,16 @@ void MainWindow::guideButton(){
 
             ui->plainTextEdit->appendPlainText("----------------------");
             for (int i=0; i<iprocess->listHoughDataSize;i++)
-                ui->plainTextEdit->appendPlainText("dist: "+QString::number(iprocess->listHoughDataArray[i][0], 'f', 2) +" angle: "+QString::number(iprocess->listHoughDataArray[i][1], 'f', 2)+" vote: "+QString::number(iprocess->listHoughDataArray[i][2], 'f', 2));
+                ui->plainTextEdit->appendPlainText("dav: "+QString::number(iprocess->listHoughDataArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughDataArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughDataArray[i][2], 'f', 2));
 
+            ui->plainTextEdit->appendPlainText("-2nd------------------");
+            for (int i=0; i<iprocess->localMaxima2ndSize;i++)
+                ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray2nd[i][0]) +" stop: "+QString::number(iprocess->rangeArray2nd[i][1]));
+/*
+            ui->plainTextEdit->appendPlainText("----------------------");
+            for (int i=0; i<iprocess->listHoughData2ndSize;i++)
+                ui->plainTextEdit->appendPlainText("dav: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
+*/
         delete iprocess;
         iprocessInitSwitch = false;
     }
