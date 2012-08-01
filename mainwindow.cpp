@@ -696,21 +696,27 @@ void MainWindow::guideButton(){
 
         iprocess->detectMainEdges();
             iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines_distance.csv");
+            ui->plainTextEdit->appendPlainText("-1st-maximas---");
             for (int i=0; i<iprocess->localMaximaSize;i++)
                 ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray[i][0]) +" stop: "+QString::number(iprocess->rangeArray[i][1]));
 
-            ui->plainTextEdit->appendPlainText("----------------------");
+            ui->plainTextEdit->appendPlainText("-1st hough vals---");
             for (int i=0; i<iprocess->listHoughDataSize;i++)
                 ui->plainTextEdit->appendPlainText("dav: "+QString::number(iprocess->listHoughDataArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughDataArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughDataArray[i][2], 'f', 2));
 
-            ui->plainTextEdit->appendPlainText("-2nd------------------");
+            ui->plainTextEdit->appendPlainText("-2nd-maximas---");
             for (int i=0; i<iprocess->localMaxima2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray2nd[i][0]) +" stop: "+QString::number(iprocess->rangeArray2nd[i][1]));
-/*
-            ui->plainTextEdit->appendPlainText("----------------------");
+
+            ui->plainTextEdit->appendPlainText("-2nd sorted---");
             for (int i=0; i<iprocess->listHoughData2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("dav: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
-*/
+
+            ui->plainTextEdit->appendPlainText("-2nd filtered---");
+            for (int i=0; i<iprocess->listHoughData2ndFilteredSize;i++)
+                ui->plainTextEdit->appendPlainText("dav: "+QString::number(iprocess->listHoughData2ndFilteredArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndFilteredArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndFilteredArray[i][2], 'f', 2));
+
+
         delete iprocess;
         iprocessInitSwitch = false;
     }
