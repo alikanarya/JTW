@@ -672,22 +672,22 @@ void MainWindow::guideButton(){
             iprocess->imgOrginal.save(savePath + "image_org.jpg");
 
         iprocess->constructValueMatrix( iprocess->imgOrginal );
-            //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
+            iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
 
         iprocess->detectEdgeSobel();
             iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge.jpg");
 
-        iprocess->scaleEdgeData(150);
-            iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge_scaled.jpg");
+        //iprocess->scaleEdgeData(150);
+          //  iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge_scaled.jpg");
 
-        iprocess->makeBinaryEdgeMatrix(255);
+        iprocess->makeBinaryEdgeMatrix(200);
             iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge.csv");
 
 //        iprocess->constructContrastMatix(3);            //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast.csv" );
 
-        iprocess->thetaMin = -6;
-        iprocess->thetaMax = 6;
-        iprocess->thetaStep = 0.5;
+        iprocess->thetaMin = -3;
+        iprocess->thetaMax = 3;
+        iprocess->thetaStep = 1.0;
 
         iprocess->houghTransform();
 
@@ -715,6 +715,11 @@ void MainWindow::guideButton(){
             ui->plainTextEdit->appendPlainText("-2nd filtered---");
             for (int i=0; i<iprocess->listHoughData2ndFilteredSize;i++)
                 ui->plainTextEdit->appendPlainText("dav: "+QString::number(iprocess->listHoughData2ndFilteredArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndFilteredArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndFilteredArray[i][2], 'f', 2));
+
+            iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org_with_edges.csv" );
+            iprocess->getImage(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "image_mainEdges.jpg");
+
+
 
 
         delete iprocess;
