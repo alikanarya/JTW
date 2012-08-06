@@ -678,10 +678,19 @@ void MainWindow::guideButton(){
             iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(savePath + "image_blurred.jpg");
 
         iprocess->detectEdgeSobelwDirections();
+            iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge.csv");
+            iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_gradients.csv");
             iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge.jpg");
-            iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edgeGradiets.csv");
 
-//        iprocess->scaleEdgeData(150);
+        iprocess->nonMaximumSuppression();
+            iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_suppressed.csv");
+            iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge_suppressed.jpg");
+
+        iprocess->cannyThresholding(20,50);
+            iprocess->getImage_cannyThresholds(QImage::Format_RGB16)->save(savePath + "image_edge_strongs_weaks.png");
+
+
+            //        iprocess->scaleEdgeData(150);
 //            iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge_scaled.jpg");
 
 //        iprocess->makeBinaryEdgeMatrix(200);
@@ -689,6 +698,8 @@ void MainWindow::guideButton(){
 
 //        iprocess->constructContrastMatix(3);            //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast.csv" );
 
+
+/* ****
         iprocess->thetaMin = -3;
         iprocess->thetaMax = 3;
         iprocess->thetaStep = 1.0;
@@ -723,7 +734,7 @@ void MainWindow::guideButton(){
             iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org_with_edges.csv" );
             iprocess->getImage(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "image_mainEdges.jpg");
 
-
+**** */
 
 
         delete iprocess;
