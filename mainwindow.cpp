@@ -702,12 +702,12 @@ void MainWindow::guideButton(){
 //        iprocess->constructContrastMatix(3);            //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast.csv" );
 
 
-/* ****
+// /* ****
         iprocess->thetaMin = -3;
         iprocess->thetaMax = 3;
         iprocess->thetaStep = 1.0;
 
-        iprocess->houghTransform();
+        iprocess->houghTransformEdgeMap();;
 
         iprocess->calculateHoughMaxs(200);              // get max voted line(s)
             iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines.csv");
@@ -737,7 +737,7 @@ void MainWindow::guideButton(){
             iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org_with_edges.csv" );
             iprocess->getImage(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "image_mainEdges.jpg");
 
-**** */
+// **** */
 
 
         delete iprocess;
