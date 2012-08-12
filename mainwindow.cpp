@@ -671,6 +671,7 @@ void MainWindow::guideButton(){
         iprocessInitSwitch = true;
             //iprocess->imgOrginal.save(savePath + "image_org.jpg");
 
+        //iprocess->constructValueHueMatrix( iprocess->imgOrginal, false );
         iprocess->constructValueMatrix( iprocess->imgOrginal );
             //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
 
@@ -686,7 +687,8 @@ void MainWindow::guideButton(){
             //iprocess->saveMatrix( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_suppressed.csv");
             //iprocess->getImage( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge_suppressed.jpg");
 
-        iprocess->cannyThresholding(20,50);
+        iprocess->cannyThresholding(true);
+            ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
             //iprocess->getImage_cannyThresholds(QImage::Format_RGB16)->save(savePath + "image_edge_strongs_weaks.png");
 
         iprocess->edgeTracing();
@@ -736,7 +738,8 @@ void MainWindow::guideButton(){
                 ui->plainTextEdit->appendPlainText("dav: "+QString::number(iprocess->listHoughData2ndFilteredArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndFilteredArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndFilteredArray[i][2], 'f', 2));
 
             iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org_with_edges.csv" );
-            iprocess->getImage(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "image_mainEdges.png");
+            //iprocess->getImage(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "image_mainEdges.png");
+            iprocess->drawLines().save(savePath + "image_mainEdges.png");
 
 // **** */
 
