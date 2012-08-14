@@ -603,6 +603,9 @@ void MainWindow::analyzeButton(){
 
         int startTime = timeSystem.getSystemTimeMsec();
 
+        processEdgeDetection();
+
+        /*
         if ( thinJointAlgoActive ) {
 
             //processThinJoint();
@@ -628,7 +631,7 @@ void MainWindow::analyzeButton(){
                 }
             }
         }
-
+        */
 
         int endTime = timeSystem.getSystemTimeMsec();
 
@@ -714,7 +717,7 @@ void MainWindow::guideButton(){
         iprocess->calculateHoughMaxs(200);              // get max voted line(s)
             //iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines.csv");
 
-        iprocess->detectMainEdges();
+        iprocess->detectMainEdges(thinJointAlgoActive, true);
             //iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines_distance.csv");
 
             ui->plainTextEdit->appendPlainText("-1st-maximas---");
@@ -733,6 +736,7 @@ void MainWindow::guideButton(){
             for (int i=0; i<iprocess->listHoughData2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
 
+            /* for 3rd iteration
             ui->plainTextEdit->appendPlainText("-3rd-maximas---");
             for (int i=0; i<iprocess->localMaxima3rdSize;i++)
                 ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray3rd[i][0]) +" stop: "+QString::number(iprocess->rangeArray3rd[i][1]));
@@ -744,10 +748,11 @@ void MainWindow::guideButton(){
             ui->plainTextEdit->appendPlainText("-3rd filtered hough vals---");
             for (int i=0; i<iprocess->listHoughData3rdFilteredSize;i++)
                 ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData3rdFilteredArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData3rdFilteredArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData3rdFilteredArray[i][2], 'f', 2));
+            */
 
             iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org_with_edges.csv" );
-            //iprocess->getImage(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "image_mainEdges.png");
             iprocess->drawLines().save(savePath + "image_mainEdges.png");
+            iprocess->cornerImage().save(savePath + "image_corners.png");
 
 // **** */
 
@@ -1289,6 +1294,39 @@ void MainWindow::processContrastDetection(){
     }
 }
 
+void MainWindow::processEdgeDetection(){
+
+    if ( !imageGetter->imageList.isEmpty() ){
+
+        targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+
+        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
+
+        iprocess->constructValueMatrix( iprocess->imgOrginal );
+
+        iprocess->gaussianBlur();
+
+        iprocess->detectEdgeSobelwDirections();
+
+        iprocess->nonMaximumSuppression();
+
+        iprocess->cannyThresholding(true);
+
+        iprocess->edgeTracing();
+
+        iprocess->thetaMin = -6;
+        iprocess->thetaMax = 6;
+        iprocess->thetaStep = 1.0;
+
+        iprocess->houghTransformEdgeMap();;
+
+        iprocess->calculateHoughMaxs(200);              // get max voted line(s)
+
+        iprocess->detectMainEdges(thinJointAlgoActive, false);
+
+    }
+}
 
 int MainWindow::timeDifference(int first, int last){
 

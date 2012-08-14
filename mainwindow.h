@@ -287,6 +287,7 @@ public:
     void processSubImageSolidness();                // sub image based on SOLID lines
     void processThinJoint();                        // darkness analysis for thin joint
     void processContrastDetection();                // contrast anaysis
+    void processEdgeDetection();                    // edge anaysis
     void repaintGuide();                            // update guide
     void repaintDevTrend();                         // update deviation trend
     void calcZParameters();
