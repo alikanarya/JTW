@@ -698,16 +698,6 @@ void MainWindow::guideButton(){
             //iprocess->getImage_cannyTracedEdges(QImage::Format_RGB16)->save(savePath + "image_edge_traced.png");
             iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
 
-            //        iprocess->scaleEdgeData(150);
-//            iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge_scaled.jpg");
-
-//        iprocess->makeBinaryEdgeMatrix(200);
-//            iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge.csv");
-
-//        iprocess->constructContrastMatix(3);            //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast.csv" );
-
-
-// /* ****
         iprocess->thetaMin = -6;
         iprocess->thetaMax = 6;
         iprocess->thetaStep = 1.0;
@@ -736,25 +726,23 @@ void MainWindow::guideButton(){
             for (int i=0; i<iprocess->listHoughData2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
 
-            /* for 3rd iteration
-            ui->plainTextEdit->appendPlainText("-3rd-maximas---");
-            for (int i=0; i<iprocess->localMaxima3rdSize;i++)
-                ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray3rd[i][0]) +" stop: "+QString::number(iprocess->rangeArray3rd[i][1]));
+            if ( !thinJointAlgoActive ) {
+                ui->plainTextEdit->appendPlainText("-3rd-maximas---");
+                for (int i=0; i<iprocess->localMaxima3rdSize;i++)
+                    ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray3rd[i][0]) +" stop: "+QString::number(iprocess->rangeArray3rd[i][1]));
 
-            ui->plainTextEdit->appendPlainText("-3rd hough vals---");
-            for (int i=0; i<iprocess->listHoughData3rdSize;i++)
-                ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData3rdArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData3rdArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData3rdArray[i][2], 'f', 2));
+                ui->plainTextEdit->appendPlainText("-3rd hough vals---");
+                for (int i=0; i<iprocess->listHoughData3rdSize;i++)
+                    ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData3rdArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData3rdArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData3rdArray[i][2], 'f', 2));
 
-            ui->plainTextEdit->appendPlainText("-3rd filtered hough vals---");
-            for (int i=0; i<iprocess->listHoughData3rdFilteredSize;i++)
-                ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData3rdFilteredArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData3rdFilteredArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData3rdFilteredArray[i][2], 'f', 2));
-            */
+                ui->plainTextEdit->appendPlainText("-3rd filtered hough vals---");
+                for (int i=0; i<iprocess->listHoughData3rdFilteredSize;i++)
+                    ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData3rdFilteredArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData3rdFilteredArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData3rdFilteredArray[i][2], 'f', 2));
+            }
 
             iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org_with_edges.csv" );
             iprocess->drawLines().save(savePath + "image_mainEdges.png");
             iprocess->cornerImage().save(savePath + "image_corners.png");
-
-// **** */
 
 
         delete iprocess;
