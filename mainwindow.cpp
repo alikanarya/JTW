@@ -72,7 +72,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
 
-        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+//        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nÇok Ýnce Aðýzlarda Aktif Hale Getiriniz!";
         msgBox.setText(str);
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setDefaultButton(QMessageBox::Ok);
@@ -667,7 +668,7 @@ void MainWindow::guideButton(){
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
 
-    // /* EDGE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    /* EDGE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -725,7 +726,7 @@ void MainWindow::guideButton(){
             ui->plainTextEdit->appendPlainText("-2nd hough vals---");
             for (int i=0; i<iprocess->listHoughData2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
-
+/ *
             if ( !thinJointAlgoActive ) {
                 ui->plainTextEdit->appendPlainText("-3rd-maximas---");
                 for (int i=0; i<iprocess->localMaxima3rdSize;i++)
@@ -739,7 +740,7 @@ void MainWindow::guideButton(){
                 for (int i=0; i<iprocess->listHoughData3rdFilteredSize;i++)
                     ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData3rdFilteredArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData3rdFilteredArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData3rdFilteredArray[i][2], 'f', 2));
             }
-
+* /
             iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org_with_edges.csv" );
             iprocess->drawLines().save(savePath + "image_mainEdges.png");
             iprocess->cornerImage().save(savePath + "image_corners.png");
@@ -748,7 +749,7 @@ void MainWindow::guideButton(){
         delete iprocess;
         iprocessInitSwitch = false;
     }
-    // */
+     */
 
 
     /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
@@ -968,7 +969,8 @@ void MainWindow::thinJointButton(){
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
 
-        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+//        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nÇok Ýnce Aðýzlarda Aktif Hale Getiriniz!";
         msgBox.setText(str);
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setDefaultButton(QMessageBox::Ok);
@@ -1012,6 +1014,9 @@ void MainWindow::zControlButton(){
 
 void MainWindow::processImage(){
 
+    processEdgeDetection();
+
+/*
     if ( thinJointAlgoActive ) {
 
 //        processThinJoint();
@@ -1036,7 +1041,7 @@ void MainWindow::processImage(){
         }
     }
 
-
+*/
     // if center of track is not an error, append dev. to trend data list OR append error code to list
     if (iprocess->detected){
 
