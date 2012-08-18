@@ -668,114 +668,54 @@ void MainWindow::guideButton(){
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
 
-     // /* EDGE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    /* EDGE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
         iprocessInitSwitch = true;
             //iprocess->imgOrginal.save(savePath + "image_org.jpg");
-/*
-        //iprocess->constructValueHueMatrix( iprocess->imgOrginal, false );
-        iprocess->constructValueMatrix( iprocess->imgOrginal );
-        //iprocess->constructValueMaxMatrix( iprocess->imgOrginal );
+
+        iprocess->prepareCannyArrays();
+
+        for (int i = 0; i < 4 ; i++){
+
+            iprocess->constructValueMatrix( iprocess->imgOrginal, i );
             //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
 
-        iprocess->gaussianBlur();
+            iprocess->gaussianBlur();
             //iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(savePath + "image_blurred.jpg");
 
-        iprocess->detectEdgeSobelwDirections();
+            iprocess->detectEdgeSobelwDirections();
             //iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge.csv");
             //iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_gradients.csv");
             //iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge.jpg");
 
-        iprocess->nonMaximumSuppression();
+            iprocess->nonMaximumSuppression();
             //iprocess->saveMatrix( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_suppressed.csv");
             //iprocess->getImage( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge_suppressed.jpg");
 
-        iprocess->cannyThresholding(true);
+            iprocess->cannyThresholding(true);
             ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
             //iprocess->getImage_cannyThresholds(QImage::Format_RGB16)->save(savePath + "image_edge_strongs_weaks.png");
 
-        iprocess->edgeTracing();
+            iprocess->edgeTracing();
             //iprocess->getImage_cannyTracedEdges(QImage::Format_RGB16)->save(savePath + "image_edge_traced.png");
-            iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
-            iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
-*/
-
-
-            iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
-
-            iprocess->gaussianBlur();
-
-            iprocess->detectEdgeSobelwDirections();
-
-            iprocess->nonMaximumSuppression();
-
-            iprocess->cannyThresholding(true);
-            ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
-
-            iprocess->edgeTracing();
+            //iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
+            //iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
 
             iprocess->assignEdgeMap();
+        }
 
 
-            iprocess->constructValueMatrix( iprocess->imgOrginal, 1 );
+        iprocess->mergeEdgeMaps();
 
-            iprocess->gaussianBlur();
-
-            iprocess->detectEdgeSobelwDirections();
-
-            iprocess->nonMaximumSuppression();
-
-            iprocess->cannyThresholding(true);
-            ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
-
-            iprocess->edgeTracing();
-
-            iprocess->assignEdgeMap();
-
-
-            iprocess->constructValueMatrix( iprocess->imgOrginal, 2 );
-
-            iprocess->gaussianBlur();
-
-            iprocess->detectEdgeSobelwDirections();
-
-            iprocess->nonMaximumSuppression();
-
-            iprocess->cannyThresholding(true);
-            ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
-
-            iprocess->edgeTracing();
-
-            iprocess->assignEdgeMap();
-
-
-            iprocess->constructValueMatrix( iprocess->imgOrginal, 3 );
-
-            iprocess->gaussianBlur();
-
-            iprocess->detectEdgeSobelwDirections();
-
-            iprocess->nonMaximumSuppression();
-
-            iprocess->cannyThresholding(true);
-            ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
-
-            iprocess->edgeTracing();
-
-            iprocess->assignEdgeMap();
-
-
-            iprocess->mergeEdgeMaps();
-
-            iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
-            iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
+        iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
+        iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
 
 
 
-        iprocess->thetaMin = -1;
-        iprocess->thetaMax = 1;
+        iprocess->thetaMin = -2;
+        iprocess->thetaMax = 2;
         iprocess->thetaStep = 1.0;
 
         iprocess->houghTransformEdgeMap();;
@@ -785,7 +725,7 @@ void MainWindow::guideButton(){
 
         iprocess->detectMainEdges(thinJointAlgoActive, true);
             //iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines_distance.csv");
-
+            / *
             ui->plainTextEdit->appendPlainText("-1st-maximas---");
             for (int i=0; i<iprocess->localMaximaSize;i++)
                 ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray[i][0]) +" stop: "+QString::number(iprocess->rangeArray[i][1]));
@@ -797,7 +737,7 @@ void MainWindow::guideButton(){
             ui->plainTextEdit->appendPlainText("-2nd-maximas---");
             for (int i=0; i<iprocess->localMaxima2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray2nd[i][0]) +" stop: "+QString::number(iprocess->rangeArray2nd[i][1]));
-
+            * /
             ui->plainTextEdit->appendPlainText("-2nd hough vals---");
             for (int i=0; i<iprocess->listHoughData2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
@@ -810,11 +750,12 @@ void MainWindow::guideButton(){
         delete iprocess;
         iprocessInitSwitch = false;
     }
-//     */
+    */
+
 
 
     /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
-   if ( !imageGetter->imageList.isEmpty() ){
+    if ( !imageGetter->imageList.isEmpty() ){
        targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
        iprocessInitSwitch = true;
@@ -1112,7 +1053,8 @@ void MainWindow::processImage(){
 
             initialJointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
             maxJointWidth = initialJointWidth * 1.2;
-                //ui->plainTextEdit->appendPlainText(QString::number(initialJointWidth) + ", " + QString::number(maxJointWidth));
+            minJointWidth = initialJointWidth * 0.8;
+                //ui->plainTextEdit->appendPlainText( QString::number(minJointWidth)+ ", " + QString::number(initialJointWidth) + ", " + QString::number(maxJointWidth) );
             controlInitiated = false;
         }
 
@@ -1136,7 +1078,7 @@ void MainWindow::processImage(){
 
         detectionError = false;
 
-        if (jointWidthControlActive && (jointWidth > maxJointWidth || jointWidth == 1) ) {
+        if (jointWidthControlActive && (jointWidth > maxJointWidth || jointWidth < minJointWidth || jointWidth == 1) ) {
 
             cmdState = _CMD_CENTER;
                 //ui->plainTextEdit->appendPlainText("error");
@@ -1359,20 +1301,28 @@ void MainWindow::processEdgeDetection(){
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
         iprocessInitSwitch = true;
 
-        iprocess->constructValueMatrix( iprocess->imgOrginal );
+        iprocess->prepareCannyArrays();
 
-        iprocess->gaussianBlur();
+        for (int i = 0; i < 4 ; i++){
 
-        iprocess->detectEdgeSobelwDirections();
+            iprocess->constructValueMatrix( iprocess->imgOrginal, i );
 
-        iprocess->nonMaximumSuppression();
+            iprocess->gaussianBlur();
 
-        iprocess->cannyThresholding(true);
+            iprocess->detectEdgeSobelwDirections();
 
-        iprocess->edgeTracing();
+            iprocess->nonMaximumSuppression();
 
-        iprocess->thetaMin = -1;
-        iprocess->thetaMax = 1;
+            iprocess->cannyThresholding(true);
+
+            iprocess->edgeTracing();
+
+            iprocess->assignEdgeMap();
+        }
+
+
+        iprocess->thetaMin = -2;
+        iprocess->thetaMax = 2;
         iprocess->thetaStep = 1.0;
 
         iprocess->houghTransformEdgeMap();;

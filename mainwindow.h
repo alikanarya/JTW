@@ -173,7 +173,7 @@ public:
     bool errorStopLimitLineVisible;
     float errorStopScale;
     int initialJointWidth;
-    int maxJointWidth;
+    int maxJointWidth, minJointWidth;
     int jointWidth;
 
     // Z-Control
