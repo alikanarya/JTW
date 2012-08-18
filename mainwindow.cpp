@@ -668,15 +668,16 @@ void MainWindow::guideButton(){
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
 
-    /* EDGE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+     // /* EDGE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
         iprocessInitSwitch = true;
             //iprocess->imgOrginal.save(savePath + "image_org.jpg");
-
+/*
         //iprocess->constructValueHueMatrix( iprocess->imgOrginal, false );
         iprocess->constructValueMatrix( iprocess->imgOrginal );
+        //iprocess->constructValueMaxMatrix( iprocess->imgOrginal );
             //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
 
         iprocess->gaussianBlur();
@@ -698,9 +699,83 @@ void MainWindow::guideButton(){
         iprocess->edgeTracing();
             //iprocess->getImage_cannyTracedEdges(QImage::Format_RGB16)->save(savePath + "image_edge_traced.png");
             iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
+            iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
+*/
 
-        iprocess->thetaMin = -6;
-        iprocess->thetaMax = 6;
+
+            iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
+
+            iprocess->gaussianBlur();
+
+            iprocess->detectEdgeSobelwDirections();
+
+            iprocess->nonMaximumSuppression();
+
+            iprocess->cannyThresholding(true);
+            ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
+
+            iprocess->edgeTracing();
+
+            iprocess->assignEdgeMap();
+
+
+            iprocess->constructValueMatrix( iprocess->imgOrginal, 1 );
+
+            iprocess->gaussianBlur();
+
+            iprocess->detectEdgeSobelwDirections();
+
+            iprocess->nonMaximumSuppression();
+
+            iprocess->cannyThresholding(true);
+            ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
+
+            iprocess->edgeTracing();
+
+            iprocess->assignEdgeMap();
+
+
+            iprocess->constructValueMatrix( iprocess->imgOrginal, 2 );
+
+            iprocess->gaussianBlur();
+
+            iprocess->detectEdgeSobelwDirections();
+
+            iprocess->nonMaximumSuppression();
+
+            iprocess->cannyThresholding(true);
+            ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
+
+            iprocess->edgeTracing();
+
+            iprocess->assignEdgeMap();
+
+
+            iprocess->constructValueMatrix( iprocess->imgOrginal, 3 );
+
+            iprocess->gaussianBlur();
+
+            iprocess->detectEdgeSobelwDirections();
+
+            iprocess->nonMaximumSuppression();
+
+            iprocess->cannyThresholding(true);
+            ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
+
+            iprocess->edgeTracing();
+
+            iprocess->assignEdgeMap();
+
+
+            iprocess->mergeEdgeMaps();
+
+            iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
+            iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
+
+
+
+        iprocess->thetaMin = -1;
+        iprocess->thetaMax = 1;
         iprocess->thetaStep = 1.0;
 
         iprocess->houghTransformEdgeMap();;
@@ -726,21 +801,7 @@ void MainWindow::guideButton(){
             ui->plainTextEdit->appendPlainText("-2nd hough vals---");
             for (int i=0; i<iprocess->listHoughData2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
-/ *
-            if ( !thinJointAlgoActive ) {
-                ui->plainTextEdit->appendPlainText("-3rd-maximas---");
-                for (int i=0; i<iprocess->localMaxima3rdSize;i++)
-                    ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray3rd[i][0]) +" stop: "+QString::number(iprocess->rangeArray3rd[i][1]));
 
-                ui->plainTextEdit->appendPlainText("-3rd hough vals---");
-                for (int i=0; i<iprocess->listHoughData3rdSize;i++)
-                    ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData3rdArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData3rdArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData3rdArray[i][2], 'f', 2));
-
-                ui->plainTextEdit->appendPlainText("-3rd filtered hough vals---");
-                for (int i=0; i<iprocess->listHoughData3rdFilteredSize;i++)
-                    ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData3rdFilteredArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData3rdFilteredArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData3rdFilteredArray[i][2], 'f', 2));
-            }
-* /
             iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org_with_edges.csv" );
             iprocess->drawLines().save(savePath + "image_mainEdges.png");
             iprocess->cornerImage().save(savePath + "image_corners.png");
@@ -749,7 +810,7 @@ void MainWindow::guideButton(){
         delete iprocess;
         iprocessInitSwitch = false;
     }
-     */
+//     */
 
 
     /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
@@ -798,14 +859,16 @@ void MainWindow::guideButton(){
            //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast_lines.csv" );
            iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight)->save(savePath + "image_lines.jpg");
 
+
        iprocess->detectContrastCenter();
            iprocess->cornerImage().save(savePath + "image_corner.jpg");
-           ui->plainTextEdit->appendPlainText("avg dist, angle: " + QString::number(iprocess->distanceAvg) + ", " + QString::number(iprocess->angleAvg));
+           ui->plainTextEdit->appendPlainText("avg dist, angle: " + QString::number(iprocess->distanceAvg) + ", " + QString::number(iprocess->thetaAvg));
+//           ui->plainTextEdit->appendPlainText("avg dist, angle: " + QString::number(iprocess->distanceAvg) + ", " + QString::number(iprocess->angleAvg));
 
        delete iprocess;
        iprocessInitSwitch = false;
    }
-    */
+   */
 
     /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
@@ -1308,8 +1371,8 @@ void MainWindow::processEdgeDetection(){
 
         iprocess->edgeTracing();
 
-        iprocess->thetaMin = -6;
-        iprocess->thetaMax = 6;
+        iprocess->thetaMin = -1;
+        iprocess->thetaMax = 1;
         iprocess->thetaStep = 1.0;
 
         iprocess->houghTransformEdgeMap();;
