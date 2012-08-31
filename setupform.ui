@@ -1004,6 +1004,26 @@
     <string>Yükseklik Kontrolü</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="hardControlStartBox">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>470</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Hard Kaynak Başlangıcı</string>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="icons.qrc"/>
@@ -1137,6 +1157,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>hardControlStartBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>setupForm</receiver>
+   <slot>hardControlStartBox()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>689</x>
+     <y>475</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>708</x>
+     <y>475</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>captureButton()</slot>
@@ -1147,5 +1183,6 @@
   <slot>subImageCheck()</slot>
   <slot>subType()</slot>
   <slot>zctrlBox()</slot>
+  <slot>hardControlStartBox()</slot>
  </slots>
 </ui>

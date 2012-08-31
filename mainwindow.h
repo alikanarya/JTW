@@ -32,6 +32,7 @@
 #define _Z_CONTROL          false
 #define _UP_TOL             1.0
 #define _DOWN_TOL           1.0
+#define _HARD_START         false
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -153,6 +154,7 @@ public:
     QRect guideFrameRect, gfBoxRect, gfLineHorRect, gfLineVerRect, gfTolLeftRect, gfTolRightRect;
     QRect sceneRect;
     int sceneCenterX;
+    bool alignGuide2TrackCenter;
 
     // image processing parameters
     imgProcess *iprocess, *iprocessLeft, *iprocessRight;    // image processing objects
@@ -210,6 +212,12 @@ public:
     int controlDelay;
     int controlThreadCount, controlThreadCountSize;
     bool controlPause;
+    bool hardControlStart;
+
+    //AYGAZ makine kontrolü için
+    bool mak1_aktif_now, mak1_aktif_old;
+    bool mak2_aktif_now, mak2_aktif_old;
+
     /*
     int right_VMEM_BYTE, right_BITofBYTE;
     int left_VMEM_BYTE, left_BITofBYTE;
@@ -336,6 +344,7 @@ private slots:
     void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
     void cameraDownAction();                        // actions handled when camera is not accesible
 
+    void testButton();
     void testEdit();
 
 private:

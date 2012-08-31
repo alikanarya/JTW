@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'setupform.ui'
 **
-** Created: Sat 28. Jul 01:23:03 2012
+** Created: Sat 1. Sep 01:07:27 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -82,6 +82,7 @@ public:
     QLineEdit *editFPS;
     QComboBox *subTypeBox;
     QCheckBox *zctrlBox;
+    QCheckBox *hardControlStartBox;
 
     void setupUi(QWidget *setupForm)
     {
@@ -332,6 +333,10 @@ public:
         font2.setBold(false);
         font2.setWeight(50);
         zctrlBox->setFont(font2);
+        hardControlStartBox = new QCheckBox(setupForm);
+        hardControlStartBox->setObjectName(QString::fromUtf8("hardControlStartBox"));
+        hardControlStartBox->setGeometry(QRect(540, 470, 161, 17));
+        hardControlStartBox->setFont(font2);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -342,6 +347,7 @@ public:
         QObject::connect(checkSubImage, SIGNAL(clicked()), setupForm, SLOT(subImageCheck()));
         QObject::connect(subTypeBox, SIGNAL(currentIndexChanged(int)), setupForm, SLOT(subType()));
         QObject::connect(zctrlBox, SIGNAL(stateChanged(int)), setupForm, SLOT(zctrlBox()));
+        QObject::connect(hardControlStartBox, SIGNAL(stateChanged(int)), setupForm, SLOT(hardControlStartBox()));
 
         QMetaObject::connectSlotsByName(setupForm);
     } // setupUi
@@ -416,6 +422,7 @@ public:
          << QApplication::translate("setupForm", "Doluluk Algo", 0, QApplication::UnicodeUTF8)
         );
         zctrlBox->setText(QApplication::translate("setupForm", "Y\303\274kseklik Kontrol\303\274", 0, QApplication::UnicodeUTF8));
+        hardControlStartBox->setText(QApplication::translate("setupForm", "Hard Kaynak Ba\305\237lang\304\261c\304\261", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

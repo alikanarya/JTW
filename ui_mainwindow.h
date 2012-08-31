@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat 28. Jul 01:23:03 2012
+** Created: Fri 31. Aug 22:55:37 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -68,6 +68,7 @@ public:
     QLabel *labelDistance;
     QLineEdit *testEdit;
     QLabel *labelDistanceTag2;
+    QPushButton *testButton;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -426,6 +427,9 @@ public:
         labelDistanceTag2->setFrameShape(QFrame::NoFrame);
         labelDistanceTag2->setLineWidth(2);
         labelDistanceTag2->setAlignment(Qt::AlignCenter);
+        testButton = new QPushButton(centralWidget);
+        testButton->setObjectName(QString::fromUtf8("testButton"));
+        testButton->setGeometry(QRect(470, 10, 41, 23));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -458,6 +462,7 @@ public:
         QObject::connect(thinJointButton, SIGNAL(clicked()), MainWindow, SLOT(thinJointButton()));
         QObject::connect(zControlButton, SIGNAL(clicked()), MainWindow, SLOT(zControlButton()));
         QObject::connect(testEdit, SIGNAL(returnPressed()), MainWindow, SLOT(testEdit()));
+        QObject::connect(testButton, SIGNAL(clicked()), MainWindow, SLOT(testButton()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -552,6 +557,7 @@ public:
         labelDistance->setText(QApplication::translate("MainWindow", "000.0", 0, QApplication::UnicodeUTF8));
         testEdit->setInputMask(QString());
         labelDistanceTag2->setText(QApplication::translate("MainWindow", "(mm)", 0, QApplication::UnicodeUTF8));
+        testButton->setText(QApplication::translate("MainWindow", "Test", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

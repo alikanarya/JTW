@@ -47,6 +47,8 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     if (w->zControlActive)
         ui->zctrlBox->setChecked(true);
 
+    ui->hardControlStartBox->setChecked( w->hardControlStart );
+
 }
 
 
@@ -579,9 +581,14 @@ void setupForm::saveExitButton(){
 }
 
 void setupForm::zctrlBox(){
+
     w->zControlActive = ui->zctrlBox->isChecked();
 }
 
+void setupForm::hardControlStartBox(){
+
+    w->hardControlStart = ui->hardControlStartBox->isChecked();
+}
 
 void setupForm::exitButton(){
 

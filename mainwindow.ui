@@ -1128,6 +1128,19 @@ background-color: rgb(236, 233, 216);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QPushButton" name="testButton">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>10</y>
+      <width>41</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Test</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -1433,8 +1446,8 @@ color: rgb(0, 0, 255);</string>
    <slot>zControlButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>438</x>
-     <y>64</y>
+     <x>440</x>
+     <y>52</y>
     </hint>
     <hint type="destinationlabel">
      <x>459</x>
@@ -1455,6 +1468,22 @@ color: rgb(0, 0, 255);</string>
     <hint type="destinationlabel">
      <x>385</x>
      <y>28</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>testButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>testButton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>493</x>
+     <y>35</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>478</x>
+     <y>57</y>
     </hint>
    </hints>
   </connection>

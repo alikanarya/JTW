@@ -23,6 +23,7 @@ public:
     int plcType;
     QString plcUrl;
     int dbNo;
+    int dbNoRead;
     int byteNo;
     int byteNo2;
     /*
@@ -39,6 +40,8 @@ public:
     int checkResult;
     bool plcInteract;
 
+    int readLength;
+    unsigned char* readBuffer;
     unsigned char* readBufferInt;
     int distanceRaw;
 
@@ -57,7 +60,11 @@ public:
     bool plcCmd_Z_Center();
     bool plcCmd_Z_Up();
     bool plcCmd_Z_Down();
+
+    bool readPLC();
     bool readDistanceValue();
+
+    int getBitofByte(unsigned char byte, int bitNo);
 
     void check();
     void disconnect();

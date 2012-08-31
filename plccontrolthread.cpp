@@ -17,6 +17,9 @@ plcControlThread::plcControlThread(int type, QString url){
     stopped = false;
     result = false;
 
+    readLength = 1;
+    readBuffer = new unsigned char[readLength];
+
     // z control additions
     readBufferInt = new unsigned char[2];
     //for (int i = 0; i < 4; i++) readBufferInt[i] = 0;
@@ -68,7 +71,8 @@ void plcControlThread::run(){
 
             if (commandRead) {
 
-                readDistanceValue();
+                readPLC();
+                //readDistanceValue();
                 commandRead = false;
             }
 
@@ -171,13 +175,36 @@ bool plcControlThread::plcCmd_Z_Down(){
 }
 
 
+bool plcControlThread::readPLC(){
+
+    int result = plc->readBytes(dbNoRead, 0, readLength, readBuffer);
+
+    if (result == 0){
+
+        unsigned char *byteptr = readBuffer;
+        unsigned char byte = *byteptr;
+
+        bool value;
+
+        if (getBitofByte(byte, 0) == 1) value = true; else value = false;
+        w->mak1_aktif_now = value;
+
+        if (getBitofByte(byte, 1) == 1) value = true; else value = false;
+        w->mak2_aktif_now = value;
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
 bool plcControlThread::readDistanceValue(){
 // customized for s7-200 start address:VW2
 // customized for s7-300 start address:DBX.dbw2
 
     int result;
 
-    result = plc->readBytes(dbNo, 2, 2, readBufferInt);
+    result = plc->readBytes(dbNoRead, 2, 2, readBufferInt);
 
     if (result == 0){
 
@@ -189,6 +216,12 @@ bool plcControlThread::readDistanceValue(){
     }
 
     return true;
+}
+
+
+int plcControlThread::getBitofByte(unsigned char byte, int bitNo){
+
+    return (byte >> bitNo) & 0x01;
 }
 
 

@@ -93,6 +93,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //gfTolLeftRect = ui->guideTolLeft->geometry();
     //gfTolRightRect = ui->guideTolRight->geometry();
     offsetXpos = 0;
+    alignGuide2TrackCenter = false;
 
     showGuide = true;       // show guide initially
     repaintGuide();
@@ -140,6 +141,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     threadPLCControl->plc->portNum = 102;
 
     threadPLCControl->dbNo = DB_NO;
+    threadPLCControl->dbNoRead = 2;
     threadPLCControl->byteNo = BYTE_NO;
     threadPLCControl->byteNo2 = threadPLCControl->byteNo + 1;
 
@@ -344,13 +346,14 @@ void MainWindow:: plcControl(){
     int stateZ = _CMD_Z_CENTER;
 
 
-         if (controlThreadCount % 4 == 0){
-             threadPLCControl->commandRead = true;
 
-             distance = 300 - ((distanceRaw * 1.0) / 27648.0) * 220.0;
-             ui->labelDistance->setText( QString::number(distance, 'f', 1) );
-
-         }
+    if (controlThreadCount % 4 == 0){
+        threadPLCControl->commandRead = true;
+/*
+        distance = 300 - ((distanceRaw * 1.0) / 27648.0) * 220.0;
+        ui->labelDistance->setText( QString::number(distance, 'f', 1) );
+*/
+    }
 
     if (!controlPause){
 
@@ -998,7 +1001,6 @@ void MainWindow::zControlButton(){
 
     if ( zControlActive ) {
 
-
 /*
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
@@ -1062,6 +1064,15 @@ void MainWindow::processImage(){
 
         int error = iprocess->trackCenterX - (frameWidth/2);
         deviationData.append(error);
+
+        if (alignGuide2TrackCenter) {
+
+            offsetXpos += error;
+
+            repaintGuide();
+
+            alignGuide2TrackCenter = false;
+        }
 
         if (trackOn){
             errorTotal += abs(error);
@@ -1590,6 +1601,7 @@ void MainWindow::readSettings(){
             BYTE_NO = settings->value("byte", _BYTE_NO).toInt();
             connectRequestedonBoot = settings->value("pcon", _PLC_CONN_ONBOOT).toBool();
             controlDelay = 0;   //settings->value("ctd", _CONTROL_DELAY).toInt();
+            hardControlStart = settings->value("hard", _HARD_START).toBool();
         settings->endGroup();
 
         settings->beginGroup("ipro");
@@ -1641,6 +1653,7 @@ void MainWindow::readSettings(){
         BYTE_NO = _BYTE_NO;
         connectRequestedonBoot = _PLC_CONN_ONBOOT;
         controlDelay = _CONTROL_DELAY;
+        hardControlStart = _HARD_START;
 
         iprocessInterval = _IPROCESS_INT;
         frameWidth = _FRAME_WIDTH;
@@ -1695,6 +1708,8 @@ void MainWindow::writeSettings(){
         QVariant pcon(connectRequestedonBoot);
             settings->setValue("pcon", pcon.toString());
         settings->setValue("ctd", QString::number(controlDelay));
+        QVariant hardstart(hardControlStart);
+            settings->setValue("hard", hardstart.toString());
     settings->endGroup();
 
     settings->beginGroup("ipro");
@@ -1815,10 +1830,19 @@ void MainWindow::playCam(){
     }
 }
 
+
 void MainWindow::testEdit(){
 
     distanceRaw = ui->testEdit->text().toInt();
 }
+
+
+void MainWindow::testButton(){
+
+    alignGuide2TrackCenter = true;
+
+}
+
 
 MainWindow::~MainWindow(){
 
