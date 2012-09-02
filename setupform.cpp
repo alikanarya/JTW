@@ -44,8 +44,9 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
             break;
     }
 
-    if (w->zControlActive)
-        ui->zctrlBox->setChecked(true);
+    ui->zctrlBox->setChecked( w->zControlActive );
+
+    ui->widthControlBox->setChecked( w->jointWidthControlActive );
 
     ui->hardControlStartBox->setChecked( w->hardControlStart );
 
@@ -589,6 +590,13 @@ void setupForm::hardControlStartBox(){
 
     w->hardControlStart = ui->hardControlStartBox->isChecked();
 }
+
+
+void setupForm::widthControl(){
+
+    w->jointWidthControlActive = ui->widthControlBox->isChecked();
+}
+
 
 void setupForm::exitButton(){
 

@@ -186,11 +186,11 @@ bool plcControlThread::readPLC(){
 
         bool value;
 
-        if (getBitofByte(byte, 0) == 1) value = true; else value = false;
-        w->mak1_aktif_now = value;
+        // read machine state
+        int bitValue = w->machineNo - 1;
+        if (getBitofByte(byte, bitValue) == 1) value = true; else value = false;
+        w->mak_aktif_now = value;
 
-        if (getBitofByte(byte, 1) == 1) value = true; else value = false;
-        w->mak2_aktif_now = value;
 
         return true;
     } else {

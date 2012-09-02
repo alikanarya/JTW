@@ -73,6 +73,7 @@ private:
 
 private slots:
     void zctrlBox();
+    void widthControl();
     void hardControlStartBox();
 
 };

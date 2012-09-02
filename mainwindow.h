@@ -33,6 +33,8 @@
 #define _UP_TOL             1.0
 #define _DOWN_TOL           1.0
 #define _HARD_START         false
+#define _MACHINE_NO         1
+#define _WIDTH_CONTROL      false
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -212,11 +214,11 @@ public:
     int controlDelay;
     int controlThreadCount, controlThreadCountSize;
     bool controlPause;
-    bool hardControlStart;
 
-    //AYGAZ makine kontrolü için
-    bool mak1_aktif_now, mak1_aktif_old;
-    bool mak2_aktif_now, mak2_aktif_old;
+    //hard makine kontrolü için
+    bool hardControlStart;
+    bool mak_aktif_now, mak_aktif_old;
+    int machineNo;
 
     /*
     int right_VMEM_BYTE, right_BITofBYTE;

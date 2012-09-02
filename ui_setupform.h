@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'setupform.ui'
 **
-** Created: Sat 1. Sep 01:07:27 2012
+** Created: Mon 3. Sep 01:22:00 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -83,20 +83,21 @@ public:
     QComboBox *subTypeBox;
     QCheckBox *zctrlBox;
     QCheckBox *hardControlStartBox;
+    QCheckBox *widthControlBox;
 
     void setupUi(QWidget *setupForm)
     {
         if (setupForm->objectName().isEmpty())
             setupForm->setObjectName(QString::fromUtf8("setupForm"));
         setupForm->setWindowModality(Qt::WindowModal);
-        setupForm->resize(1019, 505);
+        setupForm->resize(1019, 800);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(setupForm->sizePolicy().hasHeightForWidth());
         setupForm->setSizePolicy(sizePolicy);
-        setupForm->setMinimumSize(QSize(1019, 505));
-        setupForm->setMaximumSize(QSize(1019, 505));
+        setupForm->setMinimumSize(QSize(1019, 800));
+        setupForm->setMaximumSize(QSize(1019, 800));
         setupForm->setContextMenuPolicy(Qt::DefaultContextMenu);
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -107,35 +108,35 @@ public:
         labelTarget->setFrameShape(QFrame::Box);
         labelMono = new QLabel(setupForm);
         labelMono->setObjectName(QString::fromUtf8("labelMono"));
-        labelMono->setGeometry(QRect(350, 50, 320, 100));
+        labelMono->setGeometry(QRect(20, 200, 320, 100));
         labelMono->setFrameShape(QFrame::Box);
         labelEdge = new QLabel(setupForm);
         labelEdge->setObjectName(QString::fromUtf8("labelEdge"));
-        labelEdge->setGeometry(QRect(680, 50, 320, 100));
+        labelEdge->setGeometry(QRect(20, 350, 320, 100));
         labelEdge->setFrameShape(QFrame::Box);
         labelHough = new QLabel(setupForm);
         labelHough->setObjectName(QString::fromUtf8("labelHough"));
-        labelHough->setGeometry(QRect(20, 200, 320, 100));
+        labelHough->setGeometry(QRect(20, 500, 320, 100));
         labelHough->setFrameShape(QFrame::Box);
         labelAnalyze = new QLabel(setupForm);
         labelAnalyze->setObjectName(QString::fromUtf8("labelAnalyze"));
-        labelAnalyze->setGeometry(QRect(20, 350, 320, 100));
+        labelAnalyze->setGeometry(QRect(20, 650, 320, 100));
         labelAnalyze->setFrameShape(QFrame::Box);
         label = new QLabel(setupForm);
         label->setObjectName(QString::fromUtf8("label"));
         label->setGeometry(QRect(20, 30, 81, 16));
         label_2 = new QLabel(setupForm);
         label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(350, 30, 111, 16));
+        label_2->setGeometry(QRect(20, 180, 111, 16));
         label_3 = new QLabel(setupForm);
         label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setGeometry(QRect(680, 30, 141, 16));
+        label_3->setGeometry(QRect(20, 330, 141, 16));
         label_4 = new QLabel(setupForm);
         label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setGeometry(QRect(20, 180, 81, 16));
+        label_4->setGeometry(QRect(20, 480, 81, 16));
         label_5 = new QLabel(setupForm);
         label_5->setObjectName(QString::fromUtf8("label_5"));
-        label_5->setGeometry(QRect(20, 330, 91, 16));
+        label_5->setGeometry(QRect(20, 630, 91, 16));
         captureButton = new QPushButton(setupForm);
         captureButton->setObjectName(QString::fromUtf8("captureButton"));
         captureButton->setGeometry(QRect(130, 20, 91, 25));
@@ -148,35 +149,35 @@ public:
         checkSaveTarget->setGeometry(QRect(20, 160, 71, 17));
         checkSaveMono = new QCheckBox(setupForm);
         checkSaveMono->setObjectName(QString::fromUtf8("checkSaveMono"));
-        checkSaveMono->setGeometry(QRect(350, 160, 71, 17));
+        checkSaveMono->setGeometry(QRect(20, 310, 71, 17));
         checkSaveEdge = new QCheckBox(setupForm);
         checkSaveEdge->setObjectName(QString::fromUtf8("checkSaveEdge"));
-        checkSaveEdge->setGeometry(QRect(680, 160, 71, 17));
+        checkSaveEdge->setGeometry(QRect(20, 460, 71, 17));
         checkSaveHough = new QCheckBox(setupForm);
         checkSaveHough->setObjectName(QString::fromUtf8("checkSaveHough"));
-        checkSaveHough->setGeometry(QRect(20, 310, 71, 17));
+        checkSaveHough->setGeometry(QRect(20, 610, 71, 17));
         checkSaveAnalyze = new QCheckBox(setupForm);
         checkSaveAnalyze->setObjectName(QString::fromUtf8("checkSaveAnalyze"));
-        checkSaveAnalyze->setGeometry(QRect(20, 460, 71, 17));
+        checkSaveAnalyze->setGeometry(QRect(20, 760, 71, 17));
         checkSaveMonoMatrix = new QCheckBox(setupForm);
         checkSaveMonoMatrix->setObjectName(QString::fromUtf8("checkSaveMonoMatrix"));
-        checkSaveMonoMatrix->setGeometry(QRect(400, 160, 81, 17));
+        checkSaveMonoMatrix->setGeometry(QRect(70, 310, 81, 17));
         checkSaveEdgeMatrix = new QCheckBox(setupForm);
         checkSaveEdgeMatrix->setObjectName(QString::fromUtf8("checkSaveEdgeMatrix"));
-        checkSaveEdgeMatrix->setGeometry(QRect(730, 160, 81, 17));
+        checkSaveEdgeMatrix->setGeometry(QRect(70, 460, 81, 17));
         checkSaveHoughMatrix = new QCheckBox(setupForm);
         checkSaveHoughMatrix->setObjectName(QString::fromUtf8("checkSaveHoughMatrix"));
-        checkSaveHoughMatrix->setGeometry(QRect(70, 310, 81, 17));
+        checkSaveHoughMatrix->setGeometry(QRect(70, 610, 81, 17));
         saveButton = new QPushButton(setupForm);
         saveButton->setObjectName(QString::fromUtf8("saveButton"));
         saveButton->setGeometry(QRect(230, 20, 111, 25));
         saveButton->setFont(font);
         checkSaveHoughLines = new QCheckBox(setupForm);
         checkSaveHoughLines->setObjectName(QString::fromUtf8("checkSaveHoughLines"));
-        checkSaveHoughLines->setGeometry(QRect(130, 310, 101, 17));
+        checkSaveHoughLines->setGeometry(QRect(130, 610, 101, 17));
         checkSaveHoughSpace = new QCheckBox(setupForm);
         checkSaveHoughSpace->setObjectName(QString::fromUtf8("checkSaveHoughSpace"));
-        checkSaveHoughSpace->setGeometry(QRect(220, 310, 81, 17));
+        checkSaveHoughSpace->setGeometry(QRect(220, 610, 81, 17));
         editHoughLineNo = new QLineEdit(setupForm);
         editHoughLineNo->setObjectName(QString::fromUtf8("editHoughLineNo"));
         editHoughLineNo->setGeometry(QRect(480, 200, 42, 20));
@@ -206,7 +207,7 @@ public:
         labelPrimaryLine = new QLabel(setupForm);
         labelPrimaryLine->setObjectName(QString::fromUtf8("labelPrimaryLine"));
         labelPrimaryLine->setEnabled(true);
-        labelPrimaryLine->setGeometry(QRect(200, 180, 140, 16));
+        labelPrimaryLine->setGeometry(QRect(200, 480, 140, 16));
         labelPrimaryLine->setFont(font);
         labelPrimaryLine->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
         labelPrimaryLine->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
@@ -236,7 +237,7 @@ public:
         editHoughThetaMax->setAlignment(Qt::AlignCenter);
         plainTextEdit = new QPlainTextEdit(setupForm);
         plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
-        plainTextEdit->setGeometry(QRect(680, 190, 321, 241));
+        plainTextEdit->setGeometry(QRect(360, 510, 321, 241));
         QFont font1;
         font1.setFamily(QString::fromUtf8("Tahoma"));
         plainTextEdit->setFont(font1);
@@ -252,17 +253,17 @@ public:
         label_10->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         saveExitButton = new QPushButton(setupForm);
         saveExitButton->setObjectName(QString::fromUtf8("saveExitButton"));
-        saveExitButton->setGeometry(QRect(800, 470, 85, 25));
+        saveExitButton->setGeometry(QRect(800, 730, 85, 25));
         saveExitButton->setFont(font);
         saveExitButton->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
         exitButton = new QPushButton(setupForm);
         exitButton->setObjectName(QString::fromUtf8("exitButton"));
-        exitButton->setGeometry(QRect(917, 470, 85, 25));
+        exitButton->setGeometry(QRect(917, 730, 85, 25));
         exitButton->setFont(font);
         exitButton->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
         clearButton = new QPushButton(setupForm);
         clearButton->setObjectName(QString::fromUtf8("clearButton"));
-        clearButton->setGeometry(QRect(800, 440, 85, 25));
+        clearButton->setGeometry(QRect(800, 700, 85, 25));
         clearButton->setFont(font);
         checkSubImage = new QCheckBox(setupForm);
         checkSubImage->setObjectName(QString::fromUtf8("checkSubImage"));
@@ -303,31 +304,31 @@ public:
         line_2->setFrameShadow(QFrame::Sunken);
         label_13 = new QLabel(setupForm);
         label_13->setObjectName(QString::fromUtf8("label_13"));
-        label_13->setGeometry(QRect(360, 444, 111, 21));
+        label_13->setGeometry(QRect(750, 30, 111, 21));
         label_13->setFont(font);
         label_13->setFrameShape(QFrame::Box);
         label_13->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         label_14 = new QLabel(setupForm);
         label_14->setObjectName(QString::fromUtf8("label_14"));
-        label_14->setGeometry(QRect(360, 474, 111, 21));
+        label_14->setGeometry(QRect(750, 60, 111, 21));
         label_14->setFont(font);
         label_14->setFrameShape(QFrame::Box);
         label_14->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         editIPI = new QLineEdit(setupForm);
         editIPI->setObjectName(QString::fromUtf8("editIPI"));
-        editIPI->setGeometry(QRect(480, 474, 42, 20));
+        editIPI->setGeometry(QRect(870, 60, 42, 20));
         editIPI->setMaxLength(2);
         editIPI->setAlignment(Qt::AlignCenter);
         editFPS = new QLineEdit(setupForm);
         editFPS->setObjectName(QString::fromUtf8("editFPS"));
-        editFPS->setGeometry(QRect(480, 444, 42, 20));
+        editFPS->setGeometry(QRect(870, 30, 42, 20));
         editFPS->setAlignment(Qt::AlignCenter);
         subTypeBox = new QComboBox(setupForm);
         subTypeBox->setObjectName(QString::fromUtf8("subTypeBox"));
         subTypeBox->setGeometry(QRect(550, 380, 111, 22));
         zctrlBox = new QCheckBox(setupForm);
         zctrlBox->setObjectName(QString::fromUtf8("zctrlBox"));
-        zctrlBox->setGeometry(QRect(540, 450, 131, 17));
+        zctrlBox->setGeometry(QRect(750, 90, 131, 17));
         QFont font2;
         font2.setPointSize(10);
         font2.setBold(false);
@@ -335,8 +336,12 @@ public:
         zctrlBox->setFont(font2);
         hardControlStartBox = new QCheckBox(setupForm);
         hardControlStartBox->setObjectName(QString::fromUtf8("hardControlStartBox"));
-        hardControlStartBox->setGeometry(QRect(540, 470, 161, 17));
+        hardControlStartBox->setGeometry(QRect(750, 150, 161, 17));
         hardControlStartBox->setFont(font2);
+        widthControlBox = new QCheckBox(setupForm);
+        widthControlBox->setObjectName(QString::fromUtf8("widthControlBox"));
+        widthControlBox->setGeometry(QRect(750, 120, 161, 17));
+        widthControlBox->setFont(font2);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -348,6 +353,7 @@ public:
         QObject::connect(subTypeBox, SIGNAL(currentIndexChanged(int)), setupForm, SLOT(subType()));
         QObject::connect(zctrlBox, SIGNAL(stateChanged(int)), setupForm, SLOT(zctrlBox()));
         QObject::connect(hardControlStartBox, SIGNAL(stateChanged(int)), setupForm, SLOT(hardControlStartBox()));
+        QObject::connect(widthControlBox, SIGNAL(stateChanged(int)), setupForm, SLOT(widthControl()));
 
         QMetaObject::connectSlotsByName(setupForm);
     } // setupUi
@@ -423,6 +429,7 @@ public:
         );
         zctrlBox->setText(QApplication::translate("setupForm", "Y\303\274kseklik Kontrol\303\274", 0, QApplication::UnicodeUTF8));
         hardControlStartBox->setText(QApplication::translate("setupForm", "Hard Kaynak Ba\305\237lang\304\261c\304\261", 0, QApplication::UnicodeUTF8));
+        widthControlBox->setText(QApplication::translate("setupForm", "Geni\305\237lik Kontrol\303\274", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

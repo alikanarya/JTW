@@ -154,6 +154,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     checker();
 
+    mak_aktif_now = mak_aktif_old = false;
+
     if (permPLC && connectRequestedonBoot){
         plcInteractPrev = false;
 
@@ -197,7 +199,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     controlInitiated = false;
     initialJointWidth = jointWidth = 0;
     maxJointWidth = 1000;
-    jointWidthControlActive = true;
 
     cmdState = _CMD_STOP;
     cmdStatePrev2 = _CMD_CENTER;
@@ -343,12 +344,21 @@ void MainWindow:: plcControl(){
     checker();
 
     int state = _CMD_STOP;
-    int stateZ = _CMD_Z_CENTER;
+    //int stateZ = _CMD_Z_CENTER;
 
 
 
     if (controlThreadCount % 4 == 0){
         threadPLCControl->commandRead = true;
+
+        if (hardControlStart){
+            if (mak_aktif_now && !mak_aktif_old)
+                alignGuide2TrackCenter = true;
+            else
+                alignGuide2TrackCenter = false;
+
+            mak_aktif_old = mak_aktif_now;
+        }
 /*
         distance = 300 - ((distanceRaw * 1.0) / 27648.0) * 220.0;
         ui->labelDistance->setText( QString::number(distance, 'f', 1) );
@@ -375,9 +385,16 @@ void MainWindow:: plcControl(){
                     state = _CMD_STOP;
                 } else {
                     if (play && trackOn && controlOn && permPLC){
-                        state = cmdState;   // Weld Command from image processing
 
-                        stateZ = cmdZState; // Z-Control command
+                        if (hardControlStart) {
+
+                            if (mak_aktif_now)
+                                state = cmdState;   // Weld Command from image processing
+                        } else {
+                            state = cmdState;   // Weld Command from image processing
+                        }
+
+                        //stateZ = cmdZState; // Z-Control command
                     } else
                         state = _CMD_STOP;
                 }
@@ -388,20 +405,25 @@ void MainWindow:: plcControl(){
         goX = false;
         if (state != cmdStatePrev) {
 
-            if (state == _CMD_RIGHT)
-                ui->cmdStatus->setIcon(cmd2LeftIcon);
-            else if (state == _CMD_LEFT)
-                ui->cmdStatus->setIcon(cmd2RightIcon);
-            else if (state != _CMD_CHECK)
-                ui->cmdStatus->setIcon(QIcon());
+            if (hardControlStart && alignGuide2TrackCenter){
+                goX = false;
+            } else {
+                goX = true;
 
-            goX = true;
+                if (state == _CMD_RIGHT)
+                    ui->cmdStatus->setIcon(cmd2LeftIcon);
+                else if (state == _CMD_LEFT)
+                    ui->cmdStatus->setIcon(cmd2RightIcon);
+                else if (state != _CMD_CHECK)
+                    ui->cmdStatus->setIcon(QIcon());
+            }
         }
 
 
         if (goX || !cmdSended || threadPLCControl->commandRead) {
 
             cmdSended = false;
+
 
             if (!threadPLCControl->isRunning()){
 
@@ -1602,6 +1624,8 @@ void MainWindow::readSettings(){
             connectRequestedonBoot = settings->value("pcon", _PLC_CONN_ONBOOT).toBool();
             controlDelay = 0;   //settings->value("ctd", _CONTROL_DELAY).toInt();
             hardControlStart = settings->value("hard", _HARD_START).toBool();
+            machineNo = settings->value("makine", _MACHINE_NO).toInt();
+                if (machineNo < 1 || machineNo > 8) machineNo = 1;
         settings->endGroup();
 
         settings->beginGroup("ipro");
@@ -1628,6 +1652,7 @@ void MainWindow::readSettings(){
                 errorStopLimitNeg = -1 * errorStopLimit;
 
             thinJointAlgoActive = settings->value("thin", _THIN_JOINT).toBool();
+            jointWidthControlActive = settings->value("widthctrl", _WIDTH_CONTROL).toBool();
 
         settings->endGroup();
 
@@ -1654,6 +1679,7 @@ void MainWindow::readSettings(){
         connectRequestedonBoot = _PLC_CONN_ONBOOT;
         controlDelay = _CONTROL_DELAY;
         hardControlStart = _HARD_START;
+        machineNo = _MACHINE_NO;
 
         iprocessInterval = _IPROCESS_INT;
         frameWidth = _FRAME_WIDTH;
@@ -1677,6 +1703,7 @@ void MainWindow::readSettings(){
             errorStopLimitNeg = -1 * errorStopLimit;
 
         thinJointAlgoActive = _THIN_JOINT;
+        jointWidthControlActive = _WIDTH_CONTROL;
 
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
@@ -1710,6 +1737,7 @@ void MainWindow::writeSettings(){
         settings->setValue("ctd", QString::number(controlDelay));
         QVariant hardstart(hardControlStart);
             settings->setValue("hard", hardstart.toString());
+        settings->setValue("makine", QString::number(machineNo));
     settings->endGroup();
 
     settings->beginGroup("ipro");
@@ -1734,6 +1762,8 @@ void MainWindow::writeSettings(){
         QVariant thinjointsw(thinJointAlgoActive);
             settings->setValue("thin", thinjointsw.toString());
 
+        QVariant widthsw(jointWidthControlActive);
+            settings->setValue("widthctrl", widthsw.toString());
 
     settings->endGroup();
 

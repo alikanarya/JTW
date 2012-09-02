@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1019</width>
-    <height>505</height>
+    <height>800</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,13 +22,13 @@
   <property name="minimumSize">
    <size>
     <width>1019</width>
-    <height>505</height>
+    <height>800</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1019</width>
-    <height>505</height>
+    <height>800</height>
    </size>
   </property>
   <property name="contextMenuPolicy">
@@ -60,8 +60,8 @@
   <widget class="QLabel" name="labelMono">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>50</y>
+     <x>20</x>
+     <y>200</y>
      <width>320</width>
      <height>100</height>
     </rect>
@@ -76,8 +76,8 @@
   <widget class="QLabel" name="labelEdge">
    <property name="geometry">
     <rect>
-     <x>680</x>
-     <y>50</y>
+     <x>20</x>
+     <y>350</y>
      <width>320</width>
      <height>100</height>
     </rect>
@@ -93,7 +93,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>200</y>
+     <y>500</y>
      <width>320</width>
      <height>100</height>
     </rect>
@@ -109,7 +109,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>350</y>
+     <y>650</y>
      <width>320</width>
      <height>100</height>
     </rect>
@@ -137,8 +137,8 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>30</y>
+     <x>20</x>
+     <y>180</y>
      <width>111</width>
      <height>16</height>
     </rect>
@@ -150,8 +150,8 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>680</x>
-     <y>30</y>
+     <x>20</x>
+     <y>330</y>
      <width>141</width>
      <height>16</height>
     </rect>
@@ -164,7 +164,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>180</y>
+     <y>480</y>
      <width>81</width>
      <height>16</height>
     </rect>
@@ -177,7 +177,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>330</y>
+     <y>630</y>
      <width>91</width>
      <height>16</height>
     </rect>
@@ -221,32 +221,6 @@
   <widget class="QCheckBox" name="checkSaveMono">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>160</y>
-     <width>71</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>İmaj</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveEdge">
-   <property name="geometry">
-    <rect>
-     <x>680</x>
-     <y>160</y>
-     <width>71</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>İmaj</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveHough">
-   <property name="geometry">
-    <rect>
      <x>20</x>
      <y>310</y>
      <width>71</width>
@@ -257,7 +231,7 @@
     <string>İmaj</string>
    </property>
   </widget>
-  <widget class="QCheckBox" name="checkSaveAnalyze">
+  <widget class="QCheckBox" name="checkSaveEdge">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -270,11 +244,37 @@
     <string>İmaj</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkSaveHough">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>610</y>
+     <width>71</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>İmaj</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkSaveAnalyze">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>760</y>
+     <width>71</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>İmaj</string>
+   </property>
+  </widget>
   <widget class="QCheckBox" name="checkSaveMonoMatrix">
    <property name="geometry">
     <rect>
-     <x>400</x>
-     <y>160</y>
+     <x>70</x>
+     <y>310</y>
      <width>81</width>
      <height>17</height>
     </rect>
@@ -286,8 +286,8 @@
   <widget class="QCheckBox" name="checkSaveEdgeMatrix">
    <property name="geometry">
     <rect>
-     <x>730</x>
-     <y>160</y>
+     <x>70</x>
+     <y>460</y>
      <width>81</width>
      <height>17</height>
     </rect>
@@ -300,7 +300,7 @@
    <property name="geometry">
     <rect>
      <x>70</x>
-     <y>310</y>
+     <y>610</y>
      <width>81</width>
      <height>17</height>
     </rect>
@@ -332,7 +332,7 @@
    <property name="geometry">
     <rect>
      <x>130</x>
-     <y>310</y>
+     <y>610</y>
      <width>101</width>
      <height>17</height>
     </rect>
@@ -345,7 +345,7 @@
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>310</y>
+     <y>610</y>
      <width>81</width>
      <height>17</height>
     </rect>
@@ -471,7 +471,7 @@
    <property name="geometry">
     <rect>
      <x>200</x>
-     <y>180</y>
+     <y>480</y>
      <width>140</width>
      <height>16</height>
     </rect>
@@ -602,8 +602,8 @@
   <widget class="QPlainTextEdit" name="plainTextEdit">
    <property name="geometry">
     <rect>
-     <x>680</x>
-     <y>190</y>
+     <x>360</x>
+     <y>510</y>
      <width>321</width>
      <height>241</height>
     </rect>
@@ -668,7 +668,7 @@
    <property name="geometry">
     <rect>
      <x>800</x>
-     <y>470</y>
+     <y>730</y>
      <width>85</width>
      <height>25</height>
     </rect>
@@ -690,7 +690,7 @@
    <property name="geometry">
     <rect>
      <x>917</x>
-     <y>470</y>
+     <y>730</y>
      <width>85</width>
      <height>25</height>
     </rect>
@@ -712,7 +712,7 @@
    <property name="geometry">
     <rect>
      <x>800</x>
-     <y>440</y>
+     <y>700</y>
      <width>85</width>
      <height>25</height>
     </rect>
@@ -876,8 +876,8 @@
   <widget class="QLabel" name="label_13">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>444</y>
+     <x>750</x>
+     <y>30</y>
      <width>111</width>
      <height>21</height>
     </rect>
@@ -901,8 +901,8 @@
   <widget class="QLabel" name="label_14">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>474</y>
+     <x>750</x>
+     <y>60</y>
      <width>111</width>
      <height>21</height>
     </rect>
@@ -926,8 +926,8 @@
   <widget class="QLineEdit" name="editIPI">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>474</y>
+     <x>870</x>
+     <y>60</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -948,8 +948,8 @@
   <widget class="QLineEdit" name="editFPS">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>444</y>
+     <x>870</x>
+     <y>30</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -987,8 +987,8 @@
   <widget class="QCheckBox" name="zctrlBox">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>450</y>
+     <x>750</x>
+     <y>90</y>
      <width>131</width>
      <height>17</height>
     </rect>
@@ -1007,8 +1007,8 @@
   <widget class="QCheckBox" name="hardControlStartBox">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>470</y>
+     <x>750</x>
+     <y>150</y>
      <width>161</width>
      <height>17</height>
     </rect>
@@ -1022,6 +1022,26 @@
    </property>
    <property name="text">
     <string>Hard Kaynak Başlangıcı</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="widthControlBox">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>120</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Genişlik Kontrolü</string>
    </property>
   </widget>
  </widget>
@@ -1069,7 +1089,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>857</x>
-     <y>164</y>
+     <y>700</y>
     </hint>
     <hint type="destinationlabel">
      <x>925</x>
@@ -1084,8 +1104,8 @@
    <slot>exitButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>854</x>
-     <y>479</y>
+     <x>917</x>
+     <y>739</y>
     </hint>
     <hint type="destinationlabel">
      <x>808</x>
@@ -1100,8 +1120,8 @@
    <slot>saveExitButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>983</x>
-     <y>481</y>
+     <x>884</x>
+     <y>741</y>
     </hint>
     <hint type="destinationlabel">
      <x>1009</x>
@@ -1148,8 +1168,8 @@
    <slot>zctrlBox()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>552</x>
-     <y>455</y>
+     <x>762</x>
+     <y>95</y>
     </hint>
     <hint type="destinationlabel">
      <x>534</x>
@@ -1164,12 +1184,28 @@
    <slot>hardControlStartBox()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>689</x>
-     <y>475</y>
+     <x>899</x>
+     <y>155</y>
     </hint>
     <hint type="destinationlabel">
      <x>708</x>
      <y>475</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>widthControlBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>setupForm</receiver>
+   <slot>widthControl()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>868</x>
+     <y>123</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>927</x>
+     <y>124</y>
     </hint>
    </hints>
   </connection>
@@ -1184,5 +1220,7 @@
   <slot>subType()</slot>
   <slot>zctrlBox()</slot>
   <slot>hardControlStartBox()</slot>
+  <slot>machineSelection()</slot>
+  <slot>widthControl()</slot>
  </slots>
 </ui>
