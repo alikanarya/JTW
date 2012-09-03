@@ -50,6 +50,10 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
 
     ui->hardControlStartBox->setChecked( w->hardControlStart );
 
+    ui->readMachineStatusBox->setChecked( w->readMachineStatus );
+
+    ui->readDistanceBox->setChecked( w->readDistance );
+
 }
 
 
@@ -598,6 +602,18 @@ void setupForm::widthControl(){
 }
 
 
+void setupForm::readMachineStatusBox(){
+
+    w->readMachineStatus = ui->readMachineStatusBox->isChecked();
+}
+
+
+void setupForm::readDistanceBox(){
+
+    w->readDistance = ui->readDistanceBox->isChecked();
+}
+
+
 void setupForm::exitButton(){
 
     this->close();
@@ -621,7 +637,7 @@ setupForm::~setupForm(){
         iprocessRightInitSwitch = false;
     }
 
-    if (w->zControlActive){
+    if (w->zControlActive || w->readDistance){
         //w->ui->zControlButton->setIcon(w->zIconEnabled);
         w->ui->labelDistance->show();
         w->ui->labelDistanceTag->show();

@@ -75,6 +75,8 @@ private slots:
     void zctrlBox();
     void widthControl();
     void hardControlStartBox();
+    void readMachineStatusBox();
+    void readDistanceBox();
 
 };
 

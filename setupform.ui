@@ -985,6 +985,9 @@
    </item>
   </widget>
   <widget class="QCheckBox" name="zctrlBox">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>750</x>
@@ -1040,8 +1043,82 @@
      <bold>false</bold>
     </font>
    </property>
+   <property name="toolTip">
+    <string>Kaynak başlangıcındaki genişliğin %80 ile %120 si arasını geçerli say</string>
+   </property>
    <property name="text">
     <string>Genişlik Kontrolü</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_15">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>190</y>
+     <width>231</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string>PLC BİLGİ</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="readMachineStatusBox">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>220</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>DB2.DB0.x</string>
+   </property>
+   <property name="text">
+    <string>Makine Çalışma Durumu Bilgisi</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="readDistanceBox">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>240</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>DBX.DBW2</string>
+   </property>
+   <property name="text">
+    <string>Mesafe Bilgisi</string>
    </property>
   </widget>
  </widget>
@@ -1209,6 +1286,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>readMachineStatusBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>setupForm</receiver>
+   <slot>readMachineStatusBox()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>853</x>
+     <y>228</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>991</x>
+     <y>232</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>readDistanceBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>setupForm</receiver>
+   <slot>readDistanceBox()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>845</x>
+     <y>248</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1007</x>
+     <y>253</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>captureButton()</slot>
@@ -1222,5 +1331,7 @@
   <slot>hardControlStartBox()</slot>
   <slot>machineSelection()</slot>
   <slot>widthControl()</slot>
+  <slot>readMachineStatusBox()</slot>
+  <slot>readDistanceBox()</slot>
  </slots>
 </ui>

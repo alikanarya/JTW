@@ -146,7 +146,7 @@
     </font>
    </property>
    <property name="text">
-    <string>ver 1.9.22, ©Orun Elektronik, 2012</string>
+    <string>ver 1.9.30, ©Orun Elektronik, 2012</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>

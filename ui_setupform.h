@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'setupform.ui'
 **
-** Created: Mon 3. Sep 01:22:00 2012
+** Created: Mon 3. Sep 16:03:46 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -84,6 +84,9 @@ public:
     QCheckBox *zctrlBox;
     QCheckBox *hardControlStartBox;
     QCheckBox *widthControlBox;
+    QLabel *label_15;
+    QCheckBox *readMachineStatusBox;
+    QCheckBox *readDistanceBox;
 
     void setupUi(QWidget *setupForm)
     {
@@ -328,6 +331,7 @@ public:
         subTypeBox->setGeometry(QRect(550, 380, 111, 22));
         zctrlBox = new QCheckBox(setupForm);
         zctrlBox->setObjectName(QString::fromUtf8("zctrlBox"));
+        zctrlBox->setEnabled(false);
         zctrlBox->setGeometry(QRect(750, 90, 131, 17));
         QFont font2;
         font2.setPointSize(10);
@@ -342,6 +346,20 @@ public:
         widthControlBox->setObjectName(QString::fromUtf8("widthControlBox"));
         widthControlBox->setGeometry(QRect(750, 120, 161, 17));
         widthControlBox->setFont(font2);
+        label_15 = new QLabel(setupForm);
+        label_15->setObjectName(QString::fromUtf8("label_15"));
+        label_15->setGeometry(QRect(750, 190, 231, 201));
+        label_15->setFont(font);
+        label_15->setFrameShape(QFrame::Box);
+        label_15->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+        readMachineStatusBox = new QCheckBox(setupForm);
+        readMachineStatusBox->setObjectName(QString::fromUtf8("readMachineStatusBox"));
+        readMachineStatusBox->setGeometry(QRect(760, 220, 201, 17));
+        readMachineStatusBox->setFont(font2);
+        readDistanceBox = new QCheckBox(setupForm);
+        readDistanceBox->setObjectName(QString::fromUtf8("readDistanceBox"));
+        readDistanceBox->setGeometry(QRect(760, 240, 201, 17));
+        readDistanceBox->setFont(font2);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -354,6 +372,8 @@ public:
         QObject::connect(zctrlBox, SIGNAL(stateChanged(int)), setupForm, SLOT(zctrlBox()));
         QObject::connect(hardControlStartBox, SIGNAL(stateChanged(int)), setupForm, SLOT(hardControlStartBox()));
         QObject::connect(widthControlBox, SIGNAL(stateChanged(int)), setupForm, SLOT(widthControl()));
+        QObject::connect(readMachineStatusBox, SIGNAL(stateChanged(int)), setupForm, SLOT(readMachineStatusBox()));
+        QObject::connect(readDistanceBox, SIGNAL(stateChanged(int)), setupForm, SLOT(readDistanceBox()));
 
         QMetaObject::connectSlotsByName(setupForm);
     } // setupUi
@@ -429,7 +449,19 @@ public:
         );
         zctrlBox->setText(QApplication::translate("setupForm", "Y\303\274kseklik Kontrol\303\274", 0, QApplication::UnicodeUTF8));
         hardControlStartBox->setText(QApplication::translate("setupForm", "Hard Kaynak Ba\305\237lang\304\261c\304\261", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        widthControlBox->setToolTip(QApplication::translate("setupForm", "Kaynak ba\305\237lang\304\261c\304\261ndaki geni\305\237li\304\237in %80 ile %120 si aras\304\261n\304\261 ge\303\247erli say", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
         widthControlBox->setText(QApplication::translate("setupForm", "Geni\305\237lik Kontrol\303\274", 0, QApplication::UnicodeUTF8));
+        label_15->setText(QApplication::translate("setupForm", "PLC B\304\260LG\304\260", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        readMachineStatusBox->setToolTip(QApplication::translate("setupForm", "DB2.DB0.x", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        readMachineStatusBox->setText(QApplication::translate("setupForm", "Makine \303\207al\304\261\305\237ma Durumu Bilgisi", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        readDistanceBox->setToolTip(QApplication::translate("setupForm", "DBX.DBW2", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        readDistanceBox->setText(QApplication::translate("setupForm", "Mesafe Bilgisi", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

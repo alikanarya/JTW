@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'licensedialog.ui'
 **
-** Created: Sat 28. Jul 01:23:03 2012
+** Created: Mon 3. Sep 16:16:36 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -110,7 +110,7 @@ public:
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2';\">* Bilgisayar konfig\303\274rasyonu veya yaz\304\261l\304\261m\304\261 de\304\237i\305\237ince, mevcut lisans dosyas\304\261 kullan\304\261lmaz hale gelebilir. Bu durumda yukar\304\261daki \303\274r\303\274n anahtar\304\261n\304\261 Aykurt Elektri\304\237e bildirerek lisans dosyas\304\261 talep ediniz.</span></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2';\"></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell"
-                        " Dlg 2';\">Detayl\304\261 bilgi i\303\247in Aykurt Elektrik ile temas kurunuz.</span></p>\n"
+                        " Dlg 2';\">Detayl\304\261 bilgi i\303\247in Orun Elektronik ile temas kurunuz.</span></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2';\"></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'MS Shell Dlg 2'; font-weight:600;\">Program Kapat\304\261lacakt\304\261r !</span></p></body></html>", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("licenseDialog", "Tamam", 0, QApplication::UnicodeUTF8));

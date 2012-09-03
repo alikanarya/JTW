@@ -69,12 +69,20 @@ void plcControlThread::run(){
                 }
             }
 
+
             if (commandRead) {
 
-                readPLC();
-                //readDistanceValue();
+                if ( w->readMachineStatus ) {
+                    readPLC();
+                }
+
+                if ( w->readDistance ) {
+                    readDistanceValue();
+                }
+
                 commandRead = false;
             }
+
 
         }
 

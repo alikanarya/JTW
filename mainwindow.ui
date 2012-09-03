@@ -1129,6 +1129,9 @@ background-color: rgb(236, 233, 216);</string>
     </property>
    </widget>
    <widget class="QPushButton" name="testButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>470</x>

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri 31. Aug 22:55:37 2012
+** Created: Mon 3. Sep 17:33:09 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -429,6 +429,7 @@ public:
         labelDistanceTag2->setAlignment(Qt::AlignCenter);
         testButton = new QPushButton(centralWidget);
         testButton->setObjectName(QString::fromUtf8("testButton"));
+        testButton->setEnabled(false);
         testButton->setGeometry(QRect(470, 10, 41, 23));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);

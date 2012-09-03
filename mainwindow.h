@@ -35,6 +35,8 @@
 #define _HARD_START         false
 #define _MACHINE_NO         1
 #define _WIDTH_CONTROL      false
+#define _READ_MACHINE_STAT  false
+#define _READ_DISTANCE      false
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -214,6 +216,8 @@ public:
     int controlDelay;
     int controlThreadCount, controlThreadCountSize;
     bool controlPause;
+    bool readMachineStatus;
+    bool readDistance;
 
     //hard makine kontrolü için
     bool hardControlStart;
@@ -312,6 +316,7 @@ public slots:
     void plcControl();
     void target2Left();
     void target2Right();
+    void showInfo();
 
 signals:
     void cameraDown();

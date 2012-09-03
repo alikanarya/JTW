@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->emergencyButton->hide();
     ui->zControlButton->hide();
     ui->testEdit->hide();
+    ui->testButton->hide();
 
     // icon assignmets
     plcOnlineIcon.addFile(":/resources/s7_200-Enabled-Icon.png");
@@ -68,16 +69,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     if ( thinJointAlgoActive ) {
         ui->thinJointButton->setStyleSheet("color: rgb(255, 0, 0)");
-
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-
-//        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
-        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nÇok Ýnce Aðýzlarda Aktif Hale Getiriniz!";
-        msgBox.setText(str);
-        msgBox.setStandardButtons(QMessageBox::Ok);
-        msgBox.setDefaultButton(QMessageBox::Ok);
-        msgBox.exec();
     } else
         ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
 
@@ -217,34 +208,53 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         QTimer::singleShot(500, this, SLOT(showLicenseDialog()));
     }
 
-    if ( zControlActive ) {
+
+    if ( zControlActive || readDistance) {
 
         ui->zControlButton->setIcon(zIconEnabled);
         ui->labelDistance->show();
         ui->labelDistanceTag->show();
         ui->labelDistanceTag2->show();
-
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-
-        QString str = "Yükseklik Kontrolü Aktif!";
-        msgBox.setText(str);
-        msgBox.setStandardButtons(QMessageBox::Ok);
-        msgBox.setDefaultButton(QMessageBox::Ok);
-        msgBox.exec();
     } else {
+
         ui->zControlButton->setIcon(zIconDisabled);
         ui->labelDistance->hide();
         ui->labelDistanceTag->hide();
         ui->labelDistanceTag2->hide();
-
     }
+
 
     // z control
     distanceRaw = 32000;  // to make distance neg read initially
     zStartStopRate = 0.3;
 
 
+    if ( thinJointAlgoActive || zControlActive || hardControlStart )
+        QTimer::singleShot(500, this, SLOT(showInfo()));
+
+}
+
+
+void MainWindow::showInfo(){
+
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        QString str = "";
+
+        if (thinJointAlgoActive)
+            str += "AKTÝF !!! : Ýnce Kaynak Aðzý Uygulamasý\n";
+                    //"Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+
+        if (zControlActive)
+            str += "AKTÝF !!! : Yükseklik Kontrolü\n";
+
+        if (hardControlStart)
+            str += "AKTÝF !!! : Makineden Kaynak Baþlatma\n";
+
+        msgBox.setText(str);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
 }
 
 
@@ -347,23 +357,31 @@ void MainWindow:: plcControl(){
     //int stateZ = _CMD_Z_CENTER;
 
 
+    if ( readMachineStatus || readDistance ) {
 
-    if (controlThreadCount % 4 == 0){
-        threadPLCControl->commandRead = true;
+        if (controlThreadCount % 4 == 0){
 
-        if (hardControlStart){
-            if (mak_aktif_now && !mak_aktif_old)
-                alignGuide2TrackCenter = true;
-            else
-                alignGuide2TrackCenter = false;
+            threadPLCControl->commandRead = true;
 
-            mak_aktif_old = mak_aktif_now;
+            if (hardControlStart && readMachineStatus){
+
+                if (mak_aktif_now && !mak_aktif_old)
+                    alignGuide2TrackCenter = true;
+                else
+                    alignGuide2TrackCenter = false;
+
+                mak_aktif_old = mak_aktif_now;
+            }
+
+            if ( readDistance ) {
+
+                distance = 300 - ((distanceRaw * 1.0) / 27648.0) * 220.0;
+                ui->labelDistance->setText( QString::number(distance, 'f', 1) );
+            }
         }
-/*
-        distance = 300 - ((distanceRaw * 1.0) / 27648.0) * 220.0;
-        ui->labelDistance->setText( QString::number(distance, 'f', 1) );
-*/
+
     }
+
 
     if (!controlPause){
 
@@ -1626,6 +1644,8 @@ void MainWindow::readSettings(){
             hardControlStart = settings->value("hard", _HARD_START).toBool();
             machineNo = settings->value("makine", _MACHINE_NO).toInt();
                 if (machineNo < 1 || machineNo > 8) machineNo = 1;
+            readMachineStatus = settings->value("readstat", _READ_MACHINE_STAT).toBool();
+            readDistance = settings->value("readdist", _READ_DISTANCE).toBool();
         settings->endGroup();
 
         settings->beginGroup("ipro");
@@ -1680,6 +1700,8 @@ void MainWindow::readSettings(){
         controlDelay = _CONTROL_DELAY;
         hardControlStart = _HARD_START;
         machineNo = _MACHINE_NO;
+        readMachineStatus = _READ_MACHINE_STAT;
+        readDistance = _READ_DISTANCE;
 
         iprocessInterval = _IPROCESS_INT;
         frameWidth = _FRAME_WIDTH;
@@ -1738,6 +1760,10 @@ void MainWindow::writeSettings(){
         QVariant hardstart(hardControlStart);
             settings->setValue("hard", hardstart.toString());
         settings->setValue("makine", QString::number(machineNo));
+        QVariant readstat(readMachineStatus);
+            settings->setValue("readstat", readstat.toString());
+        QVariant readdist(readDistance);
+            settings->setValue("readdist", readdist.toString());
     settings->endGroup();
 
     settings->beginGroup("ipro");
