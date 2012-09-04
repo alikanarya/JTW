@@ -212,7 +212,7 @@ bool plcControlThread::readDistanceValue(){
 
     int result;
 
-    result = plc->readBytes(dbNoRead, 2, 2, readBufferInt);
+    result = plc->readBytes(dbNo, 2, 2, readBufferInt);
 
     if (result == 0){
 
