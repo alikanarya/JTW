@@ -711,7 +711,7 @@ void MainWindow::guideButton(){
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
 
-    /* EDGE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    // * EDGE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -766,9 +766,12 @@ void MainWindow::guideButton(){
         iprocess->calculateHoughMaxs(200);              // get max voted line(s)
             //iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines.csv");
 
+        if (thinJointAlgoActive)
+            iprocess->thinCornerNum = 1;
+
         iprocess->detectMainEdges(thinJointAlgoActive, true);
             //iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines_distance.csv");
-            / *
+            /*
             ui->plainTextEdit->appendPlainText("-1st-maximas---");
             for (int i=0; i<iprocess->localMaximaSize;i++)
                 ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray[i][0]) +" stop: "+QString::number(iprocess->rangeArray[i][1]));
@@ -780,7 +783,7 @@ void MainWindow::guideButton(){
             ui->plainTextEdit->appendPlainText("-2nd-maximas---");
             for (int i=0; i<iprocess->localMaxima2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray2nd[i][0]) +" stop: "+QString::number(iprocess->rangeArray2nd[i][1]));
-            * /
+            */
             ui->plainTextEdit->appendPlainText("-2nd hough vals---");
             for (int i=0; i<iprocess->listHoughData2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
@@ -793,7 +796,7 @@ void MainWindow::guideButton(){
         delete iprocess;
         iprocessInitSwitch = false;
     }
-    */
+    // */
 
 
 
@@ -1379,6 +1382,9 @@ void MainWindow::processEdgeDetection(){
         iprocess->houghTransformEdgeMap();;
 
         iprocess->calculateHoughMaxs(200);              // get max voted line(s)
+
+        if (thinJointAlgoActive)
+            iprocess->thinCornerNum = 1;
 
         iprocess->detectMainEdges(thinJointAlgoActive, false);
 
