@@ -1023,6 +1023,9 @@
      <bold>false</bold>
     </font>
    </property>
+   <property name="toolTip">
+    <string>Makineden Kaynak Başlangıcı</string>
+   </property>
    <property name="text">
     <string>Hard Kaynak Başlangıcı</string>
    </property>
@@ -1054,7 +1057,7 @@
    <property name="geometry">
     <rect>
      <x>750</x>
-     <y>190</y>
+     <y>220</y>
      <width>231</width>
      <height>201</height>
     </rect>
@@ -1079,7 +1082,7 @@
    <property name="geometry">
     <rect>
      <x>760</x>
-     <y>220</y>
+     <y>250</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -1102,7 +1105,7 @@
    <property name="geometry">
     <rect>
      <x>760</x>
-     <y>240</y>
+     <y>270</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -1119,6 +1122,52 @@
    </property>
    <property name="text">
     <string>Mesafe Bilgisi</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="dynamicAlgoBox">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>180</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>İKA ya Otomaik Geç</string>
+   </property>
+   <property name="text">
+    <string>Dinamik Algoritma</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="readWeldSeamBox">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>290</y>
+     <width>201</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>DB2.DB0.x</string>
+   </property>
+   <property name="text">
+    <string>Kaynak İzi  Bilgisi</string>
    </property>
   </widget>
  </widget>
@@ -1294,7 +1343,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>853</x>
-     <y>228</y>
+     <y>258</y>
     </hint>
     <hint type="destinationlabel">
      <x>991</x>
@@ -1310,11 +1359,43 @@
    <hints>
     <hint type="sourcelabel">
      <x>845</x>
-     <y>248</y>
+     <y>278</y>
     </hint>
     <hint type="destinationlabel">
      <x>1007</x>
      <y>253</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dynamicAlgoBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>setupForm</receiver>
+   <slot>dynamicAlgoBox()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>860</x>
+     <y>190</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>917</x>
+     <y>187</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>readWeldSeamBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>setupForm</receiver>
+   <slot>readWeldSeamBox()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>879</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>997</x>
+     <y>299</y>
     </hint>
    </hints>
   </connection>
@@ -1333,5 +1414,7 @@
   <slot>widthControl()</slot>
   <slot>readMachineStatusBox()</slot>
   <slot>readDistanceBox()</slot>
+  <slot>dynamicAlgoBox()</slot>
+  <slot>readWeldSeamBox()</slot>
  </slots>
 </ui>

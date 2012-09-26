@@ -77,6 +77,9 @@ private slots:
     void hardControlStartBox();
     void readMachineStatusBox();
     void readDistanceBox();
+    void dynamicAlgoBox();
+    void readWeldSeamBox();
+
 
 };
 

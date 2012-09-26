@@ -125,6 +125,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     emergencyStop = false;
     detectionError = true;
     permOperator = false;
+    weldSeamExists = false;
 
     // plc
     connectRequested = connectRequestedonBoot;
@@ -241,9 +242,14 @@ void MainWindow::showInfo(){
         msgBox.setIcon(QMessageBox::Warning);
         QString str = "";
 
-        if (thinJointAlgoActive)
-            str += "AKTÝF !!! : Ýnce Kaynak Aðzý Uygulamasý\n";
-                    //"Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+
+        if (dynamicAlgo)
+            str += "AKTÝF !!! : Dinamik Algoritma\n";
+        else {
+            if (thinJointAlgoActive)
+                str += "AKTÝF !!! : Ýnce Kaynak Aðzý Uygulamasý\n";
+                        //"Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+        }
 
         if (zControlActive)
             str += "AKTÝF !!! : Yükseklik Kontrolü\n";
@@ -357,7 +363,7 @@ void MainWindow:: plcControl(){
     //int stateZ = _CMD_Z_CENTER;
 
 
-    if ( readMachineStatus || readDistance ) {
+    if ( readMachineStatus || readDistance || readWeldSeam ) {
 
         if (controlThreadCount % 4 == 0){
 
@@ -569,6 +575,10 @@ void MainWindow::updateSn(){
     else
         ui->plcStatus->setIcon(plcOfflineIcon);
 
+    if ( thinJointAlgoActive )
+        ui->thinJointButton->setStyleSheet("color: rgb(255, 0, 0)");
+    else
+        ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
 
     // if video is played
     if (play){
@@ -1062,6 +1072,9 @@ void MainWindow::zControlButton(){
 
 
 void MainWindow::processImage(){
+
+    if (dynamicAlgo)
+        thinJointAlgoActive = !weldSeamExists;
 
     processEdgeDetection();
 
@@ -1652,6 +1665,8 @@ void MainWindow::readSettings(){
                 if (machineNo < 1 || machineNo > 8) machineNo = 1;
             readMachineStatus = settings->value("readstat", _READ_MACHINE_STAT).toBool();
             readDistance = settings->value("readdist", _READ_DISTANCE).toBool();
+            readWeldSeam = settings->value("readseam", _READ_WELD_SEAM).toBool();
+            dynamicAlgo = settings->value("dyna", _DYNAMIC_ALGO).toBool();
         settings->endGroup();
 
         settings->beginGroup("ipro");
@@ -1708,6 +1723,8 @@ void MainWindow::readSettings(){
         machineNo = _MACHINE_NO;
         readMachineStatus = _READ_MACHINE_STAT;
         readDistance = _READ_DISTANCE;
+        readWeldSeam = _READ_WELD_SEAM;
+        dynamicAlgo = _DYNAMIC_ALGO;
 
         iprocessInterval = _IPROCESS_INT;
         frameWidth = _FRAME_WIDTH;
@@ -1770,6 +1787,11 @@ void MainWindow::writeSettings(){
             settings->setValue("readstat", readstat.toString());
         QVariant readdist(readDistance);
             settings->setValue("readdist", readdist.toString());
+        QVariant readseam(readWeldSeam);
+            settings->setValue("readseam", readseam.toString());
+        QVariant dyna(dynamicAlgo);
+            settings->setValue("dyna", dyna.toString());
+
     settings->endGroup();
 
     settings->beginGroup("ipro");

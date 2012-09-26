@@ -54,6 +54,10 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
 
     ui->readDistanceBox->setChecked( w->readDistance );
 
+    ui->dynamicAlgoBox->setChecked( w->dynamicAlgo );
+
+    ui->readWeldSeamBox->setChecked( w->readWeldSeam );
+
 }
 
 
@@ -611,6 +615,18 @@ void setupForm::readMachineStatusBox(){
 void setupForm::readDistanceBox(){
 
     w->readDistance = ui->readDistanceBox->isChecked();
+}
+
+
+void setupForm::dynamicAlgoBox(){
+
+    w->dynamicAlgo = ui->dynamicAlgoBox->isChecked();
+}
+
+
+void setupForm::readWeldSeamBox(){
+
+    w->readWeldSeam = ui->readWeldSeamBox->isChecked();
 }
 
 

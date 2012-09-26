@@ -72,9 +72,9 @@ void plcControlThread::run(){
 
             if (commandRead) {
 
-                if ( w->readMachineStatus ) {
-                    readPLC();
-                }
+                readPLC();
+
+                //if ( w->readMachineStatus ) {                }
 
                 if ( w->readDistance ) {
                     readDistanceValue();
@@ -198,6 +198,15 @@ bool plcControlThread::readPLC(){
         int bitValue = w->machineNo - 1;
         if (getBitofByte(byte, bitValue) == 1) value = true; else value = false;
         w->mak_aktif_now = value;
+
+        if (w->readWeldSeam) {
+
+            bitValue = w->machineNo + 3;
+
+            if (getBitofByte(byte, bitValue) == 1) value = true; else value = false;
+            w->weldSeamExists = value;
+
+        }
 
 
         return true;

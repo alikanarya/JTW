@@ -37,6 +37,9 @@
 #define _WIDTH_CONTROL      false
 #define _READ_MACHINE_STAT  false
 #define _READ_DISTANCE      false
+#define _READ_WELD_SEAM     false
+#define _DYNAMIC_ALGO       false
+
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -218,11 +221,15 @@ public:
     bool controlPause;
     bool readMachineStatus;
     bool readDistance;
+    bool readWeldSeam;
+    bool weldSeamExists;
 
     //hard makine kontrolü için
     bool hardControlStart;
     bool mak_aktif_now, mak_aktif_old;
     int machineNo;
+
+    bool dynamicAlgo;
 
     /*
     int right_VMEM_BYTE, right_BITofBYTE;
