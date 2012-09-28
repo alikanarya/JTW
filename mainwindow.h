@@ -39,6 +39,9 @@
 #define _READ_DISTANCE      false
 #define _READ_WELD_SEAM     false
 #define _DYNAMIC_ALGO       false
+#define _TIME_CONTROL       false
+#define _TIME_LIMIT         30
+
 
 
 #define _PWD_SETTINGS       "nokts"
@@ -231,6 +234,12 @@ public:
 
     bool dynamicAlgo;
 
+    bool timeControl;
+    int timeLimit;
+    bool permTime;
+    bool startTimeControlCount;
+    int timeControlCounter;
+
     /*
     int right_VMEM_BYTE, right_BITofBYTE;
     int left_VMEM_BYTE, left_BITofBYTE;
@@ -360,6 +369,7 @@ private slots:
 
     void testButton();
     void testEdit();
+    void timeEdit();
 
 private:
     protect lic;

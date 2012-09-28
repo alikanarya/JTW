@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'setupform.ui'
 **
-** Created: Wed 26. Sep 13:45:50 2012
+** Created: Fri 28. Sep 18:25:50 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -89,6 +89,7 @@ public:
     QCheckBox *readDistanceBox;
     QCheckBox *dynamicAlgoBox;
     QCheckBox *readWeldSeamBox;
+    QCheckBox *timeControlBox;
 
     void setupUi(QWidget *setupForm)
     {
@@ -350,17 +351,17 @@ public:
         widthControlBox->setFont(font2);
         label_15 = new QLabel(setupForm);
         label_15->setObjectName(QString::fromUtf8("label_15"));
-        label_15->setGeometry(QRect(750, 220, 231, 201));
+        label_15->setGeometry(QRect(750, 260, 231, 201));
         label_15->setFont(font);
         label_15->setFrameShape(QFrame::Box);
         label_15->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         readMachineStatusBox = new QCheckBox(setupForm);
         readMachineStatusBox->setObjectName(QString::fromUtf8("readMachineStatusBox"));
-        readMachineStatusBox->setGeometry(QRect(760, 250, 201, 17));
+        readMachineStatusBox->setGeometry(QRect(760, 290, 201, 17));
         readMachineStatusBox->setFont(font2);
         readDistanceBox = new QCheckBox(setupForm);
         readDistanceBox->setObjectName(QString::fromUtf8("readDistanceBox"));
-        readDistanceBox->setGeometry(QRect(760, 270, 201, 17));
+        readDistanceBox->setGeometry(QRect(760, 310, 201, 17));
         readDistanceBox->setFont(font2);
         dynamicAlgoBox = new QCheckBox(setupForm);
         dynamicAlgoBox->setObjectName(QString::fromUtf8("dynamicAlgoBox"));
@@ -368,8 +369,12 @@ public:
         dynamicAlgoBox->setFont(font2);
         readWeldSeamBox = new QCheckBox(setupForm);
         readWeldSeamBox->setObjectName(QString::fromUtf8("readWeldSeamBox"));
-        readWeldSeamBox->setGeometry(QRect(760, 290, 201, 17));
+        readWeldSeamBox->setGeometry(QRect(760, 330, 201, 17));
         readWeldSeamBox->setFont(font2);
+        timeControlBox = new QCheckBox(setupForm);
+        timeControlBox->setObjectName(QString::fromUtf8("timeControlBox"));
+        timeControlBox->setGeometry(QRect(750, 210, 161, 17));
+        timeControlBox->setFont(font2);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -386,6 +391,7 @@ public:
         QObject::connect(readDistanceBox, SIGNAL(stateChanged(int)), setupForm, SLOT(readDistanceBox()));
         QObject::connect(dynamicAlgoBox, SIGNAL(stateChanged(int)), setupForm, SLOT(dynamicAlgoBox()));
         QObject::connect(readWeldSeamBox, SIGNAL(stateChanged(int)), setupForm, SLOT(readWeldSeamBox()));
+        QObject::connect(timeControlBox, SIGNAL(stateChanged(int)), setupForm, SLOT(timeControlBox()));
 
         QMetaObject::connectSlotsByName(setupForm);
     } // setupUi
@@ -485,6 +491,10 @@ public:
         readWeldSeamBox->setToolTip(QApplication::translate("setupForm", "DB2.DB0.x", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         readWeldSeamBox->setText(QApplication::translate("setupForm", "Kaynak \304\260zi  Bilgisi", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        timeControlBox->setToolTip(QApplication::translate("setupForm", "\304\260KA ya Otomaik Ge\303\247", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        timeControlBox->setText(QApplication::translate("setupForm", "Zaman Kontrol\303\274", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

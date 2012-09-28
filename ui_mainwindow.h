@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri 28. Sep 16:04:35 2012
+** Created: Fri 28. Sep 18:32:51 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -69,6 +69,9 @@ public:
     QLineEdit *testEdit;
     QLabel *labelDistanceTag2;
     QPushButton *testButton;
+    QLineEdit *timeEdit;
+    QLabel *labelTimeTag2;
+    QLabel *labelTimeTag;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -431,6 +434,25 @@ public:
         testButton->setObjectName(QString::fromUtf8("testButton"));
         testButton->setEnabled(false);
         testButton->setGeometry(QRect(470, 10, 41, 23));
+        timeEdit = new QLineEdit(centralWidget);
+        timeEdit->setObjectName(QString::fromUtf8("timeEdit"));
+        timeEdit->setGeometry(QRect(610, 650, 41, 20));
+        labelTimeTag2 = new QLabel(centralWidget);
+        labelTimeTag2->setObjectName(QString::fromUtf8("labelTimeTag2"));
+        labelTimeTag2->setGeometry(QRect(570, 660, 31, 23));
+        labelTimeTag2->setFont(font5);
+        labelTimeTag2->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
+        labelTimeTag2->setFrameShape(QFrame::NoFrame);
+        labelTimeTag2->setLineWidth(2);
+        labelTimeTag2->setAlignment(Qt::AlignCenter);
+        labelTimeTag = new QLabel(centralWidget);
+        labelTimeTag->setObjectName(QString::fromUtf8("labelTimeTag"));
+        labelTimeTag->setGeometry(QRect(510, 650, 91, 23));
+        labelTimeTag->setFont(font5);
+        labelTimeTag->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
+        labelTimeTag->setFrameShape(QFrame::NoFrame);
+        labelTimeTag->setLineWidth(2);
+        labelTimeTag->setAlignment(Qt::AlignCenter);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -464,6 +486,7 @@ public:
         QObject::connect(zControlButton, SIGNAL(clicked()), MainWindow, SLOT(zControlButton()));
         QObject::connect(testEdit, SIGNAL(returnPressed()), MainWindow, SLOT(testEdit()));
         QObject::connect(testButton, SIGNAL(clicked()), MainWindow, SLOT(testButton()));
+        QObject::connect(timeEdit, SIGNAL(returnPressed()), MainWindow, SLOT(timeEdit()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -559,6 +582,8 @@ public:
         testEdit->setInputMask(QString());
         labelDistanceTag2->setText(QApplication::translate("MainWindow", "(mm)", 0, QApplication::UnicodeUTF8));
         testButton->setText(QApplication::translate("MainWindow", "Test", 0, QApplication::UnicodeUTF8));
+        labelTimeTag2->setText(QApplication::translate("MainWindow", "(sn)", 0, QApplication::UnicodeUTF8));
+        labelTimeTag->setText(QApplication::translate("MainWindow", "Stop Zaman\304\261", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

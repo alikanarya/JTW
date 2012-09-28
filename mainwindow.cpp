@@ -126,6 +126,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     detectionError = true;
     permOperator = false;
     weldSeamExists = false;
+    startTimeControlCount = false;
+    timeControlCounter = 0;
 
     // plc
     connectRequested = connectRequestedonBoot;
@@ -224,6 +226,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->labelDistanceTag2->hide();
     }
 
+    if (timeControl){
+        ui->labelTimeTag->show();
+        ui->labelTimeTag2->show();
+        ui->timeEdit->show();
+        ui->timeEdit->setText(QString::number(timeLimit));
+        permTime = false;   // enabled when control begun
+
+    } else {
+        ui->labelTimeTag->hide();
+        ui->labelTimeTag2->hide();
+        ui->timeEdit->hide();
+        permTime = true;
+
+    }
 
     // z control
     distanceRaw = 32000;  // to make distance neg read initially
@@ -256,6 +272,9 @@ void MainWindow::showInfo(){
 
         if (hardControlStart)
             str += "AKTÝF !!! : Makineden Kaynak Baþlatma\n";
+
+        if (timeControl)
+            str += "AKTÝF !!! : Zaman Kontrolü\n";
 
         msgBox.setText(str);
         msgBox.setStandardButtons(QMessageBox::Ok);
@@ -371,9 +390,15 @@ void MainWindow:: plcControl(){
 
             if (hardControlStart && readMachineStatus){
 
-                if (mak_aktif_now && !mak_aktif_old)
+                if (mak_aktif_now && !mak_aktif_old) {
+
                     alignGuide2TrackCenter = true;
-                else
+
+                    if (timeControl) {
+                        timeControlCounter = 0;
+                        startTimeControlCount = true;
+                    }
+                } else
                     alignGuide2TrackCenter = false;
 
                 mak_aktif_old = mak_aktif_now;
@@ -408,7 +433,7 @@ void MainWindow:: plcControl(){
 
                     state = _CMD_STOP;
                 } else {
-                    if (play && trackOn && controlOn && permPLC){
+                    if (play && trackOn && controlOn && permPLC && permTime){
 
                         if (hardControlStart) {
 
@@ -521,6 +546,23 @@ void MainWindow:: plcControl(){
 
 
 void MainWindow::updateSn(){
+
+    if (timeControl) {
+
+        if (startTimeControlCount){
+            timeControlCounter++;
+            //ui->plainTextEdit->appendPlainText(QString::number(timeControlCounter));
+        }
+
+        if (timeControlCounter >= (timeLimit-5)){
+            permTime = false;
+            startTimeControlCount = false;
+
+        } else {
+            permTime = true;
+        }
+
+    }
 
     // blink emergency stop button in case of emergency
     if (emergencyStop){
@@ -968,6 +1010,16 @@ void MainWindow::controlButton(){
         if (zControlActive) {
             distanceTarget = distance;
             calcZParameters();
+        }
+
+        if (timeControl){
+            timeControlCounter = 0;
+            permTime = false;
+            startTimeControlCount = false;
+        } else {
+            timeControlCounter = 0;
+            permTime = true;
+            startTimeControlCount = false;
 
         }
 
@@ -1151,27 +1203,22 @@ void MainWindow::processImage(){
                 //ui->plainTextEdit->appendPlainText("error");
 
         } else {
-            if ( weldSeamExists ) {
+            int index = deviationData.size() - 1;
+
+            if (deviationData[index] >= errorLimit ){
+                cmdState = _CMD_RIGHT;
+            } else
+            if (deviationData[index] <= errorLimitNeg){
+                cmdState = _CMD_LEFT;
+            } else
+            if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
                 cmdState = _CMD_CENTER;
-            } else {
-
-                int index = deviationData.size() - 1;
-
-                if (deviationData[index] >= errorLimit ){
-                    cmdState = _CMD_RIGHT;
-                } else
-                if (deviationData[index] <= errorLimitNeg){
-                    cmdState = _CMD_LEFT;
-                } else
-                if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
-                    cmdState = _CMD_CENTER;
-                } else
-                if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
-                    cmdState = _CMD_CENTER;
-                } else
-                if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
-                    cmdState = _CMD_CENTER;
-                }
+            } else
+            if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
+                cmdState = _CMD_CENTER;
+            } else
+            if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
+                cmdState = _CMD_CENTER;
             }
         }
 
@@ -1671,6 +1718,8 @@ void MainWindow::readSettings(){
             readDistance = settings->value("readdist", _READ_DISTANCE).toBool();
             readWeldSeam = settings->value("readseam", _READ_WELD_SEAM).toBool();
             dynamicAlgo = settings->value("dyna", _DYNAMIC_ALGO).toBool();
+            timeControl = settings->value("tctl", _TIME_CONTROL).toBool();
+            timeLimit = settings->value("tlmt", _TIME_LIMIT).toInt();
         settings->endGroup();
 
         settings->beginGroup("ipro");
@@ -1729,6 +1778,8 @@ void MainWindow::readSettings(){
         readDistance = _READ_DISTANCE;
         readWeldSeam = _READ_WELD_SEAM;
         dynamicAlgo = _DYNAMIC_ALGO;
+        timeControl = _TIME_CONTROL;
+        timeLimit = _TIME_LIMIT;
 
         iprocessInterval = _IPROCESS_INT;
         frameWidth = _FRAME_WIDTH;
@@ -1795,6 +1846,9 @@ void MainWindow::writeSettings(){
             settings->setValue("readseam", readseam.toString());
         QVariant dyna(dynamicAlgo);
             settings->setValue("dyna", dyna.toString());
+        QVariant tctl(timeControl);
+            settings->setValue("tctl", tctl.toString());
+        settings->setValue("tlmt", QString::number(timeLimit));
 
     settings->endGroup();
 
@@ -1916,6 +1970,18 @@ void MainWindow::playCam(){
             }
         }
     }
+}
+
+
+void MainWindow::timeEdit(){
+
+    timeLimit = ui->timeEdit->text().toInt();
+
+    if (timeLimit < 20) {
+        timeLimit = 20;
+        ui->timeEdit->setText("20");
+    }
+
 }
 
 

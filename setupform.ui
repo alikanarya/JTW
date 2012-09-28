@@ -1057,7 +1057,7 @@
    <property name="geometry">
     <rect>
      <x>750</x>
-     <y>220</y>
+     <y>260</y>
      <width>231</width>
      <height>201</height>
     </rect>
@@ -1082,7 +1082,7 @@
    <property name="geometry">
     <rect>
      <x>760</x>
-     <y>250</y>
+     <y>290</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -1105,7 +1105,7 @@
    <property name="geometry">
     <rect>
      <x>760</x>
-     <y>270</y>
+     <y>310</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -1151,7 +1151,7 @@
    <property name="geometry">
     <rect>
      <x>760</x>
-     <y>290</y>
+     <y>330</y>
      <width>201</width>
      <height>17</height>
     </rect>
@@ -1168,6 +1168,29 @@
    </property>
    <property name="text">
     <string>Kaynak İzi  Bilgisi</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="timeControlBox">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>210</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>İKA ya Otomaik Geç</string>
+   </property>
+   <property name="text">
+    <string>Zaman Kontrolü</string>
    </property>
   </widget>
  </widget>
@@ -1343,7 +1366,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>853</x>
-     <y>258</y>
+     <y>298</y>
     </hint>
     <hint type="destinationlabel">
      <x>991</x>
@@ -1359,7 +1382,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>845</x>
-     <y>278</y>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
      <x>1007</x>
@@ -1391,11 +1414,27 @@
    <hints>
     <hint type="sourcelabel">
      <x>879</x>
-     <y>299</y>
+     <y>339</y>
     </hint>
     <hint type="destinationlabel">
      <x>997</x>
      <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>timeControlBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>setupForm</receiver>
+   <slot>timeControlBox()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>859</x>
+     <y>219</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>969</x>
+     <y>209</y>
     </hint>
    </hints>
   </connection>
@@ -1416,5 +1455,6 @@
   <slot>readDistanceBox()</slot>
   <slot>dynamicAlgoBox()</slot>
   <slot>readWeldSeamBox()</slot>
+  <slot>timeControlBox()</slot>
  </slots>
 </ui>

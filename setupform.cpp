@@ -58,6 +58,8 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
 
     ui->readWeldSeamBox->setChecked( w->readWeldSeam );
 
+    ui->timeControlBox->setChecked( w->timeControl );
+
 }
 
 
@@ -630,6 +632,12 @@ void setupForm::readWeldSeamBox(){
 }
 
 
+void setupForm::timeControlBox(){
+
+    w->timeControl = ui->timeControlBox->isChecked();
+}
+
+
 void setupForm::exitButton(){
 
     this->close();
@@ -665,6 +673,18 @@ setupForm::~setupForm(){
         w->ui->labelDistanceTag->hide();
         w->ui->labelDistanceTag2->hide();
     }
+
+    if (w->timeControl){
+        w->ui->labelTimeTag->show();
+        w->ui->labelTimeTag2->show();
+        w->ui->timeEdit->show();
+        w->ui->timeEdit->setText(QString::number(w->timeLimit));
+    } else {
+        w->ui->labelTimeTag->hide();
+        w->ui->labelTimeTag2->hide();
+        w->ui->timeEdit->hide();
+    }
+
 }
 
 

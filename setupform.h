@@ -79,6 +79,7 @@ private slots:
     void readDistanceBox();
     void dynamicAlgoBox();
     void readWeldSeamBox();
+    void timeControlBox();
 
 
 };
