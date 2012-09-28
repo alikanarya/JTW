@@ -721,7 +721,7 @@ void MainWindow::guideButton(){
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
 
-    // * EDGE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    /* EDGE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -781,7 +781,7 @@ void MainWindow::guideButton(){
 
         iprocess->detectMainEdges(thinJointAlgoActive, true);
             //iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines_distance.csv");
-            /*
+            / *
             ui->plainTextEdit->appendPlainText("-1st-maximas---");
             for (int i=0; i<iprocess->localMaximaSize;i++)
                 ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray[i][0]) +" stop: "+QString::number(iprocess->rangeArray[i][1]));
@@ -793,7 +793,7 @@ void MainWindow::guideButton(){
             ui->plainTextEdit->appendPlainText("-2nd-maximas---");
             for (int i=0; i<iprocess->localMaxima2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray2nd[i][0]) +" stop: "+QString::number(iprocess->rangeArray2nd[i][1]));
-            */
+            * /
             ui->plainTextEdit->appendPlainText("-2nd hough vals---");
             for (int i=0; i<iprocess->listHoughData2ndSize;i++)
                 ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
@@ -806,7 +806,7 @@ void MainWindow::guideButton(){
         delete iprocess;
         iprocessInitSwitch = false;
     }
-    // */
+    */
 
 
 
@@ -1151,23 +1151,27 @@ void MainWindow::processImage(){
                 //ui->plainTextEdit->appendPlainText("error");
 
         } else {
+            if ( weldSeamExists ) {
+                cmdState = _CMD_CENTER;
+            } else {
 
-            int index = deviationData.size() - 1;
+                int index = deviationData.size() - 1;
 
-            if (deviationData[index] >= errorLimit ){
-                cmdState = _CMD_RIGHT;
-            } else
-            if (deviationData[index] <= errorLimitNeg){
-                cmdState = _CMD_LEFT;
-            } else
-            if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
-                cmdState = _CMD_CENTER;
-            } else
-            if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
-                cmdState = _CMD_CENTER;
-            } else
-            if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
-                cmdState = _CMD_CENTER;
+                if (deviationData[index] >= errorLimit ){
+                    cmdState = _CMD_RIGHT;
+                } else
+                if (deviationData[index] <= errorLimitNeg){
+                    cmdState = _CMD_LEFT;
+                } else
+                if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
+                    cmdState = _CMD_CENTER;
+                } else
+                if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
+                    cmdState = _CMD_CENTER;
+                } else
+                if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
+                    cmdState = _CMD_CENTER;
+                }
             }
         }
 
@@ -1923,7 +1927,8 @@ void MainWindow::testEdit(){
 
 void MainWindow::testButton(){
 
-    alignGuide2TrackCenter = true;
+    mak_aktif_now = true;
+    //alignGuide2TrackCenter = true;
 
 }
 
