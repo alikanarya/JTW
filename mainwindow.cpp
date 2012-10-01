@@ -700,6 +700,7 @@ void MainWindow::analyzeButton(){
         int startTime = timeSystem.getSystemTimeMsec();
 
         processEdgeDetection();
+        iprocess->angleAvg = iprocess->centerLine.angle;
 
         /*
         if ( thinJointAlgoActive ) {
@@ -761,6 +762,57 @@ void MainWindow::guideButton(){
 
     ui->leftButton->setEnabled( showGuide && !trackOn );
     ui->rightButton->setEnabled( showGuide && !trackOn );
+
+
+    // * LINE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    if ( !imageGetter->imageList.isEmpty() ){
+        targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
+
+        iprocess->prepareCannyArrays();
+
+        iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
+        iprocess->gaussianBlur();
+        iprocess->detectEdgeSobelwDirections();
+        iprocess->nonMaximumSuppression();
+        iprocess->cannyThresholding(true);
+        //ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
+        iprocess->edgeTracing();
+
+        iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
+
+        iprocess->thetaMin = -4;
+        iprocess->thetaMax = 4;
+        iprocess->thetaStep = 1.0;
+
+        iprocess->houghTransformEdgeMap();;
+
+        iprocess->calculateHoughMaxs(200);              // get max voted line(s)
+            //iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines.csv");
+
+        if (thinJointAlgoActive)
+            iprocess->thinCornerNum = 1;
+
+        iprocess->detectMainEdges(thinJointAlgoActive, true);
+
+        for (int i=0; i<iprocess->mainEdgesList.size();i++)
+            ui->plainTextEdit->appendPlainText("mainEdges dav: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
+
+        /*
+        ui->plainTextEdit->appendPlainText("-2nd hough vals---");
+        for (int i=0; i<iprocess->listHoughData2ndSize;i++)
+            ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
+        */
+        iprocess->drawLines().save(savePath + "image_mainEdges.png");
+        iprocess->cornerImage().save(savePath + "image_corners.png");
+
+
+        delete iprocess;
+        iprocessInitSwitch = false;
+    }
+    // */
+
 
 
     /* EDGE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
