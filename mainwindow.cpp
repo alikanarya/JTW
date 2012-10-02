@@ -782,6 +782,8 @@ void MainWindow::guideButton(){
 
         iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
 
+
+
         iprocess->thetaMin = -4;
         iprocess->thetaMax = 4;
         iprocess->thetaStep = 1.0;
@@ -798,6 +800,12 @@ void MainWindow::guideButton(){
 
         for (int i=0; i<iprocess->mainEdgesList.size();i++)
             ui->plainTextEdit->appendPlainText("mainEdges dav: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
+
+        iprocess->thickenEdgeMap(3);
+        iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny_thickened.png");
+
+        iprocess->scoreLineCrossing(true);
+        ui->plainTextEdit->appendPlainText("score: " + QString::number(iprocess->mainEdgeScore));
 
         /*
         ui->plainTextEdit->appendPlainText("-2nd hough vals---");
