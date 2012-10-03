@@ -41,6 +41,8 @@
 #define _DYNAMIC_ALGO       false
 #define _TIME_CONTROL       false
 #define _TIME_LIMIT         30
+#define _LINE_DETECT        false
+#define _LINE_SCORE         33
 
 
 
@@ -240,6 +242,12 @@ public:
     bool startTimeControlCount;
     int timeControlCounter;
 
+    bool lineDetection;
+    int lineScoreLimit;
+
+    bool captureVideo;
+    QList<QImage> videoList;
+
     /*
     int right_VMEM_BYTE, right_BITofBYTE;
     int left_VMEM_BYTE, left_BITofBYTE;
@@ -318,6 +326,7 @@ public:
     void processThinJoint();                        // darkness analysis for thin joint
     void processContrastDetection();                // contrast anaysis
     void processEdgeDetection();                    // edge anaysis
+    void processLineDetection();                    // line detection
     void repaintGuide();                            // update guide
     void repaintDevTrend();                         // update deviation trend
     void calcZParameters();
@@ -333,6 +342,7 @@ public slots:
     void target2Left();
     void target2Right();
     void showInfo();
+    void videoButton();
 
 signals:
     void cameraDown();
@@ -366,6 +376,8 @@ private slots:
     void startTimer();                              // 2sn bood delay timer
     void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
     void cameraDownAction();                        // actions handled when camera is not accesible
+    void stopVideoCapture();
+    void clearVideoList();
 
     void testButton();
     void testEdit();

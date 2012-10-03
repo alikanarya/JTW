@@ -80,6 +80,8 @@ private slots:
     void dynamicAlgoBox();
     void readWeldSeamBox();
     void timeControlBox();
+    void lineDetectionBox();
+    void editLineScore();
 
 
 };

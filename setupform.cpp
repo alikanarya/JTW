@@ -60,6 +60,9 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
 
     ui->timeControlBox->setChecked( w->timeControl );
 
+    ui->lineDetectionBox->setChecked( w->lineDetection );
+
+    ui->editLineScore->setText( QString::number( w->lineScoreLimit ) );
 }
 
 
@@ -638,6 +641,18 @@ void setupForm::timeControlBox(){
 }
 
 
+void setupForm::lineDetectionBox(){
+
+    w->lineDetection = ui->lineDetectionBox->isChecked();
+}
+
+
+void setupForm::editLineScore(){
+
+    w->lineScoreLimit = ui->editLineScore->text().toInt();
+}
+
+
 void setupForm::exitButton(){
 
     this->close();
@@ -685,6 +700,8 @@ setupForm::~setupForm(){
         w->ui->timeEdit->hide();
     }
 
+    if ( w->lineDetection )
+        w->clearTrack();
 }
 
 

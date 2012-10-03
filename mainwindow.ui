@@ -1218,6 +1218,22 @@ background-color: rgb(236, 233, 216);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <widget class="QPushButton" name="videoButton">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>34</y>
+      <width>41</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Kayıt</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -1580,6 +1596,22 @@ color: rgb(0, 0, 255);</string>
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>videoButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>videoButton()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>440</x>
+     <y>68</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>408</x>
+     <y>86</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>getImageFromCam()</slot>
@@ -1608,5 +1640,6 @@ color: rgb(0, 0, 255);</string>
   <slot>testButton()</slot>
   <slot>testEdit()</slot>
   <slot>timeEdit()</slot>
+  <slot>videoButton()</slot>
  </slots>
 </ui>

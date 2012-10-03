@@ -105,6 +105,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     timeDelayAvg = 0;
     alarmCameraDownLock = false;
     connect(this, SIGNAL(cameraDown()), this, SLOT(cameraDownAction()));
+    captureVideo = false;
+
 
     // file vars init.
     fileBase = "resim";
@@ -259,22 +261,30 @@ void MainWindow::showInfo(){
         QString str = "";
 
 
-        if (dynamicAlgo)
-            str += "AKTÝF !!! : Dinamik Algoritma\n";
-        else {
-            if (thinJointAlgoActive)
-                str += "AKTÝF !!! : Ýnce Kaynak Aðzý Uygulamasý\n";
-                        //"Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+        if ( lineDetection ) {
+
+            str += "AKTÝF !!! : Ýz Tespiti Modu\n";
+
+        } else {
+
+            if (dynamicAlgo)
+                str += "AKTÝF !!! : Dinamik Algoritma\n";
+            else {
+                if (thinJointAlgoActive)
+                    str += "AKTÝF !!! : Ýnce Kaynak Aðzý Uygulamasý\n";
+                            //"Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+            }
+
+            if (zControlActive)
+                str += "AKTÝF !!! : Yükseklik Kontrolü\n";
+
+            if (hardControlStart)
+                str += "AKTÝF !!! : Makineden Kaynak Baþlatma\n";
+
+            if (timeControl)
+                str += "AKTÝF !!! : Zaman Kontrolü\n";
+
         }
-
-        if (zControlActive)
-            str += "AKTÝF !!! : Yükseklik Kontrolü\n";
-
-        if (hardControlStart)
-            str += "AKTÝF !!! : Makineden Kaynak Baþlatma\n";
-
-        if (timeControl)
-            str += "AKTÝF !!! : Zaman Kontrolü\n";
 
         msgBox.setText(str);
         msgBox.setStandardButtons(QMessageBox::Ok);
@@ -805,7 +815,7 @@ void MainWindow::guideButton(){
         iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny_thickened.png");
 
         iprocess->scoreLineCrossing(true);
-        ui->plainTextEdit->appendPlainText("score: " + QString::number(iprocess->mainEdgeScore));
+        ui->plainTextEdit->appendPlainText("score: " + QString::number(iprocess->mainEdgeScore) + ", " + QString::number(iprocess->mainEdgeScorePercent, 'f', 1));
 
         /*
         ui->plainTextEdit->appendPlainText("-2nd hough vals---");
@@ -1036,8 +1046,8 @@ void MainWindow::trackButton(){
         ui->trackButton->setIcon(trackOffIcon);
     }
 
-    ui->leftButton->setEnabled( showGuide && !trackOn );
-    ui->rightButton->setEnabled( showGuide && !trackOn );
+    //ui->leftButton->setEnabled( showGuide && !trackOn );
+    //ui->rightButton->setEnabled( showGuide && !trackOn );
 
     ui->thinJointButton->setEnabled(!trackOn);
 }
@@ -1185,10 +1195,18 @@ void MainWindow::zControlButton(){
 
 void MainWindow::processImage(){
 
-    if (dynamicAlgo)
-        thinJointAlgoActive = !weldSeamExists;
 
-    processEdgeDetection();
+    if ( lineDetection ) {
+
+        processLineDetection();
+
+    } else {
+
+        if (dynamicAlgo)
+            thinJointAlgoActive = !weldSeamExists;
+
+        processEdgeDetection();
+    }
 
 /*
     if ( thinJointAlgoActive ) {
@@ -1216,78 +1234,88 @@ void MainWindow::processImage(){
     }
 
 */
-    // if center of track is not an error, append dev. to trend data list OR append error code to list
-    if (iprocess->detected){
 
-        if (controlInitiated) {
+    if ( lineDetection ) {
 
-            initialJointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
-            maxJointWidth = initialJointWidth * 1.2;
-            minJointWidth = initialJointWidth * 0.8;
-                //ui->plainTextEdit->appendPlainText( QString::number(minJointWidth)+ ", " + QString::number(initialJointWidth) + ", " + QString::number(maxJointWidth) );
-            controlInitiated = false;
-        }
+        //....
 
-        jointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
-
-        int error = iprocess->trackCenterX - (frameWidth/2);
-        deviationData.append(error);
-
-        if (alignGuide2TrackCenter) {
-
-            offsetXpos += error;
-
-            repaintGuide();
-
-            alignGuide2TrackCenter = false;
-        }
-
-        if (trackOn){
-            errorTotal += abs(error);
-            processCount++;
-            if (abs(error) > errorMax) errorMax = abs(error);
-        }
     } else {
-        deviationData.append(eCodeDev);     // eCodeDev: error code
-    }
 
 
-    // assign plc commands using dev. data findings
-    if (iprocess->detected){
+        // if center of track is not an error, append dev. to trend data list OR append error code to list
+        if (iprocess->detected){
 
-        detectionError = false;
+            if (controlInitiated) {
 
-        if (jointWidthControlActive && (jointWidth > maxJointWidth || jointWidth < minJointWidth || jointWidth == 1) ) {
+                initialJointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
+                maxJointWidth = initialJointWidth * 1.2;
+                minJointWidth = initialJointWidth * 0.8;
+                    //ui->plainTextEdit->appendPlainText( QString::number(minJointWidth)+ ", " + QString::number(initialJointWidth) + ", " + QString::number(maxJointWidth) );
+                controlInitiated = false;
+            }
 
-            cmdState = _CMD_CENTER;
-                //ui->plainTextEdit->appendPlainText("error");
+            jointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
+
+            int error = iprocess->trackCenterX - (frameWidth/2);
+            deviationData.append(error);
+
+            if (alignGuide2TrackCenter) {
+
+                offsetXpos += error;
+
+                repaintGuide();
+
+                alignGuide2TrackCenter = false;
+            }
+
+            if (trackOn){
+                errorTotal += abs(error);
+                processCount++;
+                if (abs(error) > errorMax) errorMax = abs(error);
+            }
+        } else {
+            deviationData.append(eCodeDev);     // eCodeDev: error code
+        }
+
+
+        // assign plc commands using dev. data findings
+        if (iprocess->detected){
+
+            detectionError = false;
+
+            if (jointWidthControlActive && (jointWidth > maxJointWidth || jointWidth < minJointWidth || jointWidth == 1) ) {
+
+                cmdState = _CMD_CENTER;
+                    //ui->plainTextEdit->appendPlainText("error");
+
+            } else {
+                int index = deviationData.size() - 1;
+
+                if (deviationData[index] >= errorLimit ){
+                    cmdState = _CMD_RIGHT;
+                } else
+                if (deviationData[index] <= errorLimitNeg){
+                    cmdState = _CMD_LEFT;
+                } else
+                if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
+                    cmdState = _CMD_CENTER;
+                } else
+                if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
+                    cmdState = _CMD_CENTER;
+                } else
+                if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
+                    cmdState = _CMD_CENTER;
+                }
+            }
+
+            cmdStatePrev2 = cmdState;
 
         } else {
-            int index = deviationData.size() - 1;
-
-            if (deviationData[index] >= errorLimit ){
-                cmdState = _CMD_RIGHT;
-            } else
-            if (deviationData[index] <= errorLimitNeg){
-                cmdState = _CMD_LEFT;
-            } else
-            if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
-                cmdState = _CMD_CENTER;
-            } else
-            if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
-                cmdState = _CMD_CENTER;
-            } else
-            if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
-                cmdState = _CMD_CENTER;
-            }
+            //if (deviationData[index] != eCodeDev){
+            cmdState = cmdStatePrev2;
+            detectionError = true;
         }
 
-        cmdStatePrev2 = cmdState;
-
-    } else {
-        //if (deviationData[index] != eCodeDev){
-        cmdState = cmdStatePrev2;
-        detectionError = true;
     }
 
     if ( iprocessInitSwitch ) {
@@ -1503,7 +1531,7 @@ void MainWindow::processEdgeDetection(){
         iprocess->thetaMax = 2;
         iprocess->thetaStep = 1.0;
 
-        iprocess->houghTransformEdgeMap();;
+        iprocess->houghTransformEdgeMap();
 
         iprocess->calculateHoughMaxs(200);              // get max voted line(s)
 
@@ -1514,6 +1542,54 @@ void MainWindow::processEdgeDetection(){
 
     }
 }
+
+
+
+void MainWindow::processLineDetection(){
+
+    if ( !imageGetter->imageList.isEmpty() ){
+
+        targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+
+        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
+
+        iprocess->prepareCannyArrays();
+
+        iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
+
+        iprocess->gaussianBlur();
+
+        iprocess->detectEdgeSobelwDirections();
+
+        iprocess->nonMaximumSuppression();
+
+        iprocess->cannyThresholding(true);
+
+        iprocess->edgeTracing();
+
+        iprocess->thetaMin = -4;
+        iprocess->thetaMax = 4;
+        iprocess->thetaStep = 1.0;
+
+        iprocess->houghTransformEdgeMap();
+
+        iprocess->calculateHoughMaxs(200);              // get max voted line(s)
+
+        iprocess->thinCornerNum = 1;
+
+        iprocess->detectMainEdges(true, false);
+
+        iprocess->thickenEdgeMap(3);
+
+        iprocess->scoreLineCrossing(true);
+
+        if ( iprocess->mainEdgeScorePercent > lineScoreLimit){
+            ui->plainTextEdit->appendPlainText( timeString() + "Ýz bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
+        }
+    }
+}
+
 
 int MainWindow::timeDifference(int first, int last){
 
@@ -1780,6 +1856,8 @@ void MainWindow::readSettings(){
             dynamicAlgo = settings->value("dyna", _DYNAMIC_ALGO).toBool();
             timeControl = settings->value("tctl", _TIME_CONTROL).toBool();
             timeLimit = settings->value("tlmt", _TIME_LIMIT).toInt();
+            lineDetection = settings->value("ldtc", _LINE_DETECT).toBool();
+            lineScoreLimit = settings->value("scor", _LINE_SCORE).toInt();
         settings->endGroup();
 
         settings->beginGroup("ipro");
@@ -1840,6 +1918,8 @@ void MainWindow::readSettings(){
         dynamicAlgo = _DYNAMIC_ALGO;
         timeControl = _TIME_CONTROL;
         timeLimit = _TIME_LIMIT;
+        lineDetection = _LINE_DETECT;
+        lineScoreLimit = _LINE_SCORE;
 
         iprocessInterval = _IPROCESS_INT;
         frameWidth = _FRAME_WIDTH;
@@ -1909,6 +1989,9 @@ void MainWindow::writeSettings(){
         QVariant tctl(timeControl);
             settings->setValue("tctl", tctl.toString());
         settings->setValue("tlmt", QString::number(timeLimit));
+        QVariant ldtc(lineDetection);
+            settings->setValue("ldtc", ldtc.toString());
+        settings->setValue("scor", QString::number(lineScoreLimit));
 
     settings->endGroup();
 
@@ -2021,11 +2104,17 @@ void MainWindow::playCam(){
                 timeDelay = displayTime - requestTime;
                 timeDelayTotal += timeDelay;  // overall delay
 
+
+                if ( captureVideo )
+                    videoList.append( lastData->image->copy() );
+
                 // if joint is tracked for some interval
                 if (trackOn && (fpsReal % iprocessInterval) == 0 ){
                     processImage();  // detect deviation
 
-                    if (deviationData.size() >= 2) drawTrack();   // draw deviation trend
+                    if ( !lineDetection ) {
+                        if (deviationData.size() >= 2) drawTrack();   // draw deviation trend
+                    }
                 }
             }
         }
@@ -2041,6 +2130,50 @@ void MainWindow::timeEdit(){
         timeLimit = 20;
         ui->timeEdit->setText("20");
     }
+
+}
+
+
+void MainWindow::videoButton(){
+
+    captureVideo = true;
+    ui->videoButton->setEnabled(false);
+    QTimer::singleShot(2000, this, SLOT(stopVideoCapture()));
+
+}
+
+
+void MainWindow::stopVideoCapture(){
+
+    captureVideo = false;
+
+    if ( !videoList.isEmpty() ) {
+
+        for (int i = 0; i < videoList.size(); i++){
+            fileName = fileBase + "_" + QDateTime::currentDateTime().toString("hhmmss_zzz") + fileExt;
+            videoList[i].save(savePath + fileName);
+        }
+
+    } else {
+        ui->plainTextEdit->appendPlainText("Video oluþturulamadý!");
+    }
+
+    QTimer::singleShot(2000, this, SLOT(clearVideoList()));
+
+}
+
+
+void MainWindow::clearVideoList(){
+
+    if ( !videoList.isEmpty() ) {
+        for (int i = 0; i < videoList.size(); i++)
+            videoList.removeLast();
+
+        ui->plainTextEdit->appendPlainText(timeString() + "Video kaydedildi!");
+
+    }
+
+    ui->videoButton->setEnabled(true);
 
 }
 

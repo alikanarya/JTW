@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri 28. Sep 18:32:51 2012
+** Created: Thu 4. Oct 01:36:43 2012
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -72,6 +72,7 @@ public:
     QLineEdit *timeEdit;
     QLabel *labelTimeTag2;
     QLabel *labelTimeTag;
+    QPushButton *videoButton;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -453,6 +454,10 @@ public:
         labelTimeTag->setFrameShape(QFrame::NoFrame);
         labelTimeTag->setLineWidth(2);
         labelTimeTag->setAlignment(Qt::AlignCenter);
+        videoButton = new QPushButton(centralWidget);
+        videoButton->setObjectName(QString::fromUtf8("videoButton"));
+        videoButton->setEnabled(true);
+        videoButton->setGeometry(QRect(420, 34, 41, 23));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -487,6 +492,7 @@ public:
         QObject::connect(testEdit, SIGNAL(returnPressed()), MainWindow, SLOT(testEdit()));
         QObject::connect(testButton, SIGNAL(clicked()), MainWindow, SLOT(testButton()));
         QObject::connect(timeEdit, SIGNAL(returnPressed()), MainWindow, SLOT(timeEdit()));
+        QObject::connect(videoButton, SIGNAL(clicked()), MainWindow, SLOT(videoButton()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -584,6 +590,7 @@ public:
         testButton->setText(QApplication::translate("MainWindow", "Test", 0, QApplication::UnicodeUTF8));
         labelTimeTag2->setText(QApplication::translate("MainWindow", "(sn)", 0, QApplication::UnicodeUTF8));
         labelTimeTag->setText(QApplication::translate("MainWindow", "Stop Zaman\304\261", 0, QApplication::UnicodeUTF8));
+        videoButton->setText(QApplication::translate("MainWindow", "Kay\304\261t", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
