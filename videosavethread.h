@@ -20,6 +20,10 @@ protected:
 private:
     volatile bool stopped;
 
+signals:
+    void saveFinished();
+
+
 };
 
 #endif // VIDEOSAVETHREAD_H

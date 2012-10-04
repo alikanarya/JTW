@@ -1,6 +1,7 @@
 #include "videosavethread.h"
 
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
 
 extern MainWindow *w;
 
@@ -15,10 +16,16 @@ void videoSaveThread::run(){
 
     if (!stopped){
 
-        for (int i = 0; i < w->videoList.size(); i++){
-            w->videoList[i]->save(w->savePath + w->folderName + "pic" + QString::number(i) + ".jpg");
+        if (!QDir(w->folderName).exists())
+            QDir().mkdir(w->folderName);
+
+        for (int i = 0; i < w->videoFrameSize; i++){
+            w->videoList[i].save(w->folderName + "pic" + QString::number(i) + ".jpg");
         }
 
+        delete[] w->videoList;
+
+        emit this->saveFinished();
     }
 
     stopped = false;

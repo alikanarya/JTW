@@ -122,7 +122,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     cameraChecker = new getImage(urlCam.toString());
 
+    videoFrameSize = 200;
     threadVideoSave = new videoSaveThread();
+    connect(threadVideoSave, SIGNAL(saveFinished()), this, SLOT(saveFinished()));
 
     // tracking & plc controls
     trackOn = false;
@@ -777,7 +779,7 @@ void MainWindow::guideButton(){
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
 
-    // * LINE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    /* LINE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -820,11 +822,6 @@ void MainWindow::guideButton(){
         iprocess->scoreLineCrossing(true);
         ui->plainTextEdit->appendPlainText("score: " + QString::number(iprocess->mainEdgeScore) + ", " + QString::number(iprocess->mainEdgeScorePercent, 'f', 1));
 
-        /*
-        ui->plainTextEdit->appendPlainText("-2nd hough vals---");
-        for (int i=0; i<iprocess->listHoughData2ndSize;i++)
-            ui->plainTextEdit->appendPlainText("dav: ,"+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
-        */
         iprocess->drawLines().save(savePath + "image_mainEdges.png");
         iprocess->cornerImage().save(savePath + "image_corners.png");
 
@@ -832,7 +829,7 @@ void MainWindow::guideButton(){
         delete iprocess;
         iprocessInitSwitch = false;
     }
-    // */
+    */
 
 
 
@@ -1049,8 +1046,8 @@ void MainWindow::trackButton(){
         ui->trackButton->setIcon(trackOffIcon);
     }
 
-    //ui->leftButton->setEnabled( showGuide && !trackOn );
-    //ui->rightButton->setEnabled( showGuide && !trackOn );
+    ui->leftButton->setEnabled( showGuide && !trackOn );
+    ui->rightButton->setEnabled( showGuide && !trackOn );
 
     ui->thinJointButton->setEnabled(!trackOn);
 }
@@ -1588,7 +1585,7 @@ void MainWindow::processLineDetection(){
         iprocess->scoreLineCrossing(true);
 
         if ( iprocess->mainEdgeScorePercent > lineScoreLimit){
-            ui->plainTextEdit->appendPlainText( timeString() + "Ýz bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
+            ui->plainTextEdit->appendPlainText( timeString() + "Ýz bulundu, %" + QString::number(iprocess->mainEdgeScorePercent) );
         }
     }
 }
@@ -2108,8 +2105,19 @@ void MainWindow::playCam(){
                 timeDelayTotal += timeDelay;  // overall delay
 
 
-                if ( captureVideo )
-                    videoList.append( new QImage(lastData->image->copy()) );
+                if ( captureVideo ) {
+
+                    videoList[videoFrameCount] = lastData->image->copy();
+                    videoFrameCount++;
+
+                    if (videoFrameCount >= videoFrameSize) {
+
+                        captureVideo = false;
+                        folderName = savePath + QDateTime::currentDateTime().toString("yyMMdd_hhmmss") + "/";
+                        if (!threadVideoSave->isRunning())
+                            threadVideoSave->start();
+                    }
+                }
 
                 // if joint is tracked for some interval
                 if (trackOn && (fpsReal % iprocessInterval) == 0 ){
@@ -2139,63 +2147,17 @@ void MainWindow::timeEdit(){
 
 void MainWindow::videoButton(){
 
-    captureVideo = true;
+    videoList = new QImage[videoFrameSize];
+    videoFrameCount = 0;
     ui->videoButton->setEnabled(false);
-    QTimer::singleShot(2000, this, SLOT(stopVideoCapture()));
-
+    captureVideo = true;
 }
 
 
-void MainWindow::stopVideoCapture(){
+void MainWindow::saveFinished(){
 
-    captureVideo = false;
-
-    if ( !videoList.isEmpty() ) {
-
-        folderName = savePath + QDateTime::currentDateTime().toString("hhmmss_zzz") + "/";
-
-        if (!QDir(folderName).exists())
-            QDir().mkdir(folderName);
-
-        if (!threadVideoSave->isRunning())
-            threadVideoSave->start();
-
-        initiateVideoListClear();
-
-    } else {
-        ui->plainTextEdit->appendPlainText("Video oluþturulamadý!");
-    }
-}
-
-
-void MainWindow::initiateVideoListClear(){
-
-    QTimer::singleShot(5000, this, SLOT(clearVideoList()));
-
-    ui->plainTextEdit->appendPlainText("x1");
-}
-
-
-void MainWindow::clearVideoList(){
-
-    ui->plainTextEdit->appendPlainText("x2");
-
-    for (int i = 0; i < videoList.size(); i++){
-
-        delete videoList[i];
-
-    }
-
-    if ( videoList.isEmpty() ) {
-
-        ui->plainTextEdit->appendPlainText(timeString() + "Video kaydedildi!");
-
-    }
-
-    ui->plainTextEdit->appendPlainText("x3");
-
+    ui->plainTextEdit->appendPlainText(timeString() + "Video kaydedildi!");
     ui->videoButton->setEnabled(true);
-
 }
 
 

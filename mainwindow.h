@@ -248,7 +248,10 @@ public:
     int lineScoreLimit;
 
     bool captureVideo;
-    QList<QImage *> videoList;
+//    QList<QImage *> videoList;
+    QImage *videoList;
+    int videoFrameCount;
+    int videoFrameSize;
 
     /*
     int right_VMEM_BYTE, right_BITofBYTE;
@@ -346,8 +349,7 @@ public slots:
     void target2Right();
     void showInfo();
     void videoButton();
-    void initiateVideoListClear();
-    void clearVideoList();
+    void saveFinished();
 
 signals:
     void cameraDown();
@@ -381,7 +383,6 @@ private slots:
     void startTimer();                              // 2sn bood delay timer
     void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
     void cameraDownAction();                        // actions handled when camera is not accesible
-    void stopVideoCapture();
 
     void testButton();
     void testEdit();
