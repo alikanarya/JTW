@@ -113,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     fileExt = ".jpg";
     savePath = "resim/";
     fileName = savePath + fileBase + fileExt;
+    folderName = "";
 
     // image getter class & image data inits.
     imageGetter = new getImage(urlCam.toString(), 10);
@@ -120,6 +121,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     prevData = new networkData();
 
     cameraChecker = new getImage(urlCam.toString());
+
+    threadVideoSave = new videoSaveThread();
 
     // tracking & plc controls
     trackOn = false;
@@ -2106,7 +2109,7 @@ void MainWindow::playCam(){
 
 
                 if ( captureVideo )
-                    videoList.append( lastData->image->copy() );
+                    videoList.append( new QImage(lastData->image->copy()) );
 
                 // if joint is tracked for some interval
                 if (trackOn && (fpsReal % iprocessInterval) == 0 ){
@@ -2149,29 +2152,47 @@ void MainWindow::stopVideoCapture(){
 
     if ( !videoList.isEmpty() ) {
 
-        for (int i = 0; i < videoList.size(); i++){
-            fileName = fileBase + "_" + QDateTime::currentDateTime().toString("hhmmss_zzz") + fileExt;
-            videoList[i].save(savePath + fileName);
-        }
+        folderName = savePath + QDateTime::currentDateTime().toString("hhmmss_zzz") + "/";
+
+        if (!QDir(folderName).exists())
+            QDir().mkdir(folderName);
+
+        if (!threadVideoSave->isRunning())
+            threadVideoSave->start();
+
+        initiateVideoListClear();
 
     } else {
         ui->plainTextEdit->appendPlainText("Video oluþturulamadý!");
     }
+}
 
-    QTimer::singleShot(2000, this, SLOT(clearVideoList()));
 
+void MainWindow::initiateVideoListClear(){
+
+    QTimer::singleShot(5000, this, SLOT(clearVideoList()));
+
+    ui->plainTextEdit->appendPlainText("x1");
 }
 
 
 void MainWindow::clearVideoList(){
 
-    if ( !videoList.isEmpty() ) {
-        for (int i = 0; i < videoList.size(); i++)
-            videoList.removeLast();
+    ui->plainTextEdit->appendPlainText("x2");
+
+    for (int i = 0; i < videoList.size(); i++){
+
+        delete videoList[i];
+
+    }
+
+    if ( videoList.isEmpty() ) {
 
         ui->plainTextEdit->appendPlainText(timeString() + "Video kaydedildi!");
 
     }
+
+    ui->plainTextEdit->appendPlainText("x3");
 
     ui->videoButton->setEnabled(true);
 

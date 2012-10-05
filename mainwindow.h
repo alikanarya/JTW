@@ -104,6 +104,7 @@ namespace Ui {
 #include "../_Modules/Getsystemtime/getsystemtime.h"
 #include "plccontrolthread.h"
 #include "../_Modules/Protect/protect.h"
+#include "videosavethread.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -125,6 +126,7 @@ public:
     getImage *imageGetter;              // camera image request & retrieve class
     getImage *cameraChecker;
     networkData *lastData, *prevData;   // current and prev image data vars
+    videoSaveThread *threadVideoSave;
 
     // icons
     QIcon plcOnlineIcon, plcOfflineIcon;
@@ -246,7 +248,7 @@ public:
     int lineScoreLimit;
 
     bool captureVideo;
-    QList<QImage> videoList;
+    QList<QImage *> videoList;
 
     /*
     int right_VMEM_BYTE, right_BITofBYTE;
@@ -289,6 +291,7 @@ public:
     QString fileExt;
     QString fileName;
     QString savePath;
+    QString folderName;
 
     // report vars
     int controlStartTime, controlElapsed;
@@ -343,6 +346,8 @@ public slots:
     void target2Right();
     void showInfo();
     void videoButton();
+    void initiateVideoListClear();
+    void clearVideoList();
 
 signals:
     void cameraDown();
@@ -377,7 +382,6 @@ private slots:
     void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
     void cameraDownAction();                        // actions handled when camera is not accesible
     void stopVideoCapture();
-    void clearVideoList();
 
     void testButton();
     void testEdit();

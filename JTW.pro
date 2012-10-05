@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     ../_Modules/S7/s7.cpp \
     ../_Modules/Imgprocess/imgprocess.cpp \
     ../_Modules/Getsystemtime/getsystemtime.cpp \
-    ../_Modules/Getimage/getImage.cpp
+    ../_Modules/Getimage/getImage.cpp \
+    videosavethread.cpp
 
 HEADERS  += mainwindow.h \
     setupform.h \
@@ -53,7 +54,8 @@ HEADERS  += mainwindow.h \
     ../_Modules/Getsystemtime/getsystemtime.h \
     ../_Modules/Getimage/getImage.h \
     ../_Modules/Algo/datatypes.h \
-    ../_Modules/Algo/localMinimum.h
+    ../_Modules/Algo/localMinimum.h \
+    videosavethread.h
 
 FORMS    += mainwindow.ui \
     setupform.ui \
