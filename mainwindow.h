@@ -333,6 +333,7 @@ public:
     void processContrastDetection();                // contrast anaysis
     void processEdgeDetection();                    // edge anaysis
     void processLineDetection();                    // line detection
+    void processSolidnessCanny();                   // SOLID line analysis with canny edges
     void repaintGuide();                            // update guide
     void repaintDevTrend();                         // update deviation trend
     void calcZParameters();

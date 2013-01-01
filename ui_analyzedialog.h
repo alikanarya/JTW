@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'analyzedialog.ui'
 **
-** Created: Sat 28. Jul 01:23:03 2012
+** Created: Tue 1. Jan 11:59:31 2013
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -87,6 +87,7 @@ public:
         cancelButton->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
         cancelButton_2 = new QPushButton(analyzeDialog);
         cancelButton_2->setObjectName(QString::fromUtf8("cancelButton_2"));
+        cancelButton_2->setEnabled(false);
         cancelButton_2->setGeometry(QRect(580, 490, 80, 25));
         cancelButton_2->setFont(font2);
         cancelButton_2->setStyleSheet(QString::fromUtf8(""));

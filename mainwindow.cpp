@@ -714,8 +714,11 @@ void MainWindow::analyzeButton(){
 
         int startTime = timeSystem.getSystemTimeMsec();
 
-        processEdgeDetection();
-        iprocess->angleAvg = iprocess->centerLine.angle;
+
+        processSolidnessCanny();
+
+        //processEdgeDetection();
+        //iprocess->angleAvg = iprocess->centerLine.angle;
 
         /*
         if ( thinJointAlgoActive ) {
@@ -822,9 +825,9 @@ void MainWindow::guideButton(){
         iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
         iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
 
-        iprocess->thetaMin = 80;
-        iprocess->thetaMax = 100;
-        iprocess->thetaStep = 1.0;
+        iprocess->thetaMin = 87;
+        iprocess->thetaMax = 93;
+        iprocess->thetaStep = 0.5;
 
             for (int y = 0; y < iprocess->edgeHeight; y++)
                 for (int x = 0; x < iprocess->edgeWidth; x++){
@@ -1671,6 +1674,53 @@ void MainWindow::processLineDetection(){
         if ( iprocess->mainEdgeScorePercent > lineScoreLimit){
             ui->plainTextEdit->appendPlainText( timeString() + "Ýz bulundu, %" + QString::number(iprocess->mainEdgeScorePercent) );
         }
+    }
+}
+
+
+void MainWindow::processSolidnessCanny(){
+
+    if ( !imageGetter->imageList.isEmpty() ){
+
+        targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+
+        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
+
+        iprocess->prepareCannyArrays();
+
+        for (int i = 0; i < 4 ; i++){
+
+            iprocess->constructValueMatrix( iprocess->imgOrginal, i );
+
+            iprocess->gaussianBlur();
+
+            iprocess->detectEdgeSobelwDirections();
+
+            iprocess->nonMaximumSuppression(false);
+
+            iprocess->cannyThresholding(true);
+
+            iprocess->edgeTracing();
+
+            iprocess->assignEdgeMap();
+        }
+
+        iprocess->mergeEdgeMaps();
+
+        iprocess->thetaMin = 87;
+        iprocess->thetaMax = 93;
+        iprocess->thetaStep = 0.5;
+
+        for (int y = 0; y < iprocess->edgeHeight; y++)
+            for (int x = 0; x < iprocess->edgeWidth; x++){
+                if (iprocess->edgeMapMatrix[y][x])
+                    iprocess->valueMatrix[y][x]=255;
+                else
+                    iprocess->valueMatrix[y][x]=0;
+            }
+
+        iprocess->detectLongestSolidLines();
     }
 }
 

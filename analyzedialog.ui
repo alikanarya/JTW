@@ -150,6 +150,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="cancelButton_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>580</x>
