@@ -841,7 +841,7 @@ void MainWindow::guideButton(){
 
             iprocess->detectLongestSolidLines(true, false);
 
-            iprocess->cornerImage().save(savePath + "image_corners.png");
+            iprocess->cornerImage(false).save(savePath + "image_corners.png");
 
         ui->plainTextEdit->appendPlainText("lcr: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
         ui->plainTextEdit->appendPlainText("[0]sedal: " +
@@ -856,12 +856,20 @@ void MainWindow::guideButton(){
                                            QString::number(iprocess->major2Lines[1].distance)+", "+
                                            QString::number(iprocess->major2Lines[1].angle)+", "+
                                            QString::number(iprocess->major2Lines[1].length)  );
-        iprocess->cornerAndPrimaryLineImage(iprocess->major2Lines[0],iprocess->major2Lines[1],0).save(savePath + "image_major_2lines.png");
-        iprocess->drawSolidLines(iprocess->majorLines).save(savePath + "image_major_lines.png");
+
+        iprocess->cornerAndPrimaryLineImage(iprocess->major2Lines[0],iprocess->major2Lines[1],0,false).save(savePath + "image_major_2lines.png");
+
+//        iprocess->drawSolidLines(iprocess->majorLines).save(savePath + "image_major_lines.png");
+
+        for (int c=0; c < iprocess->majorLines.size(); c++)
+            iprocess->drawSolidLines2EdgeMatrix( iprocess->majorLines[c], QImage::Format_RGB16)->save(savePath + "image_major_lines_" + QString::number(c) + ".png");
+
         iprocess->saveList(iprocess->solidSpaceMain, savePath + "matrix_solid_space_main.csv");
         iprocess->saveList(iprocess->solidSpaceMainTrimmed, savePath + "matrix_solid_space_trimmed.csv");
         iprocess->saveList(iprocess->primaryGroup, savePath + "matrix_primary_group.csv");
         iprocess->saveList(iprocess->secondaryGroup, savePath + "matrix_secondary_group.csv");
+
+        iprocess->trackCenterX++;   // map from edge matrix to value matrix
 
         delete iprocess;
         iprocessInitSwitch = false;
