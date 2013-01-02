@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 4. Oct 01:36:43 2012
+** Created: Thu 3. Jan 01:11:28 2013
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -103,7 +103,7 @@ public:
         screenShotButton = new QPushButton(centralWidget);
         screenShotButton->setObjectName(QString::fromUtf8("screenShotButton"));
         screenShotButton->setEnabled(true);
-        screenShotButton->setGeometry(QRect(90, 30, 32, 32));
+        screenShotButton->setGeometry(QRect(130, 30, 32, 32));
         screenShotButton->setLayoutDirection(Qt::LeftToRight);
         screenShotButton->setAutoFillBackground(false);
         QIcon icon1;
@@ -154,7 +154,7 @@ public:
         plainTextEdit->setReadOnly(true);
         analyzeButton = new QPushButton(centralWidget);
         analyzeButton->setObjectName(QString::fromUtf8("analyzeButton"));
-        analyzeButton->setGeometry(QRect(170, 30, 32, 32));
+        analyzeButton->setGeometry(QRect(210, 30, 32, 32));
         QIcon icon4;
         icon4.addFile(QString::fromUtf8(":/resources/calculator-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         analyzeButton->setIcon(icon4);
@@ -191,7 +191,7 @@ public:
         frame->setLineWidth(2);
         guideButton = new QPushButton(centralWidget);
         guideButton->setObjectName(QString::fromUtf8("guideButton"));
-        guideButton->setGeometry(QRect(130, 30, 32, 32));
+        guideButton->setGeometry(QRect(170, 30, 32, 32));
         QIcon icon5;
         icon5.addFile(QString::fromUtf8(":/resources/target.png"), QSize(), QIcon::Normal, QIcon::Off);
         guideButton->setIcon(icon5);
@@ -211,7 +211,7 @@ public:
         trackView->setTransformationAnchor(QGraphicsView::NoAnchor);
         settingsButton = new QPushButton(centralWidget);
         settingsButton->setObjectName(QString::fromUtf8("settingsButton"));
-        settingsButton->setGeometry(QRect(330, 30, 32, 32));
+        settingsButton->setGeometry(QRect(370, 30, 32, 32));
         QIcon icon6;
         icon6.addFile(QString::fromUtf8(":/resources/settings-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         settingsButton->setIcon(icon6);
@@ -220,7 +220,7 @@ public:
         trackButton = new QPushButton(centralWidget);
         trackButton->setObjectName(QString::fromUtf8("trackButton"));
         trackButton->setEnabled(false);
-        trackButton->setGeometry(QRect(210, 30, 32, 32));
+        trackButton->setGeometry(QRect(250, 30, 32, 32));
         QIcon icon7;
         icon7.addFile(QString::fromUtf8(":/resources/Phone-Book-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         trackButton->setIcon(icon7);
@@ -229,7 +229,7 @@ public:
         controlButton = new QPushButton(centralWidget);
         controlButton->setObjectName(QString::fromUtf8("controlButton"));
         controlButton->setEnabled(false);
-        controlButton->setGeometry(QRect(250, 30, 32, 32));
+        controlButton->setGeometry(QRect(290, 30, 32, 32));
         QIcon icon8;
         icon8.addFile(QString::fromUtf8(":/resources/Weather-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         controlButton->setIcon(icon8);
@@ -331,7 +331,7 @@ public:
         helpButton->setFlat(true);
         reportButton = new QPushButton(centralWidget);
         reportButton->setObjectName(QString::fromUtf8("reportButton"));
-        reportButton->setGeometry(QRect(290, 30, 32, 32));
+        reportButton->setGeometry(QRect(330, 30, 32, 32));
         QIcon icon15;
         icon15.addFile(QString::fromUtf8(":/resources/report-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         reportButton->setIcon(icon15);
@@ -366,7 +366,7 @@ public:
         thinJointButton = new QPushButton(centralWidget);
         thinJointButton->setObjectName(QString::fromUtf8("thinJointButton"));
         thinJointButton->setEnabled(true);
-        thinJointButton->setGeometry(QRect(370, 30, 32, 32));
+        thinJointButton->setGeometry(QRect(410, 30, 32, 32));
         QFont font5;
         font5.setPointSize(10);
         font5.setBold(true);
@@ -457,7 +457,12 @@ public:
         videoButton = new QPushButton(centralWidget);
         videoButton->setObjectName(QString::fromUtf8("videoButton"));
         videoButton->setEnabled(true);
-        videoButton->setGeometry(QRect(420, 34, 41, 23));
+        videoButton->setGeometry(QRect(90, 30, 32, 32));
+        QIcon icon20;
+        icon20.addFile(QString::fromUtf8(":/resources/Record-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        videoButton->setIcon(icon20);
+        videoButton->setIconSize(QSize(32, 32));
+        videoButton->setFlat(true);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -590,7 +595,10 @@ public:
         testButton->setText(QApplication::translate("MainWindow", "Test", 0, QApplication::UnicodeUTF8));
         labelTimeTag2->setText(QApplication::translate("MainWindow", "(sn)", 0, QApplication::UnicodeUTF8));
         labelTimeTag->setText(QApplication::translate("MainWindow", "Stop Zaman\304\261", 0, QApplication::UnicodeUTF8));
-        videoButton->setText(QApplication::translate("MainWindow", "Kay\304\261t", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        videoButton->setToolTip(QApplication::translate("MainWindow", "Video Kaydet", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        videoButton->setText(QString());
     } // retranslateUi
 
 };

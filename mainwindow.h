@@ -139,6 +139,7 @@ public:
     QIcon calculatorOnIcon, calculatorOffIcon;
     QIcon cmd2LeftIcon, cmd2RightIcon;
     QIcon zIconDisabled, zIconEnabled;
+    QIcon videoSaveDisabled, videoSaveEnabled;
 
     // deviation trend vars
     QGraphicsScene *scene;      // to show devitation trend

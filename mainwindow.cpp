@@ -57,6 +57,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     cmd2LeftIcon.addFile(":/resources/backward.png");
     zIconDisabled.addFile(":/resources/height-icon.png");
     zIconEnabled.addFile(":/resources/height-icon-ON.png");
+    videoSaveDisabled.addFile(":/resources/Record-Disabled-icon.png");
+    videoSaveEnabled.addFile(":/resources/Record-Normal-Red-icon.png");
 
     ui->trackButton->setEnabled(false);
 
@@ -342,6 +344,7 @@ void MainWindow::playButton(){
 
     ui->trackButton->setEnabled(true);
     ui->controlButton->setEnabled(false);
+    ui->videoButton->setIcon(videoSaveEnabled);
 }
 
 
@@ -840,7 +843,7 @@ void MainWindow::guideButton(){
             //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org.csv" );
 
             iprocess->detectLongestSolidLines(true, false);
-
+/*
             iprocess->cornerImage(false).save(savePath + "image_corners.png");
 
         ui->plainTextEdit->appendPlainText("lcr: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
@@ -870,7 +873,7 @@ void MainWindow::guideButton(){
         iprocess->saveList(iprocess->secondaryGroup, savePath + "matrix_secondary_group.csv");
 
         iprocess->trackCenterX++;   // map from edge matrix to value matrix
-
+*/
         delete iprocess;
         iprocessInitSwitch = false;
     }
@@ -2294,6 +2297,9 @@ void MainWindow::videoButton(){
     videoFrameCount = 0;
     ui->videoButton->setEnabled(false);
     captureVideo = true;
+
+    ui->videoButton->setIcon(videoSaveDisabled);
+
 }
 
 
@@ -2301,6 +2307,7 @@ void MainWindow::saveFinished(){
 
     ui->plainTextEdit->appendPlainText(timeString() + "Video kaydedildi!");
     ui->videoButton->setEnabled(true);
+    ui->videoButton->setIcon(videoSaveEnabled);
 }
 
 
