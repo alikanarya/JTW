@@ -787,14 +787,14 @@ void MainWindow::guideButton(){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
         iprocessInitSwitch = true;
-            //iprocess->imgOrginal.save(savePath + "image_org.jpg");
+        //iprocess->imgOrginal.save(savePath + "image_org.jpg");
 
         iprocess->prepareCannyArrays();
 
         for (int i = 0; i < 4 ; i++){
 
             iprocess->constructValueMatrix( iprocess->imgOrginal, i );
-            //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
+            //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org_valueX.csv" );
 
             iprocess->gaussianBlur();
             //iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(savePath + "image_blurred.jpg");
@@ -823,7 +823,7 @@ void MainWindow::guideButton(){
         iprocess->mergeEdgeMaps();
 
         iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
-        iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
+        //iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
 
         iprocess->thetaMin = 87;
         iprocess->thetaMax = 93;
@@ -832,14 +832,14 @@ void MainWindow::guideButton(){
             for (int y = 0; y < iprocess->edgeHeight; y++)
                 for (int x = 0; x < iprocess->edgeWidth; x++){
                 if (iprocess->edgeMapMatrix[y][x])
-                    iprocess->valueMatrix[y][x]=255;
+                    iprocess->edgeMatrix[y][x]=255;
                 else
-                    iprocess->valueMatrix[y][x]=0;
+                    iprocess->edgeMatrix[y][x]=0;
             }
 
-            iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org.csv" );
+            //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org.csv" );
 
-            iprocess->detectLongestSolidLines();
+            iprocess->detectLongestSolidLines(true, false);
 
             iprocess->cornerImage().save(savePath + "image_corners.png");
 
@@ -856,11 +856,12 @@ void MainWindow::guideButton(){
                                            QString::number(iprocess->major2Lines[1].distance)+", "+
                                            QString::number(iprocess->major2Lines[1].angle)+", "+
                                            QString::number(iprocess->major2Lines[1].length)  );
-        iprocess->cornerAndPrimaryLineImage(iprocess->major2Lines[0],iprocess->major2Lines[1],0).save(savePath + "image_majorlines.png");
-        iprocess->saveList(iprocess->solidSpaceMain, savePath + "matrix_solidspacemain.csv");
-        iprocess->saveList(iprocess->solidSpaceMainTrimmed, savePath + "matrix_solidspacetrimmed.csv");
-        iprocess->saveList(iprocess->primaryGroup, savePath + "matrix_primarygroup.csv");
-        iprocess->saveList(iprocess->secondaryGroup, savePath + "matrix_secondarygroup.csv");
+        iprocess->cornerAndPrimaryLineImage(iprocess->major2Lines[0],iprocess->major2Lines[1],0).save(savePath + "image_major_2lines.png");
+        iprocess->drawSolidLines(iprocess->majorLines).save(savePath + "image_major_lines.png");
+        iprocess->saveList(iprocess->solidSpaceMain, savePath + "matrix_solid_space_main.csv");
+        iprocess->saveList(iprocess->solidSpaceMainTrimmed, savePath + "matrix_solid_space_trimmed.csv");
+        iprocess->saveList(iprocess->primaryGroup, savePath + "matrix_primary_group.csv");
+        iprocess->saveList(iprocess->secondaryGroup, savePath + "matrix_secondary_group.csv");
 
         delete iprocess;
         iprocessInitSwitch = false;
