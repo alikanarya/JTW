@@ -843,7 +843,7 @@ void MainWindow::guideButton(){
             //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org.csv" );
 
             iprocess->detectLongestSolidLines(true, false);
-/*
+
             iprocess->cornerImage(false).save(savePath + "image_corners.png");
 
         ui->plainTextEdit->appendPlainText("lcr: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
@@ -873,7 +873,7 @@ void MainWindow::guideButton(){
         iprocess->saveList(iprocess->secondaryGroup, savePath + "matrix_secondary_group.csv");
 
         iprocess->trackCenterX++;   // map from edge matrix to value matrix
-*/
+
         delete iprocess;
         iprocessInitSwitch = false;
     }
@@ -955,7 +955,7 @@ void MainWindow::guideButton(){
             //iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_gradients.csv");
             //iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge.jpg");
 
-            iprocess->nonMaximumSuppression();
+            iprocess->nonMaximumSuppression(false);
             //iprocess->saveMatrix( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_suppressed.csv");
             //iprocess->getImage( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge_suppressed.jpg");
 
@@ -978,8 +978,8 @@ void MainWindow::guideButton(){
         iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
 
 
-        iprocess->thetaMin = -2;
-        iprocess->thetaMax = 2;
+        iprocess->thetaMin = 87;//-2;
+        iprocess->thetaMax = 93;//2;
         iprocess->thetaStep = 1.0;
 
 
