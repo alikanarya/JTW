@@ -842,7 +842,7 @@ void MainWindow::guideButton(){
 
             //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org.csv" );
 
-            iprocess->detectLongestSolidLines(true, false);
+            iprocess->detectLongestSolidLines(false, false);
 
             iprocess->cornerImage(false).save(savePath + "image_corners.png");
 
