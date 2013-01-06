@@ -602,6 +602,9 @@ void setupForm::zctrlBox(){
 void setupForm::hardControlStartBox(){
 
     w->hardControlStart = ui->hardControlStartBox->isChecked();
+
+    w->readMachineStatus = w->hardControlStart;
+    ui->readMachineStatusBox->setChecked( w->readMachineStatus );
 }
 
 

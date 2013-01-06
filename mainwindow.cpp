@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->emergencyButton->hide();
     ui->zControlButton->hide();
     ui->testEdit->hide();
-    ui->testButton->hide();
+    //ui->testButton->hide();
 
     // icon assignmets
     plcOnlineIcon.addFile(":/resources/s7_200-Enabled-Icon.png");
@@ -717,11 +717,12 @@ void MainWindow::analyzeButton(){
 
         int startTime = timeSystem.getSystemTimeMsec();
 
-
-        processSolidnessCanny();
-
-        //processEdgeDetection();
-        //iprocess->angleAvg = iprocess->centerLine.angle;
+        if ( thinJointAlgoActive ) {
+            processEdgeDetection();
+            iprocess->angleAvg = iprocess->centerLine.angle;
+        } else {
+            processSolidnessCanny();
+        }
 
         /*
         if ( thinJointAlgoActive ) {
@@ -785,7 +786,7 @@ void MainWindow::guideButton(){
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
 
-    // * SOLID LINE DETECTION WITH CANNY EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    /* SOLID LINE DETECTION WITH CANNY EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -828,9 +829,9 @@ void MainWindow::guideButton(){
         iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
         //iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
 
-        iprocess->thetaMin = 87;
-        iprocess->thetaMax = 93;
-        iprocess->thetaStep = 0.5;
+        iprocess->thetaMin = 84;
+        iprocess->thetaMax = 96;
+        iprocess->thetaStep = 1.0;
 
             for (int y = 0; y < iprocess->edgeHeight; y++)
                 for (int x = 0; x < iprocess->edgeWidth; x++){
@@ -842,9 +843,15 @@ void MainWindow::guideButton(){
 
             //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_org.csv" );
 
-            iprocess->detectLongestSolidLines(false, false);
+        iprocess->houghTransformEdgeMap();
+        iprocess->calculateHoughMaxs(1);              // get max voted line(s)
 
-            iprocess->cornerImage(false).save(savePath + "image_corners.png");
+        for (int c = 0; c < 1; c++)
+            ui->plainTextEdit->appendPlainText("dav: " +QString::number(iprocess->houghLines[c][0], 'f', 1)+", "+QString::number(iprocess->houghLines[c][1], 'f', 1)+", "+QString::number(iprocess->houghLines[c][2], 'f', 1));
+
+        iprocess->detectLongestSolidLines(false, false);
+
+        iprocess->cornerImage(false).save(savePath + "image_corners.png");
 
         ui->plainTextEdit->appendPlainText("lcr: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
         ui->plainTextEdit->appendPlainText("[0]sedal: " +
@@ -879,7 +886,7 @@ void MainWindow::guideButton(){
         delete iprocess;
         iprocessInitSwitch = false;
     }
-    // */
+    */
 
     /* LINE DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
@@ -980,11 +987,14 @@ void MainWindow::guideButton(){
         iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
 
 
-        iprocess->thetaMin = 87;//-2;
-        iprocess->thetaMax = 93;//2;
+        iprocess->thetaMin = -2;
+        iprocess->thetaMax = 2;
+        //iprocess->thetaMin = 87;
+        //iprocess->thetaMax = 93;
         iprocess->thetaStep = 1.0;
 
 
+        iprocess->centerX = 0;
         iprocess->houghTransformEdgeMap();
 
         iprocess->calculateHoughMaxs(200);              // get max voted line(s)
@@ -993,7 +1003,8 @@ void MainWindow::guideButton(){
         if (thinJointAlgoActive)
             iprocess->thinCornerNum = 1;
 
-        iprocess->detectMainEdges(thinJointAlgoActive, true);
+//        iprocess->detectMainEdges(thinJointAlgoActive, true);
+        iprocess->detectMainEdges(false, true);
             //iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, savePath + "matrix_max_hough_lines_distance.csv");
             / *
             ui->plainTextEdit->appendPlainText("-1st-maximas---");
@@ -1023,7 +1034,7 @@ void MainWindow::guideButton(){
 
 
 
-    /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
+    // /* CONTRAST DETECTION EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
        targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -1078,7 +1089,7 @@ void MainWindow::guideButton(){
        delete iprocess;
        iprocessInitSwitch = false;
    }
-   */
+   // */
 
     /* THIN JOINT EXPERIMENT, TO BE EMBEDED IN SETUP DIALOG
     if ( !imageGetter->imageList.isEmpty() ){
@@ -1303,10 +1314,13 @@ void MainWindow::processImage(){
 
     } else {
 
-        if (dynamicAlgo)
-            thinJointAlgoActive = !weldSeamExists;
+        //if (dynamicAlgo)    thinJointAlgoActive = !weldSeamExists;
 
-        processEdgeDetection();
+        if ( thinJointAlgoActive ) {
+            processEdgeDetection();
+        } else {
+            processSolidnessCanny();
+        }
     }
 
 /*
@@ -1632,6 +1646,7 @@ void MainWindow::processEdgeDetection(){
         iprocess->thetaMax = 2;
         iprocess->thetaStep = 1.0;
 
+        iprocess->centerX = 0;
         iprocess->houghTransformEdgeMap();
 
         iprocess->calculateHoughMaxs(200);              // get max voted line(s)
@@ -1735,7 +1750,7 @@ void MainWindow::processSolidnessCanny(){
             }
 
         iprocess->houghTransformEdgeMap();
-        iprocess->calculateHoughMaxs(10);              // get max voted line(s)
+        iprocess->calculateHoughMaxs(1);              // get max voted line(s)
 
         iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
     }
@@ -2324,7 +2339,7 @@ void MainWindow::testEdit(){
 
 void MainWindow::testButton(){
 
-    mak_aktif_now = true;
+    mak_aktif_now = !mak_aktif_now;
     //alignGuide2TrackCenter = true;
 
 }

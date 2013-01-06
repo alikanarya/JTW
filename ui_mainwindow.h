@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu 3. Jan 01:11:28 2013
+** Created: Sun 6. Jan 18:22:49 2013
 **      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -433,7 +433,7 @@ public:
         labelDistanceTag2->setAlignment(Qt::AlignCenter);
         testButton = new QPushButton(centralWidget);
         testButton->setObjectName(QString::fromUtf8("testButton"));
-        testButton->setEnabled(false);
+        testButton->setEnabled(true);
         testButton->setGeometry(QRect(470, 10, 41, 23));
         timeEdit = new QLineEdit(centralWidget);
         timeEdit->setObjectName(QString::fromUtf8("timeEdit"));
