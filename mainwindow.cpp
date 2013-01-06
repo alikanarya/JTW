@@ -757,7 +757,7 @@ void MainWindow::analyzeButton(){
 
         if ( iprocessInitSwitch ) {
 
-            iprocess->cornerImage();                                                                    // produce corner image
+            iprocess->cornerImage(false);   // false for solid canny                                                                    // produce corner image
 
             analyzeDialog *_analyzeDialog = new analyzeDialog(iprocess, processElapsed, this);
             _analyzeDialog->show();
@@ -859,7 +859,7 @@ void MainWindow::guideButton(){
                                            QString::number(iprocess->major2Lines[1].start.x())+"-"+
                                            QString::number(iprocess->major2Lines[1].start.y())+", "+
                                            QString::number(iprocess->major2Lines[1].end.x())+"-"+
-                                           QString::number(iprocess->major2Lines[1].start.y())+", "+
+                                           QString::number(iprocess->major2Lines[1].end.y())+", "+
                                            QString::number(iprocess->major2Lines[1].distance, 'f', 1)+", "+
                                            QString::number(iprocess->major2Lines[1].angle, 'f', 1)+", "+
                                            QString::number(iprocess->major2Lines[1].length)  );
@@ -868,8 +868,8 @@ void MainWindow::guideButton(){
 
 //        iprocess->drawSolidLines(iprocess->majorLines).save(savePath + "image_major_lines.png");
 
-        for (int c=0; c < iprocess->majorLines.size(); c++)
-            iprocess->drawSolidLines2EdgeMatrix( iprocess->majorLines[c], QImage::Format_RGB16)->save(savePath + "image_major_lines_" + QString::number(c) + ".png");
+        //for (int c=0; c < iprocess->majorLines.size(); c++)
+        //    iprocess->drawSolidLines2EdgeMatrix( iprocess->majorLines[c], QImage::Format_RGB16)->save(savePath + "image_major_lines_" + QString::number(c) + ".png");
 
         //iprocess->saveList(iprocess->solidSpaceMain, savePath + "matrix_solid_space_main.csv");
         //iprocess->saveList(iprocess->solidSpaceMainTrimmed, savePath + "matrix_solid_space_trimmed.csv");
@@ -1724,17 +1724,20 @@ void MainWindow::processSolidnessCanny(){
 
         iprocess->thetaMin = 87;
         iprocess->thetaMax = 93;
-        iprocess->thetaStep = 0.5;
+        iprocess->thetaStep = 1.0;
 
         for (int y = 0; y < iprocess->edgeHeight; y++)
             for (int x = 0; x < iprocess->edgeWidth; x++){
                 if (iprocess->edgeMapMatrix[y][x])
-                    iprocess->valueMatrix[y][x]=255;
+                    iprocess->edgeMatrix[y][x]=255;
                 else
-                    iprocess->valueMatrix[y][x]=0;
+                    iprocess->edgeMatrix[y][x]=0;
             }
 
-        iprocess->detectLongestSolidLines();
+        iprocess->houghTransformEdgeMap();
+        iprocess->calculateHoughMaxs(10);              // get max voted line(s)
+
+        iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
     }
 }
 
