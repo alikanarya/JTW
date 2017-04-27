@@ -101,6 +101,9 @@ public:
     QLabel *labelContrast;
     QSlider *gammaSlider;
     QLabel *labelGamma;
+    QPushButton *brightnessReset;
+    QPushButton *contrastReset;
+    QPushButton *gammaReset;
 
     void setupUi(QWidget *setupForm)
     {
@@ -427,7 +430,7 @@ public:
         labelBrightness->setAlignment(Qt::AlignCenter);
         contrastSlider = new QSlider(setupForm);
         contrastSlider->setObjectName(QStringLiteral("contrastSlider"));
-        contrastSlider->setGeometry(QRect(30, 470, 160, 22));
+        contrastSlider->setGeometry(QRect(30, 460, 160, 22));
         contrastSlider->setMinimum(0);
         contrastSlider->setMaximum(200);
         contrastSlider->setSingleStep(10);
@@ -438,13 +441,13 @@ public:
         contrastSlider->setTickInterval(50);
         labelContrast = new QLabel(setupForm);
         labelContrast->setObjectName(QStringLiteral("labelContrast"));
-        labelContrast->setGeometry(QRect(210, 470, 42, 20));
+        labelContrast->setGeometry(QRect(210, 460, 42, 20));
         labelContrast->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelContrast->setFrameShape(QFrame::Box);
         labelContrast->setAlignment(Qt::AlignCenter);
         gammaSlider = new QSlider(setupForm);
         gammaSlider->setObjectName(QStringLiteral("gammaSlider"));
-        gammaSlider->setGeometry(QRect(30, 500, 160, 22));
+        gammaSlider->setGeometry(QRect(30, 490, 160, 22));
         gammaSlider->setMinimum(0);
         gammaSlider->setMaximum(200);
         gammaSlider->setSingleStep(10);
@@ -455,10 +458,22 @@ public:
         gammaSlider->setTickInterval(50);
         labelGamma = new QLabel(setupForm);
         labelGamma->setObjectName(QStringLiteral("labelGamma"));
-        labelGamma->setGeometry(QRect(210, 500, 42, 20));
+        labelGamma->setGeometry(QRect(210, 490, 42, 20));
         labelGamma->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelGamma->setFrameShape(QFrame::Box);
         labelGamma->setAlignment(Qt::AlignCenter);
+        brightnessReset = new QPushButton(setupForm);
+        brightnessReset->setObjectName(QStringLiteral("brightnessReset"));
+        brightnessReset->setGeometry(QRect(260, 430, 42, 22));
+        brightnessReset->setFont(font);
+        contrastReset = new QPushButton(setupForm);
+        contrastReset->setObjectName(QStringLiteral("contrastReset"));
+        contrastReset->setGeometry(QRect(260, 460, 42, 22));
+        contrastReset->setFont(font);
+        gammaReset = new QPushButton(setupForm);
+        gammaReset->setObjectName(QStringLiteral("gammaReset"));
+        gammaReset->setGeometry(QRect(260, 490, 42, 22));
+        gammaReset->setFont(font);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -596,6 +611,9 @@ public:
         labelBrightness->setText(QApplication::translate("setupForm", "0", 0));
         labelContrast->setText(QApplication::translate("setupForm", "0", 0));
         labelGamma->setText(QApplication::translate("setupForm", "0", 0));
+        brightnessReset->setText(QApplication::translate("setupForm", "R", 0));
+        contrastReset->setText(QApplication::translate("setupForm", "R", 0));
+        gammaReset->setText(QApplication::translate("setupForm", "R", 0));
     } // retranslateUi
 
 };

@@ -780,13 +780,20 @@ void setupForm::on_captureButton_2_clicked(){
     w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFile ));
 }
 
+void setupForm::update(){
+
+    QImage step1 = changeBrightness(w->imageFile, w->brightnessVal);
+    QImage step2 = changeContrast(step1, w->contrastVal);
+    w->imageFileChanged = changeGamma(step2, w->gammaVal);
+    w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
+    captureButton();
+}
+
 void setupForm::on_brightnessSlider_sliderReleased(){
 
     w->brightnessVal = ui->brightnessSlider->value();
-    ui->plainTextEdit->appendPlainText(QString::number(w->brightnessVal));
-    w->imageFileChanged = changeBrightness(w->imageFile, w->brightnessVal);
-    w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
-    captureButton();
+    //ui->plainTextEdit->appendPlainText(QString::number(w->brightnessVal));
+    update();
 }
 
 void setupForm::on_brightnessSlider_sliderMoved(int position){
@@ -797,9 +804,7 @@ void setupForm::on_brightnessSlider_sliderMoved(int position){
 void setupForm::on_contrastSlider_sliderReleased(){
 
     w->contrastVal = ui->contrastSlider->value();
-    w->imageFileChanged = changeContrast(w->imageFile, w->contrastVal);
-    w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
-    captureButton();
+    update();
 }
 
 void setupForm::on_contrastSlider_sliderMoved(int position){
@@ -810,9 +815,7 @@ void setupForm::on_contrastSlider_sliderMoved(int position){
 void setupForm::on_gammaSlider_sliderReleased(){
 
     w->gammaVal = ui->gammaSlider->value();
-    w->imageFileChanged = changeGamma(w->imageFile, w->gammaVal);
-    w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
-    captureButton();
+    update();
 }
 
 void setupForm::on_gammaSlider_sliderMoved(int position){
@@ -820,6 +823,29 @@ void setupForm::on_gammaSlider_sliderMoved(int position){
     ui->labelGamma->setText(QString::number(position));
 }
 
+void setupForm::on_brightnessReset_clicked(){
+
+    w->brightnessVal = 0;
+    ui->brightnessSlider->setValue(0);
+    ui->labelBrightness->setText(QString::number(0));
+    update();
+}
+
+void setupForm::on_contrastReset_clicked(){
+
+    w->contrastVal = 100;
+    ui->contrastSlider->setValue(100);
+    ui->labelContrast->setText(QString::number(100));
+    update();
+}
+
+void setupForm::on_gammaReset_clicked(){
+
+    w->gammaVal = 100;
+    ui->gammaSlider->setValue(100);
+    ui->labelGamma->setText(QString::number(100));
+    update();
+}
 
 
 
@@ -1083,6 +1109,8 @@ void setupForm::processSubImageSolidness(){
     }
 }
 */
+
+
 
 
 

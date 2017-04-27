@@ -130,8 +130,8 @@ public:
     QImage imageFile;
     QImage imageFileChanged;
     int brightnessVal = 0;
-    int contrastVal = 0;
-    int gammaVal = 0;
+    int contrastVal = 100;
+    int gammaVal = 100;
 
     // icons
     QIcon plcOnlineIcon, plcOfflineIcon;

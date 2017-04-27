@@ -70,6 +70,8 @@ public slots:
     void processSubImageSolidness();    // sub image based on SOLID lines
     void processSolidnessCanny();       // SOLID line analysis with canny edges
 
+    void update();
+
 private:
     Ui::setupForm *ui;
 
@@ -93,6 +95,9 @@ private slots:
     void on_contrastSlider_sliderMoved(int position);
     void on_gammaSlider_sliderReleased();
     void on_gammaSlider_sliderMoved(int position);
+    void on_brightnessReset_clicked();
+    void on_contrastReset_clicked();
+    void on_gammaReset_clicked();
 };
 
 #endif // SETUPFORM_H
