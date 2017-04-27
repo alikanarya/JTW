@@ -11,13 +11,13 @@
 #define UI_RESTARTDIALOG_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QDialog>
-#include <QtGui/QHeaderView>
-#include <QtGui/QPushButton>
-#include <QtGui/QTextEdit>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QTextEdit>
 
 QT_BEGIN_NAMESPACE
 
@@ -69,9 +69,14 @@ public:
 
     void retranslateUi(QDialog *restartDialog)
     {
+        restartDialog->setWindowTitle(QApplication::translate("restartDialog", "Dialog", 0));
+        cancelButton->setText(QApplication::translate("restartDialog", "\304\260ptal", 0));
+        acceptButton->setText(QApplication::translate("restartDialog", "Kabul", 0));
+/*
         restartDialog->setWindowTitle(QApplication::translate("restartDialog", "Dialog", 0, QApplication::UnicodeUTF8));
         cancelButton->setText(QApplication::translate("restartDialog", "\304\260ptal", 0, QApplication::UnicodeUTF8));
         acceptButton->setText(QApplication::translate("restartDialog", "Kabul", 0, QApplication::UnicodeUTF8));
+*/
         textEdit->setHtml(QApplication::translate("restartDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -85,7 +90,8 @@ public:
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">\304\260\305\236LEM\304\260N YARIM KALMASINA NEDEN OLACAKTIR.</span></p>\n"
 "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin"
-                        "-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600; color:#ff0000;\">EM\304\260N M\304\260S\304\260N\304\260Z !!!</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+                        "-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600; color:#ff0000;\">EM\304\260N M\304\260S\304\260N\304\260Z !!!</span></p></body></html>", 0));
+//                      "-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600; color:#ff0000;\">EM\304\260N M\304\260S\304\260N\304\260Z !!!</span></p></body></html>", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

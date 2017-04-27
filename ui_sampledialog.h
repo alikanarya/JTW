@@ -11,13 +11,13 @@
 #define UI_SAMPLEDIALOG_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QDialog>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -98,14 +98,14 @@ public:
 
     void retranslateUi(QDialog *sampleDialog)
     {
-        sampleDialog->setWindowTitle(QApplication::translate("sampleDialog", "\303\226rnek G\303\266r\303\274nt\303\274ler", 0, QApplication::UnicodeUTF8));
+        sampleDialog->setWindowTitle(QApplication::translate("sampleDialog", "\303\226rnek G\303\266r\303\274nt\303\274ler", 0));//, QApplication::UnicodeUTF8));
         labelMonoCorrect->setText(QString());
         labelAnalyzeCorrect->setText(QString());
         labelMonoWrong->setText(QString());
         labelAnalyzeWrong->setText(QString());
-        pushButton->setText(QApplication::translate("sampleDialog", "TAMAM", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("sampleDialog", "DO\304\236RU G\303\226R\303\234NT\303\234", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("sampleDialog", "YANLI\305\236 G\303\226R\303\234NT\303\234", 0, QApplication::UnicodeUTF8));
+        pushButton->setText(QApplication::translate("sampleDialog", "TAMAM", 0));//, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("sampleDialog", "DO\304\236RU G\303\226R\303\234NT\303\234", 0));//, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("sampleDialog", "YANLI\305\236 G\303\226R\303\234NT\303\234", 0));//, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

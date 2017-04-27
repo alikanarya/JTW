@@ -1,10 +1,11 @@
-#include "setupform.h"
+ï»¿#include "setupform.h"
 #include "ui_setupform.h"
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <QTextCodec>
+#include "imgtools.h"
 
 extern MainWindow *w;
 
@@ -264,7 +265,7 @@ void setupForm::processSubImageSolidness(){
 
 void setupForm::captureButton(){
 
-    if ( !w->imageGetter->imageList.isEmpty() ) {   // if any image is get
+//--    if ( !w->imageGetter->imageList.isEmpty() ) {   // if any image is get
 
         ui->labelPrimaryLine->hide();               // hide PRIMARY LINE NOT DETECTED message
 
@@ -302,7 +303,9 @@ void setupForm::captureButton(){
 
         if (!w->subImageProcessingSwitch) {
 
-            processStandardHT();
+            //processStandardHT();
+            processSolidnessCanny();
+            //ui->plainTextEdit->appendPlainText(QString::number(iprocess->thetaMin)+","+QString::number(iprocess->thetaMax)+","+QString::number(iprocess->thetaStep));
 
         } else {
 
@@ -328,11 +331,11 @@ void setupForm::captureButton(){
         ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->imgMono ) );
 
 
-        QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleþtirildi.";
+        QString message = "Analiz " + QString::number(processElapsed) + " milisaniye iÃ§inde gerÃ§ekleÅŸtirildi.";
         ui->plainTextEdit->appendPlainText(message);
 
         ui->plainTextEdit->appendPlainText(iprocess->statusMessage);    // display message about detection process
-        ui->plainTextEdit->appendPlainText("Sol Köþe (x,y) - Merkez (x,y) - Sað Köþe (x,y): ");
+        ui->plainTextEdit->appendPlainText("Sol KÃ¶ÅŸe (x,y) - Merkez (x,y) - SaÄŸ KÃ¶ÅŸe (x,y): ");
         message = "( " + QString::number(iprocess->leftCornerX) + " , " + QString::number(iprocess->leftCornerY) + " )  -  ( " +
                          QString::number(iprocess->trackCenterX) + " , " + QString::number(iprocess->trackCenterY) + " )  -  ( " +
                          QString::number(iprocess->rightCornerX) + " , " + QString::number(iprocess->rightCornerY) + " )";
@@ -374,7 +377,7 @@ void setupForm::captureButton(){
                     ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
 
                     if ( iprocess->primaryLineFound ) {
-                        ui->plainTextEdit->appendPlainText("1. Çizgi {Uzunluk-Mesafe-Açý-Baþlagýç(x,y)-Bitiþ(x,y)}");
+                        ui->plainTextEdit->appendPlainText("1. Ã‡izgi {Uzunluk-Mesafe-AÃ§Ä±-BaÅŸlagÄ±Ã§(x,y)-BitiÅŸ(x,y)}");
                         message = QString::number(iprocess->major2Lines[0].length) + " - " +
                                   QString::number(iprocess->major2Lines[0].distance, 'f', 1) + " - " +
                                   QString::number(iprocess->major2Lines[0].angle, 'f', 1) + " -   ( " +
@@ -386,7 +389,7 @@ void setupForm::captureButton(){
                     }
 
                     if ( iprocess->secondaryLineFound ) {
-                        ui->plainTextEdit->appendPlainText("2. Çizgi {Uzunluk-Mesafe-Açý-Baþlagýç(x,y)-Bitiþ(x,y)}");
+                        ui->plainTextEdit->appendPlainText("2. Ã‡izgi {Uzunluk-Mesafe-AÃ§Ä±-BaÅŸlagÄ±Ã§(x,y)-BitiÅŸ(x,y)}");
                         message = QString::number(iprocess->major2Lines[1].length) + " - " +
                                   QString::number(iprocess->major2Lines[1].distance, 'f', 1) + " - " +
                                   QString::number(iprocess->major2Lines[1].angle, 'f', 1) + " -   ( " +
@@ -397,7 +400,7 @@ void setupForm::captureButton(){
                         ui->plainTextEdit->appendPlainText(message);
                     }
                     if ( iprocess->primaryLineFound ) {
-                        ui->plainTextEdit->appendPlainText("Ortalama Açý: " + QString::number(iprocess->angleAvg));
+                        ui->plainTextEdit->appendPlainText("Ortalama AÃ§Ä±: " + QString::number(iprocess->angleAvg));
                     }
 
                     break;
@@ -409,7 +412,8 @@ void setupForm::captureButton(){
             edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
             ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
 
-            iprocess->constructHoughMatrix();   // construct hough matrix = edge matrix + coded #houghLineNo lines
+            iprocess->constructHoughMatrixFindX();   // construct hough matrix = edge matrix + coded #houghLineNo lines
+            //iprocess->constructHoughMatrix();   // construct hough matrix = edge matrix + coded #houghLineNo lines
             //iprocess->constructHoughMatrixPrimaryLines(iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX);
             hough = iprocess->getImage( iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight );     // produce hough image
             ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
@@ -417,7 +421,7 @@ void setupForm::captureButton(){
             iprocess->cornerImage();
             ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
 
-            ui->plainTextEdit->appendPlainText("Bulunan tüm boþluk parametreleri:");
+            ui->plainTextEdit->appendPlainText("Bulunan tÃ¼m boÅŸluk parametreleri:");
             ui->plainTextEdit->appendPlainText("start.X, start.Y, end.X, end.Y, boy");
 
             // void line information of primary (avg of max in that case) line
@@ -437,10 +441,11 @@ void setupForm::captureButton(){
 
         captured = true;
 
-    } else {
+/*--    } else {
 
         ui->plainTextEdit->appendPlainText(alarm6);
    }
+*/
 }
 
 
@@ -503,6 +508,8 @@ bool setupForm::saveButton(){
 
         captured = false;
     }
+
+    ui->plainTextEdit->appendPlainText("Dosyalar kaydedildi");
 
     return saveStatus;
 }
@@ -705,6 +712,112 @@ setupForm::~setupForm(){
 
     if ( w->lineDetection )
         w->clearTrack();
+}
+
+void setupForm::processSolidnessCanny(){
+
+//--    if ( !w->imageGetter->imageList.isEmpty() ){
+//--        target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+
+        target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+
+        iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
+
+        iprocess->thetaMin = ui->editHoughThetaMin->text().toInt();
+        iprocess->thetaMax = ui->editHoughThetaMax->text().toInt();
+        iprocess->thetaStep = ui->editHoughThetaStep->text().toFloat();
+
+        cannyThinning = ui->cannyThinningBox->isChecked();
+
+        iprocess->prepareCannyArrays();
+
+        for (int i = 0; i < 4 ; i++){
+
+            iprocess->constructValueMatrix( iprocess->imgOrginal, i );
+
+            iprocess->gaussianBlur();
+
+            iprocess->detectEdgeSobelwDirections();
+
+            iprocess->nonMaximumSuppression(cannyThinning);
+
+            iprocess->cannyThresholding(true);
+
+            iprocess->edgeTracing();
+
+            iprocess->assignEdgeMap();
+        }
+
+        iprocess->mergeEdgeMaps();
+
+        //iprocess->thetaMin = 87;
+        //iprocess->thetaMax = 93;
+        //iprocess->thetaStep = 1.0;
+
+        for (int y = 0; y < iprocess->edgeHeight; y++)
+            for (int x = 0; x < iprocess->edgeWidth; x++){
+                if (iprocess->edgeMapMatrix[y][x])
+                    iprocess->edgeMatrix[y][x]=255;
+                else
+                    iprocess->edgeMatrix[y][x]=0;
+            }
+
+        iprocess->houghTransformEdgeMap();
+        iprocess->calculateHoughMaxs(houghLineNo);              // get max voted line(s)
+
+        iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
+//--    }
+}
+
+void setupForm::on_captureButton_2_clicked(){
+
+    QString _fileName = QFileDialog::getOpenFileName(this,
+        tr("Open Image"), "C:/xampp/htdocs/images/aygaz", tr("Image Files (*.png *.jpg *.bmp)"));
+
+    w->imageFile.load(_fileName);
+    w->imageFileChanged = w->imageFile;
+    w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFile ));
+}
+
+void setupForm::on_brightnessSlider_sliderReleased(){
+
+    w->brightnessVal = ui->brightnessSlider->value();
+    ui->plainTextEdit->appendPlainText(QString::number(w->brightnessVal));
+    w->imageFileChanged = changeBrightness(w->imageFile, w->brightnessVal);
+    w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
+    captureButton();
+}
+
+void setupForm::on_brightnessSlider_sliderMoved(int position){
+
+    ui->labelBrightness->setText(QString::number(position));
+}
+
+void setupForm::on_contrastSlider_sliderReleased(){
+
+    w->contrastVal = ui->contrastSlider->value();
+    w->imageFileChanged = changeContrast(w->imageFile, w->contrastVal);
+    w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
+    captureButton();
+}
+
+void setupForm::on_contrastSlider_sliderMoved(int position){
+
+    ui->labelContrast->setText(QString::number(position));
+}
+
+void setupForm::on_gammaSlider_sliderReleased(){
+
+    w->gammaVal = ui->gammaSlider->value();
+    w->imageFileChanged = changeGamma(w->imageFile, w->gammaVal);
+    w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
+    captureButton();
+}
+
+void setupForm::on_gammaSlider_sliderMoved(int position){
+
+    ui->labelGamma->setText(QString::number(position));
 }
 
 
@@ -970,3 +1083,9 @@ void setupForm::processSubImageSolidness(){
     }
 }
 */
+
+
+
+
+
+

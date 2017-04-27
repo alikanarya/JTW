@@ -1,7 +1,7 @@
 #ifndef SAMPLEDIALOG_H
 #define SAMPLEDIALOG_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Ui {
     class sampleDialog;

@@ -1,7 +1,7 @@
 #ifndef INFOFORM_H
 #define INFOFORM_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Ui {
     class infoForm;

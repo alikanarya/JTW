@@ -14,7 +14,7 @@ exitDialog::exitDialog(QWidget *parent) :
     // only title on title bar
     Qt::WindowFlags flags = 0;
     flags |= Qt::Dialog;
-    flags |= Qt::FramelessWindowHint;
+    //flags |= Qt::FramelessWindowHint;
     flags |= Qt::WindowTitleHint;
     this->setWindowFlags(flags);
     this->setAttribute(Qt::WA_DeleteOnClose, true);

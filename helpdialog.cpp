@@ -10,6 +10,7 @@ helpDialog::helpDialog(QWidget *parent) :
     flags |= Qt::Dialog;
     flags |= Qt::WindowSystemMenuHint;
     flags |= Qt::WindowTitleHint;
+    flags |= Qt::WindowCloseButtonHint;
     this->setWindowFlags(flags);
     this->setAttribute(Qt::WA_DeleteOnClose, true);
 

@@ -1,7 +1,7 @@
-#ifndef ANALYZEDIALOG_H
+﻿#ifndef ANALYZEDIALOG_H
 #define ANALYZEDIALOG_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 #include "../_Modules/Imgprocess/imgprocess.h"
 

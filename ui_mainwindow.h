@@ -1,8 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun 6. Jan 18:22:49 2013
-**      by: Qt User Interface Compiler version 4.7.0
+** Created by: Qt User Interface Compiler version 5.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -11,20 +10,20 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QFrame>
-#include <QtGui/QGraphicsView>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QMainWindow>
-#include <QtGui/QMenuBar>
-#include <QtGui/QPlainTextEdit>
-#include <QtGui/QPushButton>
-#include <QtGui/QStatusBar>
-#include <QtGui/QWidget>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPlainTextEdit>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QStatusBar>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -73,16 +72,17 @@ public:
     QLabel *labelTimeTag2;
     QLabel *labelTimeTag;
     QPushButton *videoButton;
+    QPushButton *setupButton;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
-            MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
+            MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::ApplicationModal);
         MainWindow->setEnabled(true);
-        MainWindow->resize(664, 768);
+        MainWindow->resize(664, 845);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -90,31 +90,31 @@ public:
         MainWindow->setSizePolicy(sizePolicy);
         MainWindow->setMaximumSize(QSize(2000, 2000));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QStringLiteral(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
         centralWidget = new QWidget(MainWindow);
-        centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+        centralWidget->setObjectName(QStringLiteral("centralWidget"));
         imageFrame = new QLabel(centralWidget);
-        imageFrame->setObjectName(QString::fromUtf8("imageFrame"));
+        imageFrame->setObjectName(QStringLiteral("imageFrame"));
         imageFrame->setGeometry(QRect(10, 70, 644, 484));
         imageFrame->setFrameShape(QFrame::Box);
         imageFrame->setLineWidth(2);
         imageFrame->setScaledContents(false);
         screenShotButton = new QPushButton(centralWidget);
-        screenShotButton->setObjectName(QString::fromUtf8("screenShotButton"));
+        screenShotButton->setObjectName(QStringLiteral("screenShotButton"));
         screenShotButton->setEnabled(true);
         screenShotButton->setGeometry(QRect(130, 30, 32, 32));
         screenShotButton->setLayoutDirection(Qt::LeftToRight);
         screenShotButton->setAutoFillBackground(false);
         QIcon icon1;
-        icon1.addFile(QString::fromUtf8(":/resources/Image-capture-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon1.addFile(QStringLiteral(":/resources/Image-capture-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         screenShotButton->setIcon(icon1);
         screenShotButton->setIconSize(QSize(32, 32));
         screenShotButton->setFlat(true);
         labelTime = new QLabel(centralWidget);
-        labelTime->setObjectName(QString::fromUtf8("labelTime"));
+        labelTime->setObjectName(QStringLiteral("labelTime"));
         labelTime->setEnabled(false);
-        labelTime->setGeometry(QRect(380, 0, 85, 23));
+        labelTime->setGeometry(QRect(220, 730, 85, 23));
         QFont font;
         font.setPointSize(12);
         font.setBold(true);
@@ -124,83 +124,83 @@ public:
         labelTime->setLineWidth(2);
         labelTime->setAlignment(Qt::AlignCenter);
         playButton = new QPushButton(centralWidget);
-        playButton->setObjectName(QString::fromUtf8("playButton"));
+        playButton->setObjectName(QStringLiteral("playButton"));
         playButton->setGeometry(QRect(10, 30, 32, 32));
         QIcon icon2;
-        icon2.addFile(QString::fromUtf8(":/resources/Play-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
-        icon2.addFile(QString::fromUtf8(":/resources/Play-Normal-icon.png"), QSize(), QIcon::Normal, QIcon::On);
+        icon2.addFile(QStringLiteral(":/resources/Play-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon2.addFile(QStringLiteral(":/resources/Play-Normal-icon.png"), QSize(), QIcon::Normal, QIcon::On);
         playButton->setIcon(icon2);
         playButton->setIconSize(QSize(32, 32));
         playButton->setFlat(true);
         stopButton = new QPushButton(centralWidget);
-        stopButton->setObjectName(QString::fromUtf8("stopButton"));
+        stopButton->setObjectName(QStringLiteral("stopButton"));
         stopButton->setEnabled(true);
         stopButton->setGeometry(QRect(50, 30, 32, 32));
         QIcon icon3;
-        icon3.addFile(QString::fromUtf8(":/resources/Stop-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon3.addFile(QStringLiteral(":/resources/Stop-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         stopButton->setIcon(icon3);
         stopButton->setIconSize(QSize(32, 32));
         stopButton->setFlat(true);
         plainTextEdit = new QPlainTextEdit(centralWidget);
-        plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
+        plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
         plainTextEdit->setGeometry(QRect(10, 560, 158, 160));
         QFont font1;
         font1.setPointSize(7);
         plainTextEdit->setFont(font1);
-        plainTextEdit->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 127);"));
+        plainTextEdit->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 127);"));
         plainTextEdit->setFrameShape(QFrame::Box);
         plainTextEdit->setFrameShadow(QFrame::Sunken);
         plainTextEdit->setLineWidth(1);
         plainTextEdit->setReadOnly(true);
         analyzeButton = new QPushButton(centralWidget);
-        analyzeButton->setObjectName(QString::fromUtf8("analyzeButton"));
+        analyzeButton->setObjectName(QStringLiteral("analyzeButton"));
         analyzeButton->setGeometry(QRect(210, 30, 32, 32));
         QIcon icon4;
-        icon4.addFile(QString::fromUtf8(":/resources/calculator-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon4.addFile(QStringLiteral(":/resources/calculator-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         analyzeButton->setIcon(icon4);
         analyzeButton->setIconSize(QSize(32, 32));
         analyzeButton->setFlat(true);
         guideFrame = new QFrame(centralWidget);
-        guideFrame->setObjectName(QString::fromUtf8("guideFrame"));
+        guideFrame->setObjectName(QStringLiteral("guideFrame"));
         guideFrame->setEnabled(true);
         guideFrame->setGeometry(QRect(170, 72, 324, 480));
         guideFrame->setAutoFillBackground(false);
-        guideFrame->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 0);"));
+        guideFrame->setStyleSheet(QStringLiteral("color: rgb(255, 255, 0);"));
         guideFrame->setFrameShape(QFrame::NoFrame);
         guideFrame->setFrameShadow(QFrame::Plain);
         guideFrame->setLineWidth(2);
         guideFrame->setMidLineWidth(0);
         guideLineVert = new QFrame(guideFrame);
-        guideLineVert->setObjectName(QString::fromUtf8("guideLineVert"));
+        guideLineVert->setObjectName(QStringLiteral("guideLineVert"));
         guideLineVert->setEnabled(true);
         guideLineVert->setGeometry(QRect(161, 0, 2, 480));
         guideLineVert->setFrameShadow(QFrame::Plain);
         guideLineVert->setLineWidth(2);
         guideLineVert->setFrameShape(QFrame::VLine);
         guideLineHorz = new QFrame(guideFrame);
-        guideLineHorz->setObjectName(QString::fromUtf8("guideLineHorz"));
+        guideLineHorz->setObjectName(QStringLiteral("guideLineHorz"));
         guideLineHorz->setGeometry(QRect(2, 239, 320, 2));
         guideLineHorz->setFrameShadow(QFrame::Plain);
         guideLineHorz->setLineWidth(2);
         guideLineHorz->setFrameShape(QFrame::HLine);
         frame = new QFrame(guideFrame);
-        frame->setObjectName(QString::fromUtf8("frame"));
+        frame->setObjectName(QStringLiteral("frame"));
         frame->setGeometry(QRect(0, 188, 324, 104));
         frame->setFrameShape(QFrame::Box);
         frame->setFrameShadow(QFrame::Plain);
         frame->setLineWidth(2);
         guideButton = new QPushButton(centralWidget);
-        guideButton->setObjectName(QString::fromUtf8("guideButton"));
+        guideButton->setObjectName(QStringLiteral("guideButton"));
         guideButton->setGeometry(QRect(170, 30, 32, 32));
         QIcon icon5;
-        icon5.addFile(QString::fromUtf8(":/resources/target.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon5.addFile(QStringLiteral(":/resources/target.png"), QSize(), QIcon::Normal, QIcon::Off);
         guideButton->setIcon(icon5);
         guideButton->setIconSize(QSize(32, 32));
         guideButton->setFlat(true);
         trackView = new QGraphicsView(centralWidget);
-        trackView->setObjectName(QString::fromUtf8("trackView"));
+        trackView->setObjectName(QStringLiteral("trackView"));
         trackView->setGeometry(QRect(170, 559, 324, 160));
-        trackView->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);\n"
+        trackView->setStyleSheet(QLatin1String("color: rgb(0, 0, 0);\n"
 "background-color: rgb(236, 233, 216);"));
         trackView->setFrameShape(QFrame::Box);
         trackView->setFrameShadow(QFrame::Plain);
@@ -210,267 +210,273 @@ public:
         trackView->setSceneRect(QRectF(0, 0, 320, 160));
         trackView->setTransformationAnchor(QGraphicsView::NoAnchor);
         settingsButton = new QPushButton(centralWidget);
-        settingsButton->setObjectName(QString::fromUtf8("settingsButton"));
+        settingsButton->setObjectName(QStringLiteral("settingsButton"));
         settingsButton->setGeometry(QRect(370, 30, 32, 32));
         QIcon icon6;
-        icon6.addFile(QString::fromUtf8(":/resources/settings-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon6.addFile(QStringLiteral(":/resources/settings-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         settingsButton->setIcon(icon6);
         settingsButton->setIconSize(QSize(32, 32));
         settingsButton->setFlat(true);
         trackButton = new QPushButton(centralWidget);
-        trackButton->setObjectName(QString::fromUtf8("trackButton"));
+        trackButton->setObjectName(QStringLiteral("trackButton"));
         trackButton->setEnabled(false);
         trackButton->setGeometry(QRect(250, 30, 32, 32));
         QIcon icon7;
-        icon7.addFile(QString::fromUtf8(":/resources/Phone-Book-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon7.addFile(QStringLiteral(":/resources/Phone-Book-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         trackButton->setIcon(icon7);
         trackButton->setIconSize(QSize(32, 32));
         trackButton->setFlat(true);
         controlButton = new QPushButton(centralWidget);
-        controlButton->setObjectName(QString::fromUtf8("controlButton"));
+        controlButton->setObjectName(QStringLiteral("controlButton"));
         controlButton->setEnabled(false);
         controlButton->setGeometry(QRect(290, 30, 32, 32));
         QIcon icon8;
-        icon8.addFile(QString::fromUtf8(":/resources/Weather-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon8.addFile(QStringLiteral(":/resources/Weather-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         controlButton->setIcon(icon8);
         controlButton->setIconSize(QSize(32, 32));
         controlButton->setFlat(true);
         plcStatus = new QPushButton(centralWidget);
-        plcStatus->setObjectName(QString::fromUtf8("plcStatus"));
+        plcStatus->setObjectName(QStringLiteral("plcStatus"));
         plcStatus->setGeometry(QRect(500, 690, 32, 32));
         QIcon icon9;
-        icon9.addFile(QString::fromUtf8(":/resources/s7_200-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon9.addFile(QStringLiteral(":/resources/s7_200-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         plcStatus->setIcon(icon9);
         plcStatus->setIconSize(QSize(32, 32));
         plcStatus->setFlat(true);
         infoButton = new QPushButton(centralWidget);
-        infoButton->setObjectName(QString::fromUtf8("infoButton"));
+        infoButton->setObjectName(QStringLiteral("infoButton"));
         infoButton->setGeometry(QRect(580, 30, 32, 32));
         QIcon icon10;
-        icon10.addFile(QString::fromUtf8(":/resources/info-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon10.addFile(QStringLiteral(":/resources/info-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         infoButton->setIcon(icon10);
         infoButton->setIconSize(QSize(32, 32));
         infoButton->setFlat(true);
         exitButton = new QPushButton(centralWidget);
-        exitButton->setObjectName(QString::fromUtf8("exitButton"));
+        exitButton->setObjectName(QStringLiteral("exitButton"));
         exitButton->setGeometry(QRect(620, 688, 32, 32));
         QIcon icon11;
-        icon11.addFile(QString::fromUtf8(":/resources/exit-48.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon11.addFile(QStringLiteral(":/resources/exit-48.png"), QSize(), QIcon::Normal, QIcon::Off);
         exitButton->setIcon(icon11);
         exitButton->setIconSize(QSize(32, 32));
         exitButton->setFlat(true);
         label_3 = new QLabel(centralWidget);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setGeometry(QRect(10, 3, 351, 25));
+        label_3->setObjectName(QStringLiteral("label_3"));
+        label_3->setGeometry(QRect(10, 3, 411, 25));
         sizePolicy.setHeightForWidth(label_3->sizePolicy().hasHeightForWidth());
         label_3->setSizePolicy(sizePolicy);
         QFont font2;
-        font2.setFamily(QString::fromUtf8("Pristina"));
+        font2.setFamily(QStringLiteral("Pristina"));
         font2.setPointSize(14);
         font2.setBold(true);
         font2.setWeight(75);
         label_3->setFont(font2);
-        label_3->setStyleSheet(QString::fromUtf8("color: rgb(7, 65, 255);"));
+        label_3->setStyleSheet(QStringLiteral("color: rgb(7, 65, 255);"));
         label_3->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
         labelLogoCustomer = new QLabel(centralWidget);
-        labelLogoCustomer->setObjectName(QString::fromUtf8("labelLogoCustomer"));
+        labelLogoCustomer->setObjectName(QStringLiteral("labelLogoCustomer"));
         labelLogoCustomer->setEnabled(false);
-        labelLogoCustomer->setGeometry(QRect(370, 0, 24, 24));
+        labelLogoCustomer->setGeometry(QRect(50, 730, 24, 24));
         labelLogoCustomer->setFrameShape(QFrame::Box);
         labelLogoCustomer->setLineWidth(1);
         labelLogoCustomer->setPixmap(QPixmap(QString::fromUtf8(":/resources/NokselLogo.bmp")));
         labelLogoCustomer->setScaledContents(true);
         emergencyButton = new QPushButton(centralWidget);
-        emergencyButton->setObjectName(QString::fromUtf8("emergencyButton"));
+        emergencyButton->setObjectName(QStringLiteral("emergencyButton"));
         emergencyButton->setEnabled(false);
-        emergencyButton->setGeometry(QRect(330, 0, 32, 32));
+        emergencyButton->setGeometry(QRect(10, 730, 32, 32));
         QIcon icon12;
-        icon12.addFile(QString::fromUtf8(":/resources/Emergency-Stop-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
-        icon12.addFile(QString::fromUtf8(":/resources/Emergency-Stop-Enabled-Icon.png"), QSize(), QIcon::Normal, QIcon::On);
+        icon12.addFile(QStringLiteral(":/resources/Emergency-Stop-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon12.addFile(QStringLiteral(":/resources/Emergency-Stop-Enabled-Icon.png"), QSize(), QIcon::Normal, QIcon::On);
         emergencyButton->setIcon(icon12);
         emergencyButton->setIconSize(QSize(32, 32));
         emergencyButton->setFlat(true);
         cameraStatus = new QPushButton(centralWidget);
-        cameraStatus->setObjectName(QString::fromUtf8("cameraStatus"));
+        cameraStatus->setObjectName(QStringLiteral("cameraStatus"));
         cameraStatus->setGeometry(QRect(540, 690, 32, 32));
         QIcon icon13;
-        icon13.addFile(QString::fromUtf8(":/resources/Camera-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon13.addFile(QStringLiteral(":/resources/Camera-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         cameraStatus->setIcon(icon13);
         cameraStatus->setIconSize(QSize(32, 32));
         cameraStatus->setFlat(true);
         label_4 = new QLabel(centralWidget);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setGeometry(QRect(430, 3, 221, 25));
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setGeometry(QRect(500, 3, 151, 25));
         sizePolicy.setHeightForWidth(label_4->sizePolicy().hasHeightForWidth());
         label_4->setSizePolicy(sizePolicy);
         QFont font3;
-        font3.setFamily(QString::fromUtf8("Pristina"));
+        font3.setFamily(QStringLiteral("Pristina"));
         font3.setPointSize(12);
         font3.setBold(true);
         font3.setWeight(75);
         label_4->setFont(font3);
-        label_4->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
+        label_4->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
         label_4->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         clearMsgBoxButton = new QPushButton(centralWidget);
-        clearMsgBoxButton->setObjectName(QString::fromUtf8("clearMsgBoxButton"));
+        clearMsgBoxButton->setObjectName(QStringLiteral("clearMsgBoxButton"));
         clearMsgBoxButton->setEnabled(false);
-        clearMsgBoxButton->setGeometry(QRect(70, 680, 80, 25));
+        clearMsgBoxButton->setGeometry(QRect(40, 760, 80, 25));
         QFont font4;
-        font4.setFamily(QString::fromUtf8("Arial"));
+        font4.setFamily(QStringLiteral("Arial"));
         font4.setPointSize(10);
         font4.setBold(true);
         font4.setWeight(75);
         clearMsgBoxButton->setFont(font4);
         helpButton = new QPushButton(centralWidget);
-        helpButton->setObjectName(QString::fromUtf8("helpButton"));
+        helpButton->setObjectName(QStringLiteral("helpButton"));
         helpButton->setGeometry(QRect(620, 30, 32, 32));
         QIcon icon14;
-        icon14.addFile(QString::fromUtf8(":/resources/Button-Help-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon14.addFile(QStringLiteral(":/resources/Button-Help-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         helpButton->setIcon(icon14);
         helpButton->setIconSize(QSize(32, 32));
         helpButton->setFlat(true);
         reportButton = new QPushButton(centralWidget);
-        reportButton->setObjectName(QString::fromUtf8("reportButton"));
+        reportButton->setObjectName(QStringLiteral("reportButton"));
         reportButton->setGeometry(QRect(330, 30, 32, 32));
         QIcon icon15;
-        icon15.addFile(QString::fromUtf8(":/resources/report-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon15.addFile(QStringLiteral(":/resources/report-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         reportButton->setIcon(icon15);
         reportButton->setIconSize(QSize(32, 32));
         reportButton->setFlat(true);
         cmdStatus = new QPushButton(centralWidget);
-        cmdStatus->setObjectName(QString::fromUtf8("cmdStatus"));
+        cmdStatus->setObjectName(QStringLiteral("cmdStatus"));
         cmdStatus->setGeometry(QRect(500, 560, 32, 32));
         cmdStatus->setAutoFillBackground(false);
-        cmdStatus->setStyleSheet(QString::fromUtf8(""));
+        cmdStatus->setStyleSheet(QStringLiteral(""));
         QIcon icon16;
-        icon16.addFile(QString::fromUtf8(":/resources/backward.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon16.addFile(QStringLiteral(":/resources/backward.png"), QSize(), QIcon::Normal, QIcon::Off);
         cmdStatus->setIcon(icon16);
         cmdStatus->setIconSize(QSize(32, 32));
         cmdStatus->setFlat(true);
         leftButton = new QPushButton(centralWidget);
-        leftButton->setObjectName(QString::fromUtf8("leftButton"));
+        leftButton->setObjectName(QStringLiteral("leftButton"));
         leftButton->setGeometry(QRect(580, 560, 32, 32));
         QIcon icon17;
-        icon17.addFile(QString::fromUtf8(":/resources/left.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon17.addFile(QStringLiteral(":/resources/left.png"), QSize(), QIcon::Normal, QIcon::Off);
         leftButton->setIcon(icon17);
         leftButton->setIconSize(QSize(32, 32));
         leftButton->setFlat(true);
         rightButton = new QPushButton(centralWidget);
-        rightButton->setObjectName(QString::fromUtf8("rightButton"));
+        rightButton->setObjectName(QStringLiteral("rightButton"));
         rightButton->setGeometry(QRect(620, 560, 32, 32));
         QIcon icon18;
-        icon18.addFile(QString::fromUtf8(":/resources/right.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon18.addFile(QStringLiteral(":/resources/right.png"), QSize(), QIcon::Normal, QIcon::Off);
         rightButton->setIcon(icon18);
         rightButton->setIconSize(QSize(32, 32));
         rightButton->setFlat(true);
         thinJointButton = new QPushButton(centralWidget);
-        thinJointButton->setObjectName(QString::fromUtf8("thinJointButton"));
+        thinJointButton->setObjectName(QStringLiteral("thinJointButton"));
         thinJointButton->setEnabled(true);
-        thinJointButton->setGeometry(QRect(410, 30, 32, 32));
+        thinJointButton->setGeometry(QRect(410, 30, 41, 32));
         QFont font5;
         font5.setPointSize(10);
         font5.setBold(true);
         font5.setWeight(75);
         thinJointButton->setFont(font5);
         thinJointButton->setIconSize(QSize(32, 32));
-        thinJointButton->setDefault(false);
         thinJointButton->setFlat(false);
         zControlButton = new QPushButton(centralWidget);
-        zControlButton->setObjectName(QString::fromUtf8("zControlButton"));
+        zControlButton->setObjectName(QStringLiteral("zControlButton"));
         zControlButton->setEnabled(false);
-        zControlButton->setGeometry(QRect(440, 0, 32, 32));
+        zControlButton->setGeometry(QRect(190, 730, 32, 32));
         QFont font6;
         font6.setPointSize(8);
         font6.setBold(false);
         font6.setWeight(50);
         zControlButton->setFont(font6);
         QIcon icon19;
-        icon19.addFile(QString::fromUtf8(":/resources/height-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon19.addFile(QStringLiteral(":/resources/height-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         zControlButton->setIcon(icon19);
         zControlButton->setIconSize(QSize(32, 32));
         zControlButton->setCheckable(false);
         zControlButton->setChecked(false);
-        zControlButton->setDefault(false);
         zControlButton->setFlat(true);
         labelDistanceTag = new QLabel(centralWidget);
-        labelDistanceTag->setObjectName(QString::fromUtf8("labelDistanceTag"));
-        labelDistanceTag->setGeometry(QRect(560, 600, 43, 44));
+        labelDistanceTag->setObjectName(QStringLiteral("labelDistanceTag"));
+        labelDistanceTag->setGeometry(QRect(510, 600, 43, 44));
         QFont font7;
         font7.setPointSize(11);
         font7.setBold(true);
         font7.setWeight(75);
         labelDistanceTag->setFont(font7);
-        labelDistanceTag->setStyleSheet(QString::fromUtf8("color: rgb(170, 0, 0);"));
+        labelDistanceTag->setStyleSheet(QStringLiteral("color: rgb(170, 0, 0);"));
         labelDistanceTag->setFrameShape(QFrame::NoFrame);
         labelDistanceTag->setLineWidth(2);
         labelDistanceTag->setPixmap(QPixmap(QString::fromUtf8(":/pixmaps/resources/distance.png")));
         labelDistanceTag->setScaledContents(true);
         labelDistanceTag->setAlignment(Qt::AlignCenter);
         labelDistance = new QLabel(centralWidget);
-        labelDistance->setObjectName(QString::fromUtf8("labelDistance"));
-        labelDistance->setGeometry(QRect(610, 600, 41, 23));
+        labelDistance->setObjectName(QStringLiteral("labelDistance"));
+        labelDistance->setGeometry(QRect(590, 600, 61, 23));
         labelDistance->setFont(font5);
-        labelDistance->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
+        labelDistance->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
         labelDistance->setFrameShape(QFrame::NoFrame);
         labelDistance->setLineWidth(2);
         labelDistance->setAlignment(Qt::AlignCenter);
         testEdit = new QLineEdit(centralWidget);
-        testEdit->setObjectName(QString::fromUtf8("testEdit"));
+        testEdit->setObjectName(QStringLiteral("testEdit"));
         testEdit->setEnabled(false);
-        testEdit->setGeometry(QRect(520, 30, 51, 20));
+        testEdit->setGeometry(QRect(130, 730, 51, 20));
         QFont font8;
         font8.setPointSize(9);
         font8.setBold(true);
         font8.setWeight(75);
         testEdit->setFont(font8);
         labelDistanceTag2 = new QLabel(centralWidget);
-        labelDistanceTag2->setObjectName(QString::fromUtf8("labelDistanceTag2"));
-        labelDistanceTag2->setGeometry(QRect(610, 620, 41, 23));
+        labelDistanceTag2->setObjectName(QStringLiteral("labelDistanceTag2"));
+        labelDistanceTag2->setGeometry(QRect(590, 620, 61, 23));
         labelDistanceTag2->setFont(font5);
-        labelDistanceTag2->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
+        labelDistanceTag2->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
         labelDistanceTag2->setFrameShape(QFrame::NoFrame);
         labelDistanceTag2->setLineWidth(2);
         labelDistanceTag2->setAlignment(Qt::AlignCenter);
         testButton = new QPushButton(centralWidget);
-        testButton->setObjectName(QString::fromUtf8("testButton"));
+        testButton->setObjectName(QStringLiteral("testButton"));
         testButton->setEnabled(true);
-        testButton->setGeometry(QRect(470, 10, 41, 23));
+        testButton->setGeometry(QRect(80, 730, 41, 23));
         timeEdit = new QLineEdit(centralWidget);
-        timeEdit->setObjectName(QString::fromUtf8("timeEdit"));
-        timeEdit->setGeometry(QRect(610, 650, 41, 20));
+        timeEdit->setObjectName(QStringLiteral("timeEdit"));
+        timeEdit->setGeometry(QRect(490, 730, 41, 20));
         labelTimeTag2 = new QLabel(centralWidget);
-        labelTimeTag2->setObjectName(QString::fromUtf8("labelTimeTag2"));
-        labelTimeTag2->setGeometry(QRect(570, 660, 31, 23));
+        labelTimeTag2->setObjectName(QStringLiteral("labelTimeTag2"));
+        labelTimeTag2->setGeometry(QRect(430, 730, 41, 23));
         labelTimeTag2->setFont(font5);
-        labelTimeTag2->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
+        labelTimeTag2->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
         labelTimeTag2->setFrameShape(QFrame::NoFrame);
         labelTimeTag2->setLineWidth(2);
         labelTimeTag2->setAlignment(Qt::AlignCenter);
         labelTimeTag = new QLabel(centralWidget);
-        labelTimeTag->setObjectName(QString::fromUtf8("labelTimeTag"));
-        labelTimeTag->setGeometry(QRect(510, 650, 91, 23));
+        labelTimeTag->setObjectName(QStringLiteral("labelTimeTag"));
+        labelTimeTag->setGeometry(QRect(310, 730, 121, 23));
         labelTimeTag->setFont(font5);
-        labelTimeTag->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 0);"));
+        labelTimeTag->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
         labelTimeTag->setFrameShape(QFrame::NoFrame);
         labelTimeTag->setLineWidth(2);
         labelTimeTag->setAlignment(Qt::AlignCenter);
         videoButton = new QPushButton(centralWidget);
-        videoButton->setObjectName(QString::fromUtf8("videoButton"));
+        videoButton->setObjectName(QStringLiteral("videoButton"));
         videoButton->setEnabled(true);
         videoButton->setGeometry(QRect(90, 30, 32, 32));
         QIcon icon20;
-        icon20.addFile(QString::fromUtf8(":/resources/Record-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon20.addFile(QStringLiteral(":/resources/Record-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         videoButton->setIcon(icon20);
         videoButton->setIconSize(QSize(32, 32));
         videoButton->setFlat(true);
+        setupButton = new QPushButton(centralWidget);
+        setupButton->setObjectName(QStringLiteral("setupButton"));
+        setupButton->setGeometry(QRect(460, 30, 32, 32));
+        QIcon icon21;
+        icon21.addFile(QStringLiteral(":/resources/height-icon-ON.png"), QSize(), QIcon::Normal, QIcon::Off);
+        setupButton->setIcon(icon21);
+        setupButton->setIconSize(QSize(32, 32));
+        setupButton->setFlat(true);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
-        menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 664, 21));
+        menuBar->setObjectName(QStringLiteral("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 664, 27));
         MainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(MainWindow);
-        statusBar->setObjectName(QString::fromUtf8("statusBar"));
-        statusBar->setStyleSheet(QString::fromUtf8("background-color: rgb(212, 236, 192);\n"
+        statusBar->setObjectName(QStringLiteral("statusBar"));
+        statusBar->setStyleSheet(QLatin1String("background-color: rgb(212, 236, 192);\n"
 "color: rgb(0, 0, 255);"));
         statusBar->setSizeGripEnabled(false);
         MainWindow->setStatusBar(statusBar);
@@ -499,106 +505,114 @@ public:
         QObject::connect(timeEdit, SIGNAL(returnPressed()), MainWindow, SLOT(timeEdit()));
         QObject::connect(videoButton, SIGNAL(clicked()), MainWindow, SLOT(videoButton()));
 
+        thinJointButton->setDefault(false);
+        zControlButton->setDefault(false);
+
+
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "JTW - Kaynak i\303\247in Birle\305\237me Yeri Takip\303\247isi", 0, QApplication::UnicodeUTF8));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "JTW - Kaynak i\303\247in Birle\305\237me Yeri Takip\303\247isi", 0));
         imageFrame->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        screenShotButton->setToolTip(QApplication::translate("MainWindow", "Resim Yakala", 0, QApplication::UnicodeUTF8));
+        screenShotButton->setToolTip(QApplication::translate("MainWindow", "Resim Yakala", 0));
 #endif // QT_NO_TOOLTIP
         screenShotButton->setText(QString());
-        labelTime->setText(QApplication::translate("MainWindow", "Saat", 0, QApplication::UnicodeUTF8));
+        labelTime->setText(QApplication::translate("MainWindow", "Saat", 0));
 #ifndef QT_NO_TOOLTIP
-        playButton->setToolTip(QApplication::translate("MainWindow", "Kamera", 0, QApplication::UnicodeUTF8));
+        playButton->setToolTip(QApplication::translate("MainWindow", "Kamera", 0));
 #endif // QT_NO_TOOLTIP
         playButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        stopButton->setToolTip(QApplication::translate("MainWindow", "Kamera Durdur", 0, QApplication::UnicodeUTF8));
+        stopButton->setToolTip(QApplication::translate("MainWindow", "Kamera Durdur", 0));
 #endif // QT_NO_TOOLTIP
         stopButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        analyzeButton->setToolTip(QApplication::translate("MainWindow", "Analiz", 0, QApplication::UnicodeUTF8));
+        analyzeButton->setToolTip(QApplication::translate("MainWindow", "Analiz", 0));
 #endif // QT_NO_TOOLTIP
         analyzeButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        guideButton->setToolTip(QApplication::translate("MainWindow", "Rehber", 0, QApplication::UnicodeUTF8));
+        guideButton->setToolTip(QApplication::translate("MainWindow", "Rehber", 0));
 #endif // QT_NO_TOOLTIP
         guideButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        settingsButton->setToolTip(QApplication::translate("MainWindow", "Ayarlar", 0, QApplication::UnicodeUTF8));
+        settingsButton->setToolTip(QApplication::translate("MainWindow", "Ayarlar", 0));
 #endif // QT_NO_TOOLTIP
         settingsButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        trackButton->setToolTip(QApplication::translate("MainWindow", "\304\260z Takibi", 0, QApplication::UnicodeUTF8));
+        trackButton->setToolTip(QApplication::translate("MainWindow", "\304\260z Takibi", 0));
 #endif // QT_NO_TOOLTIP
         trackButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        controlButton->setToolTip(QApplication::translate("MainWindow", "Kaynak", 0, QApplication::UnicodeUTF8));
+        controlButton->setToolTip(QApplication::translate("MainWindow", "Kaynak", 0));
 #endif // QT_NO_TOOLTIP
         controlButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        plcStatus->setToolTip(QApplication::translate("MainWindow", "PLC Ba\304\237lant\304\261 Durumu", 0, QApplication::UnicodeUTF8));
+        plcStatus->setToolTip(QApplication::translate("MainWindow", "PLC Ba\304\237lant\304\261 Durumu", 0));
 #endif // QT_NO_TOOLTIP
         plcStatus->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        infoButton->setToolTip(QApplication::translate("MainWindow", "Bilgi", 0, QApplication::UnicodeUTF8));
+        infoButton->setToolTip(QApplication::translate("MainWindow", "Bilgi", 0));
 #endif // QT_NO_TOOLTIP
         infoButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        exitButton->setToolTip(QApplication::translate("MainWindow", "\303\207\304\261k\304\261\305\237", 0, QApplication::UnicodeUTF8));
+        exitButton->setToolTip(QApplication::translate("MainWindow", "\303\207\304\261k\304\261\305\237", 0));
 #endif // QT_NO_TOOLTIP
         exitButton->setText(QString());
-        label_3->setText(QApplication::translate("MainWindow", "JTW - Kaynak i\303\247in Birle\305\237me Yeri Takip\303\247isi", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("MainWindow", "JTW - Kaynak i\303\247in Birle\305\237me Yeri Takip\303\247isi", 0));
         labelLogoCustomer->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        emergencyButton->setToolTip(QApplication::translate("MainWindow", "Acil Stop", 0, QApplication::UnicodeUTF8));
+        emergencyButton->setToolTip(QApplication::translate("MainWindow", "Acil Stop", 0));
 #endif // QT_NO_TOOLTIP
         emergencyButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        cameraStatus->setToolTip(QApplication::translate("MainWindow", "Kamera Ba\304\237lant\304\261 Durumu", 0, QApplication::UnicodeUTF8));
+        cameraStatus->setToolTip(QApplication::translate("MainWindow", "Kamera Ba\304\237lant\304\261 Durumu", 0));
 #endif // QT_NO_TOOLTIP
         cameraStatus->setText(QString());
-        label_4->setText(QApplication::translate("MainWindow", "\302\251Orun Elektronik", 0, QApplication::UnicodeUTF8));
-        clearMsgBoxButton->setText(QApplication::translate("MainWindow", "Temizle", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("MainWindow", "\302\251Orun Elektronik", 0));
+        clearMsgBoxButton->setText(QApplication::translate("MainWindow", "Temizle", 0));
 #ifndef QT_NO_TOOLTIP
-        helpButton->setToolTip(QApplication::translate("MainWindow", "Yard\304\261m", 0, QApplication::UnicodeUTF8));
+        helpButton->setToolTip(QApplication::translate("MainWindow", "Yard\304\261m", 0));
 #endif // QT_NO_TOOLTIP
         helpButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        reportButton->setToolTip(QApplication::translate("MainWindow", "Rapor", 0, QApplication::UnicodeUTF8));
+        reportButton->setToolTip(QApplication::translate("MainWindow", "Rapor", 0));
 #endif // QT_NO_TOOLTIP
         reportButton->setText(QString());
         cmdStatus->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        leftButton->setToolTip(QApplication::translate("MainWindow", "Rehber Sola", 0, QApplication::UnicodeUTF8));
+        leftButton->setToolTip(QApplication::translate("MainWindow", "Rehber Sola", 0));
 #endif // QT_NO_TOOLTIP
         leftButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        rightButton->setToolTip(QApplication::translate("MainWindow", "Rehber Sa\304\237a", 0, QApplication::UnicodeUTF8));
+        rightButton->setToolTip(QApplication::translate("MainWindow", "Rehber Sa\304\237a", 0));
 #endif // QT_NO_TOOLTIP
         rightButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        thinJointButton->setToolTip(QApplication::translate("MainWindow", "\304\260nce Kaynak A\304\237z\304\261 Uygulamas\304\261", 0, QApplication::UnicodeUTF8));
+        thinJointButton->setToolTip(QApplication::translate("MainWindow", "\304\260nce Kaynak A\304\237z\304\261 Uygulamas\304\261", 0));
 #endif // QT_NO_TOOLTIP
-        thinJointButton->setText(QApplication::translate("MainWindow", "\304\260KA", 0, QApplication::UnicodeUTF8));
+        thinJointButton->setText(QApplication::translate("MainWindow", "\304\260KA", 0));
 #ifndef QT_NO_TOOLTIP
-        zControlButton->setToolTip(QApplication::translate("MainWindow", "Y\303\274kseklik Kontrol", 0, QApplication::UnicodeUTF8));
+        zControlButton->setToolTip(QApplication::translate("MainWindow", "Y\303\274kseklik Kontrol", 0));
 #endif // QT_NO_TOOLTIP
         zControlButton->setText(QString());
         labelDistanceTag->setText(QString());
-        labelDistance->setText(QApplication::translate("MainWindow", "000.0", 0, QApplication::UnicodeUTF8));
+        labelDistance->setText(QApplication::translate("MainWindow", "000.0", 0));
         testEdit->setInputMask(QString());
-        labelDistanceTag2->setText(QApplication::translate("MainWindow", "(mm)", 0, QApplication::UnicodeUTF8));
-        testButton->setText(QApplication::translate("MainWindow", "Test", 0, QApplication::UnicodeUTF8));
-        labelTimeTag2->setText(QApplication::translate("MainWindow", "(sn)", 0, QApplication::UnicodeUTF8));
-        labelTimeTag->setText(QApplication::translate("MainWindow", "Stop Zaman\304\261", 0, QApplication::UnicodeUTF8));
+        labelDistanceTag2->setText(QApplication::translate("MainWindow", "(mm)", 0));
+        testButton->setText(QApplication::translate("MainWindow", "Test", 0));
+        labelTimeTag2->setText(QApplication::translate("MainWindow", "(sn)", 0));
+        labelTimeTag->setText(QApplication::translate("MainWindow", "Stop Zaman\304\261", 0));
 #ifndef QT_NO_TOOLTIP
-        videoButton->setToolTip(QApplication::translate("MainWindow", "Video Kaydet", 0, QApplication::UnicodeUTF8));
+        videoButton->setToolTip(QApplication::translate("MainWindow", "Video Kaydet", 0));
 #endif // QT_NO_TOOLTIP
         videoButton->setText(QString());
+#ifndef QT_NO_TOOLTIP
+        setupButton->setToolTip(QApplication::translate("MainWindow", "Ayarlar", 0));
+#endif // QT_NO_TOOLTIP
+        setupButton->setText(QString());
     } // retranslateUi
 
 };

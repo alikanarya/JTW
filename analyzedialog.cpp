@@ -1,4 +1,4 @@
-#include "analyzedialog.h"
+ï»¿#include "analyzedialog.h"
 #include "ui_analyzedialog.h"
 
 #include "sampledialog.h"
@@ -13,7 +13,7 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
     // only title on title bar
     Qt::WindowFlags flags = 0;
     flags |= Qt::Dialog;
-    flags |= Qt::FramelessWindowHint;
+    //flags |= Qt::FramelessWindowHint;
     flags |= Qt::WindowTitleHint;
     this->setWindowFlags(flags);
     this->setAttribute(Qt::WA_DeleteOnClose, true);
@@ -23,26 +23,26 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
     ui->labelMono->setPixmap(QPixmap::fromImage(iprocess->imgMono));
     ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCorner));
 
-    ui->plainTextEdit->appendPlainText("ANALİZ SONUCU");
+    ui->plainTextEdit->appendPlainText("ANALÄ°Z SONUCU");
     ui->plainTextEdit->appendPlainText("--------------------------------------------------");
-    ui->plainTextEdit->appendPlainText("Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.");
-    ui->plainTextEdit->appendPlainText("Analiz Mesajı: " + iprocess->statusMessage);
-    ui->plainTextEdit->appendPlainText("Çizgi açısı: " + QString::number(iprocess->angleAvg) + " Derece");
+    ui->plainTextEdit->appendPlainText("Analiz " + QString::number(processElapsed) + " milisaniye iÃ§inde gerÃ§ekleÅŸtirildi.");
+    ui->plainTextEdit->appendPlainText("Analiz MesajÄ±: " + iprocess->statusMessage);
+    ui->plainTextEdit->appendPlainText("Ã‡izgi aÃ§Ä±sÄ±: " + QString::number(iprocess->angleAvg) + " Derece");
     ui->plainTextEdit->appendPlainText("--------------------------------------------------");
 
     ui->plainTextEdit->appendPlainText("BU YAZILIM;");
-    ui->plainTextEdit->appendPlainText("YAPTIĞI TESPİTİN DOĞRULUĞUNA KENDİLİĞİNDEN KARAR VEREMEZ !");
-    ui->plainTextEdit->appendPlainText("BU SEBEPLE YUKARIDAKİ GÖRÜNTÜLERİN OPERATÖR TARAFINDAN ONAYLANMASI GEREKMEKTEDİR.\n");
+    ui->plainTextEdit->appendPlainText("YAPTIÄI TESPÄ°TÄ°N DOÄRULUÄUNA KENDÄ°LÄ°ÄÄ°NDEN KARAR VEREMEZ !");
+    ui->plainTextEdit->appendPlainText("BU SEBEPLE YUKARIDAKÄ° GÃ–RÃœNTÃœLERÄ°N OPERATÃ–R TARAFINDAN ONAYLANMASI GEREKMEKTEDÄ°R.\n");
 
-//    ui->plainTextEdit->appendPlainText("* Yukarıda soldaki resimde, görüntüde PARLAMA olup olmadığı ve lazer çizgisinin");
-//    ui->plainTextEdit->appendPlainText("NET bir şekilde seçilebilir olup olmadığına dikkat edilir.(İNCE KAYNAK AĞZI UYGULMASI HARİÇ)\n");
+//    ui->plainTextEdit->appendPlainText("* YukarÄ±da soldaki resimde, gÃ¶rÃ¼ntÃ¼de PARLAMA olup olmadÄ±ÄŸÄ± ve lazer Ã§izgisinin");
+//    ui->plainTextEdit->appendPlainText("NET bir ÅŸekilde seÃ§ilebilir olup olmadÄ±ÄŸÄ±na dikkat edilir.(Ä°NCE KAYNAK AÄZI UYGULMASI HARÄ°Ã‡)\n");
 
-    ui->plainTextEdit->appendPlainText("* Yukarıda sağdaki resimde ise KÖŞElerin ve");
-    ui->plainTextEdit->appendPlainText("MERKEZ noktasının doğru tespit edilip edilemediğine dikkat edilir.\n");
+    ui->plainTextEdit->appendPlainText("* YukarÄ±da saÄŸdaki resimde ise KÃ–ÅElerin ve");
+    ui->plainTextEdit->appendPlainText("MERKEZ noktasÄ±nÄ±n doÄŸru tespit edilip edilemediÄŸine dikkat edilir.\n");
 
-    ui->plainTextEdit->appendPlainText("Eğer bu kriter(ler)e göre doğru algılama yapılamadıysa, kamera kurulumunda bir hata var demektir.");
-    ui->plainTextEdit->appendPlainText("Yazılımın tespit edebildiği hatalar, yukarıdaki analiz mesajında belirtilir ve sizin onay vermeniz engellenir.");
-    ui->plainTextEdit->appendPlainText("Hata durumunda veya tespit doğruluğundaki anormalliklerde TEKNİK SERVİSİNİZ ile irtibata geçiniz.");
+    ui->plainTextEdit->appendPlainText("EÄŸer bu kriter(ler)e gÃ¶re doÄŸru algÄ±lama yapÄ±lamadÄ±ysa, kamera kurulumunda bir hata var demektir.");
+    ui->plainTextEdit->appendPlainText("YazÄ±lÄ±mÄ±n tespit edebildiÄŸi hatalar, yukarÄ±daki analiz mesajÄ±nda belirtilir ve sizin onay vermeniz engellenir.");
+    ui->plainTextEdit->appendPlainText("Hata durumunda veya tespit doÄŸruluÄŸundaki anormalliklerde TEKNÄ°K SERVÄ°SÄ°NÄ°Z ile irtibata geÃ§iniz.");
 
     if (!iprocess->detected) ui->acceptButton->setEnabled(false);
 

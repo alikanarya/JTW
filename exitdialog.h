@@ -1,7 +1,7 @@
 #ifndef EXITDIALOG_H
 #define EXITDIALOG_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Ui {
     class exitDialog;

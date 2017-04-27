@@ -1,8 +1,8 @@
 #ifndef SETTINGSFORM_H
 #define SETTINGSFORM_H
 
-#include <QDialog>
-#include <QTableWidgetItem>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QTableWidgetItem>
 
 #include "restartdialog.h"
 #include "ui_restartdialog.h"

@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+ï»¿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <QTextCodec>
@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // only title on title bar
     Qt::WindowFlags flags = 0;
     flags |= Qt::Dialog;
-    flags |= Qt::FramelessWindowHint;
+    //flags |= Qt::FramelessWindowHint;
     flags |= Qt::WindowTitleHint;
     this->setWindowFlags(flags);
     this->setAttribute(Qt::WA_DeleteOnClose, true);
@@ -65,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     statusMessage = "";
     settings = new QSettings(INIFILENAME, QSettings::IniFormat);
+    settings->setIniCodec( "UTF-8" );
     readSettings();
 
     this->setWindowTitle(_MAINTITLE + title);
@@ -213,7 +214,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     weldCommandsSize = controlDelay / timerControlInterval;
 
     // start message
-    ui->plainTextEdit->appendPlainText(timeString() + "Sistem baþlatýlmýþtýr. Hoþ geldiniz.");
+    ui->plainTextEdit->appendPlainText(timeString() + "Sistem baÅŸlatÄ±lmÄ±ÅŸtÄ±r. HoÅŸ geldiniz.");
     lic.checkLicence();
 
     if (lic.licenseState != _LIC2){
@@ -270,26 +271,26 @@ void MainWindow::showInfo(){
 
         if ( lineDetection ) {
 
-            str += "AKTÝF !!! : Ýz Tespiti Modu\n";
+            str += "AKTÄ°F !!! : Ä°z Tespiti Modu\n";
 
         } else {
 
             if (dynamicAlgo)
-                str += "AKTÝF !!! : Dinamik Algoritma\n";
+                str += "AKTÄ°F !!! : Dinamik Algoritma\n";
             else {
                 if (thinJointAlgoActive)
-                    str += "AKTÝF !!! : Ýnce Kaynak Aðzý Uygulamasý\n";
-                            //"Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
+                    str += "AKTÄ°F !!! : Ä°nce Kaynak AÄŸzÄ± UygulamasÄ±\n";
+                            //"Ä°nce Kaynak AÄŸzÄ± UygulamasÄ±:\nLazerin V ÅŸekli teÅŸkil edemediÄŸi ince aÄŸÄ±zlarda kullanÄ±lÄ±r.\nLazeri kapatÄ±n ve\nkaynak aÄŸzÄ±nÄ±n dÃ¼zgÃ¼n karanlÄ±k siluet oluÅŸturmasÄ±na\ndikkat edin!";
             }
 
             if (zControlActive)
-                str += "AKTÝF !!! : Yükseklik Kontrolü\n";
+                str += "AKTÄ°F !!! : YÃ¼kseklik KontrolÃ¼\n";
 
             if (hardControlStart)
-                str += "AKTÝF !!! : Makineden Kaynak Baþlatma\n";
+                str += "AKTÄ°F !!! : Makineden Kaynak BaÅŸlatma\n";
 
             if (timeControl)
-                str += "AKTÝF !!! : Zaman Kontrolü\n";
+                str += "AKTÄ°F !!! : Zaman KontrolÃ¼\n";
 
         }
 
@@ -321,9 +322,9 @@ void MainWindow::getImageFromCam(){
     fileName = fileBase + "_" + QDateTime::currentDateTime().toString("hhmmss_zzz") + fileExt;
 
     if (lastData->image->save(savePath + fileName))
-        ui->plainTextEdit->appendPlainText(fileName + " baþarýyla " + savePath + " klasörüne kayýt edildi.");
+        ui->plainTextEdit->appendPlainText(fileName + " baÅŸarÄ±yla " + savePath + " klasÃ¶rÃ¼ne kayÄ±t edildi.");
     else
-        ui->plainTextEdit->appendPlainText(fileName + " kayýt edilemedi !!!");
+        ui->plainTextEdit->appendPlainText(fileName + " kayÄ±t edilemedi !!!");
 }
 
 
@@ -1184,9 +1185,9 @@ void MainWindow::controlButton(){
         processCount = 0;
         controlStartTime = timeSystem.getSystemTimeMsec();
         errorMax = 0;
-        //QString line = timeString() + "Kaynak baþladý."
+        //QString line = timeString() + "Kaynak baÅŸladÄ±."
         fileData.clear();
-        fileData.append(timeString() + "Kaynak baþlatýldý.");
+        fileData.append(timeString() + "Kaynak baÅŸlatÄ±ldÄ±.");
 
         // z control
         if (zControlActive) {
@@ -1225,7 +1226,7 @@ void MainWindow::controlButton(){
 
         //QString line = QString::number(controlElapsed)+" sn, et:"+QString::number(errorTotal)+", pc:"+QString::number(processCount)+", ea"+QString::number(errorAvg)+", max:"+QString::number(errorMax);
         //ui->plainTextEdit->appendPlainText(line);
-        fileData.append("Süre: " + QString::number(controlElapsed) + " sn");
+        fileData.append("SÃ¼re: " + QString::number(controlElapsed) + " sn");
         fileData.append("Ortalama Hata: " + QString::number(errorAvg) + " piksel");
         fileData.append("Max Hata: " + QString::number(errorMax) + " piksel");
         fileData.append(timeString() + "Kaynak bitirildi.");
@@ -1263,8 +1264,8 @@ void MainWindow::thinJointButton(){
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
 
-//        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nLazerin V þekli teþkil edemediði ince aðýzlarda kullanýlýr.\nLazeri kapatýn ve\nkaynak aðzýnýn düzgün karanlýk siluet oluþturmasýna\ndikkat edin!";
-        QString str = "Ýnce Kaynak Aðzý Uygulamasý:\nÇok Ýnce Aðýzlarda Aktif Hale Getiriniz!";
+//        QString str = "Ä°nce Kaynak AÄŸzÄ± UygulamasÄ±:\nLazerin V ÅŸekli teÅŸkil edemediÄŸi ince aÄŸÄ±zlarda kullanÄ±lÄ±r.\nLazeri kapatÄ±n ve\nkaynak aÄŸzÄ±nÄ±n dÃ¼zgÃ¼n karanlÄ±k siluet oluÅŸturmasÄ±na\ndikkat edin!";
+        QString str = "Ä°nce Kaynak AÄŸzÄ± UygulamasÄ±:\nÃ‡ok Ä°nce AÄŸÄ±zlarda Aktif Hale Getiriniz!";
         msgBox.setText(str);
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setDefaultButton(QMessageBox::Ok);
@@ -1292,7 +1293,7 @@ void MainWindow::zControlButton(){
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
 
-        QString str = "Yükseklik Kontrolü Aktif!";
+        QString str = "YÃ¼kseklik KontrolÃ¼ Aktif!";
         msgBox.setText(str);
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setDefaultButton(QMessageBox::Ok);
@@ -1701,7 +1702,7 @@ void MainWindow::processLineDetection(){
         iprocess->scoreLineCrossing(true);
 
         if ( iprocess->mainEdgeScorePercent > lineScoreLimit){
-            ui->plainTextEdit->appendPlainText( timeString() + "Ýz bulundu, %" + QString::number(iprocess->mainEdgeScorePercent) );
+            ui->plainTextEdit->appendPlainText( timeString() + "Ä°z bulundu, %" + QString::number(iprocess->mainEdgeScorePercent) );
         }
     }
 }
@@ -1977,7 +1978,7 @@ void MainWindow::showLicenseDialog(){
 
 void MainWindow::showReport(){
 
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Rapor Aç"),
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Rapor AÃ§"),
                                                      "rapor/",
                                                      tr("Rapor (*.txt)"));
     if (fileName != ""){
@@ -2119,7 +2120,7 @@ void MainWindow::readSettings(){
         distanceUpTol = _UP_TOL;
         distanceDownTol = _DOWN_TOL;
 
-        statusMessage = "ini dosyasý bulunamadý";
+        statusMessage = "ini dosyasÄ± bulunamadÄ±";
     }
 }
 
@@ -2341,7 +2342,18 @@ void MainWindow::testButton(){
 
     mak_aktif_now = !mak_aktif_now;
     //alignGuide2TrackCenter = true;
+    QString _fileName = QFileDialog::getOpenFileName(this,
+        tr("Open Image"), "C:/xampp/htdocs/images/aygaz", tr("Image Files (*.png *.jpg *.bmp)"));
 
+    //imageFile = new QImage();
+    //imageFile->load(_fileName);
+    //ui->imageFrame->setPixmap( QPixmap::fromImage( *imageFile ));
+}
+
+
+void MainWindow::on_setupButton_clicked(){
+
+    showSetupForm();
 }
 
 
@@ -2500,3 +2512,5 @@ void MainWindow::processSubImageSolidness(){
     }
 }
 */
+
+

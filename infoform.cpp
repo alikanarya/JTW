@@ -8,6 +8,7 @@ infoForm::infoForm(QWidget *parent) : QDialog(parent), ui(new Ui::infoForm){
     flags |= Qt::Dialog;
     flags |= Qt::WindowSystemMenuHint;
     flags |= Qt::WindowTitleHint;
+    flags |= Qt::WindowCloseButtonHint;
     this->setWindowFlags(flags);
     this->setAttribute(Qt::WA_DeleteOnClose, true);
 

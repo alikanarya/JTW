@@ -11,12 +11,12 @@
 #define UI_REPORTDIALOG_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QDialog>
-#include <QtGui/QHeaderView>
-#include <QtGui/QPlainTextEdit>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QPlainTextEdit>
 
 QT_BEGIN_NAMESPACE
 
@@ -57,7 +57,7 @@ public:
 
     void retranslateUi(QDialog *reportDialog)
     {
-        reportDialog->setWindowTitle(QApplication::translate("reportDialog", "Rapor", 0, QApplication::UnicodeUTF8));
+        reportDialog->setWindowTitle(QApplication::translate("reportDialog", "Rapor", 0));//, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

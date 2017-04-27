@@ -1,7 +1,7 @@
 #ifndef LICENSEDIALOG_H
 #define LICENSEDIALOG_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 #include "../_Modules/Protect/protect.h"
 
 namespace Ui {

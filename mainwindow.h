@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+ï»¿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #define INIFILENAME         "settings.ini"
@@ -62,8 +62,8 @@
 #define _CMD_Z_UP           11
 #define _CMD_Z_DOWN         12
 
-#define _MAINTITLE "JTW - Kaynak için Birleþme Yeri Takipçisi :: "
-#define _TITLE "DIÞ KAYNAK"
+#define _MAINTITLE "JTW - Kaynak iÃ§in BirleÅŸme Yeri TakipÃ§isi :: "
+#define _TITLE "DIÅž KAYNAK"
 
 //const int yResArray[9] = {1, 2, 4, 6, 8, 10, 12, 16, 20}; // for height 240
 //const int yResArray[9] = {12, 12, 12, 12, 12, 12, 12, 16, 20};
@@ -93,8 +93,8 @@ namespace Ui {
 #include <QPixmap>
 #include <QFile>
 #include <QTextStream>
-#include <QWidget>
-#include <QtGui>
+#include <QtWidgets/QWidget>
+#include <QtWidgets>
 #include <QNetworkInterface>
 
 #include "../_Modules/Getimage/getimage.h"
@@ -127,6 +127,11 @@ public:
     getImage *cameraChecker;
     networkData *lastData, *prevData;   // current and prev image data vars
     videoSaveThread *threadVideoSave;
+    QImage imageFile;
+    QImage imageFileChanged;
+    int brightnessVal = 0;
+    int contrastVal = 0;
+    int gammaVal = 0;
 
     // icons
     QIcon plcOnlineIcon, plcOfflineIcon;
@@ -232,7 +237,7 @@ public:
     bool readWeldSeam;
     bool weldSeamExists;
 
-    //hard makine kontrolü için
+    //hard makine kontrolÃ¼ iÃ§in
     bool hardControlStart;
     bool mak_aktif_now, mak_aktif_old;
     int machineNo;
@@ -389,6 +394,8 @@ private slots:
     void testButton();
     void testEdit();
     void timeEdit();
+
+    void on_setupButton_clicked();
 
 private:
     protect lic;

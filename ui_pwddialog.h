@@ -11,13 +11,13 @@
 #define UI_PWDDIALOG_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QDialog>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -68,9 +68,9 @@ public:
 
     void retranslateUi(QDialog *pwdDialog)
     {
-        pwdDialog->setWindowTitle(QApplication::translate("pwdDialog", "\305\236ifre Giri\305\237i", 0, QApplication::UnicodeUTF8));
-        acceptButton->setText(QApplication::translate("pwdDialog", "Tamam", 0, QApplication::UnicodeUTF8));
-        cancelButton->setText(QApplication::translate("pwdDialog", "\304\260ptal", 0, QApplication::UnicodeUTF8));
+        pwdDialog->setWindowTitle(QApplication::translate("pwdDialog", "\305\236ifre Giri\305\237i", 0));//, QApplication::UnicodeUTF8));
+        acceptButton->setText(QApplication::translate("pwdDialog", "Tamam", 0));//, QApplication::UnicodeUTF8));
+        cancelButton->setText(QApplication::translate("pwdDialog", "\304\260ptal", 0));//, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

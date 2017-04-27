@@ -5,11 +5,14 @@
 #-------------------------------------------------
 
 QT       += core gui
-QT       += core network
+QT       += network widgets
+#QT       += core network
+greaterThan(QT_MAJOR_VERSION, 4): QT       += widgets
 
 TARGET = JTW
 TEMPLATE = app
 
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x040900
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -55,7 +58,8 @@ HEADERS  += mainwindow.h \
     ../_Modules/Getimage/getImage.h \
     ../_Modules/Algo/datatypes.h \
     ../_Modules/Algo/localMinimum.h \
-    videosavethread.h
+    videosavethread.h \
+    imgtools.h
 
 FORMS    += mainwindow.ui \
     setupform.ui \
@@ -78,3 +82,5 @@ OTHER_FILES += \
     appicon.rc
 
 win32:RC_FILE = appicon.rc
+
+DISTFILES +=

@@ -11,13 +11,13 @@
 #define UI_EXITDIALOG_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QDialog>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -73,10 +73,10 @@ public:
 
     void retranslateUi(QDialog *exitDialog)
     {
-        exitDialog->setWindowTitle(QApplication::translate("exitDialog", "\303\207\304\261k\304\261\305\237 Onay\304\261", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("exitDialog", "Program\304\261 Kapat?", 0, QApplication::UnicodeUTF8));
-        acceptButton->setText(QApplication::translate("exitDialog", "Evet", 0, QApplication::UnicodeUTF8));
-        cancelButton->setText(QApplication::translate("exitDialog", "Hay\304\261r", 0, QApplication::UnicodeUTF8));
+        exitDialog->setWindowTitle(QApplication::translate("exitDialog", "\303\207\304\261k\304\261\305\237 Onay\304\261", 0));//, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("exitDialog", "Program\304\261 Kapat?", 0));//, QApplication::UnicodeUTF8));
+        acceptButton->setText(QApplication::translate("exitDialog", "Evet", 0));//, QApplication::UnicodeUTF8));
+        cancelButton->setText(QApplication::translate("exitDialog", "Hay\304\261r", 0));//, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

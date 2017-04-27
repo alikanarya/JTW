@@ -11,14 +11,14 @@
 #define UI_ANALYZEDIALOG_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QDialog>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QPlainTextEdit>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPlainTextEdit>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -102,13 +102,13 @@ public:
 
     void retranslateUi(QDialog *analyzeDialog)
     {
-        analyzeDialog->setWindowTitle(QApplication::translate("analyzeDialog", "Analiz Sonucu", 0, QApplication::UnicodeUTF8));
+        analyzeDialog->setWindowTitle(QApplication::translate("analyzeDialog", "Analiz Sonucu", 0));//, QApplication::UnicodeUTF8));
         labelMono->setText(QString());
         labelAnalyze->setText(QString());
-        label->setText(QApplication::translate("analyzeDialog", "ONAYLIYOR MUSUNUZ ?", 0, QApplication::UnicodeUTF8));
-        acceptButton->setText(QApplication::translate("analyzeDialog", "EVET", 0, QApplication::UnicodeUTF8));
-        cancelButton->setText(QApplication::translate("analyzeDialog", "HAYIR", 0, QApplication::UnicodeUTF8));
-        cancelButton_2->setText(QApplication::translate("analyzeDialog", "\303\226RNEK", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("analyzeDialog", "ONAYLIYOR MUSUNUZ ?", 0));//, QApplication::UnicodeUTF8));
+        acceptButton->setText(QApplication::translate("analyzeDialog", "EVET", 0));//, QApplication::UnicodeUTF8));
+        cancelButton->setText(QApplication::translate("analyzeDialog", "HAYIR", 0));//, QApplication::UnicodeUTF8));
+        cancelButton_2->setText(QApplication::translate("analyzeDialog", "\303\226RNEK", 0));//, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -2,7 +2,7 @@
 #define SETUPFORM_H
 
 #include "../_Modules/Imgprocess/imgprocess.h"
-#include <QDialog>
+#include <QtWidgets/QDialog>
 #include <QTime>
 
 namespace Ui {
@@ -45,6 +45,7 @@ public:
     int voteThreshold, voteAvg;
     int voidThreshold;
     int tCenterX;
+    bool cannyThinning;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -67,6 +68,7 @@ public slots:
     void processStandardHT();           // standard hough transform
     void processSubImageVoidness();     // sub image based on VOID areas
     void processSubImageSolidness();    // sub image based on SOLID lines
+    void processSolidnessCanny();       // SOLID line analysis with canny edges
 
 private:
     Ui::setupForm *ui;
@@ -84,6 +86,13 @@ private slots:
     void editLineScore();
 
 
+    void on_captureButton_2_clicked();
+    void on_brightnessSlider_sliderReleased();
+    void on_brightnessSlider_sliderMoved(int position);
+    void on_contrastSlider_sliderReleased();
+    void on_contrastSlider_sliderMoved(int position);
+    void on_gammaSlider_sliderReleased();
+    void on_gammaSlider_sliderMoved(int position);
 };
 
 #endif // SETUPFORM_H

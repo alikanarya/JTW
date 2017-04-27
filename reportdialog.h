@@ -1,7 +1,7 @@
 #ifndef REPORTDIALOG_H
 #define REPORTDIALOG_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Ui {
     class reportDialog;

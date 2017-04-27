@@ -1,7 +1,7 @@
 #ifndef RESTARTDIALOG_H
 #define RESTARTDIALOG_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Ui {
     class restartDialog;

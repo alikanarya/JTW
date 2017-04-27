@@ -11,13 +11,13 @@
 #define UI_HELPDIALOG_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QDialog>
-#include <QtGui/QHeaderView>
-#include <QtGui/QPlainTextEdit>
-#include <QtGui/QPushButton>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QPlainTextEdit>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 
@@ -306,57 +306,57 @@ public:
 
     void retranslateUi(QDialog *helpDialog)
     {
-        helpDialog->setWindowTitle(QApplication::translate("helpDialog", "Yard\304\261m Ekran\304\261", 0, QApplication::UnicodeUTF8));
+        helpDialog->setWindowTitle(QApplication::translate("helpDialog", "Yard\304\261m Ekran\304\261", 0));//, QApplication::UnicodeUTF8));
         infoButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        analyzeButton->setToolTip(QApplication::translate("helpDialog", "Analiz", 0, QApplication::UnicodeUTF8));
+        analyzeButton->setToolTip(QApplication::translate("helpDialog", "Analiz", 0));//, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         analyzeButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        playButton->setToolTip(QApplication::translate("helpDialog", "Kamera", 0, QApplication::UnicodeUTF8));
+        playButton->setToolTip(QApplication::translate("helpDialog", "Kamera", 0));//, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         playButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        trackButton->setToolTip(QApplication::translate("helpDialog", "\304\260z Takibi", 0, QApplication::UnicodeUTF8));
+        trackButton->setToolTip(QApplication::translate("helpDialog", "\304\260z Takibi", 0));//, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         trackButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        controlButton->setToolTip(QApplication::translate("helpDialog", "Kaynak", 0, QApplication::UnicodeUTF8));
+        controlButton->setToolTip(QApplication::translate("helpDialog", "Kaynak", 0));//, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         controlButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        screenShotButton->setToolTip(QApplication::translate("helpDialog", "Resim Yakala", 0, QApplication::UnicodeUTF8));
+        screenShotButton->setToolTip(QApplication::translate("helpDialog", "Resim Yakala", 0));//, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         screenShotButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        stopButton->setToolTip(QApplication::translate("helpDialog", "Kamera Durdur", 0, QApplication::UnicodeUTF8));
+        stopButton->setToolTip(QApplication::translate("helpDialog", "Kamera Durdur", 0));//, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         stopButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        guideButton->setToolTip(QApplication::translate("helpDialog", "Rehber", 0, QApplication::UnicodeUTF8));
+        guideButton->setToolTip(QApplication::translate("helpDialog", "Rehber", 0));//, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         guideButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        settingsButton->setToolTip(QApplication::translate("helpDialog", "Ayarlar", 0, QApplication::UnicodeUTF8));
+        settingsButton->setToolTip(QApplication::translate("helpDialog", "Ayarlar", 0));//, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         settingsButton->setText(QString());
         plainTextEdit->setDocumentTitle(QString());
-        plainTextEdit->setPlainText(QApplication::translate("helpDialog", "Kamera Butonu: Kamera g\303\266r\303\274nt\303\274s\303\274n\303\274 g\303\266sterir", 0, QApplication::UnicodeUTF8));
+        plainTextEdit->setPlainText(QApplication::translate("helpDialog", "Kamera Butonu: Kamera g\303\266r\303\274nt\303\274s\303\274n\303\274 g\303\266sterir", 0));//, QApplication::UnicodeUTF8));
         plainTextEdit_2->setDocumentTitle(QString());
         plainTextEdit_2->setPlainText(QApplication::translate("helpDialog", "Kamera Durdur Butonu: Kamera g\303\266r\303\274nt\303\274s\303\274n\303\274 durdurur\n"
-"\304\260z Takibi ve Kaynak yap\304\261lamaz", 0, QApplication::UnicodeUTF8));
+"\304\260z Takibi ve Kaynak yap\304\261lamaz", 0));//, QApplication::UnicodeUTF8));
         plainTextEdit_3->setDocumentTitle(QString());
-        plainTextEdit_3->setPlainText(QApplication::translate("helpDialog", "Resim Yakala Butonu: Anl\304\261k g\303\266r\303\274nt\303\274y\303\274 bilgisayara resim olarak kay\304\261t eder", 0, QApplication::UnicodeUTF8));
+        plainTextEdit_3->setPlainText(QApplication::translate("helpDialog", "Resim Yakala Butonu: Anl\304\261k g\303\266r\303\274nt\303\274y\303\274 bilgisayara resim olarak kay\304\261t eder", 0));//, QApplication::UnicodeUTF8));
         plainTextEdit_4->setDocumentTitle(QString());
-        plainTextEdit_4->setPlainText(QApplication::translate("helpDialog", "Rehber Butonu: Rehberi ekranda g\303\266sterir veya saklar", 0, QApplication::UnicodeUTF8));
+        plainTextEdit_4->setPlainText(QApplication::translate("helpDialog", "Rehber Butonu: Rehberi ekranda g\303\266sterir veya saklar", 0));//, QApplication::UnicodeUTF8));
         plainTextEdit_5->setDocumentTitle(QString());
         plainTextEdit_5->setPlainText(QApplication::translate("helpDialog", "Analiz Butonu: K\303\266\305\237e ve Merkez noktas\304\261 tespiti yapar ve operat\303\266rden onay ister\n"
 "Onay verilirse Kaynak yap\304\261labilir, verilmezse yap\304\261lamaz\n"
 "Sembol aktif ise, Kaynak yap\304\261labilmesi i\303\247in operat\303\266r onay\304\261 beklendi\304\237ini belirtir\n"
-"Sembol pasif ise, operat\303\266r onay\304\261 al\304\261nm\304\261\305\237 demektir, Kaynak yap\304\261labilir", 0, QApplication::UnicodeUTF8));
+"Sembol pasif ise, operat\303\266r onay\304\261 al\304\261nm\304\261\305\237 demektir, Kaynak yap\304\261labilir", 0));//, QApplication::UnicodeUTF8));
         plainTextEdit_6->setDocumentTitle(QString());
         plainTextEdit_6->setPlainText(QApplication::translate("helpDialog", "\304\260z Takibi Butonu: Merkez noktas\304\261n\304\261 takip eder ve buldu\304\237u sapmalar\304\261 ekranda grafik olarak g\303\266sterir\n"
-"Kaynak yap\304\261lmas\304\261 i\303\247in devrede olmal\304\261d\304\261r", 0, QApplication::UnicodeUTF8));
+"Kaynak yap\304\261lmas\304\261 i\303\247in devrede olmal\304\261d\304\261r", 0));//, QApplication::UnicodeUTF8));
         plainTextEdit_7->setDocumentTitle(QString());
         plainTextEdit_7->setPlainText(QApplication::translate("helpDialog", "Kaynak Butonu: Bulunan sapmalara g\303\266re PLC'ye komut g\303\266ndererek kaynak yap\304\261lmas\304\261n\304\261 sa\304\237lar\n"
 "(Kaynak ba\305\237l\304\261\304\237\304\261n\304\261 kontrol eder, kaynak aktivasyonu operat\303\266r taraf\304\261ndan manuel yap\304\261l\304\261r)\n"
@@ -364,23 +364,23 @@ public:
 "- PLC'ye ula\305\237\304\261lamad\304\261\304\237\304\261nda veya\n"
 "- Operat\303\266r, analiz sonu\303\247lar\304\261na onay vermediyse veya\n"
 "- \304\260z takibi yap\304\261lm\304\261yorsa\n"
-"KAYNAK YAPILAMAZ", 0, QApplication::UnicodeUTF8));
+"KAYNAK YAPILAMAZ", 0));//, QApplication::UnicodeUTF8));
         plainTextEdit_8->setDocumentTitle(QString());
-        plainTextEdit_8->setPlainText(QApplication::translate("helpDialog", "Ayarlar Butonu: Teknik servisin gerekti\304\237inde yapmas\304\261 gereken ayarlar\304\261 g\303\266sterir", 0, QApplication::UnicodeUTF8));
+        plainTextEdit_8->setPlainText(QApplication::translate("helpDialog", "Ayarlar Butonu: Teknik servisin gerekti\304\237inde yapmas\304\261 gereken ayarlar\304\261 g\303\266sterir", 0));//, QApplication::UnicodeUTF8));
         plainTextEdit_9->setDocumentTitle(QString());
-        plainTextEdit_9->setPlainText(QApplication::translate("helpDialog", "\304\260nfo Butonu: Program hakk\304\261nda bilgi", 0, QApplication::UnicodeUTF8));
+        plainTextEdit_9->setPlainText(QApplication::translate("helpDialog", "\304\260nfo Butonu: Program hakk\304\261nda bilgi", 0));//, QApplication::UnicodeUTF8));
         plainTextEdit_10->setDocumentTitle(QString());
-        plainTextEdit_10->setPlainText(QApplication::translate("helpDialog", "Yard\304\261m Butonu: Bu ekran", 0, QApplication::UnicodeUTF8));
+        plainTextEdit_10->setPlainText(QApplication::translate("helpDialog", "Yard\304\261m Butonu: Bu ekran", 0));//, QApplication::UnicodeUTF8));
         helpButton->setText(QString());
 #ifndef QT_NO_TOOLTIP
-        exitButton->setToolTip(QApplication::translate("helpDialog", "\303\207\304\261k\304\261\305\237", 0, QApplication::UnicodeUTF8));
+        exitButton->setToolTip(QApplication::translate("helpDialog", "\303\207\304\261k\304\261\305\237", 0));//, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         exitButton->setText(QString());
         emergencyButton->setText(QString());
         plainTextEdit_11->setDocumentTitle(QString());
-        plainTextEdit_11->setPlainText(QApplication::translate("helpDialog", "Acil Stop: Acil bir durum oldu\304\237unda bas\304\261n\304\261z", 0, QApplication::UnicodeUTF8));
+        plainTextEdit_11->setPlainText(QApplication::translate("helpDialog", "Acil Stop: Acil bir durum oldu\304\237unda bas\304\261n\304\261z", 0));//, QApplication::UnicodeUTF8));
         plainTextEdit_12->setDocumentTitle(QString());
-        plainTextEdit_12->setPlainText(QApplication::translate("helpDialog", "\303\207\304\261k\304\261\305\237 Butonu: Programdan \303\247\304\261k\304\261\305\237", 0, QApplication::UnicodeUTF8));
+        plainTextEdit_12->setPlainText(QApplication::translate("helpDialog", "\303\207\304\261k\304\261\305\237 Butonu: Programdan \303\247\304\261k\304\261\305\237", 0));//, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

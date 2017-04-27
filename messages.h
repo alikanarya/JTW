@@ -1,47 +1,47 @@
-#ifndef MESSAGES_H
+ï»¿#ifndef MESSAGES_H
 #define MESSAGES_H
 
-#define message1    "Kaynak başlatıldı"
+#define message1    "Kaynak baÅŸlatÄ±ldÄ±"
 #define message2    "Kaynak durduruldu"
-#define message3    "Kamera bağlantısı normal"
+#define message3    "Kamera baÄŸlantÄ±sÄ± normal"
 #define message4    "Kaynak gecikmesi: "
-#define message5    "Rapor dosyası yazılamadı"
+#define message5    "Rapor dosyasÄ± yazÄ±lamadÄ±"
 
-#define alarm6      "Resim alınamadı !!! Kamera veya bağlantısında problem olabilir."
-#define alarm7      "Kamera bağlantısında problem oluştu !!!"
-#define alarm8      "Kaynak gecikmesi için girilen değer geçersiz !!! Tekrar deneyiniz."
-#define alarm9      "Kaynak gecikmesi için girilen değer 500ms'den az olamaz. (Demo için 0 giriniz)"
+#define alarm6      "Resim alÄ±namadÄ± !!! Kamera veya baÄŸlantÄ±sÄ±nda problem olabilir."
+#define alarm7      "Kamera baÄŸlantÄ±sÄ±nda problem oluÅŸtu !!!"
+#define alarm8      "Kaynak gecikmesi iÃ§in girilen deÄŸer geÃ§ersiz !!! Tekrar deneyiniz."
+#define alarm9      "Kaynak gecikmesi iÃ§in girilen deÄŸer 500ms'den az olamaz. (Demo iÃ§in 0 giriniz)"
 #define alarm10     "Komutlar durduruldu !"
 
-#define help10      "Kamera Butonu: Kamera görüntüsünü gösterir"
+#define help10      "Kamera Butonu: Kamera gÃ¶rÃ¼ntÃ¼sÃ¼nÃ¼ gÃ¶sterir"
 
-#define help20      "Kamera Durdur Butonu: Kamera görüntüsünü durdurur"
-#define help21      "İz Takibi ve Kaynak yapılamaz"
+#define help20      "Kamera Durdur Butonu: Kamera gÃ¶rÃ¼ntÃ¼sÃ¼nÃ¼ durdurur"
+#define help21      "Ä°z Takibi ve Kaynak yapÄ±lamaz"
 
-#define help30      "Resim Yakala Butonu: Anlık görüntüyü bilgisayara resim olarak kayıt eder"
+#define help30      "Resim Yakala Butonu: AnlÄ±k gÃ¶rÃ¼ntÃ¼yÃ¼ bilgisayara resim olarak kayÄ±t eder"
 
-#define help40      "Rehber Butonu: Rehberi ekranda gösterir veya saklar"
+#define help40      "Rehber Butonu: Rehberi ekranda gÃ¶sterir veya saklar"
 
-#define help50      "Analiz Butonu: Köşe ve Merkez noktası tespiti yapar ve operatörden onay ister"
-#define help51      "Onay verilirse Kaynak yapılabilir, verilmezse yapılamaz"
-#define help52      "Sembol aktif ise, Kaynak yapılabilmesi için operatör onayı beklendiğini belirtir"
-#define help53      "Sembol pasif ise, operatör onayı alınmış demektir, Kaynak yapılabilir"
+#define help50      "Analiz Butonu: KÃ¶ÅŸe ve Merkez noktasÄ± tespiti yapar ve operatÃ¶rden onay ister"
+#define help51      "Onay verilirse Kaynak yapÄ±labilir, verilmezse yapÄ±lamaz"
+#define help52      "Sembol aktif ise, Kaynak yapÄ±labilmesi iÃ§in operatÃ¶r onayÄ± beklendiÄŸini belirtir"
+#define help53      "Sembol pasif ise, operatÃ¶r onayÄ± alÄ±nmÄ±ÅŸ demektir, Kaynak yapÄ±labilir"
 
-#define help60      "İz Takibi Butonu: Merkez noktasını takip eder ve bulduğu sapmaları ekranda grafik olarak gösterir"
-#define help61      "Kaynak yapılması için devrede olmalıdır"
+#define help60      "Ä°z Takibi Butonu: Merkez noktasÄ±nÄ± takip eder ve bulduÄŸu sapmalarÄ± ekranda grafik olarak gÃ¶sterir"
+#define help61      "Kaynak yapÄ±lmasÄ± iÃ§in devrede olmalÄ±dÄ±r"
 
-#define help70      "Kaynak Butonu: Bulunan sapmalara göre PLC'ye komut göndererek kaynak yapılmasını sağlar"
-#define help71      "Kamera görüntüsü durduğunda/ulaşılamadığında veya"
-#define help72      "PLC'ye ulaşılamadığında veya"
-#define help73      "Operatör, analiz sonuçlarına onay vermediyse veya"
-#define help74      "İz takibi yapılmıyorsa veya"
-#define help75      "Kaynak gecikmesi için geçerli bir rakam verilmediyse"
+#define help70      "Kaynak Butonu: Bulunan sapmalara gÃ¶re PLC'ye komut gÃ¶ndererek kaynak yapÄ±lmasÄ±nÄ± saÄŸlar"
+#define help71      "Kamera gÃ¶rÃ¼ntÃ¼sÃ¼ durduÄŸunda/ulaÅŸÄ±lamadÄ±ÄŸÄ±nda veya"
+#define help72      "PLC'ye ulaÅŸÄ±lamadÄ±ÄŸÄ±nda veya"
+#define help73      "OperatÃ¶r, analiz sonuÃ§larÄ±na onay vermediyse veya"
+#define help74      "Ä°z takibi yapÄ±lmÄ±yorsa veya"
+#define help75      "Kaynak gecikmesi iÃ§in geÃ§erli bir rakam verilmediyse"
 #define help76      "KAYNAK YAPILAMAZ"
 
-#define help80      "Ayarlar Butonu: Teknik servisin gerektiğinde yapması gereken ayarları gösterir"
+#define help80      "Ayarlar Butonu: Teknik servisin gerektiÄŸinde yapmasÄ± gereken ayarlarÄ± gÃ¶sterir"
 
-#define help90      "İnfo Butonu: Program hakkında bilgi"
+#define help90      "Ä°nfo Butonu: Program hakkÄ±nda bilgi"
 
-#define help100     "Yardım Butonu: Bu ekran"
+#define help100     "YardÄ±m Butonu: Bu ekran"
 
 #endif // MESSAGES_H

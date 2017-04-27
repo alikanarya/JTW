@@ -1,8 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'settingsform.ui'
 **
-** Created: Sat 28. Jul 01:23:03 2012
-**      by: Qt User Interface Compiler version 4.7.0
+** Created by: Qt User Interface Compiler version 5.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -11,19 +10,19 @@
 #define UI_SETTINGSFORM_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QCheckBox>
-#include <QtGui/QFrame>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
-#include <QtGui/QPushButton>
-#include <QtGui/QRadioButton>
-#include <QtGui/QSlider>
-#include <QtGui/QTableWidget>
-#include <QtGui/QWidget>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QFrame>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
+#include <QtWidgets/QSlider>
+#include <QtWidgets/QTableWidget>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -67,7 +66,7 @@ public:
     void setupUi(QWidget *settingsForm)
     {
         if (settingsForm->objectName().isEmpty())
-            settingsForm->setObjectName(QString::fromUtf8("settingsForm"));
+            settingsForm->setObjectName(QStringLiteral("settingsForm"));
         settingsForm->setWindowModality(Qt::WindowModal);
         settingsForm->resize(400, 600);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -78,51 +77,51 @@ public:
         settingsForm->setMinimumSize(QSize(400, 600));
         settingsForm->setMaximumSize(QSize(400, 600));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QStringLiteral(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         settingsForm->setWindowIcon(icon);
         settingsForm->setWindowOpacity(1);
         setupButton = new QPushButton(settingsForm);
-        setupButton->setObjectName(QString::fromUtf8("setupButton"));
+        setupButton->setObjectName(QStringLiteral("setupButton"));
         setupButton->setGeometry(QRect(10, 560, 80, 25));
         QFont font;
-        font.setFamily(QString::fromUtf8("Arial"));
+        font.setFamily(QStringLiteral("Arial"));
         font.setPointSize(10);
         font.setBold(true);
         font.setWeight(75);
         setupButton->setFont(font);
         setupButton->setFocusPolicy(Qt::NoFocus);
         label = new QLabel(settingsForm);
-        label->setObjectName(QString::fromUtf8("label"));
+        label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(10, 23, 111, 16));
         label->setFont(font);
         errorLimitSlider = new QSlider(settingsForm);
-        errorLimitSlider->setObjectName(QString::fromUtf8("errorLimitSlider"));
+        errorLimitSlider->setObjectName(QStringLiteral("errorLimitSlider"));
         errorLimitSlider->setGeometry(QRect(150, 20, 100, 25));
         errorLimitSlider->setMinimum(2);
         errorLimitSlider->setMaximum(50);
         errorLimitSlider->setPageStep(5);
         errorLimitSlider->setOrientation(Qt::Horizontal);
         labelErrorLimit = new QLabel(settingsForm);
-        labelErrorLimit->setObjectName(QString::fromUtf8("labelErrorLimit"));
+        labelErrorLimit->setObjectName(QStringLiteral("labelErrorLimit"));
         labelErrorLimit->setGeometry(QRect(120, 23, 21, 16));
         QFont font1;
         font1.setPointSize(10);
         font1.setBold(true);
         font1.setWeight(75);
         labelErrorLimit->setFont(font1);
-        labelErrorLimit->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
+        labelErrorLimit->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         saveExitButton = new QPushButton(settingsForm);
-        saveExitButton->setObjectName(QString::fromUtf8("saveExitButton"));
-        saveExitButton->setGeometry(QRect(150, 510, 100, 25));
+        saveExitButton->setObjectName(QStringLiteral("saveExitButton"));
+        saveExitButton->setGeometry(QRect(140, 510, 131, 25));
         saveExitButton->setFont(font);
         saveExitButton->setFocusPolicy(Qt::NoFocus);
-        saveExitButton->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
+        saveExitButton->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         exitButton = new QPushButton(settingsForm);
-        exitButton->setObjectName(QString::fromUtf8("exitButton"));
+        exitButton->setObjectName(QStringLiteral("exitButton"));
         exitButton->setGeometry(QRect(310, 560, 80, 25));
         exitButton->setFont(font);
         exitButton->setFocusPolicy(Qt::NoFocus);
-        exitButton->setStyleSheet(QString::fromUtf8(""));
+        exitButton->setStyleSheet(QStringLiteral(""));
         table = new QTableWidget(settingsForm);
         if (table->columnCount() < 1)
             table->setColumnCount(1);
@@ -150,7 +149,7 @@ public:
         table->setVerticalHeaderItem(2, __qtablewidgetitem3);
         QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
         table->setItem(0, 0, __qtablewidgetitem4);
-        table->setObjectName(QString::fromUtf8("table"));
+        table->setObjectName(QStringLiteral("table"));
         table->setGeometry(QRect(10, 310, 381, 151));
         table->setFrameShape(QFrame::Box);
         table->setFrameShadow(QFrame::Plain);
@@ -172,7 +171,7 @@ public:
         table->verticalHeader()->setHighlightSections(true);
         table->verticalHeader()->setMinimumSectionSize(25);
         yResIndexSlider = new QSlider(settingsForm);
-        yResIndexSlider->setObjectName(QString::fromUtf8("yResIndexSlider"));
+        yResIndexSlider->setObjectName(QStringLiteral("yResIndexSlider"));
         yResIndexSlider->setGeometry(QRect(152, 478, 100, 25));
         yResIndexSlider->setMinimum(0);
         yResIndexSlider->setMaximum(8);
@@ -181,78 +180,78 @@ public:
         yResIndexSlider->setSliderPosition(0);
         yResIndexSlider->setOrientation(Qt::Horizontal);
         labelyRes = new QLabel(settingsForm);
-        labelyRes->setObjectName(QString::fromUtf8("labelyRes"));
+        labelyRes->setObjectName(QStringLiteral("labelyRes"));
         labelyRes->setGeometry(QRect(270, 481, 31, 16));
         labelyRes->setFont(font1);
-        labelyRes->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
+        labelyRes->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
         label_2 = new QLabel(settingsForm);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setObjectName(QStringLiteral("label_2"));
         label_2->setGeometry(QRect(10, 480, 91, 16));
         label_2->setFont(font);
         checkPLConBoot = new QCheckBox(settingsForm);
-        checkPLConBoot->setObjectName(QString::fromUtf8("checkPLConBoot"));
+        checkPLConBoot->setObjectName(QStringLiteral("checkPLConBoot"));
         checkPLConBoot->setGeometry(QRect(10, 220, 361, 17));
         checkPLConBoot->setFont(font);
         checkCamonBoot = new QCheckBox(settingsForm);
-        checkCamonBoot->setObjectName(QString::fromUtf8("checkCamonBoot"));
+        checkCamonBoot->setObjectName(QStringLiteral("checkCamonBoot"));
         checkCamonBoot->setGeometry(QRect(10, 200, 381, 17));
         checkCamonBoot->setFont(font);
         line = new QFrame(settingsForm);
-        line->setObjectName(QString::fromUtf8("line"));
+        line->setObjectName(QStringLiteral("line"));
         line->setGeometry(QRect(0, 540, 400, 16));
-        line->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
+        line->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         line->setFrameShadow(QFrame::Plain);
         line->setLineWidth(2);
         line->setFrameShape(QFrame::HLine);
         line_2 = new QFrame(settingsForm);
-        line_2->setObjectName(QString::fromUtf8("line_2"));
+        line_2->setObjectName(QStringLiteral("line_2"));
         line_2->setGeometry(QRect(0, 240, 400, 16));
-        line_2->setStyleSheet(QString::fromUtf8("color: rgb(255, 0, 0);"));
+        line_2->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         line_2->setFrameShadow(QFrame::Plain);
         line_2->setLineWidth(2);
         line_2->setFrameShape(QFrame::HLine);
         radio200 = new QRadioButton(settingsForm);
         radioGroup = new QButtonGroup(settingsForm);
-        radioGroup->setObjectName(QString::fromUtf8("radioGroup"));
+        radioGroup->setObjectName(QStringLiteral("radioGroup"));
         radioGroup->addButton(radio200);
-        radio200->setObjectName(QString::fromUtf8("radio200"));
+        radio200->setObjectName(QStringLiteral("radio200"));
         radio200->setGeometry(QRect(40, 260, 82, 17));
         radio200->setFont(font);
         radio300 = new QRadioButton(settingsForm);
         radioGroup->addButton(radio300);
-        radio300->setObjectName(QString::fromUtf8("radio300"));
+        radio300->setObjectName(QStringLiteral("radio300"));
         radio300->setGeometry(QRect(40, 280, 82, 17));
         radio300->setFont(font);
         label_3 = new QLabel(settingsForm);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_3->setObjectName(QStringLiteral("label_3"));
         label_3->setGeometry(QRect(152, 280, 46, 13));
         label_3->setFont(font);
         editDBNo = new QLineEdit(settingsForm);
-        editDBNo->setObjectName(QString::fromUtf8("editDBNo"));
+        editDBNo->setObjectName(QStringLiteral("editDBNo"));
         editDBNo->setGeometry(QRect(204, 277, 51, 20));
         editControlDelay = new QLineEdit(settingsForm);
-        editControlDelay->setObjectName(QString::fromUtf8("editControlDelay"));
+        editControlDelay->setObjectName(QStringLiteral("editControlDelay"));
         editControlDelay->setEnabled(false);
         editControlDelay->setGeometry(QRect(310, 520, 80, 20));
         editControlDelay->setFont(font2);
         editControlDelay->setFocusPolicy(Qt::StrongFocus);
-        editControlDelay->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);\n"
+        editControlDelay->setStyleSheet(QLatin1String("color: rgb(0, 0, 255);\n"
 "background-color: rgb(255, 0, 0);"));
         editControlDelay->setMaxLength(5);
         editControlDelay->setAlignment(Qt::AlignCenter);
         editControlDelay->setReadOnly(true);
         label_4 = new QLabel(settingsForm);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
+        label_4->setObjectName(QStringLiteral("label_4"));
         label_4->setEnabled(false);
-        label_4->setGeometry(QRect(310, 500, 91, 16));
+        label_4->setGeometry(QRect(280, 500, 121, 20));
         QFont font4;
-        font4.setFamily(QString::fromUtf8("Arial"));
+        font4.setFamily(QStringLiteral("Arial"));
         font4.setPointSize(8);
         font4.setBold(false);
         font4.setWeight(50);
         label_4->setFont(font4);
         targetSlider = new QSlider(settingsForm);
-        targetSlider->setObjectName(QString::fromUtf8("targetSlider"));
+        targetSlider->setObjectName(QStringLiteral("targetSlider"));
         targetSlider->setGeometry(QRect(150, 80, 240, 25));
         targetSlider->setMinimum(100);
         targetSlider->setMaximum(320);
@@ -260,25 +259,25 @@ public:
         targetSlider->setPageStep(5);
         targetSlider->setOrientation(Qt::Horizontal);
         label_5 = new QLabel(settingsForm);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setObjectName(QStringLiteral("label_5"));
         label_5->setGeometry(QRect(10, 83, 91, 16));
         label_5->setFont(font);
         labelTarget = new QLabel(settingsForm);
-        labelTarget->setObjectName(QString::fromUtf8("labelTarget"));
-        labelTarget->setGeometry(QRect(120, 83, 25, 16));
+        labelTarget->setObjectName(QStringLiteral("labelTarget"));
+        labelTarget->setGeometry(QRect(114, 83, 31, 20));
         labelTarget->setFont(font1);
-        labelTarget->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
+        labelTarget->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
         label_6 = new QLabel(settingsForm);
-        label_6->setObjectName(QString::fromUtf8("label_6"));
+        label_6->setObjectName(QStringLiteral("label_6"));
         label_6->setGeometry(QRect(10, 113, 91, 16));
         label_6->setFont(font);
         labelTargetVert = new QLabel(settingsForm);
-        labelTargetVert->setObjectName(QString::fromUtf8("labelTargetVert"));
-        labelTargetVert->setGeometry(QRect(120, 113, 30, 16));
+        labelTargetVert->setObjectName(QStringLiteral("labelTargetVert"));
+        labelTargetVert->setGeometry(QRect(119, 113, 31, 20));
         labelTargetVert->setFont(font1);
-        labelTargetVert->setStyleSheet(QString::fromUtf8("color: rgb(0, 0, 255);"));
+        labelTargetVert->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
         targetVertSlider = new QSlider(settingsForm);
-        targetVertSlider->setObjectName(QString::fromUtf8("targetVertSlider"));
+        targetVertSlider->setObjectName(QStringLiteral("targetVertSlider"));
         targetVertSlider->setGeometry(QRect(150, 110, 240, 25));
         targetVertSlider->setMinimum(100);
         targetVertSlider->setMaximum(320);
@@ -286,12 +285,12 @@ public:
         targetVertSlider->setPageStep(5);
         targetVertSlider->setOrientation(Qt::Horizontal);
         labelErrorScale = new QLabel(settingsForm);
-        labelErrorScale->setObjectName(QString::fromUtf8("labelErrorScale"));
-        labelErrorScale->setGeometry(QRect(120, 53, 25, 16));
+        labelErrorScale->setObjectName(QStringLiteral("labelErrorScale"));
+        labelErrorScale->setGeometry(QRect(114, 53, 31, 20));
         labelErrorScale->setFont(font1);
-        labelErrorScale->setStyleSheet(QString::fromUtf8("color: rgb(0, 255, 0);"));
+        labelErrorScale->setStyleSheet(QStringLiteral("color: rgb(0, 255, 0);"));
         errorScaleSlider = new QSlider(settingsForm);
-        errorScaleSlider->setObjectName(QString::fromUtf8("errorScaleSlider"));
+        errorScaleSlider->setObjectName(QStringLiteral("errorScaleSlider"));
         errorScaleSlider->setGeometry(QRect(150, 50, 100, 25));
         errorScaleSlider->setMinimum(0);
         errorScaleSlider->setMaximum(100);
@@ -299,19 +298,19 @@ public:
         errorScaleSlider->setValue(100);
         errorScaleSlider->setOrientation(Qt::Horizontal);
         label_7 = new QLabel(settingsForm);
-        label_7->setObjectName(QString::fromUtf8("label_7"));
+        label_7->setObjectName(QStringLiteral("label_7"));
         label_7->setGeometry(QRect(10, 53, 111, 16));
         label_7->setFont(font);
         checkErrorStopVisible = new QCheckBox(settingsForm);
-        checkErrorStopVisible->setObjectName(QString::fromUtf8("checkErrorStopVisible"));
+        checkErrorStopVisible->setObjectName(QStringLiteral("checkErrorStopVisible"));
         checkErrorStopVisible->setGeometry(QRect(260, 53, 141, 17));
         checkErrorStopVisible->setFont(font);
         label_8 = new QLabel(settingsForm);
-        label_8->setObjectName(QString::fromUtf8("label_8"));
+        label_8->setObjectName(QStringLiteral("label_8"));
         label_8->setGeometry(QRect(10, 143, 91, 16));
         label_8->setFont(font);
         editTitle = new QLineEdit(settingsForm);
-        editTitle->setObjectName(QString::fromUtf8("editTitle"));
+        editTitle->setObjectName(QStringLiteral("editTitle"));
         editTitle->setGeometry(QRect(150, 140, 231, 20));
         editTitle->setMaxLength(20);
 
@@ -337,20 +336,20 @@ public:
 
     void retranslateUi(QWidget *settingsForm)
     {
-        settingsForm->setWindowTitle(QApplication::translate("settingsForm", "Ayarlar", 0, QApplication::UnicodeUTF8));
-        setupButton->setText(QApplication::translate("settingsForm", "Kurulum", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("settingsForm", "Komut Start", 0, QApplication::UnicodeUTF8));
-        labelErrorLimit->setText(QApplication::translate("settingsForm", "10", 0, QApplication::UnicodeUTF8));
-        saveExitButton->setText(QApplication::translate("settingsForm", "Kaydet ve \303\207\304\261k", 0, QApplication::UnicodeUTF8));
-        exitButton->setText(QApplication::translate("settingsForm", "\303\207\304\261k", 0, QApplication::UnicodeUTF8));
+        settingsForm->setWindowTitle(QApplication::translate("settingsForm", "Ayarlar", 0));
+        setupButton->setText(QApplication::translate("settingsForm", "Kurulum", 0));
+        label->setText(QApplication::translate("settingsForm", "Komut Start", 0));
+        labelErrorLimit->setText(QApplication::translate("settingsForm", "10", 0));
+        saveExitButton->setText(QApplication::translate("settingsForm", "Kaydet ve \303\207\304\261k", 0));
+        exitButton->setText(QApplication::translate("settingsForm", "\303\207\304\261k", 0));
         QTableWidgetItem *___qtablewidgetitem = table->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QApplication::translate("settingsForm", "Deger", 0, QApplication::UnicodeUTF8));
+        ___qtablewidgetitem->setText(QApplication::translate("settingsForm", "Deger", 0));
         QTableWidgetItem *___qtablewidgetitem1 = table->verticalHeaderItem(0);
-        ___qtablewidgetitem1->setText(QApplication::translate("settingsForm", "Kamera IP Adresi", 0, QApplication::UnicodeUTF8));
+        ___qtablewidgetitem1->setText(QApplication::translate("settingsForm", "Kamera IP Adresi", 0));
         QTableWidgetItem *___qtablewidgetitem2 = table->verticalHeaderItem(1);
-        ___qtablewidgetitem2->setText(QApplication::translate("settingsForm", "PLC IP Adresi", 0, QApplication::UnicodeUTF8));
+        ___qtablewidgetitem2->setText(QApplication::translate("settingsForm", "PLC IP Adresi", 0));
         QTableWidgetItem *___qtablewidgetitem3 = table->verticalHeaderItem(2);
-        ___qtablewidgetitem3->setText(QApplication::translate("settingsForm", "PLC Byte No", 0, QApplication::UnicodeUTF8));
+        ___qtablewidgetitem3->setText(QApplication::translate("settingsForm", "PLC Byte No", 0));
 #ifndef QT_NO_TOOLTIP
         ___qtablewidgetitem3->setToolTip(QApplication::translate("settingsForm", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -362,21 +361,21 @@ public:
 "<p style=\" m"
                         "argin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600; color:#ff0000;\">Bit X.2: Stop</span></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600; color:#ff0000;\">Bit X.3: Acil Stop</span></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600; color:#ff0000;\"></p></body></html>", 0, QApplication::UnicodeUTF8));
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600; color:#ff0000;\"></p></body></html>", 0));
 #endif // QT_NO_TOOLTIP
 
         const bool __sortingEnabled = table->isSortingEnabled();
         table->setSortingEnabled(false);
         table->setSortingEnabled(__sortingEnabled);
 
-        labelyRes->setText(QApplication::translate("settingsForm", "10", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("settingsForm", "Takip Trendi", 0, QApplication::UnicodeUTF8));
-        checkPLConBoot->setText(QApplication::translate("settingsForm", "Program A\303\247\304\261ld\304\261\304\237\304\261nda PLC'ye Otomatik Ba\304\237lans\304\261n m\304\261?", 0, QApplication::UnicodeUTF8));
-        checkCamonBoot->setText(QApplication::translate("settingsForm", "Program A\303\247\304\261ld\304\261\304\237\304\261nda Kamera'ya Otomatik Ba\304\237lans\304\261n m\304\261?", 0, QApplication::UnicodeUTF8));
-        radio200->setText(QApplication::translate("settingsForm", "S7-200", 0, QApplication::UnicodeUTF8));
-        radio300->setText(QApplication::translate("settingsForm", "S7-300", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("settingsForm", "DB No:", 0, QApplication::UnicodeUTF8));
-        editDBNo->setInputMask(QApplication::translate("settingsForm", "999; ", 0, QApplication::UnicodeUTF8));
+        labelyRes->setText(QApplication::translate("settingsForm", "10", 0));
+        label_2->setText(QApplication::translate("settingsForm", "Takip Trendi", 0));
+        checkPLConBoot->setText(QApplication::translate("settingsForm", "Program A\303\247\304\261ld\304\261\304\237\304\261nda PLC'ye Otomatik Ba\304\237lans\304\261n m\304\261?", 0));
+        checkCamonBoot->setText(QApplication::translate("settingsForm", "Program A\303\247\304\261ld\304\261\304\237\304\261nda Kamera'ya Otomatik Ba\304\237lans\304\261n m\304\261?", 0));
+        radio200->setText(QApplication::translate("settingsForm", "S7-200", 0));
+        radio300->setText(QApplication::translate("settingsForm", "S7-300", 0));
+        label_3->setText(QApplication::translate("settingsForm", "DB No:", 0));
+        editDBNo->setInputMask(QApplication::translate("settingsForm", "999", 0));
 #ifndef QT_NO_TOOLTIP
         editControlDelay->setToolTip(QApplication::translate("settingsForm", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -388,28 +387,28 @@ public:
                         "-weight:600;\">kaynak ba\305\237l\304\261\304\237\304\261n\304\261n gelme zaman\304\261n\304\261 ifade eder.</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Birimi mili saniyedir (1 sn = 1000 ms).</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Do\304\237ru zamanda komutun verilebilmesi i\303\247in \303\266nemlidir.</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Hassas \303\266l\303\247\303\274m yap\304\261n\304\261z.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Hassas \303\266l\303\247\303\274m yap\304\261n\304\261z.</span></p></body></html>", 0));
 #endif // QT_NO_TOOLTIP
         editControlDelay->setInputMask(QString());
         editControlDelay->setText(QString());
-        label_4->setText(QApplication::translate("settingsForm", "Kontrol Gecikmesi", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("settingsForm", "Hedef Yatay", 0, QApplication::UnicodeUTF8));
-        labelTarget->setText(QApplication::translate("settingsForm", "100", 0, QApplication::UnicodeUTF8));
-        label_6->setText(QApplication::translate("settingsForm", "Hedef Dikey", 0, QApplication::UnicodeUTF8));
-        labelTargetVert->setText(QApplication::translate("settingsForm", "100", 0, QApplication::UnicodeUTF8));
-        labelErrorScale->setText(QApplication::translate("settingsForm", "100", 0, QApplication::UnicodeUTF8));
-        label_7->setText(QApplication::translate("settingsForm", "Stop Y\303\274zdesi", 0, QApplication::UnicodeUTF8));
-        checkErrorStopVisible->setText(QApplication::translate("settingsForm", "Ekranda G\303\266r\303\274ns\303\274n", 0, QApplication::UnicodeUTF8));
-        label_8->setText(QApplication::translate("settingsForm", "Ba\305\237l\304\261k", 0, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("settingsForm", "Kontrol Gecikmesi", 0));
+        label_5->setText(QApplication::translate("settingsForm", "Hedef Yatay", 0));
+        labelTarget->setText(QApplication::translate("settingsForm", "100", 0));
+        label_6->setText(QApplication::translate("settingsForm", "Hedef Dikey", 0));
+        labelTargetVert->setText(QApplication::translate("settingsForm", "100", 0));
+        labelErrorScale->setText(QApplication::translate("settingsForm", "100", 0));
+        label_7->setText(QApplication::translate("settingsForm", "Stop Y\303\274zdesi", 0));
+        checkErrorStopVisible->setText(QApplication::translate("settingsForm", "Ekranda G\303\266r\303\274ns\303\274n", 0));
+        label_8->setText(QApplication::translate("settingsForm", "Ba\305\237l\304\261k", 0));
 #ifndef QT_NO_TOOLTIP
         editTitle->setToolTip(QApplication::translate("settingsForm", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#ff0000;\">Aktif olabilmesi i\303\247in program\304\261 yeniden ba\305\237latman\304\261z gerekir.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#ff0000;\">Aktif olabilmesi i\303\247in program\304\261 yeniden ba\305\237latman\304\261z gerekir.</span></p></body></html>", 0));
 #endif // QT_NO_TOOLTIP
         editTitle->setInputMask(QString());
-        editTitle->setText(QApplication::translate("settingsForm", "DI\305\236 KAYNAK", 0, QApplication::UnicodeUTF8));
+        editTitle->setText(QApplication::translate("settingsForm", "DI\305\236 KAYNAK", 0));
     } // retranslateUi
 
 };

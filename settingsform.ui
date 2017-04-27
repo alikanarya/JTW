@@ -134,9 +134,9 @@
   <widget class="QPushButton" name="saveExitButton">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>140</x>
      <y>510</y>
-     <width>100</width>
+     <width>131</width>
      <height>25</height>
     </rect>
    </property>
@@ -502,7 +502,7 @@ p, li { white-space: pre-wrap; }
     <string>S7-200</string>
    </property>
    <attribute name="buttonGroup">
-    <string>radioGroup</string>
+    <string notr="true">radioGroup</string>
    </attribute>
   </widget>
   <widget class="QRadioButton" name="radio300">
@@ -526,7 +526,7 @@ p, li { white-space: pre-wrap; }
     <string>S7-300</string>
    </property>
    <attribute name="buttonGroup">
-    <string>radioGroup</string>
+    <string notr="true">radioGroup</string>
    </attribute>
   </widget>
   <widget class="QLabel" name="label_3">
@@ -560,7 +560,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="inputMask">
-    <string>999; </string>
+    <string>999</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="editControlDelay">
@@ -623,10 +623,10 @@ background-color: rgb(255, 0, 0);</string>
    </property>
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>280</x>
      <y>500</y>
-     <width>91</width>
-     <height>16</height>
+     <width>121</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
@@ -690,10 +690,10 @@ background-color: rgb(255, 0, 0);</string>
   <widget class="QLabel" name="labelTarget">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>114</x>
      <y>83</y>
-     <width>25</width>
-     <height>16</height>
+     <width>31</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
@@ -734,10 +734,10 @@ background-color: rgb(255, 0, 0);</string>
   <widget class="QLabel" name="labelTargetVert">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>119</x>
      <y>113</y>
-     <width>30</width>
-     <height>16</height>
+     <width>31</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
@@ -782,10 +782,10 @@ background-color: rgb(255, 0, 0);</string>
   <widget class="QLabel" name="labelErrorScale">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>114</x>
      <y>53</y>
-     <width>25</width>
-     <height>16</height>
+     <width>31</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
@@ -976,12 +976,12 @@ p, li { white-space: pre-wrap; }
    <slot>exitButton()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>377</x>
-     <y>475</y>
+     <x>389</x>
+     <y>569</y>
     </hint>
     <hint type="destinationlabel">
-     <x>288</x>
-     <y>275</y>
+     <x>322</x>
+     <y>268</y>
     </hint>
    </hints>
   </connection>

@@ -1,7 +1,7 @@
 #ifndef PWDDIALOG_H
 #define PWDDIALOG_H
 
-#include <QDialog>
+#include <QtWidgets/QDialog>
 
 namespace Ui {
     class pwdDialog;

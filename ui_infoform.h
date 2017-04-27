@@ -11,12 +11,12 @@
 #define UI_INFOFORM_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QWidget>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
 
@@ -98,12 +98,12 @@ public:
 
     void retranslateUi(QWidget *infoForm)
     {
-        infoForm->setWindowTitle(QApplication::translate("infoForm", "Hakk\304\261nda", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("infoForm", "JTW", 0, QApplication::UnicodeUTF8));
-        label_2->setText(QApplication::translate("infoForm", "Joint Tracker for Welding", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("infoForm", "Kaynak i\303\247in Birle\305\237me Yeri Takip\303\247isi", 0, QApplication::UnicodeUTF8));
-        label_4->setText(QApplication::translate("infoForm", "ver 1.9.39, \302\251Orun Elektronik, 2012", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("infoForm", "T\303\274m haklar\304\261 sakl\304\261d\304\261r. All rights reserved.", 0, QApplication::UnicodeUTF8));
+        infoForm->setWindowTitle(QApplication::translate("infoForm", "Hakk\304\261nda", 0));//, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("infoForm", "JTW", 0));//, QApplication::UnicodeUTF8));
+        label_2->setText(QApplication::translate("infoForm", "Joint Tracker for Welding", 0));//, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("infoForm", "Kaynak i\303\247in Birle\305\237me Yeri Takip\303\247isi", 0));//, QApplication::UnicodeUTF8));
+        label_4->setText(QApplication::translate("infoForm", "ver 1.9.39, \302\251Orun Elektronik, 2012", 0));//, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("infoForm", "T\303\274m haklar\304\261 sakl\304\261d\304\261r. All rights reserved.", 0));//, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

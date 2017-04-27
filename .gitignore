@@ -1,10 +1,11 @@
 
 *.lic
 *.ini
+/.qmake.stash
 /Makefile.Release
 /Makefile
 /Makefile.Debug
-/JTW.pro.user
+/JTW.pro.user*
 /libnodave.dll
 /object_script.JTW.Release
 /object_script.JTW.Debug
