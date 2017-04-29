@@ -65,6 +65,7 @@
 #define _MAINTITLE "JTW - Kaynak için Birleşme Yeri Takipçisi :: "
 #define _TITLE "DIŞ KAYNAK"
 
+
 //const int yResArray[9] = {1, 2, 4, 6, 8, 10, 12, 16, 20}; // for height 240
 //const int yResArray[9] = {12, 12, 12, 12, 12, 12, 12, 16, 20};
 //const int yResArray[9] = {1, 1, 2, 4, 5, 8, 10, 16, 20}; // for height 160
@@ -301,6 +302,14 @@ public:
     QString fileName;
     QString savePath;
     QString folderName;
+
+    // image file open vars
+    QString loadedFileName = "";
+    QString loadedFileNamewPath = "";
+    QDir fileOpenDir;
+    QStringList filesInDirList;
+    QStringList fileFilters  = (QStringList() << "*.jpg" << "*.png");
+    int filesInDirListIndex = 0;
 
     // report vars
     int controlStartTime, controlElapsed;

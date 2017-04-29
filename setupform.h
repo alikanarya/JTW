@@ -98,6 +98,7 @@ private slots:
     void on_brightnessReset_clicked();
     void on_contrastReset_clicked();
     void on_gammaReset_clicked();
+    void on_fileSlider_sliderMoved(int position);
 };
 
 #endif // SETUPFORM_H

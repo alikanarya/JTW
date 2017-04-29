@@ -772,12 +772,29 @@ void setupForm::processSolidnessCanny(){
 
 void setupForm::on_captureButton_2_clicked(){
 
-    QString _fileName = QFileDialog::getOpenFileName(this,
-        tr("Open Image"), "C:/xampp/htdocs/images/aygaz", tr("Image Files (*.png *.jpg *.bmp)"));
+    w->loadedFileNamewPath = QFileDialog::getOpenFileName(this,
+        tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
+        //tr("Open Image"), "C:/xampp/htdocs/images/aygaz", tr("Image Files (*.png *.jpg *.bmp)"));
 
-    w->imageFile.load(_fileName);
-    w->imageFileChanged = w->imageFile;
-    w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFile ));
+
+    if (!w->loadedFileNamewPath.isEmpty() && !w->loadedFileNamewPath.isNull()){
+
+        w->fileOpenDir = QFileInfo(w->loadedFileNamewPath).absoluteDir();
+        w->filesInDirList = w->fileOpenDir.entryList(w->fileFilters, QDir::Files);
+
+        //foreach(QString temp, w->filesInDirList){ qDebug() << temp; }
+
+        w->loadedFileName = QFileInfo(w->loadedFileNamewPath).fileName();
+        w->filesInDirListIndex = w->filesInDirList.indexOf(w->loadedFileName,0);
+
+        ui->fileSlider->setMaximum(w->filesInDirList.size() - 1);
+        ui->fileSlider->setValue(w->filesInDirListIndex);
+
+        w->imageFile.load(w->loadedFileNamewPath);
+        w->imageFileChanged = w->imageFile;
+        w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFile ));
+        captureButton();
+    }
 }
 
 void setupForm::update(){
@@ -786,7 +803,9 @@ void setupForm::update(){
     QImage step2 = changeContrast(step1, w->contrastVal);
     w->imageFileChanged = changeGamma(step2, w->gammaVal);
     w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
-    captureButton();
+
+    if (ui->checkProcessing->isChecked())
+        captureButton();
 }
 
 void setupForm::on_brightnessSlider_sliderReleased(){
@@ -847,7 +866,15 @@ void setupForm::on_gammaReset_clicked(){
     update();
 }
 
+void setupForm::on_fileSlider_sliderMoved(int position){
 
+    w->filesInDirListIndex = position;
+    w->loadedFileName = w->filesInDirList.at(position);
+
+    //qDebug() << w->filesInDirListIndex << "." << w->loadedFileName;
+    w->imageFile.load(w->fileOpenDir.path() + "/" + w->loadedFileName);
+    update();
+}
 
         //fileName = savePath + "t" + QString::number(i) + "_houghlines" + ".csv";
         //iprocessSub[i]->saveMatrix(iprocessSub[i]->houghLines, 3, iprocessSub[i]->houghLineNo, fileName);
@@ -1109,6 +1136,8 @@ void setupForm::processSubImageSolidness(){
     }
 }
 */
+
+
 
 
 
