@@ -125,7 +125,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     cameraChecker = new getImage(urlCam.toString());
 
-    videoFrameSize = 200;
+    videoFrameSize = 25;
     threadVideoSave = new videoSaveThread();
     connect(threadVideoSave, SIGNAL(saveFinished()), this, SLOT(saveFinished()));
 

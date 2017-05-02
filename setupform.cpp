@@ -767,6 +767,7 @@ void setupForm::processSolidnessCanny(){
         iprocess->calculateHoughMaxs(houghLineNo);              // get max voted line(s)
 
         iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
+        iprocess->constructGaussianMatrix();
 //--    }
 }
 
