@@ -106,6 +106,10 @@ public:
     QPushButton *gammaReset;
     QSlider *fileSlider;
     QCheckBox *checkProcessing;
+    QLabel *labelGaussSize;
+    QSlider *gaussSizeSlider;
+    QSlider *gaussSDevSlider;
+    QLabel *labelGaussSDev;
 
     void setupUi(QWidget *setupForm)
     {
@@ -265,7 +269,7 @@ public:
         editHoughThetaMax->setAlignment(Qt::AlignCenter);
         plainTextEdit = new QPlainTextEdit(setupForm);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
-        plainTextEdit->setGeometry(QRect(620, 470, 321, 191));
+        plainTextEdit->setGeometry(QRect(620, 530, 321, 191));
         QFont font1;
         font1.setFamily(QStringLiteral("Tahoma"));
         plainTextEdit->setFont(font1);
@@ -488,6 +492,48 @@ public:
         checkProcessing = new QCheckBox(setupForm);
         checkProcessing->setObjectName(QStringLiteral("checkProcessing"));
         checkProcessing->setGeometry(QRect(140, 20, 101, 17));
+        labelGaussSize = new QLabel(setupForm);
+        labelGaussSize->setObjectName(QStringLiteral("labelGaussSize"));
+        labelGaussSize->setGeometry(QRect(800, 470, 42, 20));
+        labelGaussSize->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
+        labelGaussSize->setFrameShape(QFrame::Box);
+        labelGaussSize->setAlignment(Qt::AlignCenter);
+        gaussSizeSlider = new QSlider(setupForm);
+        gaussSizeSlider->setObjectName(QStringLiteral("gaussSizeSlider"));
+        gaussSizeSlider->setGeometry(QRect(620, 470, 160, 22));
+        gaussSizeSlider->setAutoFillBackground(false);
+        gaussSizeSlider->setMinimum(3);
+        gaussSizeSlider->setMaximum(11);
+        gaussSizeSlider->setSingleStep(2);
+        gaussSizeSlider->setValue(5);
+        gaussSizeSlider->setSliderPosition(5);
+        gaussSizeSlider->setTracking(true);
+        gaussSizeSlider->setOrientation(Qt::Horizontal);
+        gaussSizeSlider->setInvertedAppearance(false);
+        gaussSizeSlider->setInvertedControls(false);
+        gaussSizeSlider->setTickPosition(QSlider::TicksBothSides);
+        gaussSizeSlider->setTickInterval(2);
+        gaussSDevSlider = new QSlider(setupForm);
+        gaussSDevSlider->setObjectName(QStringLiteral("gaussSDevSlider"));
+        gaussSDevSlider->setGeometry(QRect(620, 500, 160, 22));
+        gaussSDevSlider->setAutoFillBackground(false);
+        gaussSDevSlider->setMinimum(1);
+        gaussSDevSlider->setMaximum(20);
+        gaussSDevSlider->setSingleStep(1);
+        gaussSDevSlider->setValue(10);
+        gaussSDevSlider->setSliderPosition(10);
+        gaussSDevSlider->setTracking(true);
+        gaussSDevSlider->setOrientation(Qt::Horizontal);
+        gaussSDevSlider->setInvertedAppearance(false);
+        gaussSDevSlider->setInvertedControls(false);
+        gaussSDevSlider->setTickPosition(QSlider::TicksBothSides);
+        gaussSDevSlider->setTickInterval(5);
+        labelGaussSDev = new QLabel(setupForm);
+        labelGaussSDev->setObjectName(QStringLiteral("labelGaussSDev"));
+        labelGaussSDev->setGeometry(QRect(800, 500, 42, 20));
+        labelGaussSDev->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
+        labelGaussSDev->setFrameShape(QFrame::Box);
+        labelGaussSDev->setAlignment(Qt::AlignCenter);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -629,6 +675,8 @@ public:
         contrastReset->setText(QApplication::translate("setupForm", "R", 0));
         gammaReset->setText(QApplication::translate("setupForm", "R", 0));
         checkProcessing->setText(QApplication::translate("setupForm", "Analiz Aktif", 0));
+        labelGaussSize->setText(QApplication::translate("setupForm", "0", 0));
+        labelGaussSDev->setText(QApplication::translate("setupForm", "0", 0));
     } // retranslateUi
 
 };

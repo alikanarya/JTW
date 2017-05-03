@@ -46,6 +46,8 @@ public:
     int voidThreshold;
     int tCenterX;
     bool cannyThinning;
+    int gaussianSize = 5;
+    float stdDev = 1.4;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -99,6 +101,8 @@ private slots:
     void on_contrastReset_clicked();
     void on_gammaReset_clicked();
     void on_fileSlider_sliderMoved(int position);
+    void on_gaussSizeSlider_sliderMoved(int position);
+    void on_gaussSDevSlider_sliderMoved(int position);
 };
 
 #endif // SETUPFORM_H

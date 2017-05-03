@@ -731,12 +731,14 @@ void setupForm::processSolidnessCanny(){
         cannyThinning = ui->cannyThinningBox->isChecked();
 
         iprocess->prepareCannyArrays();
+        iprocess->constructGaussianMatrix(gaussianSize, stdDev);
 
         for (int i = 0; i < 4 ; i++){
 
             iprocess->constructValueMatrix( iprocess->imgOrginal, i );
 
-            iprocess->gaussianBlur();
+//            iprocess->gaussianBlur();
+            iprocess->gaussianBlur(5, 1.4);
 
             iprocess->detectEdgeSobelwDirections();
 
@@ -767,7 +769,7 @@ void setupForm::processSolidnessCanny(){
         iprocess->calculateHoughMaxs(houghLineNo);              // get max voted line(s)
 
         iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
-        iprocess->constructGaussianMatrix();
+        //iprocess->constructGaussianMatrix();
 //--    }
 }
 
@@ -874,6 +876,20 @@ void setupForm::on_fileSlider_sliderMoved(int position){
 
     //qDebug() << w->filesInDirListIndex << "." << w->loadedFileName;
     w->imageFile.load(w->fileOpenDir.path() + "/" + w->loadedFileName);
+    update();
+}
+
+void setupForm::on_gaussSizeSlider_sliderMoved(int position){
+
+    gaussianSize = position;
+    ui->labelGaussSize->setText(QString::number(gaussianSize));
+    update();
+}
+
+void setupForm::on_gaussSDevSlider_sliderMoved(int position){
+
+    stdDev = position / 10.0;
+    ui->labelGaussSDev->setText(QString::number(stdDev));
     update();
 }
 
@@ -1137,6 +1153,8 @@ void setupForm::processSubImageSolidness(){
     }
 }
 */
+
+
 
 
 
