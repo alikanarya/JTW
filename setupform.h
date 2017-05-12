@@ -45,9 +45,9 @@ public:
     int voteThreshold, voteAvg;
     int voidThreshold;
     int tCenterX;
-    bool cannyThinning;
-    int gaussianSize = 5;
-    float stdDev = 1.4;
+    //bool cannyThinning;
+    //int gaussianSize = 5;
+    //float stdDev = 1.4;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -103,6 +103,7 @@ private slots:
     void on_fileSlider_sliderMoved(int position);
     void on_gaussSizeSlider_sliderMoved(int position);
     void on_gaussSDevSlider_sliderMoved(int position);
+    void on_cannyThinningBox_clicked();
 };
 
 #endif // SETUPFORM_H

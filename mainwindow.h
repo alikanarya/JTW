@@ -43,7 +43,12 @@
 #define _TIME_LIMIT         30
 #define _LINE_DETECT        false
 #define _LINE_SCORE         33
-
+#define _BRIGHTNESS         0
+#define _CONTRAST           100
+#define _GAMMA              100
+#define _GAUSS_SIZE         5
+#define _GAUSS_DEV          1.4
+#define _CANNY_THIN         true
 
 
 #define _PWD_SETTINGS       "nokts"
@@ -198,6 +203,10 @@ public:
     int initialJointWidth;
     int maxJointWidth, minJointWidth;
     int jointWidth;
+
+    bool cannyThinning;
+    int gaussianSize = 5;
+    float stdDev = 1.4;
 
     // Z-Control
     bool zControlActive;

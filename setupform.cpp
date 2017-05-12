@@ -64,6 +64,23 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     ui->lineDetectionBox->setChecked( w->lineDetection );
 
     ui->editLineScore->setText( QString::number( w->lineScoreLimit ) );
+
+    ui->labelBrightness->setText( QString::number(w->brightnessVal) );
+    ui->brightnessSlider->setValue( w->brightnessVal );
+
+    ui->labelContrast->setText( QString::number(w->contrastVal) );
+    ui->contrastSlider->setValue( w->contrastVal );
+
+    ui->labelGamma->setText( QString::number(w->gammaVal) );
+    ui->gammaSlider->setValue( w->gammaVal );
+
+    ui->labelGaussSize->setText( QString::number(w->gaussianSize) );
+    ui->gaussSizeSlider->setValue( (w->gaussianSize-1)/2 );
+
+    ui->labelGaussSDev->setText( QString::number(w->stdDev) );
+    ui->gaussSDevSlider->setValue( (int)(w->stdDev*10) );
+
+    ui->cannyThinningBox->setChecked( w->cannyThinning );
 }
 
 
@@ -728,10 +745,8 @@ void setupForm::processSolidnessCanny(){
         iprocess->thetaMax = ui->editHoughThetaMax->text().toInt();
         iprocess->thetaStep = ui->editHoughThetaStep->text().toFloat();
 
-        cannyThinning = ui->cannyThinningBox->isChecked();
-
         iprocess->prepareCannyArrays();
-        iprocess->constructGaussianMatrix(gaussianSize, stdDev);
+        iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
 
         for (int i = 0; i < 4 ; i++){
 
@@ -742,7 +757,7 @@ void setupForm::processSolidnessCanny(){
 
             iprocess->detectEdgeSobelwDirections();
 
-            iprocess->nonMaximumSuppression(cannyThinning);
+            iprocess->nonMaximumSuppression(w->cannyThinning);
 
             iprocess->cannyThresholding(true);
 
@@ -881,18 +896,22 @@ void setupForm::on_fileSlider_sliderMoved(int position){
 
 void setupForm::on_gaussSizeSlider_sliderMoved(int position){
 
-    gaussianSize = position;
-    ui->labelGaussSize->setText(QString::number(gaussianSize));
+    w->gaussianSize = 2*position+1;
+    ui->labelGaussSize->setText(QString::number(w->gaussianSize));
     update();
 }
 
 void setupForm::on_gaussSDevSlider_sliderMoved(int position){
 
-    stdDev = position / 10.0;
-    ui->labelGaussSDev->setText(QString::number(stdDev));
+    w->stdDev = position / 10.0;
+    ui->labelGaussSDev->setText(QString::number(w->stdDev));
     update();
 }
 
+void setupForm::on_cannyThinningBox_clicked(){
+
+    w->cannyThinning = ui->cannyThinningBox->isChecked();
+}
         //fileName = savePath + "t" + QString::number(i) + "_houghlines" + ".csv";
         //iprocessSub[i]->saveMatrix(iprocessSub[i]->houghLines, 3, iprocessSub[i]->houghLineNo, fileName);
 
@@ -1153,6 +1172,8 @@ void setupForm::processSubImageSolidness(){
     }
 }
 */
+
+
 
 
 

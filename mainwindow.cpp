@@ -2053,6 +2053,13 @@ void MainWindow::readSettings(){
             thinJointAlgoActive = settings->value("thin", _THIN_JOINT).toBool();
             jointWidthControlActive = settings->value("widthctrl", _WIDTH_CONTROL).toBool();
 
+            brightnessVal = settings->value("brightness", _BRIGHTNESS).toInt();
+            contrastVal = settings->value("contrast", _CONTRAST).toInt();
+            gammaVal = settings->value("gamma", _GAMMA).toInt();
+            gaussianSize = settings->value("gausssize", _GAUSS_SIZE).toInt();
+            stdDev = settings->value("gaussdev", _GAUSS_DEV).toFloat();
+            cannyThinning = settings->value("cannythin", _CANNY_THIN).toBool();
+
         settings->endGroup();
 
         settings->beginGroup("oth");
@@ -2111,6 +2118,13 @@ void MainWindow::readSettings(){
 
         thinJointAlgoActive = _THIN_JOINT;
         jointWidthControlActive = _WIDTH_CONTROL;
+
+        brightnessVal = _BRIGHTNESS;
+        contrastVal = _CONTRAST;
+        gammaVal = _GAMMA;
+        gaussianSize = _GAUSS_SIZE;
+        stdDev = _GAUSS_DEV;
+        cannyThinning = _CANNY_THIN;
 
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
@@ -2186,6 +2200,16 @@ void MainWindow::writeSettings(){
 
         QVariant widthsw(jointWidthControlActive);
             settings->setValue("widthctrl", widthsw.toString());
+
+
+        settings->setValue("brightness", QString::number(brightnessVal));
+        settings->setValue("contrast", QString::number(contrastVal));
+        settings->setValue("gamma", QString::number(gammaVal));
+        settings->setValue("gausssize", QString::number(gaussianSize));
+        settings->setValue("gaussdev", QString::number(stdDev));
+
+        QVariant cannythinsw(cannyThinning);
+            settings->setValue("cannythin", cannythinsw.toString());
 
     settings->endGroup();
 
