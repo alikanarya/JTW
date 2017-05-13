@@ -1624,6 +1624,7 @@ void MainWindow::processEdgeDetection(){
         iprocessInitSwitch = true;
 
         iprocess->prepareCannyArrays();
+        iprocess->constructGaussianMatrix(gaussianSize, stdDev);
 
         for (int i = 0; i < 4 ; i++){
 
@@ -1633,7 +1634,7 @@ void MainWindow::processEdgeDetection(){
 
             iprocess->detectEdgeSobelwDirections();
 
-            iprocess->nonMaximumSuppression();
+            iprocess->nonMaximumSuppression(cannyThinning);
 
             iprocess->cannyThresholding(true);
 
@@ -1642,21 +1643,25 @@ void MainWindow::processEdgeDetection(){
             iprocess->assignEdgeMap();
         }
 
+        iprocess->mergeEdgeMaps();
 
-        iprocess->thetaMin = -2;
-        iprocess->thetaMax = 2;
-        iprocess->thetaStep = 1.0;
+        for (int y = 0; y < iprocess->edgeHeight; y++)
+            for (int x = 0; x < iprocess->edgeWidth; x++){
+                if (iprocess->edgeMapMatrix[y][x])
+                    iprocess->edgeMatrix[y][x]=255;
+                else
+                    iprocess->edgeMatrix[y][x]=0;
+            }
 
         iprocess->centerX = 0;
         iprocess->houghTransformEdgeMap();
-
-        iprocess->calculateHoughMaxs(200);              // get max voted line(s)
+        iprocess->calculateHoughMaxs(houghLineNo);              // get max voted line(s)
 
         if (thinJointAlgoActive)
             iprocess->thinCornerNum = 1;
-
         iprocess->detectMainEdges(thinJointAlgoActive, false);
 
+        //iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
     }
 }
 
@@ -2370,8 +2375,8 @@ void MainWindow::testButton(){
         tr("Open Image"), "C:/xampp/htdocs/images/aygaz", tr("Image Files (*.png *.jpg *.bmp)"));
 
     //imageFile = new QImage();
-    //imageFile->load(_fileName);
-    //ui->imageFrame->setPixmap( QPixmap::fromImage( *imageFile ));
+    imageFile.load(_fileName);
+    ui->imageFrame->setPixmap( QPixmap::fromImage( imageFile ));
 }
 
 

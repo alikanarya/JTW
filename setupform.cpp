@@ -86,35 +86,45 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
 
 void setupForm::processStandardHT(){
 
-    target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth,w->frameHeight );  // take target image
-
-    if (iprocessInitSwitch) {
-        delete iprocess;
-        iprocessInitSwitch = false;
+    if ( w->play && !w->imageGetter->imageList.isEmpty() ){
+        target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
     }
-    iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
-    iprocessInitSwitch = true;
 
-    iprocess->toMono();                                     // convert target to mono
-    iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
-    iprocess->detectEdgeSobel();                            // detect edges of the mono image
+    if ( !w->play &&  imageLoadedFromFile){
+        target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+    }
 
-    iprocess->thetaMin = thetaMin;
-    iprocess->thetaMax = thetaMax;
-    iprocess->thetaStep = thetaStep;
-    iprocess->houghTransform();                             // detect lines in edge image
+    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ){
 
-    iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
-    iprocess->calcAvgDistAndAngle( houghLineNo );           // calc. avg. distance and theta
-    voteAvg = iprocess->calcVoteAvg();                      // avg. value of max voted line(s)
+        /*if (iprocessInitSwitch) {
+            delete iprocess;
+            iprocessInitSwitch = false;
+        }*/
+        iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
 
-    iprocess->voteThreshold = voteThreshold;                // acceptable vote value low-limit
-    if ( !iprocess->checkPrimaryLine() )                    // is max voted line  above the low-limit?
-        ui->labelPrimaryLine->show();
-    iprocess->detectVoidLines();                            // detect void lines on hough lines in MONO image
+        iprocess->toMono();                                     // convert target to mono
+        iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
+        iprocess->detectEdgeSobel();                            // detect edges of the mono image
 
-    iprocess->voidThreshold = voidThreshold;                // void threshold to decide max void as primary
-    iprocess->detectPrimaryVoid();                          // decide primary void line & corners/center
+        iprocess->thetaMin = thetaMin;
+        iprocess->thetaMax = thetaMax;
+        iprocess->thetaStep = thetaStep;
+        iprocess->houghTransform();                             // detect lines in edge image
+
+        iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+        iprocess->calcAvgDistAndAngle( houghLineNo );           // calc. avg. distance and theta
+        voteAvg = iprocess->calcVoteAvg();                      // avg. value of max voted line(s)
+
+        iprocess->voteThreshold = voteThreshold;                // acceptable vote value low-limit
+        if ( !iprocess->checkPrimaryLine() )                    // is max voted line  above the low-limit?
+            ui->labelPrimaryLine->show();
+        iprocess->detectVoidLines();                            // detect void lines on hough lines in MONO image
+
+        iprocess->voidThreshold = voidThreshold;                // void threshold to decide max void as primary
+        iprocess->detectPrimaryVoid();                          // decide primary void line & corners/center
+    }
+
 }
 
 
@@ -282,7 +292,7 @@ void setupForm::processSubImageSolidness(){
 
 void setupForm::captureButton(){
 
-//--    if ( !w->imageGetter->imageList.isEmpty() ) {   // if any image is get
+    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ) {   // if any image is get
 
         ui->labelPrimaryLine->hide();               // hide PRIMARY LINE NOT DETECTED message
 
@@ -320,8 +330,8 @@ void setupForm::captureButton(){
 
         if (!w->subImageProcessingSwitch) {
 
-            //processStandardHT();
-            processSolidnessCanny();
+            processStandardHT();
+            //processSolidnessCanny();
             //ui->plainTextEdit->appendPlainText(QString::number(iprocess->thetaMin)+","+QString::number(iprocess->thetaMax)+","+QString::number(iprocess->thetaStep));
 
         } else {
@@ -458,11 +468,11 @@ void setupForm::captureButton(){
 
         captured = true;
 
-/*--    } else {
+    } else {
 
         ui->plainTextEdit->appendPlainText(alarm6);
    }
-*/
+
 }
 
 
@@ -733,10 +743,15 @@ setupForm::~setupForm(){
 
 void setupForm::processSolidnessCanny(){
 
-//--    if ( !w->imageGetter->imageList.isEmpty() ){
-//--        target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+    if ( w->play && !w->imageGetter->imageList.isEmpty() ){
+        target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+    }
 
+    if ( !w->play &&  imageLoadedFromFile){
         target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+    }
+
+    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ){
 
         iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
         iprocessInitSwitch = true;
@@ -752,8 +767,7 @@ void setupForm::processSolidnessCanny(){
 
             iprocess->constructValueMatrix( iprocess->imgOrginal, i );
 
-//            iprocess->gaussianBlur();
-            iprocess->gaussianBlur(5, 1.4);
+            iprocess->gaussianBlur();
 
             iprocess->detectEdgeSobelwDirections();
 
@@ -768,10 +782,6 @@ void setupForm::processSolidnessCanny(){
 
         iprocess->mergeEdgeMaps();
 
-        //iprocess->thetaMin = 87;
-        //iprocess->thetaMax = 93;
-        //iprocess->thetaStep = 1.0;
-
         for (int y = 0; y < iprocess->edgeHeight; y++)
             for (int x = 0; x < iprocess->edgeWidth; x++){
                 if (iprocess->edgeMapMatrix[y][x])
@@ -780,12 +790,16 @@ void setupForm::processSolidnessCanny(){
                     iprocess->edgeMatrix[y][x]=0;
             }
 
+        iprocess->centerX = 0;
         iprocess->houghTransformEdgeMap();
         iprocess->calculateHoughMaxs(houghLineNo);              // get max voted line(s)
 
-        iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
-        //iprocess->constructGaussianMatrix();
-//--    }
+        if (w->thinJointAlgoActive)
+            iprocess->thinCornerNum = 1;
+        iprocess->detectMainEdges(w->thinJointAlgoActive, false);
+
+        //iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
+    }
 }
 
 void setupForm::on_captureButton_2_clicked(){
@@ -796,6 +810,8 @@ void setupForm::on_captureButton_2_clicked(){
 
 
     if (!w->loadedFileNamewPath.isEmpty() && !w->loadedFileNamewPath.isNull()){
+
+        imageLoadedFromFile = true;
 
         w->fileOpenDir = QFileInfo(w->loadedFileNamewPath).absoluteDir();
         w->filesInDirList = w->fileOpenDir.entryList(w->fileFilters, QDir::Files);

@@ -52,6 +52,7 @@ public:
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
     bool iprocessInitSwitch, iprocessLeftInitSwitch, iprocessRightInitSwitch;
+    bool imageLoadedFromFile = false;
 
     explicit setupForm(QWidget *parent = 0);    // constructor
     void getParameters();       // get parameters from mainwindow
