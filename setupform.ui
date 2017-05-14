@@ -1701,6 +1701,26 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QComboBox" name="algorithmBox">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>570</y>
+     <width>111</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Canny</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Hough Transform</string>
+    </property>
+   </item>
+  </widget>
  </widget>
  <resources>
   <include location="icons.qrc"/>

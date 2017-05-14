@@ -105,6 +105,7 @@ private slots:
     void on_gaussSizeSlider_sliderMoved(int position);
     void on_gaussSDevSlider_sliderMoved(int position);
     void on_cannyThinningBox_clicked();
+    void on_algorithmBox_currentIndexChanged(int index);
 };
 
 #endif // SETUPFORM_H

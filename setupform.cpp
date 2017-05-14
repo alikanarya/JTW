@@ -110,6 +110,14 @@ void setupForm::processStandardHT(){
         iprocess->thetaMin = thetaMin;
         iprocess->thetaMax = thetaMax;
         iprocess->thetaStep = thetaStep;
+
+        if (w->thinJointAlgoActive){
+            iprocess->centerX = 0;
+            iprocess->centerY = 0;
+        } else {
+            iprocess->centerX = iprocess->edgeWidth / 2;
+            iprocess->centerY = 0;
+        }
         iprocess->houghTransform();                             // detect lines in edge image
 
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
@@ -756,9 +764,9 @@ void setupForm::processSolidnessCanny(){
         iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
         iprocessInitSwitch = true;
 
-        iprocess->thetaMin = ui->editHoughThetaMin->text().toInt();
-        iprocess->thetaMax = ui->editHoughThetaMax->text().toInt();
-        iprocess->thetaStep = ui->editHoughThetaStep->text().toFloat();
+        iprocess->thetaMin = thetaMin;
+        iprocess->thetaMax = thetaMax;
+        iprocess->thetaStep = thetaStep;
 
         iprocess->prepareCannyArrays();
         iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
@@ -790,8 +798,15 @@ void setupForm::processSolidnessCanny(){
                     iprocess->edgeMatrix[y][x]=0;
             }
 
-        iprocess->centerX = 0;
+        if (w->thinJointAlgoActive){
+            iprocess->centerX = 0;
+            iprocess->centerY = 0;
+        } else {
+            iprocess->centerX = iprocess->edgeWidth / 2;
+            iprocess->centerY = 0;
+        }
         iprocess->houghTransformEdgeMap();
+
         iprocess->calculateHoughMaxs(houghLineNo);              // get max voted line(s)
 
         if (w->thinJointAlgoActive)
@@ -927,6 +942,10 @@ void setupForm::on_gaussSDevSlider_sliderMoved(int position){
 void setupForm::on_cannyThinningBox_clicked(){
 
     w->cannyThinning = ui->cannyThinningBox->isChecked();
+}
+
+void setupForm::on_algorithmBox_currentIndexChanged(int index){
+
 }
         //fileName = savePath + "t" + QString::number(i) + "_houghlines" + ".csv";
         //iprocessSub[i]->saveMatrix(iprocessSub[i]->houghLines, 3, iprocessSub[i]->houghLineNo, fileName);
@@ -1188,6 +1207,8 @@ void setupForm::processSubImageSolidness(){
     }
 }
 */
+
+
 
 
 

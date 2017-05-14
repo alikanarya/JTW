@@ -110,6 +110,7 @@ public:
     QSlider *gaussSizeSlider;
     QSlider *gaussSDevSlider;
     QLabel *labelGaussSDev;
+    QComboBox *algorithmBox;
 
     void setupUi(QWidget *setupForm)
     {
@@ -534,6 +535,9 @@ public:
         labelGaussSDev->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelGaussSDev->setFrameShape(QFrame::Box);
         labelGaussSDev->setAlignment(Qt::AlignCenter);
+        algorithmBox = new QComboBox(setupForm);
+        algorithmBox->setObjectName(QStringLiteral("algorithmBox"));
+        algorithmBox->setGeometry(QRect(220, 570, 111, 22));
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -677,6 +681,11 @@ public:
         checkProcessing->setText(QApplication::translate("setupForm", "Analiz Aktif", 0));
         labelGaussSize->setText(QApplication::translate("setupForm", "0", 0));
         labelGaussSDev->setText(QApplication::translate("setupForm", "0", 0));
+        algorithmBox->clear();
+        algorithmBox->insertItems(0, QStringList()
+         << QApplication::translate("setupForm", "Canny", 0)
+         << QApplication::translate("setupForm", "Hough Transform", 0)
+        );
     } // retranslateUi
 
 };
