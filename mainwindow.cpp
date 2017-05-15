@@ -11,7 +11,6 @@
 
 //#include "../_Modules/Algo/localMinimum.h"
 
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
 
     rectScreen = QApplication::desktop()->geometry();
@@ -261,7 +260,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 }
 
-
 void MainWindow::showInfo(){
 
         QMessageBox msgBox;
@@ -300,7 +298,6 @@ void MainWindow::showInfo(){
         msgBox.exec();
 }
 
-
 void MainWindow::checker(){
 
     permWeld = !emergencyStop && permOperator && permPLC && play && !cameraChecker->cameraDown && trackOn && controlDelayValid;
@@ -308,14 +305,12 @@ void MainWindow::checker(){
     ui->controlButton->setEnabled(permWeld);
 }
 
-
 QImage* MainWindow::takeTargetAreaImage(){
 
     QImage *image = new QImage(*lastData->image);
     targetArea = image->copy(offsetX, offsetY, frameWidth, frameHeight);
     return image;
 }
-
 
 void MainWindow::getImageFromCam(){
 
@@ -326,7 +321,6 @@ void MainWindow::getImageFromCam(){
     else
         ui->plainTextEdit->appendPlainText(fileName + " kayıt edilemedi !!!");
 }
-
 
 void MainWindow::playButton(){
 
@@ -348,7 +342,6 @@ void MainWindow::playButton(){
     ui->videoButton->setIcon(videoSaveEnabled);
 }
 
-
 void MainWindow::stopButton(){
 
     // reseted vars ????
@@ -362,7 +355,6 @@ void MainWindow::stopButton(){
     ui->controlButton->setEnabled(false);
 
 }
-
 
 void MainWindow::update(){
 
@@ -389,7 +381,6 @@ void MainWindow::update(){
     }
 
 }
-
 
 void MainWindow:: plcControl(){
 
@@ -563,7 +554,6 @@ void MainWindow:: plcControl(){
 
 }
 
-
 void MainWindow::updateSn(){
 
     if (timeControl) {
@@ -673,7 +663,6 @@ void MainWindow::updateSn(){
     pause = false;
 }
 
-
 void MainWindow::startTimer(){
 
     if (!threadPLCControl->isRunning()){
@@ -689,7 +678,6 @@ void MainWindow::startTimer(){
     QTimer::singleShot(2000, this, SLOT(initPlcTimer()));
 }
 
-
 void MainWindow::initPlcTimer(){
 
     ui->plainTextEdit->appendPlainText(timeString() + threadPLCControl->plc->message);
@@ -704,13 +692,11 @@ void MainWindow::initPlcTimer(){
 
 }
 
-
 void  MainWindow::cameraDownAction(){
 
     ui->plainTextEdit->appendPlainText(timeString() + alarm7);
     alarmCameraDownLock = true;
 }
-
 
 void MainWindow::analyzeButton(){
 
@@ -773,7 +759,6 @@ void MainWindow::analyzeButton(){
          ui->plainTextEdit->appendPlainText(timeString() + alarm6);
     }
 }
-
 
 void MainWindow::guideButton(){
 
@@ -1148,7 +1133,6 @@ void MainWindow::guideButton(){
 
 }
 
-
 void MainWindow::trackButton(){
 
     trackOn = !trackOn;
@@ -1164,7 +1148,6 @@ void MainWindow::trackButton(){
 
     ui->thinJointButton->setEnabled(!trackOn);
 }
-
 
 void MainWindow::controlButton(){
 
@@ -1239,7 +1222,6 @@ void MainWindow::controlButton(){
     ui->analyzeButton->setEnabled(!controlOn);
 }
 
-
 void MainWindow::emergencyButton(){
 
     emergencyStop = !emergencyStop;
@@ -1252,7 +1234,6 @@ void MainWindow::emergencyButton(){
         ui->emergencyButton->setIcon(emergencyOnIcon);
     }
 }
-
 
 void MainWindow::thinJointButton(){
 
@@ -1276,7 +1257,6 @@ void MainWindow::thinJointButton(){
     }
 
 }
-
 
 void MainWindow::zControlButton(){
 
@@ -1304,7 +1284,6 @@ void MainWindow::zControlButton(){
         ui->zControlButton->setStyleSheet("color: rgb(0, 0, 0)");
     }
 }
-
 
 void MainWindow::processImage(){
 
@@ -1441,7 +1420,6 @@ void MainWindow::processImage(){
 
 }
 
-
 void MainWindow::processStandardHT(){
 
     if ( !imageGetter->imageList.isEmpty() ){
@@ -1471,7 +1449,6 @@ void MainWindow::processStandardHT(){
         iprocess->detectPrimaryVoid();                          // decide primary void line & corners/center
     }
 }
-
 
 void MainWindow::processSubImageVoidness(){
 
@@ -1547,7 +1524,6 @@ void MainWindow::processSubImageVoidness(){
     }
 }
 
-
 void MainWindow::processSubImageSolidness(){
 
     if ( !imageGetter->imageList.isEmpty() ){
@@ -1567,7 +1543,6 @@ void MainWindow::processSubImageSolidness(){
     }
 }
 
-
 void MainWindow::processThinJoint(){
 
     if ( !imageGetter->imageList.isEmpty() ){
@@ -1582,7 +1557,6 @@ void MainWindow::processThinJoint(){
         iprocess->detectThinJointCenter(3, 31);
     }
 }
-
 
 void MainWindow::processContrastDetection(){
 
@@ -1665,8 +1639,6 @@ void MainWindow::processEdgeDetection(){
     }
 }
 
-
-
 void MainWindow::processLineDetection(){
 
     if ( !imageGetter->imageList.isEmpty() ){
@@ -1711,7 +1683,6 @@ void MainWindow::processLineDetection(){
         }
     }
 }
-
 
 void MainWindow::processSolidnessCanny(){
 
@@ -1762,7 +1733,6 @@ void MainWindow::processSolidnessCanny(){
     }
 }
 
-
 int MainWindow::timeDifference(int first, int last){
 
     if (last >= first)
@@ -1770,7 +1740,6 @@ int MainWindow::timeDifference(int first, int last){
     else
         return (1000 - first + last);
 }
-
 
 int MainWindow::timeDifference(QTime first, QTime second){
 
@@ -1782,18 +1751,15 @@ int MainWindow::timeDifference(QTime first, QTime second){
         return (86400000 - firstMS + secondMS);
 }
 
-
 QString MainWindow::timeString(){
 
     return (QDateTime::currentDateTime().toString("hh:mm:ss") + " ");
 }
 
-
 int MainWindow::calcTotalMsec(int hour, int min, int second, int msec){
 
     return ( (hour * 3600 + min * 60 + second) * 1000 + msec );
 }
-
 
 void MainWindow::addAxis(){
 
@@ -1808,14 +1774,12 @@ void MainWindow::addAxis(){
     }
 }
 
-
 void MainWindow::clearTrack(){
 
     scene->clear();
     addAxis();
     ui->trackView->show();
 }
-
 
 void MainWindow::drawTrack(){
 
@@ -1836,7 +1800,6 @@ void MainWindow::drawTrack(){
     ui->trackView->show();
 }
 
-
 void MainWindow::target2Left(){
 
     offsetXpos--;
@@ -1850,7 +1813,6 @@ void MainWindow::target2Left(){
     repaintGuide();
 }
 
-
 void MainWindow::target2Right(){
 
     offsetXpos++;
@@ -1863,7 +1825,6 @@ void MainWindow::target2Right(){
 
     repaintGuide();
 }
-
 
 void MainWindow::repaintGuide(){
 
@@ -1900,14 +1861,12 @@ void MainWindow::repaintGuide(){
     ui->guideFrame->setVisible(showGuide);
 }
 
-
 void MainWindow::repaintDevTrend(){
 
     // updata dev. trend for error limit value changes
     if (!trackOn) clearTrack();
     if (deviationData.size() != 0) drawTrack();
 }
-
 
 void MainWindow::calcZParameters(){
 
@@ -1917,7 +1876,6 @@ void MainWindow::calcZParameters(){
     distanceDownStart = distanceTarget - distanceDownTol;
     distanceDownStop = distanceTarget - distanceDownTol * zStartStopRate;
 }
-
 
 void MainWindow::showSettingsForm(){
 
@@ -1932,7 +1890,6 @@ void MainWindow::showSettingsForm(){
     }
 }
 
-
 void MainWindow::showSetupForm(){
 
     if (setupPWDOK){
@@ -1946,13 +1903,11 @@ void MainWindow::showSetupForm(){
     }
 }
 
-
 void MainWindow::infoButton(){
 
     infoForm *infoGui = new infoForm(this);
     infoGui->show();
 }
-
 
 void MainWindow::exitButton(){
 
@@ -1960,12 +1915,10 @@ void MainWindow::exitButton(){
     exitGui->show();
 }
 
-
 void MainWindow::clearMsgBoxButton(){
 
     ui->plainTextEdit->clear();
 }
-
 
 void MainWindow::helpButton(){
 
@@ -1973,13 +1926,11 @@ void MainWindow::helpButton(){
     helpGui->show();
 }
 
-
 void MainWindow::showLicenseDialog(){
 
     licenseDialog *licenseGui = new licenseDialog(lic, this);
     licenseGui->show();
 }
-
 
 void MainWindow::showReport(){
 
@@ -2001,7 +1952,6 @@ void MainWindow::showReport(){
         reportGui->show();
     }
 }
-
 
 void MainWindow::readSettings(){
 
@@ -2143,7 +2093,6 @@ void MainWindow::readSettings(){
     }
 }
 
-
 void MainWindow::writeSettings(){
 
     settings->beginGroup("kamera");
@@ -2232,7 +2181,6 @@ void MainWindow::writeSettings(){
     settings->sync();
 }
 
-
 bool MainWindow::writeReport(){
 
     QString fname = "rapor/rapor_" + QDateTime::currentDateTime().toString("yyyy_MMM_dd") + ".txt";
@@ -2248,12 +2196,10 @@ bool MainWindow::writeReport(){
     return true;
 }
 
-
 void MainWindow::closeEvent(QCloseEvent*){
 
     qApp->quit();
 }
-
 
 void MainWindow::playCam(){
 
@@ -2328,7 +2274,6 @@ void MainWindow::playCam(){
     }
 }
 
-
 void MainWindow::timeEdit(){
 
     timeLimit = ui->timeEdit->text().toInt();
@@ -2339,7 +2284,6 @@ void MainWindow::timeEdit(){
     }
 
 }
-
 
 void MainWindow::videoButton(){
 
@@ -2352,7 +2296,6 @@ void MainWindow::videoButton(){
 
 }
 
-
 void MainWindow::saveFinished(){
 
     ui->plainTextEdit->appendPlainText(timeString() + "Video kaydedildi!");
@@ -2360,12 +2303,10 @@ void MainWindow::saveFinished(){
     ui->videoButton->setIcon(videoSaveEnabled);
 }
 
-
 void MainWindow::testEdit(){
 
     distanceRaw = ui->testEdit->text().toInt();
 }
-
 
 void MainWindow::testButton(){
 
@@ -2379,12 +2320,10 @@ void MainWindow::testButton(){
     ui->imageFrame->setPixmap( QPixmap::fromImage( imageFile ));
 }
 
-
 void MainWindow::on_setupButton_clicked(){
 
     showSetupForm();
 }
-
 
 MainWindow::~MainWindow(){
 
@@ -2394,13 +2333,6 @@ MainWindow::~MainWindow(){
 //    delete settings;
     delete ui;
 }
-
-
-
-
-
-
-
 
 
 /*

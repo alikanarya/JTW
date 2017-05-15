@@ -83,6 +83,73 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     ui->cannyThinningBox->setChecked( w->cannyThinning );
 }
 
+void setupForm::processSolidnessCanny(){
+
+    if ( w->play && !w->imageGetter->imageList.isEmpty() ){
+        target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+    }
+
+    if ( !w->play &&  imageLoadedFromFile){
+        target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+    }
+
+    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ){
+
+        iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
+
+        iprocess->thetaMin = thetaMin;
+        iprocess->thetaMax = thetaMax;
+        iprocess->thetaStep = thetaStep;
+
+        iprocess->prepareCannyArrays();
+        iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
+
+        for (int i = 0; i < 4 ; i++){
+
+            iprocess->constructValueMatrix( iprocess->imgOrginal, i );
+
+            iprocess->gaussianBlur();
+
+            iprocess->detectEdgeSobelwDirections();
+
+            iprocess->nonMaximumSuppression(w->cannyThinning);
+
+            iprocess->cannyThresholding(true);
+
+            iprocess->edgeTracing();
+
+            iprocess->assignEdgeMap();
+        }
+
+        iprocess->mergeEdgeMaps();
+
+        for (int y = 0; y < iprocess->edgeHeight; y++)
+            for (int x = 0; x < iprocess->edgeWidth; x++){
+                if (iprocess->edgeMapMatrix[y][x])
+                    iprocess->edgeMatrix[y][x]=255;
+                else
+                    iprocess->edgeMatrix[y][x]=0;
+            }
+
+        if (w->thinJointAlgoActive){
+            iprocess->centerX = 0;
+            iprocess->centerY = 0;
+        } else {
+            iprocess->centerX = iprocess->edgeWidth / 2;
+            iprocess->centerY = 0;
+        }
+        iprocess->houghTransformEdgeMap();
+
+        iprocess->calculateHoughMaxs(houghLineNo);              // get max voted line(s)
+
+        if (w->thinJointAlgoActive)
+            iprocess->thinCornerNum = 1;
+        iprocess->detectMainEdges(w->thinJointAlgoActive, false);
+
+        //iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
+    }
+}
 
 void setupForm::processStandardHT(){
 
@@ -134,7 +201,6 @@ void setupForm::processStandardHT(){
     }
 
 }
-
 
 void setupForm::processSubImageVoidness(){
 
@@ -267,7 +333,6 @@ void setupForm::processSubImageVoidness(){
     }
 }
 
-
 void setupForm::processSubImageSolidness(){
 
     target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight ); // take target image
@@ -296,7 +361,6 @@ void setupForm::processSubImageSolidness(){
         iprocess->saveList(iprocess->secondaryGroup, "data/secondaryGroup.csv");
         // */
 }
-
 
 void setupForm::captureButton(){
 
@@ -338,8 +402,14 @@ void setupForm::captureButton(){
 
         if (!w->subImageProcessingSwitch) {
 
-            processStandardHT();
-            //processSolidnessCanny();
+            switch ( algorithmType ) {
+                case 0:
+                    processSolidnessCanny();
+                    break;
+                case 1:
+                    processStandardHT();
+                    break;
+            }
             //ui->plainTextEdit->appendPlainText(QString::number(iprocess->thetaMin)+","+QString::number(iprocess->thetaMax)+","+QString::number(iprocess->thetaStep));
 
         } else {
@@ -483,7 +553,6 @@ void setupForm::captureButton(){
 
 }
 
-
 bool setupForm::saveButton(){
 
     bool saveStatus = true;
@@ -549,7 +618,6 @@ bool setupForm::saveButton(){
     return saveStatus;
 }
 
-
 void setupForm::getParameters(){
 
     thetaMin = w->thetaMin;
@@ -589,7 +657,6 @@ void setupForm::clearButton(){
     ui->plainTextEdit->clear();
 }
 
-
 void setupForm::subImageCheck(){
 
     w->subImageProcessingSwitch = ui->checkSubImage->isChecked();
@@ -598,7 +665,6 @@ void setupForm::subImageCheck(){
     ui->editHoughThetaStepSub->setEnabled( ui->checkSubImage->isChecked() );
     ui->subTypeBox->setEnabled( ui->checkSubImage->isChecked() );
 }
-
 
 void setupForm::subType(){
 
@@ -611,7 +677,6 @@ void setupForm::subType(){
             break;
     }
 }
-
 
 void setupForm::saveExitButton(){
 
@@ -649,60 +714,50 @@ void setupForm::hardControlStartBox(){
     ui->readMachineStatusBox->setChecked( w->readMachineStatus );
 }
 
-
 void setupForm::widthControl(){
 
     w->jointWidthControlActive = ui->widthControlBox->isChecked();
 }
-
 
 void setupForm::readMachineStatusBox(){
 
     w->readMachineStatus = ui->readMachineStatusBox->isChecked();
 }
 
-
 void setupForm::readDistanceBox(){
 
     w->readDistance = ui->readDistanceBox->isChecked();
 }
-
 
 void setupForm::dynamicAlgoBox(){
 
     w->dynamicAlgo = ui->dynamicAlgoBox->isChecked();
 }
 
-
 void setupForm::readWeldSeamBox(){
 
     w->readWeldSeam = ui->readWeldSeamBox->isChecked();
 }
-
 
 void setupForm::timeControlBox(){
 
     w->timeControl = ui->timeControlBox->isChecked();
 }
 
-
 void setupForm::lineDetectionBox(){
 
     w->lineDetection = ui->lineDetectionBox->isChecked();
 }
-
 
 void setupForm::editLineScore(){
 
     w->lineScoreLimit = ui->editLineScore->text().toInt();
 }
 
-
 void setupForm::exitButton(){
 
     this->close();
 }
-
 
 setupForm::~setupForm(){
 
@@ -747,74 +802,6 @@ setupForm::~setupForm(){
 
     if ( w->lineDetection )
         w->clearTrack();
-}
-
-void setupForm::processSolidnessCanny(){
-
-    if ( w->play && !w->imageGetter->imageList.isEmpty() ){
-        target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
-    }
-
-    if ( !w->play &&  imageLoadedFromFile){
-        target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
-    }
-
-    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ){
-
-        iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
-        iprocessInitSwitch = true;
-
-        iprocess->thetaMin = thetaMin;
-        iprocess->thetaMax = thetaMax;
-        iprocess->thetaStep = thetaStep;
-
-        iprocess->prepareCannyArrays();
-        iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
-
-        for (int i = 0; i < 4 ; i++){
-
-            iprocess->constructValueMatrix( iprocess->imgOrginal, i );
-
-            iprocess->gaussianBlur();
-
-            iprocess->detectEdgeSobelwDirections();
-
-            iprocess->nonMaximumSuppression(w->cannyThinning);
-
-            iprocess->cannyThresholding(true);
-
-            iprocess->edgeTracing();
-
-            iprocess->assignEdgeMap();
-        }
-
-        iprocess->mergeEdgeMaps();
-
-        for (int y = 0; y < iprocess->edgeHeight; y++)
-            for (int x = 0; x < iprocess->edgeWidth; x++){
-                if (iprocess->edgeMapMatrix[y][x])
-                    iprocess->edgeMatrix[y][x]=255;
-                else
-                    iprocess->edgeMatrix[y][x]=0;
-            }
-
-        if (w->thinJointAlgoActive){
-            iprocess->centerX = 0;
-            iprocess->centerY = 0;
-        } else {
-            iprocess->centerX = iprocess->edgeWidth / 2;
-            iprocess->centerY = 0;
-        }
-        iprocess->houghTransformEdgeMap();
-
-        iprocess->calculateHoughMaxs(houghLineNo);              // get max voted line(s)
-
-        if (w->thinJointAlgoActive)
-            iprocess->thinCornerNum = 1;
-        iprocess->detectMainEdges(w->thinJointAlgoActive, false);
-
-        //iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
-    }
 }
 
 void setupForm::on_captureButton_2_clicked(){
@@ -946,8 +933,11 @@ void setupForm::on_cannyThinningBox_clicked(){
 
 void setupForm::on_algorithmBox_currentIndexChanged(int index){
 
+    algorithmType = index;
 }
-        //fileName = savePath + "t" + QString::number(i) + "_houghlines" + ".csv";
+
+
+//fileName = savePath + "t" + QString::number(i) + "_houghlines" + ".csv";
         //iprocessSub[i]->saveMatrix(iprocessSub[i]->houghLines, 3, iprocessSub[i]->houghLineNo, fileName);
 
         //iprocessSub[i]->calcAvgDistAndAngleOfMajors();
