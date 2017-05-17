@@ -802,13 +802,14 @@ setupForm::~setupForm(){
 
     if ( w->lineDetection )
         w->clearTrack();
+
 }
 
 void setupForm::on_captureButton_2_clicked(){
 
     w->loadedFileNamewPath = QFileDialog::getOpenFileName(this,
-        tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
-        //tr("Open Image"), "C:/xampp/htdocs/images/aygaz", tr("Image Files (*.png *.jpg *.bmp)"));
+        //tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
+        tr("Open Image"), "C:/xampp/htdocs/images", tr("Image Files (*.png *.jpg *.bmp)"));
 
 
     if (!w->loadedFileNamewPath.isEmpty() && !w->loadedFileNamewPath.isNull()){
