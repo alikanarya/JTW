@@ -48,7 +48,7 @@ public:
     //bool cannyThinning;
     //int gaussianSize = 5;
     //float stdDev = 1.4;
-    int algorithmType = 1;
+    int algorithmType = 0;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
