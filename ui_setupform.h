@@ -111,6 +111,7 @@ public:
     QSlider *gaussSDevSlider;
     QLabel *labelGaussSDev;
     QComboBox *algorithmBox;
+    QCheckBox *thinJointBox;
 
     void setupUi(QWidget *setupForm)
     {
@@ -538,6 +539,15 @@ public:
         algorithmBox = new QComboBox(setupForm);
         algorithmBox->setObjectName(QStringLiteral("algorithmBox"));
         algorithmBox->setGeometry(QRect(220, 570, 111, 22));
+        thinJointBox = new QCheckBox(setupForm);
+        thinJointBox->setObjectName(QStringLiteral("thinJointBox"));
+        thinJointBox->setGeometry(QRect(360, 460, 161, 17));
+        QFont font3;
+        font3.setPointSize(10);
+        font3.setBold(true);
+        font3.setWeight(75);
+        thinJointBox->setFont(font3);
+        thinJointBox->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -669,7 +679,7 @@ public:
         label_16->setText(QApplication::translate("setupForm", "(%)", 0));
         captureButton_2->setText(QApplication::translate("setupForm", "Resim Y\303\274kle", 0));
 #ifndef QT_NO_TOOLTIP
-        cannyThinningBox->setToolTip(QApplication::translate("setupForm", "\304\260KA ya Otomaik Ge\303\247", 0));
+        cannyThinningBox->setToolTip(QString());
 #endif // QT_NO_TOOLTIP
         cannyThinningBox->setText(QApplication::translate("setupForm", "Canny \304\260nceltme", 0));
         labelBrightness->setText(QApplication::translate("setupForm", "0", 0));
@@ -686,6 +696,10 @@ public:
          << QApplication::translate("setupForm", "Canny", 0)
          << QApplication::translate("setupForm", "Hough Transform", 0)
         );
+#ifndef QT_NO_TOOLTIP
+        thinJointBox->setToolTip(QApplication::translate("setupForm", "Lazersiz D\303\274\305\237ey Kenar Takibi", 0));
+#endif // QT_NO_TOOLTIP
+        thinJointBox->setText(QApplication::translate("setupForm", "Lazersiz Takip", 0));
     } // retranslateUi
 
 };

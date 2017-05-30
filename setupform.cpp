@@ -81,6 +81,9 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     ui->gaussSDevSlider->setValue( (int)(w->stdDev*10) );
 
     ui->cannyThinningBox->setChecked( w->cannyThinning );
+
+    ui->thinJointBox->setChecked( w->thinJointAlgoActive );
+
 }
 
 void setupForm::processSolidnessCanny(){
@@ -144,10 +147,10 @@ void setupForm::processSolidnessCanny(){
         iprocess->calculateHoughMaxs(houghLineNo);              // get max voted line(s)
 
         if (w->thinJointAlgoActive)
-            iprocess->thinCornerNum = 1;
+            iprocess->thinCornerNum = 2;
         iprocess->detectMainEdges(w->thinJointAlgoActive, false);
 
-        //iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
+//        iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
     }
 }
 
@@ -188,6 +191,7 @@ void setupForm::processStandardHT(){
         iprocess->houghTransform();                             // detect lines in edge image
 
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+/*
         iprocess->calcAvgDistAndAngle( houghLineNo );           // calc. avg. distance and theta
         voteAvg = iprocess->calcVoteAvg();                      // avg. value of max voted line(s)
 
@@ -198,6 +202,8 @@ void setupForm::processStandardHT(){
 
         iprocess->voidThreshold = voidThreshold;                // void threshold to decide max void as primary
         iprocess->detectPrimaryVoid();                          // decide primary void line & corners/center
+*/
+        iprocess->detectLongestSolidLines(false, false);    // no averaging & edge matrix
     }
 
 }
@@ -517,8 +523,41 @@ void setupForm::captureButton(){
             edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
             ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
 
-            iprocess->constructHoughMatrixFindX();   // construct hough matrix = edge matrix + coded #houghLineNo lines
-            //iprocess->constructHoughMatrix();   // construct hough matrix = edge matrix + coded #houghLineNo lines
+            switch ( algorithmType ) {
+                case 0: // canny
+
+                if (w->thinJointAlgoActive){
+                    iprocess->constructHoughMatrixFindX();   // FOR THINJOINT - edge matrix + coded #houghLineNo lines
+                } else {
+                    iprocess->constructHoughMatrix();   // construct hough matrix = edge matrix + coded #houghLineNo lines
+                }
+
+
+                break;
+
+                case 1: // hough transfrom
+
+                ui->plainTextEdit->appendPlainText("Bulunan major2Lines parametreleri:");
+                ui->plainTextEdit->appendPlainText("strX, strY, endX, endY, dist, açı, boy");
+
+                for (int i=0;i<iprocess->major2Lines.size();i++){
+                    message = QString::number(iprocess->major2Lines[i].start.x()) + ", " +
+                              QString::number(iprocess->major2Lines[i].start.y()) + ", " +
+                              QString::number(iprocess->major2Lines[i].end.x()) + ", " +
+                              QString::number(iprocess->major2Lines[i].end.y()) + ", " +
+                              QString::number(iprocess->major2Lines[i].distance) + ", " +
+                              QString::number(iprocess->major2Lines[i].angle) + ", " +
+                              QString::number(iprocess->major2Lines[i].length);
+                    ui->plainTextEdit->appendPlainText(message);
+                }
+                iprocess->constructHoughMatrixMajor2Lines();   // construct hough matrix = edge matrix + coded #houghLineNo lines
+
+                break;
+            }
+
+
+
+
             //iprocess->constructHoughMatrixPrimaryLines(iprocessLeft->primaryLine, iprocessRight->primaryLine, tCenterX);
             hough = iprocess->getImage( iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight );     // produce hough image
             ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
@@ -526,6 +565,7 @@ void setupForm::captureButton(){
             iprocess->cornerImage();
             ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
 
+            /*
             ui->plainTextEdit->appendPlainText("Bulunan tüm boşluk parametreleri:");
             ui->plainTextEdit->appendPlainText("start.X, start.Y, end.X, end.Y, boy");
 
@@ -539,6 +579,7 @@ void setupForm::captureButton(){
                           QString::number(iprocess->voidSpace[i]->length);
                 ui->plainTextEdit->appendPlainText(message);
             }
+            */
 
        }
 
@@ -937,6 +978,21 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
     algorithmType = index;
 }
 
+void setupForm::on_thinJointBox_clicked(){
+
+    w->thinJointAlgoActive = ui->thinJointBox->isChecked();
+
+    if (w->thinJointAlgoActive){
+        thetaMin = w->thetaMinVerLine;
+        thetaMax = w->thetaMaxVerLine;
+    } else {
+        thetaMin = w->thetaMinHorLine;
+        thetaMax = w->thetaMaxHorLine;
+    }
+    ui->editHoughThetaMin->setText(QString::number(thetaMin));
+    ui->editHoughThetaMax->setText(QString::number(thetaMax));
+}
+
 
 //fileName = savePath + "t" + QString::number(i) + "_houghlines" + ".csv";
         //iprocessSub[i]->saveMatrix(iprocessSub[i]->houghLines, 3, iprocessSub[i]->houghLineNo, fileName);
@@ -1198,6 +1254,7 @@ void setupForm::processSubImageSolidness(){
     }
 }
 */
+
 
 
 

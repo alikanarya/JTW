@@ -1986,8 +1986,10 @@ void MainWindow::readSettings(){
             iprocessInterval = settings->value("ipi", _IPROCESS_INT).toInt();
             frameWidth = settings->value("frw", _FRAME_WIDTH).toInt();
             frameHeight = settings->value("frh", _FRAME_HEIGHT).toInt();
-            thetaMin = settings->value("tmn", _THETA_MIN).toInt();
-            thetaMax = settings->value("tmx", _THETA_MAX).toInt();
+            thetaMinVerLine = settings->value("tmnv", _THETA_MIN_VER).toInt();
+            thetaMaxVerLine = settings->value("tmxv", _THETA_MAX_VER).toInt();
+            thetaMinHorLine = settings->value("tmnh", _THETA_MIN_HOR).toInt();
+            thetaMaxHorLine = settings->value("tmxh", _THETA_MAX_HOR).toInt();
             thetaStep = settings->value("tst", _THETA_STEP).toFloat();
             subImageProcessingSwitch = settings->value("subi", _SUB_IPROCESS).toBool();
             subImageProcessingType = settings->value("subt", _SUB_TYPE).toInt();
@@ -2006,6 +2008,14 @@ void MainWindow::readSettings(){
                 errorStopLimitNeg = -1 * errorStopLimit;
 
             thinJointAlgoActive = settings->value("thin", _THIN_JOINT).toBool();
+            if (thinJointAlgoActive) {
+                thetaMin = thetaMinVerLine;
+                thetaMax = thetaMaxVerLine;
+            } else {
+                thetaMin = thetaMinHorLine;
+                thetaMax = thetaMaxHorLine;
+            }
+
             jointWidthControlActive = settings->value("widthctrl", _WIDTH_CONTROL).toBool();
 
             brightnessVal = settings->value("brightness", _BRIGHTNESS).toInt();
@@ -2053,8 +2063,11 @@ void MainWindow::readSettings(){
         iprocessInterval = _IPROCESS_INT;
         frameWidth = _FRAME_WIDTH;
         frameHeight = _FRAME_HEIGHT;
-        thetaMin = _THETA_MIN;
-        thetaMax = _THETA_MAX;
+        thetaMinVerLine = _THETA_MIN_VER;
+        thetaMaxVerLine = _THETA_MAX_VER;
+        thetaMinHorLine = _THETA_MIN_HOR;
+        thetaMaxHorLine = _THETA_MAX_HOR;
+
         thetaStep = _THETA_STEP;
         subImageProcessingSwitch = _SUB_IPROCESS;
         subImageProcessingType = _SUB_TYPE;
@@ -2072,6 +2085,14 @@ void MainWindow::readSettings(){
             errorStopLimitNeg = -1 * errorStopLimit;
 
         thinJointAlgoActive = _THIN_JOINT;
+        if (thinJointAlgoActive) {
+            thetaMin = thetaMinVerLine;
+            thetaMax = thetaMaxVerLine;
+        } else {
+            thetaMin = thetaMinHorLine;
+            thetaMax = thetaMaxHorLine;
+        }
+
         jointWidthControlActive = _WIDTH_CONTROL;
 
         brightnessVal = _BRIGHTNESS;
@@ -2134,8 +2155,10 @@ void MainWindow::writeSettings(){
         settings->setValue("ipi", QString::number(iprocessInterval));
         settings->setValue("frw", QString::number(frameWidth));
         settings->setValue("frh", QString::number(frameHeight));
-        settings->setValue("tmn", QString::number(thetaMin));
-        settings->setValue("tmx", QString::number(thetaMax));
+        settings->setValue("tmnv", QString::number(thetaMinVerLine));
+        settings->setValue("tmxv", QString::number(thetaMaxVerLine));
+        settings->setValue("tmnh", QString::number(thetaMinHorLine));
+        settings->setValue("tmxh", QString::number(thetaMaxHorLine));
         settings->setValue("tst", QString::number(thetaStep));
         QVariant subimagesw(subImageProcessingSwitch);
             settings->setValue("subi", subimagesw.toString());

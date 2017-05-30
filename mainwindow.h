@@ -8,8 +8,10 @@
 #define _IPROCESS_INT       1
 #define _FRAME_WIDTH        320
 #define _FRAME_HEIGHT       160
-#define _THETA_MIN          80
-#define _THETA_MAX          100
+#define _THETA_MIN_HOR      85
+#define _THETA_MAX_HOR      95
+#define _THETA_MIN_VER      0
+#define _THETA_MAX_VER      10
 #define _THETA_STEP         1.0
 #define _THETA_MIN_SUB      80
 #define _THETA_MAX_SUB      100
@@ -188,6 +190,8 @@ public:
     QImage targetArea;                  // target area image
     int iprocessInterval;
     int thetaMin, thetaMax;
+    int thetaMinHorLine, thetaMaxHorLine;   // for horizontal laser line
+    int thetaMinVerLine, thetaMaxVerLine;   // for vertical edge lines w/o laser
     float thetaStep;
     int thetaMinSub, thetaMaxSub;
     float thetaStepSub;

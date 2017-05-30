@@ -1302,7 +1302,7 @@
     </font>
    </property>
    <property name="toolTip">
-    <string>İKA ya Otomaik Geç</string>
+    <string/>
    </property>
    <property name="text">
     <string>Canny İnceltme</string>
@@ -1720,6 +1720,32 @@
      <string>Hough Transform</string>
     </property>
    </item>
+  </widget>
+  <widget class="QCheckBox" name="thinJointBox">
+   <property name="geometry">
+    <rect>
+     <x>360</x>
+     <y>460</y>
+     <width>161</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Lazersiz Düşey Kenar Takibi</string>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
+   </property>
+   <property name="text">
+    <string>Lazersiz Takip</string>
+   </property>
   </widget>
  </widget>
  <resources>
