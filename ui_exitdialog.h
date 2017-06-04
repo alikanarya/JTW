@@ -1,8 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'exitdialog.ui'
 **
-** Created: Sat 28. Jul 01:23:03 2012
-**      by: Qt User Interface Compiler version 4.7.0
+** Created by: Qt User Interface Compiler version 5.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -31,17 +30,17 @@ public:
     void setupUi(QDialog *exitDialog)
     {
         if (exitDialog->objectName().isEmpty())
-            exitDialog->setObjectName(QString::fromUtf8("exitDialog"));
+            exitDialog->setObjectName(QStringLiteral("exitDialog"));
         exitDialog->setWindowModality(Qt::WindowModal);
         exitDialog->resize(242, 90);
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QStringLiteral(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         exitDialog->setWindowIcon(icon);
         label = new QLabel(exitDialog);
-        label->setObjectName(QString::fromUtf8("label"));
+        label->setObjectName(QStringLiteral("label"));
         label->setGeometry(QRect(20, 10, 199, 31));
         QFont font;
-        font.setFamily(QString::fromUtf8("Arial"));
+        font.setFamily(QStringLiteral("Arial"));
         font.setPointSize(14);
         font.setBold(true);
         font.setItalic(false);
@@ -51,16 +50,16 @@ public:
         label->setFont(font);
         label->setAlignment(Qt::AlignCenter);
         acceptButton = new QPushButton(exitDialog);
-        acceptButton->setObjectName(QString::fromUtf8("acceptButton"));
+        acceptButton->setObjectName(QStringLiteral("acceptButton"));
         acceptButton->setGeometry(QRect(20, 50, 80, 25));
         QFont font1;
-        font1.setFamily(QString::fromUtf8("Arial"));
+        font1.setFamily(QStringLiteral("Arial"));
         font1.setPointSize(10);
         font1.setBold(true);
         font1.setWeight(75);
         acceptButton->setFont(font1);
         cancelButton = new QPushButton(exitDialog);
-        cancelButton->setObjectName(QString::fromUtf8("cancelButton"));
+        cancelButton->setObjectName(QStringLiteral("cancelButton"));
         cancelButton->setGeometry(QRect(140, 50, 80, 25));
         cancelButton->setFont(font1);
 
@@ -73,10 +72,10 @@ public:
 
     void retranslateUi(QDialog *exitDialog)
     {
-        exitDialog->setWindowTitle(QApplication::translate("exitDialog", "\303\207\304\261k\304\261\305\237 Onay\304\261", 0));//, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("exitDialog", "Program\304\261 Kapat?", 0));//, QApplication::UnicodeUTF8));
-        acceptButton->setText(QApplication::translate("exitDialog", "Evet", 0));//, QApplication::UnicodeUTF8));
-        cancelButton->setText(QApplication::translate("exitDialog", "Hay\304\261r", 0));//, QApplication::UnicodeUTF8));
+        exitDialog->setWindowTitle(QApplication::translate("exitDialog", "\303\207\304\261k\304\261\305\237 Onay\304\261", 0));
+        label->setText(QApplication::translate("exitDialog", "Program\304\261 Kapat?", 0));
+        acceptButton->setText(QApplication::translate("exitDialog", "Evet", 0));
+        cancelButton->setText(QApplication::translate("exitDialog", "Hay\304\261r", 0));
     } // retranslateUi
 
 };

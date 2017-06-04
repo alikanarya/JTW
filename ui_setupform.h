@@ -21,6 +21,7 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QWidget>
 
@@ -111,7 +112,9 @@ public:
     QSlider *gaussSDevSlider;
     QLabel *labelGaussSDev;
     QComboBox *algorithmBox;
-    QCheckBox *thinJointBox;
+    QRadioButton *radioLaser;
+    QRadioButton *radioWoLaser;
+    QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
     {
@@ -539,15 +542,19 @@ public:
         algorithmBox = new QComboBox(setupForm);
         algorithmBox->setObjectName(QStringLiteral("algorithmBox"));
         algorithmBox->setGeometry(QRect(220, 570, 111, 22));
-        thinJointBox = new QCheckBox(setupForm);
-        thinJointBox->setObjectName(QStringLiteral("thinJointBox"));
-        thinJointBox->setGeometry(QRect(360, 460, 161, 17));
-        QFont font3;
-        font3.setPointSize(10);
-        font3.setBold(true);
-        font3.setWeight(75);
-        thinJointBox->setFont(font3);
-        thinJointBox->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
+        radioLaser = new QRadioButton(setupForm);
+        laserGroup = new QButtonGroup(setupForm);
+        laserGroup->setObjectName(QStringLiteral("laserGroup"));
+        laserGroup->addButton(radioLaser);
+        radioLaser->setObjectName(QStringLiteral("radioLaser"));
+        radioLaser->setGeometry(QRect(870, 750, 103, 21));
+        radioLaser->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
+        radioLaser->setChecked(true);
+        radioWoLaser = new QRadioButton(setupForm);
+        laserGroup->addButton(radioWoLaser);
+        radioWoLaser->setObjectName(QStringLiteral("radioWoLaser"));
+        radioWoLaser->setGeometry(QRect(870, 780, 111, 21));
+        radioWoLaser->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -596,7 +603,7 @@ public:
         saveButton->setText(QApplication::translate("setupForm", "Se\303\247ilileri Kaydet", 0));
         checkSaveHoughLines->setText(QApplication::translate("setupForm", "\303\207izgi Matrixi", 0));
         checkSaveHoughSpace->setText(QApplication::translate("setupForm", "HSpace", 0));
-        editHoughLineNo->setInputMask(QApplication::translate("setupForm", "99", 0));
+        editHoughLineNo->setInputMask(QApplication::translate("setupForm", "999", 0));
         editHoughLineNo->setText(QApplication::translate("setupForm", "2", 0));
         label_6->setText(QApplication::translate("setupForm", "\303\207izgi Say\304\261s\304\261", 0));
         label_7->setText(QApplication::translate("setupForm", "E\305\237ik", 0));
@@ -696,10 +703,8 @@ public:
          << QApplication::translate("setupForm", "Canny", 0)
          << QApplication::translate("setupForm", "Hough Transform", 0)
         );
-#ifndef QT_NO_TOOLTIP
-        thinJointBox->setToolTip(QApplication::translate("setupForm", "Lazersiz D\303\274\305\237ey Kenar Takibi", 0));
-#endif // QT_NO_TOOLTIP
-        thinJointBox->setText(QApplication::translate("setupForm", "Lazersiz Takip", 0));
+        radioLaser->setText(QApplication::translate("setupForm", "Lazerli Takip", 0));
+        radioWoLaser->setText(QApplication::translate("setupForm", "Lazersiz Takip", 0));
     } // retranslateUi
 
 };

@@ -382,7 +382,7 @@
     </rect>
    </property>
    <property name="inputMask">
-    <string>99</string>
+    <string>999</string>
    </property>
    <property name="text">
     <string>2</string>
@@ -1721,24 +1721,36 @@
     </property>
    </item>
   </widget>
-  <widget class="QCheckBox" name="thinJointBox">
+  <widget class="QRadioButton" name="radioLaser">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>460</y>
-     <width>161</width>
-     <height>17</height>
+     <x>870</x>
+     <y>750</y>
+     <width>103</width>
+     <height>21</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>10</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
-   <property name="toolTip">
-    <string>Lazersiz Düşey Kenar Takibi</string>
+   <property name="text">
+    <string>Lazerli Takip</string>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <attribute name="buttonGroup">
+    <string notr="true">laserGroup</string>
+   </attribute>
+  </widget>
+  <widget class="QRadioButton" name="radioWoLaser">
+   <property name="geometry">
+    <rect>
+     <x>870</x>
+     <y>780</y>
+     <width>111</width>
+     <height>21</height>
+    </rect>
    </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(255, 0, 0);</string>
@@ -1746,6 +1758,9 @@
    <property name="text">
     <string>Lazersiz Takip</string>
    </property>
+   <attribute name="buttonGroup">
+    <string notr="true">laserGroup</string>
+   </attribute>
   </widget>
  </widget>
  <resources>
@@ -2045,4 +2060,7 @@
   <slot>lineDetectionBox()</slot>
   <slot>editLineScore()</slot>
  </slots>
+ <buttongroups>
+  <buttongroup name="laserGroup"/>
+ </buttongroups>
 </ui>

@@ -1,8 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'reportdialog.ui'
 **
-** Created: Sat 28. Jul 01:23:03 2012
-**      by: Qt User Interface Compiler version 4.7.0
+** Created by: Qt User Interface Compiler version 5.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -28,7 +27,7 @@ public:
     void setupUi(QDialog *reportDialog)
     {
         if (reportDialog->objectName().isEmpty())
-            reportDialog->setObjectName(QString::fromUtf8("reportDialog"));
+            reportDialog->setObjectName(QStringLiteral("reportDialog"));
         reportDialog->setWindowModality(Qt::WindowModal);
         reportDialog->resize(600, 360);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -39,16 +38,16 @@ public:
         reportDialog->setMinimumSize(QSize(600, 360));
         reportDialog->setMaximumSize(QSize(600, 360));
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QStringLiteral(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         reportDialog->setWindowIcon(icon);
         plainTextEdit = new QPlainTextEdit(reportDialog);
-        plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
+        plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
         plainTextEdit->setGeometry(QRect(10, 10, 581, 341));
         QFont font;
-        font.setFamily(QString::fromUtf8("Arial"));
+        font.setFamily(QStringLiteral("Arial"));
         font.setPointSize(10);
         plainTextEdit->setFont(font);
-        plainTextEdit->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 127);"));
+        plainTextEdit->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 127);"));
 
         retranslateUi(reportDialog);
 
@@ -57,7 +56,7 @@ public:
 
     void retranslateUi(QDialog *reportDialog)
     {
-        reportDialog->setWindowTitle(QApplication::translate("reportDialog", "Rapor", 0));//, QApplication::UnicodeUTF8));
+        reportDialog->setWindowTitle(QApplication::translate("reportDialog", "Rapor", 0));
     } // retranslateUi
 
 };

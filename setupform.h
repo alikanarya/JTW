@@ -107,7 +107,8 @@ private slots:
     void on_gaussSDevSlider_sliderMoved(int position);
     void on_cannyThinningBox_clicked();
     void on_algorithmBox_currentIndexChanged(int index);
-    void on_thinJointBox_clicked();
+    void on_radioLaser_clicked();
+    void on_radioWoLaser_clicked();
 };
 
 #endif // SETUPFORM_H

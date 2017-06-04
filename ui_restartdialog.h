@@ -1,8 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'restartdialog.ui'
 **
-** Created: Sat 28. Jul 01:23:03 2012
-**      by: Qt User Interface Compiler version 4.7.0
+** Created by: Qt User Interface Compiler version 5.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -31,33 +30,33 @@ public:
     void setupUi(QDialog *restartDialog)
     {
         if (restartDialog->objectName().isEmpty())
-            restartDialog->setObjectName(QString::fromUtf8("restartDialog"));
+            restartDialog->setObjectName(QStringLiteral("restartDialog"));
         restartDialog->setWindowModality(Qt::WindowModal);
         restartDialog->resize(391, 223);
         QIcon icon;
-        icon.addFile(QString::fromUtf8(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        icon.addFile(QStringLiteral(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         restartDialog->setWindowIcon(icon);
         cancelButton = new QPushButton(restartDialog);
-        cancelButton->setObjectName(QString::fromUtf8("cancelButton"));
+        cancelButton->setObjectName(QStringLiteral("cancelButton"));
         cancelButton->setGeometry(QRect(240, 190, 80, 25));
         QFont font;
-        font.setFamily(QString::fromUtf8("Arial"));
+        font.setFamily(QStringLiteral("Arial"));
         font.setPointSize(10);
         font.setBold(true);
         font.setWeight(75);
         cancelButton->setFont(font);
         acceptButton = new QPushButton(restartDialog);
-        acceptButton->setObjectName(QString::fromUtf8("acceptButton"));
+        acceptButton->setObjectName(QStringLiteral("acceptButton"));
         acceptButton->setGeometry(QRect(70, 190, 80, 25));
         acceptButton->setFont(font);
         textEdit = new QTextEdit(restartDialog);
-        textEdit->setObjectName(QString::fromUtf8("textEdit"));
+        textEdit->setObjectName(QStringLiteral("textEdit"));
         textEdit->setGeometry(QRect(10, 10, 371, 161));
         QFont font1;
-        font1.setFamily(QString::fromUtf8("Arial"));
+        font1.setFamily(QStringLiteral("Arial"));
         font1.setPointSize(10);
         textEdit->setFont(font1);
-        textEdit->setStyleSheet(QString::fromUtf8("background-color: rgb(236, 233, 216);"));
+        textEdit->setStyleSheet(QStringLiteral("background-color: rgb(236, 233, 216);"));
         textEdit->setFrameShape(QFrame::NoFrame);
 
         retranslateUi(restartDialog);
@@ -72,11 +71,6 @@ public:
         restartDialog->setWindowTitle(QApplication::translate("restartDialog", "Dialog", 0));
         cancelButton->setText(QApplication::translate("restartDialog", "\304\260ptal", 0));
         acceptButton->setText(QApplication::translate("restartDialog", "Kabul", 0));
-/*
-        restartDialog->setWindowTitle(QApplication::translate("restartDialog", "Dialog", 0, QApplication::UnicodeUTF8));
-        cancelButton->setText(QApplication::translate("restartDialog", "\304\260ptal", 0, QApplication::UnicodeUTF8));
-        acceptButton->setText(QApplication::translate("restartDialog", "Kabul", 0, QApplication::UnicodeUTF8));
-*/
         textEdit->setHtml(QApplication::translate("restartDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -91,7 +85,6 @@ public:
 "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:600;\"></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin"
                         "-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600; color:#ff0000;\">EM\304\260N M\304\260S\304\260N\304\260Z !!!</span></p></body></html>", 0));
-//                      "-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600; color:#ff0000;\">EM\304\260N M\304\260S\304\260N\304\260Z !!!</span></p></body></html>", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
