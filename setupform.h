@@ -45,10 +45,15 @@ public:
     int voteThreshold, voteAvg;
     int voidThreshold;
     int tCenterX;
+    //int centerX,centerY;
+
     //bool cannyThinning;
     //int gaussianSize = 5;
     //float stdDev = 1.4;
+    bool thinJointAlgoActive;
     int algorithmType = 0;
+    int edgeDetectionState = 0; // 0:none, 1: sobel, 2: canny
+    int lineDetectAlgos = 0; // 0:none, 1: detectLongestSolidLines, 2: detectMainEdges, 3: detectPrimaryVoid
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -69,6 +74,7 @@ public slots:
     void subType();
 
     // image processing fns
+    void processImage();
     void processStandardHT();           // standard hough transform
     void processSubImageVoidness();     // sub image based on VOID areas
     void processSubImageSolidness();    // sub image based on SOLID lines
@@ -109,6 +115,8 @@ private slots:
     void on_algorithmBox_currentIndexChanged(int index);
     void on_radioLaser_clicked();
     void on_radioWoLaser_clicked();
+    void on_edgeDetectionBox_currentIndexChanged(int index);
+    void on_detecAlgoBox_currentIndexChanged(int index);
 };
 
 #endif // SETUPFORM_H

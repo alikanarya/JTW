@@ -114,6 +114,8 @@ public:
     QComboBox *algorithmBox;
     QRadioButton *radioLaser;
     QRadioButton *radioWoLaser;
+    QComboBox *edgeDetectionBox;
+    QComboBox *detecAlgoBox;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -121,14 +123,14 @@ public:
         if (setupForm->objectName().isEmpty())
             setupForm->setObjectName(QStringLiteral("setupForm"));
         setupForm->setWindowModality(Qt::WindowModal);
-        setupForm->resize(1349, 850);
+        setupForm->resize(1680, 850);
         QSizePolicy sizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(setupForm->sizePolicy().hasHeightForWidth());
         setupForm->setSizePolicy(sizePolicy);
         setupForm->setMinimumSize(QSize(1019, 635));
-        setupForm->setMaximumSize(QSize(1500, 850));
+        setupForm->setMaximumSize(QSize(1680, 850));
         setupForm->setContextMenuPolicy(Qt::DefaultContextMenu);
         QIcon icon;
         icon.addFile(QStringLiteral(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -155,7 +157,7 @@ public:
         labelHough->setScaledContents(true);
         labelAnalyze = new QLabel(setupForm);
         labelAnalyze->setObjectName(QStringLiteral("labelAnalyze"));
-        labelAnalyze->setGeometry(QRect(1010, 470, 320, 320));
+        labelAnalyze->setGeometry(QRect(1340, 100, 320, 320));
         labelAnalyze->setFrameShape(QFrame::Box);
         labelAnalyze->setScaledContents(true);
         label = new QLabel(setupForm);
@@ -172,7 +174,7 @@ public:
         label_4->setGeometry(QRect(1011, 80, 81, 16));
         label_5 = new QLabel(setupForm);
         label_5->setObjectName(QStringLiteral("label_5"));
-        label_5->setGeometry(QRect(1010, 450, 91, 16));
+        label_5->setGeometry(QRect(1340, 80, 91, 16));
         captureButton = new QPushButton(setupForm);
         captureButton->setObjectName(QStringLiteral("captureButton"));
         captureButton->setGeometry(QRect(470, 50, 91, 25));
@@ -195,7 +197,7 @@ public:
         checkSaveHough->setGeometry(QRect(1010, 430, 71, 17));
         checkSaveAnalyze = new QCheckBox(setupForm);
         checkSaveAnalyze->setObjectName(QStringLiteral("checkSaveAnalyze"));
-        checkSaveAnalyze->setGeometry(QRect(1010, 800, 71, 17));
+        checkSaveAnalyze->setGeometry(QRect(1340, 430, 71, 17));
         checkSaveMonoMatrix = new QCheckBox(setupForm);
         checkSaveMonoMatrix->setObjectName(QStringLiteral("checkSaveMonoMatrix"));
         checkSaveMonoMatrix->setGeometry(QRect(410, 430, 81, 17));
@@ -217,27 +219,27 @@ public:
         checkSaveHoughSpace->setGeometry(QRect(1240, 430, 81, 17));
         editHoughLineNo = new QLineEdit(setupForm);
         editHoughLineNo->setObjectName(QStringLiteral("editHoughLineNo"));
-        editHoughLineNo->setGeometry(QRect(140, 600, 42, 20));
+        editHoughLineNo->setGeometry(QRect(1510, 520, 42, 20));
         editHoughLineNo->setAlignment(Qt::AlignCenter);
         label_6 = new QLabel(setupForm);
         label_6->setObjectName(QStringLiteral("label_6"));
-        label_6->setGeometry(QRect(20, 600, 111, 21));
+        label_6->setGeometry(QRect(1390, 520, 111, 21));
         label_6->setFont(font);
         label_6->setFrameShape(QFrame::Box);
         label_6->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         label_7 = new QLabel(setupForm);
         label_7->setObjectName(QStringLiteral("label_7"));
-        label_7->setGeometry(QRect(20, 630, 111, 21));
+        label_7->setGeometry(QRect(1390, 550, 111, 21));
         label_7->setFont(font);
         label_7->setFrameShape(QFrame::Box);
         label_7->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         editHoughThreshold = new QLineEdit(setupForm);
         editHoughThreshold->setObjectName(QStringLiteral("editHoughThreshold"));
-        editHoughThreshold->setGeometry(QRect(140, 630, 42, 20));
+        editHoughThreshold->setGeometry(QRect(1510, 550, 42, 20));
         editHoughThreshold->setAlignment(Qt::AlignCenter);
         labelVoteAvg = new QLabel(setupForm);
         labelVoteAvg->setObjectName(QStringLiteral("labelVoteAvg"));
-        labelVoteAvg->setGeometry(QRect(190, 630, 42, 20));
+        labelVoteAvg->setGeometry(QRect(1560, 550, 42, 20));
         labelVoteAvg->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelVoteAvg->setFrameShape(QFrame::Box);
         labelVoteAvg->setAlignment(Qt::AlignCenter);
@@ -250,41 +252,41 @@ public:
         labelPrimaryLine->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
         editHoughThetaStep = new QLineEdit(setupForm);
         editHoughThetaStep->setObjectName(QStringLiteral("editHoughThetaStep"));
-        editHoughThetaStep->setGeometry(QRect(140, 690, 42, 20));
+        editHoughThetaStep->setGeometry(QRect(1510, 610, 42, 20));
         editHoughThetaStep->setAlignment(Qt::AlignCenter);
         label_8 = new QLabel(setupForm);
         label_8->setObjectName(QStringLiteral("label_8"));
-        label_8->setGeometry(QRect(20, 690, 111, 21));
+        label_8->setGeometry(QRect(1390, 610, 111, 21));
         label_8->setFont(font);
         label_8->setFrameShape(QFrame::Box);
         label_8->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         editHoughThetaMin = new QLineEdit(setupForm);
         editHoughThetaMin->setObjectName(QStringLiteral("editHoughThetaMin"));
-        editHoughThetaMin->setGeometry(QRect(140, 660, 42, 20));
+        editHoughThetaMin->setGeometry(QRect(1510, 580, 42, 20));
         editHoughThetaMin->setAlignment(Qt::AlignCenter);
         label_9 = new QLabel(setupForm);
         label_9->setObjectName(QStringLiteral("label_9"));
-        label_9->setGeometry(QRect(20, 660, 111, 21));
+        label_9->setGeometry(QRect(1390, 580, 111, 21));
         label_9->setFont(font);
         label_9->setFrameShape(QFrame::Box);
         label_9->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         editHoughThetaMax = new QLineEdit(setupForm);
         editHoughThetaMax->setObjectName(QStringLiteral("editHoughThetaMax"));
-        editHoughThetaMax->setGeometry(QRect(190, 660, 42, 20));
+        editHoughThetaMax->setGeometry(QRect(1560, 580, 42, 20));
         editHoughThetaMax->setAlignment(Qt::AlignCenter);
         plainTextEdit = new QPlainTextEdit(setupForm);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
-        plainTextEdit->setGeometry(QRect(620, 530, 321, 191));
+        plainTextEdit->setGeometry(QRect(610, 630, 581, 191));
         QFont font1;
         font1.setFamily(QStringLiteral("Tahoma"));
         plainTextEdit->setFont(font1);
         editVoidThreshold = new QLineEdit(setupForm);
         editVoidThreshold->setObjectName(QStringLiteral("editVoidThreshold"));
-        editVoidThreshold->setGeometry(QRect(140, 720, 42, 20));
+        editVoidThreshold->setGeometry(QRect(1510, 640, 42, 20));
         editVoidThreshold->setAlignment(Qt::AlignCenter);
         label_10 = new QLabel(setupForm);
         label_10->setObjectName(QStringLiteral("label_10"));
-        label_10->setGeometry(QRect(20, 720, 111, 21));
+        label_10->setGeometry(QRect(1390, 640, 111, 21));
         label_10->setFont(font);
         label_10->setFrameShape(QFrame::Box);
         label_10->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
@@ -382,17 +384,17 @@ public:
         widthControlBox->setFont(font2);
         label_15 = new QLabel(setupForm);
         label_15->setObjectName(QStringLiteral("label_15"));
-        label_15->setGeometry(QRect(620, 730, 231, 101));
+        label_15->setGeometry(QRect(1390, 720, 231, 101));
         label_15->setFont(font);
         label_15->setFrameShape(QFrame::Box);
         label_15->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         readMachineStatusBox = new QCheckBox(setupForm);
         readMachineStatusBox->setObjectName(QStringLiteral("readMachineStatusBox"));
-        readMachineStatusBox->setGeometry(QRect(630, 760, 201, 17));
+        readMachineStatusBox->setGeometry(QRect(1400, 750, 201, 17));
         readMachineStatusBox->setFont(font2);
         readDistanceBox = new QCheckBox(setupForm);
         readDistanceBox->setObjectName(QStringLiteral("readDistanceBox"));
-        readDistanceBox->setGeometry(QRect(630, 780, 201, 17));
+        readDistanceBox->setGeometry(QRect(1400, 770, 201, 17));
         readDistanceBox->setFont(font2);
         dynamicAlgoBox = new QCheckBox(setupForm);
         dynamicAlgoBox->setObjectName(QStringLiteral("dynamicAlgoBox"));
@@ -400,7 +402,7 @@ public:
         dynamicAlgoBox->setFont(font2);
         readWeldSeamBox = new QCheckBox(setupForm);
         readWeldSeamBox->setObjectName(QStringLiteral("readWeldSeamBox"));
-        readWeldSeamBox->setGeometry(QRect(630, 800, 201, 17));
+        readWeldSeamBox->setGeometry(QRect(1400, 790, 201, 17));
         readWeldSeamBox->setFont(font2);
         timeControlBox = new QCheckBox(setupForm);
         timeControlBox->setObjectName(QStringLiteral("timeControlBox"));
@@ -423,7 +425,7 @@ public:
         captureButton_2->setFont(font);
         cannyThinningBox = new QCheckBox(setupForm);
         cannyThinningBox->setObjectName(QStringLiteral("cannyThinningBox"));
-        cannyThinningBox->setGeometry(QRect(360, 720, 161, 17));
+        cannyThinningBox->setGeometry(QRect(1390, 680, 161, 17));
         cannyThinningBox->setFont(font2);
         brightnessSlider = new QSlider(setupForm);
         brightnessSlider->setObjectName(QStringLiteral("brightnessSlider"));
@@ -547,14 +549,20 @@ public:
         laserGroup->setObjectName(QStringLiteral("laserGroup"));
         laserGroup->addButton(radioLaser);
         radioLaser->setObjectName(QStringLiteral("radioLaser"));
-        radioLaser->setGeometry(QRect(870, 750, 103, 21));
+        radioLaser->setGeometry(QRect(1050, 460, 103, 21));
         radioLaser->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         radioLaser->setChecked(true);
         radioWoLaser = new QRadioButton(setupForm);
         laserGroup->addButton(radioWoLaser);
         radioWoLaser->setObjectName(QStringLiteral("radioWoLaser"));
-        radioWoLaser->setGeometry(QRect(870, 780, 111, 21));
+        radioWoLaser->setGeometry(QRect(1170, 460, 111, 21));
         radioWoLaser->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
+        edgeDetectionBox = new QComboBox(setupForm);
+        edgeDetectionBox->setObjectName(QStringLiteral("edgeDetectionBox"));
+        edgeDetectionBox->setGeometry(QRect(880, 430, 111, 22));
+        detecAlgoBox = new QComboBox(setupForm);
+        detecAlgoBox->setObjectName(QStringLiteral("detecAlgoBox"));
+        detecAlgoBox->setGeometry(QRect(1040, 490, 151, 22));
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -615,10 +623,10 @@ public:
         editHoughThetaStep->setText(QApplication::translate("setupForm", "1.0", 0));
         label_8->setText(QApplication::translate("setupForm", "A\303\247\304\261 \303\207\303\266z.", 0));
         editHoughThetaMin->setInputMask(QApplication::translate("setupForm", "999", 0));
-        editHoughThetaMin->setText(QApplication::translate("setupForm", "80", 0));
+        editHoughThetaMin->setText(QApplication::translate("setupForm", "87", 0));
         label_9->setText(QApplication::translate("setupForm", "A\303\247\304\261 Aral\304\261\304\237\304\261", 0));
         editHoughThetaMax->setInputMask(QApplication::translate("setupForm", "999", 0));
-        editHoughThetaMax->setText(QApplication::translate("setupForm", "100", 0));
+        editHoughThetaMax->setText(QApplication::translate("setupForm", "93", 0));
         plainTextEdit->setDocumentTitle(QString());
         plainTextEdit->setPlainText(QString());
         editVoidThreshold->setInputMask(QApplication::translate("setupForm", "99", 0));
@@ -705,6 +713,19 @@ public:
         );
         radioLaser->setText(QApplication::translate("setupForm", "Lazerli Takip", 0));
         radioWoLaser->setText(QApplication::translate("setupForm", "Lazersiz Takip", 0));
+        edgeDetectionBox->clear();
+        edgeDetectionBox->insertItems(0, QStringList()
+         << QApplication::translate("setupForm", "Yok", 0)
+         << QApplication::translate("setupForm", "Sobel", 0)
+         << QApplication::translate("setupForm", "Canny", 0)
+        );
+        detecAlgoBox->clear();
+        detecAlgoBox->insertItems(0, QStringList()
+         << QApplication::translate("setupForm", "Yok", 0)
+         << QApplication::translate("setupForm", "detectLongestSolidLines", 0)
+         << QApplication::translate("setupForm", "detectMainEdges", 0)
+         << QApplication::translate("setupForm", "detectPrimaryVoid", 0)
+        );
     } // retranslateUi
 
 };
