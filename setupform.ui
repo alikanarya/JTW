@@ -621,7 +621,7 @@
    <property name="geometry">
     <rect>
      <x>610</x>
-     <y>630</y>
+     <y>540</y>
      <width>581</width>
      <height>191</height>
     </rect>
@@ -746,48 +746,29 @@
    </property>
   </widget>
   <widget class="QCheckBox" name="checkSubImage">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>760</y>
-     <width>181</width>
+     <x>1210</x>
+     <y>770</y>
+     <width>101</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Alt İmaj Algoritması</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_11">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>810</y>
-     <width>71</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::Box</enum>
-   </property>
-   <property name="text">
-    <string>Açı Çöz.</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+    <string>Alt İmaj</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="editHoughThetaMinSub">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>780</y>
+     <x>1210</x>
+     <y>790</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -802,36 +783,14 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_12">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>780</y>
-     <width>71</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::Box</enum>
-   </property>
-   <property name="text">
-    <string>Açı Aralığı</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
-   </property>
-  </widget>
   <widget class="QLineEdit" name="editHoughThetaStepSub">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>810</y>
+     <x>1310</x>
+     <y>790</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -847,10 +806,13 @@
    </property>
   </widget>
   <widget class="QLineEdit" name="editHoughThetaMaxSub">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>780</y>
+     <x>1260</x>
+     <y>790</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -868,8 +830,8 @@
   <widget class="Line" name="line">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>750</y>
+     <x>630</x>
+     <y>520</y>
      <width>311</width>
      <height>16</height>
     </rect>
@@ -881,8 +843,8 @@
   <widget class="Line" name="line_2">
    <property name="geometry">
     <rect>
-     <x>9</x>
-     <y>830</y>
+     <x>30</x>
+     <y>600</y>
      <width>311</width>
      <height>16</height>
     </rect>
@@ -981,26 +943,6 @@
    <property name="alignment">
     <set>Qt::AlignCenter</set>
    </property>
-  </widget>
-  <widget class="QComboBox" name="subTypeBox">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>780</y>
-     <width>111</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>Boşluk Algo</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Doluluk Algo</string>
-    </property>
-   </item>
   </widget>
   <widget class="QCheckBox" name="zctrlBox">
    <property name="enabled">
@@ -1790,9 +1732,9 @@
   <widget class="QComboBox" name="detecAlgoBox">
    <property name="geometry">
     <rect>
-     <x>1040</x>
+     <x>1010</x>
      <y>490</y>
-     <width>151</width>
+     <width>201</width>
      <height>22</height>
     </rect>
    </property>
@@ -1816,6 +1758,57 @@
      <string>detectPrimaryVoid</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>detectThinJointCenter</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QSlider" name="mainEdgesSlider">
+   <property name="geometry">
+    <rect>
+     <x>1390</x>
+     <y>490</y>
+     <width>160</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>5</number>
+   </property>
+   <property name="singleStep">
+    <number>1</number>
+   </property>
+   <property name="value">
+    <number>1</number>
+   </property>
+   <property name="sliderPosition">
+    <number>1</number>
+   </property>
+   <property name="tracking">
+    <bool>true</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="invertedAppearance">
+    <bool>false</bool>
+   </property>
+   <property name="invertedControls">
+    <bool>false</bool>
+   </property>
+   <property name="tickPosition">
+    <enum>QSlider::TicksBothSides</enum>
+   </property>
+   <property name="tickInterval">
+    <number>1</number>
+   </property>
   </widget>
  </widget>
  <resources>
@@ -1915,22 +1908,6 @@
     <hint type="destinationlabel">
      <x>347</x>
      <y>357</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>subTypeBox</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>setupForm</receiver>
-   <slot>subType()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>622</x>
-     <y>384</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>671</x>
-     <y>383</y>
     </hint>
    </hints>
   </connection>

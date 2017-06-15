@@ -277,8 +277,8 @@ void MainWindow::showInfo(){
                 str += "AKTİF !!! : Dinamik Algoritma\n";
             else {
                 if (thinJointAlgoActive)
-                    str += "AKTİF !!! : İnce Kaynak Ağzı Uygulaması\n";
-                            //"İnce Kaynak Ağzı Uygulaması:\nLazerin V şekli teşkil edemediği ince ağızlarda kullanılır.\nLazeri kapatın ve\nkaynak ağzının düzgün karanlık siluet oluşturmasına\ndikkat edin!";
+                    str += "AKTİF !!! : Lazersiz Takip\n";
+                            //"Lazerin V şekli teşkil edemediği ince ağızlarda kullanılır.\nLazeri kapatın ve\nkaynak ağzının düzgün karanlık siluet oluşturmasına\ndikkat edin!";
             }
 
             if (zControlActive)
@@ -1420,8 +1420,8 @@ void MainWindow::processImage(){
 
 }
 
-void MainWindow::processStandardHT(){
-
+/**/void MainWindow::processStandardHT(){
+// SOBEL > detectPrimaryVoid
     if ( !imageGetter->imageList.isEmpty() ){
 
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
@@ -1450,8 +1450,8 @@ void MainWindow::processStandardHT(){
     }
 }
 
-void MainWindow::processSubImageVoidness(){
-
+/**/void MainWindow::processSubImageVoidness(){
+// VOID > VOID DETECTION -OBSOLETE-
     processStandardHT();
 
     if ( iprocessInitSwitch ) {
@@ -1524,8 +1524,8 @@ void MainWindow::processSubImageVoidness(){
     }
 }
 
-void MainWindow::processSubImageSolidness(){
-
+/**/void MainWindow::processSubImageSolidness(){
+// -OBSOLETE-
     if ( !imageGetter->imageList.isEmpty() ){
 
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
@@ -1588,8 +1588,8 @@ void MainWindow::processContrastDetection(){
     }
 }
 
-void MainWindow::processEdgeDetection(){
-
+/**/void MainWindow::processEdgeDetection(){
+// CANNY > detectMainEdges
     if ( !imageGetter->imageList.isEmpty() ){
 
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
@@ -1684,8 +1684,8 @@ void MainWindow::processLineDetection(){
     }
 }
 
-void MainWindow::processSolidnessCanny(){
-
+/**/void MainWindow::processSolidnessCanny(){
+// CANNY > detectLongestSolidLines
     if ( !imageGetter->imageList.isEmpty() ){
 
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
@@ -2358,143 +2358,5 @@ MainWindow::~MainWindow(){
 }
 
 
-/*
-void MainWindow::processSubImageSolidness(){
-
-    processStandardHT();
-
-    if ( iprocessInitSwitch ) {
-
-        if ( iprocess->detected ) {
-
-            int tCenterX = iprocess->trackCenterX;
-            int tWidth = frameWidth;
-
-            QImage targetLeft = targetArea.copy( 0, 0, tCenterX, frameHeight );
-            QImage targetRight = targetArea.copy( tCenterX, 0, tWidth - tCenterX, frameHeight );
-
-            // left image process
-            iprocessLeft = new imgProcess( targetLeft, targetLeft.width(), targetLeft.height() );    // new imgProcess object
-            iprocessLeft->toMono();                                         // convert target to mono
-            iprocessLeft->constructValueMatrix( iprocessLeft->imgMono );    // construct mono matrix
-            iprocessLeft->detectEdgeSobel();                                // detect edges of the mono image
-            iprocessLeft->thickenEdges();
-
-            iprocessLeft->thetaMin = thetaMinSub;
-            iprocessLeft->thetaMax = thetaMaxSub;
-            iprocessLeft->thetaStep = thetaStepSub;
-            iprocessLeft->houghTransform();                                 // detect lines in edge image
-            iprocessLeft->detectLongestSolidLines();
-
-
-            // right image process
-            iprocessRight = new imgProcess( targetRight, targetRight.width(), targetRight.height() );    // new imgProcess object
-            iprocessRight->toMono();                                        // convert target to mono
-            iprocessRight->constructValueMatrix( iprocessRight->imgMono );  // construct mono matrix
-            iprocessRight->detectEdgeSobel();                               // detect edges of the mono image
-            iprocessRight->thickenEdges();
-
-            iprocessRight->thetaMin = thetaMinSub;
-            iprocessRight->thetaMax = thetaMaxSub;
-            iprocessRight->thetaStep = thetaStepSub;
-            iprocessRight->houghTransform();                                // detect lines in edge image
-            iprocessRight->detectLongestSolidLines();
-
-
-            if ( iprocessLeft->primaryLine.length > iprocessRight->primaryLine.length  && iprocessRight->primaryLine.length != -1 ) {
-
-                // right image re-process
-                tCenterX = iprocessLeft->primaryLine.end.x() + 5;
-
-                targetRight = targetArea.copy( tCenterX, 0, tWidth - tCenterX, frameHeight );
-
-                delete iprocessRight;
-
-                iprocessRight = new imgProcess( targetRight, targetRight.width(), targetRight.height() );   // new imgProcess object
-                iprocessRight->toMono();                                        // convert target to mono
-                iprocessRight->constructValueMatrix( iprocessRight->imgMono );  // construct mono matrix
-                iprocessRight->detectEdgeSobel();                               // detect edges of the mono image
-                iprocessRight->thickenEdges();
-
-                iprocessRight->thetaMin = thetaMinSub;
-                iprocessRight->thetaMax = thetaMaxSub;
-                iprocessRight->thetaStep = thetaStepSub;
-                iprocessRight->houghTransform();                                // detect lines in edge image
-                iprocessRight->detectLongestSolidLines();
-
-            } else
-            if ( iprocessLeft->primaryLine.length < iprocessRight->primaryLine.length && iprocessLeft->primaryLine.length != -1 ) {
-
-                // left image re-process
-                tCenterX = iprocess->trackCenterX + iprocessRight->primaryLine.start.x() - 5;
-
-                targetLeft = targetArea.copy( 0, 0, tCenterX, frameHeight );
-
-                delete iprocessLeft;
-
-                iprocessLeft = new imgProcess( targetLeft, targetLeft.width(), targetLeft.height() );   // new imgProcess object
-                iprocessLeft->toMono();                                         // convert target to mono
-                iprocessLeft->constructValueMatrix( iprocessLeft->imgMono );    // construct mono matrix
-                iprocessLeft->detectEdgeSobel();                                // detect edges of the mono image
-                iprocessLeft->thickenEdges();
-
-                iprocessLeft->thetaMin = thetaMinSub;
-                iprocessLeft->thetaMax = thetaMaxSub;
-                iprocessLeft->thetaStep = thetaStepSub;
-                iprocessLeft->houghTransform();                                 // detect lines in edge image
-                iprocessLeft->detectLongestSolidLines();
-
-                // to recover for right image coord.
-                tCenterX = iprocess->trackCenterX;
-
-            } else {
-                // equality in lengths
-            }
-
-            // if no left line
-            if ( iprocessLeft->primaryLine.length == -1){
-
-                iprocessLeft->primaryLine.start.setX( 0 );
-                iprocessLeft->primaryLine.end.setX( 0 );
-
-                if ( iprocessRight->primaryLine.length != -1 ){
-                    iprocessLeft->primaryLine.start.setY( iprocessRight->primaryLine.start.y() );
-                    iprocessLeft->primaryLine.end.setY( iprocessRight->primaryLine.start.y() );
-                } else {
-                    iprocessLeft->primaryLine.start.setY( iprocessLeft->imageHeight / 2 );
-                    iprocessLeft->primaryLine.end.setY( iprocessLeft->imageHeight / 2 );
-                }
-            }
-
-            // if no right line
-            if ( iprocessRight->primaryLine.length == -1){
-
-                iprocessRight->primaryLine.start.setX( iprocessRight->imageWidth - 1 );
-                iprocessRight->primaryLine.end.setX( iprocessRight->imageWidth - 1 );
-
-                if ( iprocessLeft->primaryLine.length != -1 ){
-                    iprocessRight->primaryLine.start.setY( iprocessLeft->primaryLine.end.y() );
-                    iprocessRight->primaryLine.end.setY( iprocessLeft->primaryLine.end.y() );
-                } else {
-                    iprocessRight->primaryLine.start.setY( iprocessRight->imageHeight / 2 );
-                    iprocessRight->primaryLine.end.setY( iprocessRight->imageHeight / 2 );
-                }
-            }
-
-            iprocess->leftCornerX = iprocessLeft->primaryLine.end.x();
-            iprocess->leftCornerY = iprocessLeft->primaryLine.end.y();
-
-            iprocess->rightCornerX = tCenterX + iprocessRight->primaryLine.start.x();
-            iprocess->rightCornerY = iprocessRight->primaryLine.start.y();
-
-            iprocess->trackCenterX = ( iprocess->leftCornerX + iprocess->rightCornerX ) / 2;
-            iprocess->trackCenterY = ( iprocess->leftCornerY + iprocess->rightCornerY ) / 2;
-
-            delete iprocessLeft;
-            delete iprocessRight;
-        }
-    }
-}
-*/
 
 

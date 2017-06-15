@@ -45,7 +45,10 @@ public:
     int voteThreshold, voteAvg;
     int voidThreshold;
     int tCenterX;
+    int mainEdgesNumber = 1;
     //int centerX,centerY;
+    bool matrixFlag = false;
+    bool averaging = false;
 
     //bool cannyThinning;
     //int gaussianSize = 5;
@@ -54,6 +57,7 @@ public:
     int algorithmType = 0;
     int edgeDetectionState = 0; // 0:none, 1: sobel, 2: canny
     int lineDetectAlgos = 0; // 0:none, 1: detectLongestSolidLines, 2: detectMainEdges, 3: detectPrimaryVoid
+    bool subImageProcessingSwitch;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -71,14 +75,14 @@ public slots:
     void saveExitButton();      // transfer paramteres to mainwindow
     void exitButton();          // exit without changing parameters
     void subImageCheck();       // sub image processing algorithm selection
-    void subType();
 
     // image processing fns
+    void edgeDetection(imgProcess *iprocess);
     void processImage();
-    void processStandardHT();           // standard hough transform
-    void processSubImageVoidness();     // sub image based on VOID areas
-    void processSubImageSolidness();    // sub image based on SOLID lines
-    void processSolidnessCanny();       // SOLID line analysis with canny edges
+    void Algo1(imgProcess *iprocess);   // LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines
+    void Algo2(imgProcess *iprocess);   // LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid
+    void Algo3(imgProcess *iprocess);   // woLASER: edge > houghTr > detectMainEdges
+    void Algo4(imgProcess *iprocess);   // woLASER: value > detectThinJointCenter
 
     void update();
 
@@ -117,6 +121,7 @@ private slots:
     void on_radioWoLaser_clicked();
     void on_edgeDetectionBox_currentIndexChanged(int index);
     void on_detecAlgoBox_currentIndexChanged(int index);
+    void on_mainEdgesSlider_valueChanged(int value);
 };
 
 #endif // SETUPFORM_H

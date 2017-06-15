@@ -70,9 +70,7 @@ public:
     QPushButton *exitButton;
     QPushButton *clearButton;
     QCheckBox *checkSubImage;
-    QLabel *label_11;
     QLineEdit *editHoughThetaMinSub;
-    QLabel *label_12;
     QLineEdit *editHoughThetaStepSub;
     QLineEdit *editHoughThetaMaxSub;
     QFrame *line;
@@ -81,7 +79,6 @@ public:
     QLabel *label_14;
     QLineEdit *editIPI;
     QLineEdit *editFPS;
-    QComboBox *subTypeBox;
     QCheckBox *zctrlBox;
     QCheckBox *hardControlStartBox;
     QCheckBox *widthControlBox;
@@ -116,6 +113,7 @@ public:
     QRadioButton *radioWoLaser;
     QComboBox *edgeDetectionBox;
     QComboBox *detecAlgoBox;
+    QSlider *mainEdgesSlider;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -276,7 +274,7 @@ public:
         editHoughThetaMax->setAlignment(Qt::AlignCenter);
         plainTextEdit = new QPlainTextEdit(setupForm);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
-        plainTextEdit->setGeometry(QRect(610, 630, 581, 191));
+        plainTextEdit->setGeometry(QRect(610, 540, 581, 191));
         QFont font1;
         font1.setFamily(QStringLiteral("Tahoma"));
         plainTextEdit->setFont(font1);
@@ -306,39 +304,31 @@ public:
         clearButton->setFont(font);
         checkSubImage = new QCheckBox(setupForm);
         checkSubImage->setObjectName(QStringLiteral("checkSubImage"));
-        checkSubImage->setGeometry(QRect(20, 760, 181, 17));
-        label_11 = new QLabel(setupForm);
-        label_11->setObjectName(QStringLiteral("label_11"));
-        label_11->setGeometry(QRect(20, 810, 71, 21));
-        label_11->setFont(font);
-        label_11->setFrameShape(QFrame::Box);
-        label_11->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+        checkSubImage->setEnabled(false);
+        checkSubImage->setGeometry(QRect(1210, 770, 101, 17));
         editHoughThetaMinSub = new QLineEdit(setupForm);
         editHoughThetaMinSub->setObjectName(QStringLiteral("editHoughThetaMinSub"));
-        editHoughThetaMinSub->setGeometry(QRect(110, 780, 42, 20));
+        editHoughThetaMinSub->setEnabled(false);
+        editHoughThetaMinSub->setGeometry(QRect(1210, 790, 42, 20));
         editHoughThetaMinSub->setAlignment(Qt::AlignCenter);
-        label_12 = new QLabel(setupForm);
-        label_12->setObjectName(QStringLiteral("label_12"));
-        label_12->setGeometry(QRect(20, 780, 71, 21));
-        label_12->setFont(font);
-        label_12->setFrameShape(QFrame::Box);
-        label_12->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         editHoughThetaStepSub = new QLineEdit(setupForm);
         editHoughThetaStepSub->setObjectName(QStringLiteral("editHoughThetaStepSub"));
-        editHoughThetaStepSub->setGeometry(QRect(110, 810, 42, 20));
+        editHoughThetaStepSub->setEnabled(false);
+        editHoughThetaStepSub->setGeometry(QRect(1310, 790, 42, 20));
         editHoughThetaStepSub->setAlignment(Qt::AlignCenter);
         editHoughThetaMaxSub = new QLineEdit(setupForm);
         editHoughThetaMaxSub->setObjectName(QStringLiteral("editHoughThetaMaxSub"));
-        editHoughThetaMaxSub->setGeometry(QRect(160, 780, 42, 20));
+        editHoughThetaMaxSub->setEnabled(false);
+        editHoughThetaMaxSub->setGeometry(QRect(1260, 790, 42, 20));
         editHoughThetaMaxSub->setAlignment(Qt::AlignCenter);
         line = new QFrame(setupForm);
         line->setObjectName(QStringLiteral("line"));
-        line->setGeometry(QRect(10, 750, 311, 16));
+        line->setGeometry(QRect(630, 520, 311, 16));
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
         line_2 = new QFrame(setupForm);
         line_2->setObjectName(QStringLiteral("line_2"));
-        line_2->setGeometry(QRect(9, 830, 311, 16));
+        line_2->setGeometry(QRect(30, 600, 311, 16));
         line_2->setFrameShape(QFrame::HLine);
         line_2->setFrameShadow(QFrame::Sunken);
         label_13 = new QLabel(setupForm);
@@ -362,9 +352,6 @@ public:
         editFPS->setObjectName(QStringLiteral("editFPS"));
         editFPS->setGeometry(QRect(480, 480, 42, 20));
         editFPS->setAlignment(Qt::AlignCenter);
-        subTypeBox = new QComboBox(setupForm);
-        subTypeBox->setObjectName(QStringLiteral("subTypeBox"));
-        subTypeBox->setGeometry(QRect(210, 780, 111, 22));
         zctrlBox = new QCheckBox(setupForm);
         zctrlBox->setObjectName(QStringLiteral("zctrlBox"));
         zctrlBox->setEnabled(false);
@@ -562,7 +549,22 @@ public:
         edgeDetectionBox->setGeometry(QRect(880, 430, 111, 22));
         detecAlgoBox = new QComboBox(setupForm);
         detecAlgoBox->setObjectName(QStringLiteral("detecAlgoBox"));
-        detecAlgoBox->setGeometry(QRect(1040, 490, 151, 22));
+        detecAlgoBox->setGeometry(QRect(1010, 490, 201, 22));
+        mainEdgesSlider = new QSlider(setupForm);
+        mainEdgesSlider->setObjectName(QStringLiteral("mainEdgesSlider"));
+        mainEdgesSlider->setGeometry(QRect(1390, 490, 160, 22));
+        mainEdgesSlider->setAutoFillBackground(false);
+        mainEdgesSlider->setMinimum(1);
+        mainEdgesSlider->setMaximum(5);
+        mainEdgesSlider->setSingleStep(1);
+        mainEdgesSlider->setValue(1);
+        mainEdgesSlider->setSliderPosition(1);
+        mainEdgesSlider->setTracking(true);
+        mainEdgesSlider->setOrientation(Qt::Horizontal);
+        mainEdgesSlider->setInvertedAppearance(false);
+        mainEdgesSlider->setInvertedControls(false);
+        mainEdgesSlider->setTickPosition(QSlider::TicksBothSides);
+        mainEdgesSlider->setTickInterval(1);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -571,7 +573,6 @@ public:
         QObject::connect(exitButton, SIGNAL(clicked()), setupForm, SLOT(exitButton()));
         QObject::connect(saveExitButton, SIGNAL(clicked()), setupForm, SLOT(saveExitButton()));
         QObject::connect(checkSubImage, SIGNAL(clicked()), setupForm, SLOT(subImageCheck()));
-        QObject::connect(subTypeBox, SIGNAL(currentIndexChanged(int)), setupForm, SLOT(subType()));
         QObject::connect(zctrlBox, SIGNAL(stateChanged(int)), setupForm, SLOT(zctrlBox()));
         QObject::connect(hardControlStartBox, SIGNAL(stateChanged(int)), setupForm, SLOT(hardControlStartBox()));
         QObject::connect(widthControlBox, SIGNAL(stateChanged(int)), setupForm, SLOT(widthControl()));
@@ -635,11 +636,9 @@ public:
         saveExitButton->setText(QApplication::translate("setupForm", "Kaydet ve \303\207\304\261k", 0));
         exitButton->setText(QApplication::translate("setupForm", "\303\207\304\261k", 0));
         clearButton->setText(QApplication::translate("setupForm", "Temizle", 0));
-        checkSubImage->setText(QApplication::translate("setupForm", "Alt \304\260maj Algoritmas\304\261", 0));
-        label_11->setText(QApplication::translate("setupForm", "A\303\247\304\261 \303\207\303\266z.", 0));
+        checkSubImage->setText(QApplication::translate("setupForm", "Alt \304\260maj", 0));
         editHoughThetaMinSub->setInputMask(QApplication::translate("setupForm", "999", 0));
         editHoughThetaMinSub->setText(QApplication::translate("setupForm", "80", 0));
-        label_12->setText(QApplication::translate("setupForm", "A\303\247\304\261 Aral\304\261\304\237\304\261", 0));
         editHoughThetaStepSub->setInputMask(QApplication::translate("setupForm", "9.9", 0));
         editHoughThetaStepSub->setText(QApplication::translate("setupForm", "1.0", 0));
         editHoughThetaMaxSub->setInputMask(QApplication::translate("setupForm", "999", 0));
@@ -650,11 +649,6 @@ public:
         editIPI->setText(QApplication::translate("setupForm", "3", 0));
         editFPS->setInputMask(QApplication::translate("setupForm", "99", 0));
         editFPS->setText(QApplication::translate("setupForm", "10", 0));
-        subTypeBox->clear();
-        subTypeBox->insertItems(0, QStringList()
-         << QApplication::translate("setupForm", "Bo\305\237luk Algo", 0)
-         << QApplication::translate("setupForm", "Doluluk Algo", 0)
-        );
         zctrlBox->setText(QApplication::translate("setupForm", "Y\303\274kseklik Kontrol\303\274", 0));
 #ifndef QT_NO_TOOLTIP
         hardControlStartBox->setToolTip(QApplication::translate("setupForm", "Makineden Kaynak Ba\305\237lang\304\261c\304\261", 0));
@@ -725,6 +719,7 @@ public:
          << QApplication::translate("setupForm", "detectLongestSolidLines", 0)
          << QApplication::translate("setupForm", "detectMainEdges", 0)
          << QApplication::translate("setupForm", "detectPrimaryVoid", 0)
+         << QApplication::translate("setupForm", "detectThinJointCenter", 0)
         );
     } // retranslateUi
 
