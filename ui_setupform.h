@@ -711,7 +711,8 @@ public:
         edgeDetectionBox->insertItems(0, QStringList()
          << QApplication::translate("setupForm", "Yok", 0)
          << QApplication::translate("setupForm", "Sobel", 0)
-         << QApplication::translate("setupForm", "Canny", 0)
+         << QApplication::translate("setupForm", "Canny4", 0)
+         << QApplication::translate("setupForm", "Canny1", 0)
         );
         detecAlgoBox->clear();
         detecAlgoBox->insertItems(0, QStringList()

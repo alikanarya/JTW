@@ -1725,7 +1725,12 @@
    </item>
    <item>
     <property name="text">
-     <string>Canny</string>
+     <string>Canny4</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Canny1</string>
     </property>
    </item>
   </widget>

@@ -96,7 +96,7 @@ void setupForm::edgeDetection(imgProcess *iprocess){
             averaging = false;
             matrixFlag = false;
             break;
-        case 2: // CANNY
+        case 2: // CANNY 4
             iprocess->prepareCannyArrays();
             iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
             for (int i = 0; i < 4 ; i++){
@@ -121,6 +121,26 @@ void setupForm::edgeDetection(imgProcess *iprocess){
             averaging = false;
             matrixFlag = false;
             break;
+        case 3: // CANNY 1
+            iprocess->prepareCannyArrays();
+            iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
+            iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
+            iprocess->gaussianBlur();
+            iprocess->detectEdgeSobelwDirections();
+            iprocess->nonMaximumSuppression(w->cannyThinning);
+            iprocess->cannyThresholding(true);
+            iprocess->edgeTracing();
+
+            for (int y = 0; y < iprocess->edgeHeight; y++)  // to display edge image
+                for (int x = 0; x < iprocess->edgeWidth; x++){
+                    if (iprocess->edgeMapMatrix[y][x])
+                        iprocess->edgeMatrix[y][x]=255;
+                    else
+                        iprocess->edgeMatrix[y][x]=0;
+                }
+            iprocess->houghTransformEdgeMap();
+            matrixFlag = false;
+            break;
     }
 
 }
@@ -136,6 +156,7 @@ void setupForm::Algo1(imgProcess *iprocess){
     iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
 
     iprocess->detectLongestSolidLines(averaging, matrixFlag);
+    algoPrerequestsOk = true;
 }
 
 void setupForm::Algo2(imgProcess *iprocess){
@@ -158,6 +179,7 @@ void setupForm::Algo2(imgProcess *iprocess){
 
     iprocess->voidThreshold = voidThreshold;                // void threshold to decide max void as primary
     iprocess->detectPrimaryVoid();                          // decide primary void line & corners/center
+    algoPrerequestsOk = true;
 }
 
 void setupForm::Algo3(imgProcess *iprocess){
@@ -167,8 +189,10 @@ void setupForm::Algo3(imgProcess *iprocess){
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
         iprocess->thinCornerNum = mainEdgesNumber;
         iprocess->detectMainEdges(thinJointAlgoActive, false);
+        algoPrerequestsOk = true;
     } else {
         ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
+        algoPrerequestsOk = false;
     }
 }
 
@@ -177,6 +201,36 @@ void setupForm::Algo4(imgProcess *iprocess){
 
     iprocess->constructValueMatrix( iprocess->imgOrginal );
     iprocess->detectThinJointCenter(3, 31);
+    algoPrerequestsOk = true;
+}
+
+void setupForm::Algo5(imgProcess *iprocess){
+// woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
+
+    iprocess->constructValueMatrix( iprocess->imgOrginal );
+    iprocess->constructContrastMatix(3);
+    iprocess->houghTransformContrast();;
+    iprocess->calculateHoughMaxs( 200 );            // get max voted line(s)
+    iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
+    //iprocess->constructContrastMatrixMajor2Lines();
+    iprocess->detectContrastCenter();
+    algoPrerequestsOk = true;
+}
+
+void setupForm::Algo6(imgProcess *iprocess){
+// woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
+
+    if (edgeDetectionState == 3) {
+        iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+        iprocess->thinCornerNum = 1;//mainEdgesNumber;
+        iprocess->detectMainEdges(thinJointAlgoActive, false);
+        iprocess->thickenEdgeMap(3);
+        iprocess->scoreLineCrossing(true);
+        algoPrerequestsOk = true;
+    } else {
+        ui->plainTextEdit->appendPlainText("Canny1 kenar tespiti algoritması seçilmelidir");
+        algoPrerequestsOk = false;
+    }
 }
 
 void setupForm::processImage(){
@@ -216,6 +270,8 @@ void setupForm::processImage(){
 
         edgeDetection(iprocess);
 
+        algoPrerequestsOk = false;
+
         if (thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
 
             switch ( algorithmType ) {
@@ -224,10 +280,16 @@ void setupForm::processImage(){
                 case 1: // MAIN EDGES
                     Algo3(iprocess);
                     break;
-                case 2: // THIN JOINT
+                case 2: // THIN JOINT - DARK AREA
                     Algo4(iprocess);
                     break;
-                case 3: // TRIAL
+                case 3: // CONTRAST
+                    Algo5(iprocess);
+                    break;
+                case 4: // LINE DETECTION WITH MAIN EDGES
+                    Algo6(iprocess);
+                    break;
+                case 5: // EXPERIMENTAL
                     break;
             }
 
@@ -236,34 +298,17 @@ void setupForm::processImage(){
             switch ( algorithmType ) {
                 case 0: // NONE
                     break;
-                case 1: // LONGEST SOLID LINE
+                case 1: // LONGEST SOLID LINES
                     Algo1(iprocess);
                     break;
                 case 2: // PRIMARY VOID
                     Algo2(iprocess);
                     break;
-                case 3: // TRIAL
+                case 3: // EXPERIMENTAL
                     break;
             }
         }
 
-
-        switch ( lineDetectAlgos ) {
-            case 0: // none
-                break;
-
-            case 1: // detectLongestSolidLines
-                break;
-
-            case 2: // detectMainEdges
-                break;
-
-            case 3: // detectPrimaryVoid
-                break;
-
-            case 4: // detectThinJointCenter
-                break;
-        }
 
     }
 
@@ -320,9 +365,6 @@ void setupForm::captureButton(){
 
 
         // UPDATE GUI
-        ui->labelTarget->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
-        ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->imgMono ) );
-
 
         QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
         ui->plainTextEdit->appendPlainText(message);
@@ -334,140 +376,100 @@ void setupForm::captureButton(){
                          QString::number(iprocess->rightCornerX) + " , " + QString::number(iprocess->rightCornerY) + " )";
         ui->plainTextEdit->appendPlainText(message);
 
-        if (thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
 
-            switch ( algorithmType ) {
-
-                case 0: // NONE
-                    break;
-                case 1: // MAIN EDGES
-                    break;
-                case 2: // THIN JOINT
-                    iprocess->cornerImage();
-                    ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
-                    break;
-                case 3: // TRIAL
-                    break;
-            }
-
-        } else {    // with laser - HORIZONTAL SEARCH
-
-            switch ( algorithmType ) {
-
-                case 0: // NONE
-                    break;
-                case 1: // LONGEST SOLID LINE
-                    if ( iprocess->primaryLineFound && iprocess->secondaryLineFound )
-                        iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[1], 0 );
-                    else
-                        if ( iprocess->primaryLineFound )
-                            iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[0], 0 );
-
-                    ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
-
-                    if ( iprocess->primaryLineFound ) {
-                        ui->plainTextEdit->appendPlainText("Ortalama Açı: " + QString::number(iprocess->angleAvg));
-                    }
-                    break;
-                case 2: // PRIMARY VOID
-                    break;
-                case 3: // TRIAL
-                    break;
-            }
-        }
+        ui->labelTarget->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
+        ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->imgMono ) );
 
         if ( edgeDetectionState != 0) {
-
             edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
             ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
+        }
 
-            if ( lineDetectAlgos != 0) {
+        if (algoPrerequestsOk) {
+            if (thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
 
-                if (thinJointAlgoActive){
-                    iprocess->constructHoughMatrixFindX();   // FOR THINJOINT - edge matrix + coded #houghLineNo lines
+                switch ( algorithmType ) {
 
-                    hough = iprocess->getImage( iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight );     // produce hough image
-                    ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
+                    case 0: // NONE
+                        break;
+                    case 1: // MAIN EDGES
+                        iprocess->constructHoughMatrixFindX();   // FOR THINJOINT - edge matrix + coded #houghLineNo lines
 
-                    iprocess->cornerImage();
-                    ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
-                } else {
-                    iprocess->constructHoughMatrixMajor2Lines();   // construct hough matrix = edge matrix + coded #houghLineNo lines
+                        hough = iprocess->getImage( iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight );     // produce hough image
+                        ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
 
-                    hough = iprocess->getImage( iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight );     // produce hough image
-                    ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
+                        iprocess->cornerImage();
+                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
+                        break;
+                    case 2: // THIN JOINT
+                        iprocess->cornerImage();
+                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
+                        break;
+                    case 3: // CONTRAST
+                        iprocess->constructContrastMatrixMajor2Lines();
+                        //iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_contrast_lines.csv" );
+                        hough = iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight);
+                        ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
 
-                    iprocess->cornerImage();
-                    ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
+                        iprocess->cornerImage();
+                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
+                        break;
+                    case 4: // LINE DETECTION WITH MAIN EDGES
+                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(1) ) );
+
+                        if ( iprocess->mainEdgeScorePercent > w->lineScoreLimit){
+                            ui->plainTextEdit->appendPlainText( "İz bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
+                        }
+                        break;
+                    case 5: // EXPERIMENTAL
+                        break;
                 }
 
+            } else {    // with laser - HORIZONTAL SEARCH
 
-            }
+                switch ( algorithmType ) {
 
-        } else {
+                    case 0: // NONE
+                        break;
+                    case 1: // LONGEST SOLID LINES
+                        if ( iprocess->primaryLineFound && iprocess->secondaryLineFound )
+                            iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[1], 0 );
+                        else
+                            if ( iprocess->primaryLineFound )
+                                iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[0], 0 );
 
-            switch ( lineDetectAlgos ) {
-                case 0: // none
-                    break;
-                case 1: // detectLongestSolidLines
-                    if (thinJointAlgoActive){
-                        //..
-                    } else {
+                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
 
-                    }
-                    break;
-                case 2: // detectMainEdges
-                    break;
-                case 3: // detectPrimaryVoid
-                    break;
-                case 4: // detectThinJointCenter
-                    break;
-            }
+                        if ( iprocess->primaryLineFound ) {
+                            ui->plainTextEdit->appendPlainText("Ortalama Açı: " + QString::number(iprocess->angleAvg));
+                        }
+                        break;
+                    case 2: // PRIMARY VOID
+                        ui->plainTextEdit->appendPlainText("Bulunan boşluk parametreleri:");
+                        ui->plainTextEdit->appendPlainText("start.X, start.Y, end.X, end.Y, boy");
 
-        }
+                        // void line information of primary (avg of max in that case) line
+                        for (int i=0;i<iprocess->voidSpace.size();i++){
 
-        if ( lineDetectAlgos != 0) {
+                            message = QString::number(iprocess->voidSpace[i]->start.x()) + ", " +
+                                      QString::number(iprocess->voidSpace[i]->start.y()) + ", " +
+                                      QString::number(iprocess->voidSpace[i]->end.x()) + ", " +
+                                      QString::number(iprocess->voidSpace[i]->end.y()) + ", " +
+                                      QString::number(iprocess->voidSpace[i]->length);
+                            ui->plainTextEdit->appendPlainText(message);
+                        }
 
-        }
-
-        switch ( edgeDetectionState ) {
-            case 0: // none
-                break;
-            case 1: // sobel
-                break;
-            case 2: // canny
-                break;
-        }
-
-        switch ( lineDetectAlgos ) {
-            case 0: // none
-                break;
-            case 1: // detectLongestSolidLines
-                break;
-            case 2: // detectMainEdges
-                break;
-            case 3: // detectPrimaryVoid
-                ui->plainTextEdit->appendPlainText("Bulunan boşluk parametreleri:");
-                ui->plainTextEdit->appendPlainText("start.X, start.Y, end.X, end.Y, boy");
-
-                // void line information of primary (avg of max in that case) line
-                for (int i=0;i<iprocess->voidSpace.size();i++){
-
-                    message = QString::number(iprocess->voidSpace[i]->start.x()) + ", " +
-                              QString::number(iprocess->voidSpace[i]->start.y()) + ", " +
-                              QString::number(iprocess->voidSpace[i]->end.x()) + ", " +
-                              QString::number(iprocess->voidSpace[i]->end.y()) + ", " +
-                              QString::number(iprocess->voidSpace[i]->length);
-                    ui->plainTextEdit->appendPlainText(message);
+                        iprocess->cornerAndPrimaryLineImage( iprocess->primaryLine, iprocess->primaryLine, 0 );
+                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
+                        break;
+                    case 3: // EXPERIMENTAL
+                        break;
                 }
+            }
 
-                iprocess->cornerAndPrimaryLineImage( iprocess->primaryLine, iprocess->primaryLine, 0 );
-                ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
-
-                //iprocess->cornerImage();
-                //ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
-                break;
         }
+
+
 
         if ( iprocess->major2Lines.size() > 0) {
             ui->plainTextEdit->appendPlainText("Çizgi {Uzunluk-Mesafe-Açı-Başlagıç(x,y)-Bitiş(x,y)}");
@@ -897,6 +899,8 @@ void setupForm::on_radioWoLaser_clicked() {
     ui->algorithmBox->addItem("Yok");
     ui->algorithmBox->addItem("Ana Kenarlar");
     ui->algorithmBox->addItem("İnce Ağız");
+    ui->algorithmBox->addItem("Kontrast");
+    ui->algorithmBox->addItem("Ana Kenarlar ile Çizgi");
     ui->algorithmBox->addItem("Deneme");
 
 }

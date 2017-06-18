@@ -58,6 +58,7 @@ public:
     int edgeDetectionState = 0; // 0:none, 1: sobel, 2: canny
     int lineDetectAlgos = 0; // 0:none, 1: detectLongestSolidLines, 2: detectMainEdges, 3: detectPrimaryVoid
     bool subImageProcessingSwitch;
+    bool algoPrerequestsOk = false;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -83,6 +84,8 @@ public slots:
     void Algo2(imgProcess *iprocess);   // LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid
     void Algo3(imgProcess *iprocess);   // woLASER: edge > houghTr > detectMainEdges
     void Algo4(imgProcess *iprocess);   // woLASER: value > detectThinJointCenter
+    void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
+    void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
 
     void update();
 

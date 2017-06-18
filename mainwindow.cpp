@@ -1543,7 +1543,7 @@ void MainWindow::processImage(){
     }
 }
 
-void MainWindow::processThinJoint(){
+/**/void MainWindow::processThinJoint(){
 
     if ( !imageGetter->imageList.isEmpty() ){
 
@@ -1558,7 +1558,7 @@ void MainWindow::processThinJoint(){
     }
 }
 
-void MainWindow::processContrastDetection(){
+/**/void MainWindow::processContrastDetection(){
 
     if ( !imageGetter->imageList.isEmpty() ){
 
@@ -1639,7 +1639,7 @@ void MainWindow::processContrastDetection(){
     }
 }
 
-void MainWindow::processLineDetection(){
+/**/void MainWindow::processLineDetection(){
 
     if ( !imageGetter->imageList.isEmpty() ){
 
