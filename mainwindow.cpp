@@ -933,35 +933,35 @@ void MainWindow::guideButton(){
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
         iprocessInitSwitch = true;
-            //iprocess->imgOrginal.save(savePath + "image_org.jpg");
+//iprocess->imgOrginal.save(savePath + "image_org.jpg");
 
         iprocess->prepareCannyArrays();
 
         for (int i = 0; i < 4 ; i++){
 
             iprocess->constructValueMatrix( iprocess->imgOrginal, i );
-            //iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
+//iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "matrix_orgvalue.csv" );
 
             iprocess->gaussianBlur();
-            //iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(savePath + "image_blurred.jpg");
+//iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(savePath + "image_blurred.jpg");
 
             iprocess->detectEdgeSobelwDirections();
-            //iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge.csv");
-            //iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_gradients.csv");
-            //iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge.jpg");
+//iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge.csv");
+//iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_gradients.csv");
+//iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge.jpg");
 
             iprocess->nonMaximumSuppression(false);
-            //iprocess->saveMatrix( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_suppressed.csv");
-            //iprocess->getImage( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge_suppressed.jpg");
+//iprocess->saveMatrix( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_suppressed.csv");
+//iprocess->getImage( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_edge_suppressed.jpg");
 
             iprocess->cannyThresholding(true);
-            ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
-            //iprocess->getImage_cannyThresholds(QImage::Format_RGB16)->save(savePath + "image_edge_strongs_weaks.png");
+ui->plainTextEdit->appendPlainText("lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
+//iprocess->getImage_cannyThresholds(QImage::Format_RGB16)->save(savePath + "image_edge_strongs_weaks.png");
 
             iprocess->edgeTracing();
-            //iprocess->getImage_cannyTracedEdges(QImage::Format_RGB16)->save(savePath + "image_edge_traced.png");
-            //iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
-            //iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
+//iprocess->getImage_cannyTracedEdges(QImage::Format_RGB16)->save(savePath + "image_edge_traced.png");
+//iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(savePath + "image_canny.png");
+//iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, savePath + "matrix_edge_map.csv");
 
             iprocess->assignEdgeMap();
         }

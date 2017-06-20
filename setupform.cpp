@@ -18,6 +18,7 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     fileBaseCorner = "corner";
     fileExt = ".jpg";
     savePath = "data/";
+    path = savePath;
     fileName = "";
 
     // only title & close button on title bar
@@ -99,16 +100,31 @@ void setupForm::edgeDetection(imgProcess *iprocess){
         case 2: // CANNY 4
             iprocess->prepareCannyArrays();
             iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
+                /*D*/if (DEBUG) iprocess->saveMatrix(iprocess->gaussianMatrix, iprocess->gaussianMatrixSize, iprocess->gaussianMatrixSize, path+"02-gaussian matrix.csv");
             for (int i = 0; i < 4 ; i++){
                 iprocess->constructValueMatrix( iprocess->imgOrginal, i );
+                    /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, path+"03-value matrix"+QString::number(i)+".csv" );
                 iprocess->gaussianBlur();
+                    /*D*/if (DEBUG) iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(path+"04-blurred image"+QString::number(i)+".jpg");
                 iprocess->detectEdgeSobelwDirections();
+                    /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, path+"05-edge matrix"+QString::number(i)+".csv");
+                    /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, path+"06-edge gradients matrix"+QString::number(i)+".csv");
+                    /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(path+"07-edge image"+QString::number(i)+".jpg");
                 iprocess->nonMaximumSuppression(w->cannyThinning);
+                    /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight, path+"08-edge suppressed matrix"+QString::number(i)+".csv");
+                    /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(path+"09-edge suppressed image"+QString::number(i)+".jpg");
                 iprocess->cannyThresholding(true);
+                    /*D*/if (DEBUG) ui->plainTextEdit->appendPlainText("cannyThresholding"+QString::number(i)+" lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
+                    /*D*/if (DEBUG) iprocess->getImage_cannyThresholds(QImage::Format_RGB16)->save(path+"10-edge strongs weaks image"+QString::number(i)+".jpg");
                 iprocess->edgeTracing();
+                    /*D*/if (DEBUG) iprocess->getImage_cannyTracedEdges(QImage::Format_RGB16)->save(path+"11-edge traced image"+QString::number(i)+".jpg");
+                    /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(path+"12-canny image"+QString::number(i)+".jpg");
+                    /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, path+"13-edge map matrix"+QString::number(i)+".csv");
                 iprocess->assignEdgeMap();
             }
             iprocess->mergeEdgeMaps();
+                /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(path+"14-canny combined image.jpg");
+                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, path+"15-edge map matrix.csv");
 
             for (int y = 0; y < iprocess->edgeHeight; y++)
                 for (int x = 0; x < iprocess->edgeWidth; x++){
@@ -124,12 +140,25 @@ void setupForm::edgeDetection(imgProcess *iprocess){
         case 3: // CANNY 1
             iprocess->prepareCannyArrays();
             iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
+                /*D*/if (DEBUG) iprocess->saveMatrix(iprocess->gaussianMatrix, iprocess->gaussianMatrixSize, iprocess->gaussianMatrixSize, path+"02-gaussian matrix.csv");
             iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
+                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, path+"03-value matrix.csv" );
             iprocess->gaussianBlur();
+                /*D*/if (DEBUG) iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(path+"04-blurred image.jpg");
             iprocess->detectEdgeSobelwDirections();
+                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, path+"05-edge matrix.csv");
+                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, path+"06-edge gradients matrix.csv");
+                /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(path+"07-edge image.jpg");
             iprocess->nonMaximumSuppression(w->cannyThinning);
+                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight, path+"08-edge suppressed matrix.csv");
+                /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(path+"09-edge suppressed image.jpg");
             iprocess->cannyThresholding(true);
+                /*D*/if (DEBUG) ui->plainTextEdit->appendPlainText("cannyThresholding lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
+                /*D*/if (DEBUG) iprocess->getImage_cannyThresholds(QImage::Format_RGB16)->save(path+"10-edge strongs weaks image.png");
             iprocess->edgeTracing();
+                /*D*/if (DEBUG) iprocess->getImage_cannyTracedEdges(QImage::Format_RGB16)->save(path+"11-edge traced image.png");
+                /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(path+"12-canny image.png");
+                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, path+"13-edge map matrix.csv");
 
             for (int y = 0; y < iprocess->edgeHeight; y++)  // to display edge image
                 for (int x = 0; x < iprocess->edgeWidth; x++){
@@ -157,6 +186,7 @@ void setupForm::Algo1(imgProcess *iprocess){
 
     iprocess->detectLongestSolidLines(averaging, matrixFlag);
     algoPrerequestsOk = true;
+    captured = true;
 }
 
 void setupForm::Algo2(imgProcess *iprocess){
@@ -180,6 +210,7 @@ void setupForm::Algo2(imgProcess *iprocess){
     iprocess->voidThreshold = voidThreshold;                // void threshold to decide max void as primary
     iprocess->detectPrimaryVoid();                          // decide primary void line & corners/center
     algoPrerequestsOk = true;
+    captured = true;
 }
 
 void setupForm::Algo3(imgProcess *iprocess){
@@ -190,6 +221,7 @@ void setupForm::Algo3(imgProcess *iprocess){
         iprocess->thinCornerNum = mainEdgesNumber;
         iprocess->detectMainEdges(thinJointAlgoActive, false);
         algoPrerequestsOk = true;
+        captured = true;
     } else {
         ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
         algoPrerequestsOk = false;
@@ -202,6 +234,7 @@ void setupForm::Algo4(imgProcess *iprocess){
     iprocess->constructValueMatrix( iprocess->imgOrginal );
     iprocess->detectThinJointCenter(3, 31);
     algoPrerequestsOk = true;
+    captured = true;
 }
 
 void setupForm::Algo5(imgProcess *iprocess){
@@ -215,6 +248,7 @@ void setupForm::Algo5(imgProcess *iprocess){
     //iprocess->constructContrastMatrixMajor2Lines();
     iprocess->detectContrastCenter();
     algoPrerequestsOk = true;
+    captured = true;
 }
 
 void setupForm::Algo6(imgProcess *iprocess){
@@ -227,6 +261,7 @@ void setupForm::Algo6(imgProcess *iprocess){
         iprocess->thickenEdgeMap(3);
         iprocess->scoreLineCrossing(true);
         algoPrerequestsOk = true;
+        captured = true;
     } else {
         ui->plainTextEdit->appendPlainText("Canny1 kenar tespiti algoritması seçilmelidir");
         algoPrerequestsOk = false;
@@ -251,6 +286,7 @@ void setupForm::processImage(){
         }
 
         iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+            /*D*/if (DEBUG) iprocess->imgOrginal.save(path+"01-orginal image.jpg");
         iprocessInitSwitch = true;
         iprocess->_DEBUG = true;
 
@@ -267,6 +303,7 @@ void setupForm::processImage(){
         }
 
         iprocess->toMono();                                     // convert target to mono
+        /*D*/if (DEBUG) iprocess->imgMono.save(path+"02-mono image.jpg");
 
         edgeDetection(iprocess);
 
@@ -351,7 +388,7 @@ void setupForm::captureButton(){
         voidThreshold = ui->editVoidThreshold->text().toInt();
 
         // for file names
-        captureTimeStr = QTime::currentTime().toString("hhmmss_");      // for filename
+        captureTimeStr = QDate::currentDate().toString("yyyyMMdd") + "-" + QTime::currentTime().toString("hhmmss");      // for filename
 
         // -------START IMAGE PROCESSING-------
         startTime = w->timeSystem.getSystemTimeMsec();
@@ -399,6 +436,9 @@ void setupForm::captureButton(){
                         ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
 
                         iprocess->cornerImage();
+                            /*D*/if (DEBUG) iprocess->imgCorner.save(path+"--corner image.jpg");
+                        ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
+
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
                         break;
                     case 2: // THIN JOINT
@@ -438,6 +478,8 @@ void setupForm::captureButton(){
                             if ( iprocess->primaryLineFound )
                                 iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[0], 0 );
 
+                            /**/if (DEBUG) iprocess->imgCornerAndPrimaryLines.save(path+"--major2lines image.jpg");
+                            /**/if (DEBUG) iprocess->drawSolidLines(iprocess->majorLines).save(path+"--major lines image.jpg");
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
 
                         if ( iprocess->primaryLineFound ) {
@@ -501,6 +543,7 @@ bool setupForm::saveButton(){
 
     bool saveStatus = true;
 
+    /*
     if (captured){
 
         if (ui->checkSaveTarget->isChecked()){
@@ -556,7 +599,86 @@ bool setupForm::saveButton(){
 
         captured = false;
     }
+    ui->plainTextEdit->appendPlainText("Dosyalar kaydedildi");
+    */
+    saveAlgo6();
+    return saveStatus;
+}
 
+bool setupForm::saveAlgo1(){
+    bool saveStatus = true;
+    return saveStatus;
+}
+
+bool setupForm::saveAlgo2(){
+    bool saveStatus = true;
+    return saveStatus;
+}
+
+bool setupForm::saveAlgo3(){
+    bool saveStatus = true;
+    return saveStatus;
+}
+
+bool setupForm::saveAlgo4(){
+    bool saveStatus = true;
+    return saveStatus;
+}
+
+bool setupForm::saveAlgo5(){
+    bool saveStatus = true;
+    return saveStatus;
+}
+
+bool setupForm::saveAlgo6(){
+
+    bool saveStatus = true;
+
+    DEBUG = true;
+    path = savePath + "Algo6-" + captureTimeStr + "/";
+    QDir().mkdir(path);
+
+    captureButton();
+
+    DEBUG = false;
+
+/*    if (captured){
+
+        path = savePath + "Algo6-" + captureTimeStr + "/";
+        QDir().mkdir(path);
+        fileName = path + "01-" + fileBaseTarget + fileExt;
+        saveStatus = saveStatus && iprocess->imgOrginal.save(fileName);
+
+        fileName = savePath + captureTimeStr + fileBaseMono + fileExt;
+        saveStatus = saveStatus && iprocess->imgMono.save(fileName);
+
+        fileName = savePath + captureTimeStr + fileBaseEdge + fileExt;
+        saveStatus = saveStatus && edge->save(fileName);
+
+        fileName = savePath + captureTimeStr + fileBaseHough + fileExt;
+        saveStatus = saveStatus && hough->save(fileName);
+
+        fileName = savePath + captureTimeStr + fileBaseCorner + fileExt;
+        saveStatus = saveStatus && iprocess->imgCorner.save(fileName);
+
+        fileName = savePath + captureTimeStr + fileBaseMono + ".csv";
+        saveStatus = saveStatus && iprocess->saveMatrix(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, fileName);
+
+        fileName = savePath + captureTimeStr + fileBaseEdge + ".csv";
+        saveStatus = saveStatus && iprocess->saveMatrix(iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, fileName);
+
+        fileName = savePath + captureTimeStr + fileBaseHough + ".csv";
+        saveStatus = saveStatus && iprocess->saveMatrix(iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight, fileName);
+
+        fileName = savePath + captureTimeStr + fileBaseHough + "Lines" + ".csv";
+        saveStatus = saveStatus && iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, fileName);
+
+        fileName = savePath + captureTimeStr + fileBaseHough + "Space" + ".csv";
+        saveStatus = saveStatus && iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, fileName);
+
+        captured = false;
+    }
+*/
     ui->plainTextEdit->appendPlainText("Dosyalar kaydedildi");
 
     return saveStatus;
@@ -917,4 +1039,9 @@ void setupForm::on_detecAlgoBox_currentIndexChanged(int index){
 
 void setupForm::on_mainEdgesSlider_valueChanged(int value){
     mainEdgesNumber = value;
+}
+
+void setupForm::on_saveButton_clicked()
+{
+
 }

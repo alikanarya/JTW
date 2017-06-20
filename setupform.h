@@ -29,6 +29,7 @@ public:
     QString fileExt;
     QString fileName;
     QString savePath;
+    QString path;
 
     QImage target;              // original image
     QImage *edge;               // edge detection image
@@ -59,6 +60,7 @@ public:
     int lineDetectAlgos = 0; // 0:none, 1: detectLongestSolidLines, 2: detectMainEdges, 3: detectPrimaryVoid
     bool subImageProcessingSwitch;
     bool algoPrerequestsOk = false;
+    bool DEBUG = false;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -86,6 +88,13 @@ public slots:
     void Algo4(imgProcess *iprocess);   // woLASER: value > detectThinJointCenter
     void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
+
+    bool saveAlgo1();
+    bool saveAlgo2();
+    bool saveAlgo3();
+    bool saveAlgo4();
+    bool saveAlgo5();
+    bool saveAlgo6();
 
     void update();
 
@@ -125,6 +134,7 @@ private slots:
     void on_edgeDetectionBox_currentIndexChanged(int index);
     void on_detecAlgoBox_currentIndexChanged(int index);
     void on_mainEdgesSlider_valueChanged(int value);
+    void on_saveButton_clicked();
 };
 
 #endif // SETUPFORM_H
