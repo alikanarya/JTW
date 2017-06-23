@@ -29,7 +29,7 @@ public:
     QString fileExt;
     QString fileName;
     QString savePath;
-    QString path;
+    QString path, edgePath;
 
     QImage target;              // original image
     QImage *edge;               // edge detection image
