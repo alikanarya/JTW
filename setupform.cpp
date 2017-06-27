@@ -194,6 +194,7 @@ void setupForm::Algo1(imgProcess *iprocess){
     if (edgeDetectionState == 0){
         iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
         iprocess->houghTransformFn(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight);
+            /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, path+"hough space.csv");
     }
 
     iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
@@ -356,7 +357,7 @@ void setupForm::processImage(){
         iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
             /*D*/if (DEBUG) iprocess->imgOrginal.save(path+"01-orginal image.jpg");
         iprocessInitSwitch = true;
-        iprocess->_DEBUG = true;
+        //iprocess->_DEBUG = true;
 
         iprocess->thetaMin = thetaMin;
         iprocess->thetaMax = thetaMax;
@@ -527,6 +528,18 @@ void setupForm::captureButton(){
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
                         break;
                     case 2: // THIN JOINT
+                            /**/if (DEBUG) {
+                                    minCostedLines *centerline = new minCostedLines();
+                                    centerline->c = iprocess->centerC;
+                                    centerline->cost = 0;
+                                    iprocess->drawLine(centerline, iprocess->slopeBest).save(path+"_centerLine.jpg");
+
+                                    iprocess->saveMinCostedLinesArray(iprocess->bestLines, iprocess->anglePrecision, path+"best lines.csv");
+                                    iprocess->saveMinCostedLinesList(iprocess->lineList, path+"lineList.csv");
+                                    iprocess->saveList(iprocess->peakPoints, path+"peakPoints.csv");
+
+                                }
+                        ui->plainTextEdit->appendPlainText("best slope: "+ QString::number(iprocess->slopeBestIndex));
                         iprocess->cornerImage();
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
                         break;
@@ -534,14 +547,16 @@ void setupForm::captureButton(){
                         iprocess->constructContrastMatrixMajor2Lines();
                             /**/if (DEBUG) iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "contrast with lines matrix.csv" );
                         hough = iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight);
+                            /**/if (DEBUG) hough->save(path+"major 2 lines image.jpg");
                         ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
 
                         iprocess->cornerImage();
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
+                            /*D*/if (DEBUG) iprocess->imgCorner.save(path+"--corner image.jpg");
                         ui->plainTextEdit->appendPlainText("avg dist, angle: " + QString::number(iprocess->distanceAvg) + ", " + QString::number(iprocess->thetaAvg));
                         break;
                     case 4: // LINE DETECTION WITH MAIN EDGES
-                        /**/if (DEBUG) {
+                            /**/if (DEBUG) {
                                 ui->plainTextEdit->appendPlainText("-1st-maximas---");
                                 for (int i=0; i<iprocess->localMaximaSize;i++)
                                     ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray[i][0]) +" stop: "+QString::number(iprocess->rangeArray[i][1]));
@@ -610,7 +625,6 @@ void setupForm::captureButton(){
 
                         // void line information of primary (avg of max in that case) line
                         for (int i=0;i<iprocess->voidSpace.size();i++){
-
                             message = QString::number(iprocess->voidSpace[i]->start.x()) + ", " +
                                       QString::number(iprocess->voidSpace[i]->start.y()) + ", " +
                                       QString::number(iprocess->voidSpace[i]->end.x()) + ", " +
@@ -621,6 +635,7 @@ void setupForm::captureButton(){
 
                         iprocess->cornerAndPrimaryLineImage( iprocess->primaryLine, iprocess->primaryLine, 0 );
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
+                            /**/if (DEBUG) iprocess->imgCornerAndPrimaryLines.save(path+"--major2lines image.jpg");
                         break;
                     case 3: // EXPERIMENTAL
                         break;
@@ -661,142 +676,12 @@ bool setupForm::saveButton(){
 
     bool saveStatus = true;
 
-    /*
-    if (captured){
-
-        if (ui->checkSaveTarget->isChecked()){
-            fileName = savePath + captureTimeStr + fileBaseTarget + fileExt;
-            saveStatus = saveStatus && iprocess->imgOrginal.save(fileName);
-        }
-
-        if (ui->checkSaveMono->isChecked()){
-            fileName = savePath + captureTimeStr + fileBaseMono + fileExt;
-            saveStatus = saveStatus && iprocess->imgMono.save(fileName);
-        }
-
-        if (ui->checkSaveEdge->isChecked()){
-            fileName = savePath + captureTimeStr + fileBaseEdge + fileExt;
-            saveStatus = saveStatus && edge->save(fileName);
-        }
-
-        if (ui->checkSaveHough->isChecked()){
-            fileName = savePath + captureTimeStr + fileBaseHough + fileExt;
-            saveStatus = saveStatus && hough->save(fileName);
-        }
-
-        if (ui->checkSaveAnalyze->isChecked()){
-            fileName = savePath + captureTimeStr + fileBaseCorner + fileExt;
-            saveStatus = saveStatus && iprocess->imgCorner.save(fileName);
-        }
-
-        // matrix save operations
-        if (ui->checkSaveMonoMatrix->isChecked()){
-            fileName = savePath + captureTimeStr + fileBaseMono + ".csv";
-            saveStatus = saveStatus && iprocess->saveMatrix(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, fileName);
-        }
-
-        if (ui->checkSaveEdgeMatrix->isChecked()){
-            fileName = savePath + captureTimeStr + fileBaseEdge + ".csv";
-            saveStatus = saveStatus && iprocess->saveMatrix(iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, fileName);
-        }
-
-        if (ui->checkSaveHoughMatrix->isChecked()){
-            fileName = savePath + captureTimeStr + fileBaseHough + ".csv";
-            saveStatus = saveStatus && iprocess->saveMatrix(iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight, fileName);
-        }
-
-        if (ui->checkSaveHoughLines->isChecked()){
-            fileName = savePath + captureTimeStr + fileBaseHough + "Lines" + ".csv";
-            saveStatus = saveStatus && iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, fileName);
-        }
-
-        if (ui->checkSaveHoughSpace->isChecked()){
-            fileName = savePath + captureTimeStr + fileBaseHough + "Space" + ".csv";
-            saveStatus = saveStatus && iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, fileName);
-        }
-
-        captured = false;
-    }
-    ui->plainTextEdit->appendPlainText("Dosyalar kaydedildi");
-    */
     DEBUG = true;
 
     captureButton();
-//    saveAlgo6();
 
     ui->plainTextEdit->appendPlainText("Dosyalar kaydedildi");
     DEBUG = false;
-
-    return saveStatus;
-}
-
-bool setupForm::saveAlgo1(){
-    bool saveStatus = true;
-    return saveStatus;
-}
-
-bool setupForm::saveAlgo2(){
-    bool saveStatus = true;
-    return saveStatus;
-}
-
-bool setupForm::saveAlgo3(){
-    bool saveStatus = true;
-    return saveStatus;
-}
-
-bool setupForm::saveAlgo4(){
-    bool saveStatus = true;
-    return saveStatus;
-}
-
-bool setupForm::saveAlgo5(){
-    bool saveStatus = true;
-    return saveStatus;
-}
-
-bool setupForm::saveAlgo6(){
-
-    bool saveStatus = true;
-
-/*    if (captured){
-
-        path = savePath + "Algo6-" + captureTimeStr + "/";
-        QDir().mkdir(path);
-        fileName = path + "01-" + fileBaseTarget + fileExt;
-        saveStatus = saveStatus && iprocess->imgOrginal.save(fileName);
-
-        fileName = savePath + captureTimeStr + fileBaseMono + fileExt;
-        saveStatus = saveStatus && iprocess->imgMono.save(fileName);
-
-        fileName = savePath + captureTimeStr + fileBaseEdge + fileExt;
-        saveStatus = saveStatus && edge->save(fileName);
-
-        fileName = savePath + captureTimeStr + fileBaseHough + fileExt;
-        saveStatus = saveStatus && hough->save(fileName);
-
-        fileName = savePath + captureTimeStr + fileBaseCorner + fileExt;
-        saveStatus = saveStatus && iprocess->imgCorner.save(fileName);
-
-        fileName = savePath + captureTimeStr + fileBaseMono + ".csv";
-        saveStatus = saveStatus && iprocess->saveMatrix(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, fileName);
-
-        fileName = savePath + captureTimeStr + fileBaseEdge + ".csv";
-        saveStatus = saveStatus && iprocess->saveMatrix(iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, fileName);
-
-        fileName = savePath + captureTimeStr + fileBaseHough + ".csv";
-        saveStatus = saveStatus && iprocess->saveMatrix(iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight, fileName);
-
-        fileName = savePath + captureTimeStr + fileBaseHough + "Lines" + ".csv";
-        saveStatus = saveStatus && iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, fileName);
-
-        fileName = savePath + captureTimeStr + fileBaseHough + "Space" + ".csv";
-        saveStatus = saveStatus && iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, fileName);
-
-        captured = false;
-    }
-*/
-    ui->plainTextEdit->appendPlainText("Dosyalar kaydedildi");
 
     return saveStatus;
 }

@@ -89,13 +89,6 @@ public slots:
     void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
 
-    bool saveAlgo1();
-    bool saveAlgo2();
-    bool saveAlgo3();
-    bool saveAlgo4();
-    bool saveAlgo5();
-    bool saveAlgo6();
-
     void update();
 
 private:
