@@ -125,7 +125,6 @@ private slots:
     void on_radioLaser_clicked();
     void on_radioWoLaser_clicked();
     void on_edgeDetectionBox_currentIndexChanged(int index);
-    void on_detecAlgoBox_currentIndexChanged(int index);
     void on_mainEdgesSlider_valueChanged(int value);
     void on_saveButton_clicked();
 };

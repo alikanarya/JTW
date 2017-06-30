@@ -205,7 +205,7 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 127);</string>
+     <string notr="true">background-color: rgb(255, 255, 195);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::Box</enum>

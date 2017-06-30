@@ -147,7 +147,7 @@ public:
         QFont font1;
         font1.setPointSize(7);
         plainTextEdit->setFont(font1);
-        plainTextEdit->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 127);"));
+        plainTextEdit->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 195);"));
         plainTextEdit->setFrameShape(QFrame::Box);
         plainTextEdit->setFrameShadow(QFrame::Sunken);
         plainTextEdit->setLineWidth(1);

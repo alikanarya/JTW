@@ -45,7 +45,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>100</y>
+     <y>60</y>
      <width>320</width>
      <height>320</height>
     </rect>
@@ -64,7 +64,7 @@
    <property name="geometry">
     <rect>
      <x>350</x>
-     <y>100</y>
+     <y>60</y>
      <width>320</width>
      <height>320</height>
     </rect>
@@ -83,7 +83,7 @@
    <property name="geometry">
     <rect>
      <x>680</x>
-     <y>100</y>
+     <y>60</y>
      <width>320</width>
      <height>320</height>
     </rect>
@@ -102,7 +102,7 @@
    <property name="geometry">
     <rect>
      <x>1011</x>
-     <y>100</y>
+     <y>60</y>
      <width>320</width>
      <height>320</height>
     </rect>
@@ -121,7 +121,7 @@
    <property name="geometry">
     <rect>
      <x>1340</x>
-     <y>100</y>
+     <y>60</y>
      <width>320</width>
      <height>320</height>
     </rect>
@@ -140,10 +140,13 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>80</y>
-     <width>101</width>
+     <y>40</y>
+     <width>111</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
    </property>
    <property name="text">
     <string>Hedef Alan İmajı</string>
@@ -153,10 +156,13 @@
    <property name="geometry">
     <rect>
      <x>350</x>
-     <y>80</y>
+     <y>40</y>
      <width>111</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
    </property>
    <property name="text">
     <string>Mono İmaj</string>
@@ -166,10 +172,13 @@
    <property name="geometry">
     <rect>
      <x>680</x>
-     <y>80</y>
+     <y>40</y>
      <width>141</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
    </property>
    <property name="text">
     <string>Tespit Edilen Kenarlar</string>
@@ -179,10 +188,13 @@
    <property name="geometry">
     <rect>
      <x>1011</x>
-     <y>80</y>
+     <y>40</y>
      <width>81</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
    </property>
    <property name="text">
     <string>Çizgi Tespiti</string>
@@ -192,10 +204,13 @@
    <property name="geometry">
     <rect>
      <x>1340</x>
-     <y>80</y>
+     <y>40</y>
      <width>91</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
    </property>
    <property name="text">
     <string>Köşe Tespiti</string>
@@ -204,8 +219,8 @@
   <widget class="QPushButton" name="captureButton">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>50</y>
+     <x>20</x>
+     <y>390</y>
      <width>91</width>
      <height>25</height>
     </rect>
@@ -217,121 +232,14 @@
     </font>
    </property>
    <property name="text">
-    <string>Yakala</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveTarget">
-   <property name="geometry">
-    <rect>
-     <x>269</x>
-     <y>430</y>
-     <width>71</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::RightToLeft</enum>
-   </property>
-   <property name="text">
-    <string>İmaj</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveMono">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>430</y>
-     <width>71</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>İmaj</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveEdge">
-   <property name="geometry">
-    <rect>
-     <x>680</x>
-     <y>430</y>
-     <width>71</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>İmaj</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveHough">
-   <property name="geometry">
-    <rect>
-     <x>1010</x>
-     <y>430</y>
-     <width>71</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>İmaj</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveAnalyze">
-   <property name="geometry">
-    <rect>
-     <x>1340</x>
-     <y>430</y>
-     <width>71</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>İmaj</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveMonoMatrix">
-   <property name="geometry">
-    <rect>
-     <x>410</x>
-     <y>430</y>
-     <width>81</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Matrix</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveEdgeMatrix">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>430</y>
-     <width>81</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Matrix</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveHoughMatrix">
-   <property name="geometry">
-    <rect>
-     <x>1070</x>
-     <y>430</y>
-     <width>81</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Matrix</string>
+    <string>Analiz</string>
    </property>
   </widget>
   <widget class="QPushButton" name="saveButton">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>426</y>
+     <x>120</x>
+     <y>390</y>
      <width>131</width>
      <height>25</height>
     </rect>
@@ -343,40 +251,14 @@
     </font>
    </property>
    <property name="text">
-    <string>Seçilileri Kaydet</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveHoughLines">
-   <property name="geometry">
-    <rect>
-     <x>1140</x>
-     <y>430</y>
-     <width>101</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Çizgi Matrixi</string>
-   </property>
-  </widget>
-  <widget class="QCheckBox" name="checkSaveHoughSpace">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>430</y>
-     <width>81</width>
-     <height>17</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>HSpace</string>
+    <string>Analiz/Kaydet</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="editHoughLineNo">
    <property name="geometry">
     <rect>
-     <x>1510</x>
-     <y>520</y>
+     <x>1560</x>
+     <y>418</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -394,58 +276,58 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>1390</x>
-     <y>520</y>
+     <x>1440</x>
+     <y>420</y>
      <width>111</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Box</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <property name="text">
     <string>Çizgi Sayısı</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>1390</x>
-     <y>550</y>
+     <x>1440</x>
+     <y>450</y>
      <width>111</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Box</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <property name="text">
     <string>Eşik</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
    </property>
   </widget>
   <widget class="QLineEdit" name="editHoughThreshold">
    <property name="geometry">
     <rect>
-     <x>1510</x>
-     <y>550</y>
+     <x>1560</x>
+     <y>448</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -463,8 +345,8 @@
   <widget class="QLabel" name="labelVoteAvg">
    <property name="geometry">
     <rect>
-     <x>1560</x>
-     <y>550</y>
+     <x>1610</x>
+     <y>448</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -489,7 +371,7 @@
    <property name="geometry">
     <rect>
      <x>1160</x>
-     <y>80</y>
+     <y>40</y>
      <width>171</width>
      <height>20</height>
     </rect>
@@ -513,8 +395,8 @@
   <widget class="QLineEdit" name="editHoughThetaStep">
    <property name="geometry">
     <rect>
-     <x>1510</x>
-     <y>610</y>
+     <x>1560</x>
+     <y>508</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -532,33 +414,33 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>1390</x>
-     <y>610</y>
+     <x>1440</x>
+     <y>510</y>
      <width>111</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Box</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <property name="text">
     <string>Açı Çöz.</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
    </property>
   </widget>
   <widget class="QLineEdit" name="editHoughThetaMin">
    <property name="geometry">
     <rect>
-     <x>1510</x>
-     <y>580</y>
+     <x>1560</x>
+     <y>478</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -576,33 +458,33 @@
   <widget class="QLabel" name="label_9">
    <property name="geometry">
     <rect>
-     <x>1390</x>
-     <y>580</y>
+     <x>1440</x>
+     <y>480</y>
      <width>111</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Box</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <property name="text">
     <string>Açı Aralığı</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
    </property>
   </widget>
   <widget class="QLineEdit" name="editHoughThetaMax">
    <property name="geometry">
     <rect>
-     <x>1560</x>
-     <y>580</y>
+     <x>1610</x>
+     <y>478</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -620,8 +502,8 @@
   <widget class="QPlainTextEdit" name="plainTextEdit">
    <property name="geometry">
     <rect>
-     <x>610</x>
-     <y>540</y>
+     <x>20</x>
+     <y>570</y>
      <width>581</width>
      <height>191</height>
     </rect>
@@ -630,6 +512,9 @@
     <font>
      <family>Tahoma</family>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 195);</string>
    </property>
    <property name="documentTitle">
     <string/>
@@ -641,8 +526,8 @@
   <widget class="QLineEdit" name="editVoidThreshold">
    <property name="geometry">
     <rect>
-     <x>1510</x>
-     <y>640</y>
+     <x>1560</x>
+     <y>538</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -660,34 +545,34 @@
   <widget class="QLabel" name="label_10">
    <property name="geometry">
     <rect>
-     <x>1390</x>
-     <y>640</y>
+     <x>1440</x>
+     <y>540</y>
      <width>111</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Box</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <property name="text">
     <string>Void Eşiği</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
    </property>
   </widget>
   <widget class="QPushButton" name="saveExitButton">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>810</y>
-     <width>171</width>
+     <x>1540</x>
+     <y>740</y>
+     <width>121</width>
      <height>25</height>
     </rect>
    </property>
@@ -701,14 +586,14 @@
     <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
-    <string>Kaydet ve Çık</string>
+    <string>Çık/Kaydet</string>
    </property>
   </widget>
   <widget class="QPushButton" name="exitButton">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>780</y>
+     <x>1576</x>
+     <y>770</y>
      <width>85</width>
      <height>25</height>
     </rect>
@@ -729,8 +614,8 @@
   <widget class="QPushButton" name="clearButton">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>750</y>
+     <x>20</x>
+     <y>770</y>
      <width>85</width>
      <height>25</height>
     </rect>
@@ -751,8 +636,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>1210</x>
-     <y>770</y>
+     <x>1090</x>
+     <y>740</y>
      <width>101</width>
      <height>17</height>
     </rect>
@@ -767,8 +652,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>1210</x>
-     <y>790</y>
+     <x>1090</x>
+     <y>760</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -789,8 +674,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>1310</x>
-     <y>790</y>
+     <x>1190</x>
+     <y>760</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -811,8 +696,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>1260</x>
-     <y>790</y>
+     <x>1140</x>
+     <y>760</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -827,25 +712,12 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="Line" name="line">
-   <property name="geometry">
-    <rect>
-     <x>630</x>
-     <y>520</y>
-     <width>311</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-  </widget>
   <widget class="Line" name="line_2">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>600</y>
-     <width>311</width>
+     <x>20</x>
+     <y>530</y>
+     <width>320</width>
      <height>16</height>
     </rect>
    </property>
@@ -856,58 +728,58 @@
   <widget class="QLabel" name="label_13">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>480</y>
+     <x>670</x>
+     <y>562</y>
      <width>111</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Box</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <property name="text">
     <string>FPS</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_14">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>510</y>
-     <width>111</width>
-     <height>21</height>
+     <x>670</x>
+     <y>592</y>
+     <width>131</width>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <weight>75</weight>
-     <bold>true</bold>
+     <weight>50</weight>
+     <bold>false</bold>
     </font>
    </property>
    <property name="frameShape">
-    <enum>QFrame::Box</enum>
+    <enum>QFrame::NoFrame</enum>
    </property>
    <property name="text">
-    <string>İ.İşleme Aralığı</string>
+    <string>İmaj İşleme Aralığı</string>
    </property>
    <property name="alignment">
-    <set>Qt::AlignHCenter|Qt::AlignTop</set>
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
   <widget class="QLineEdit" name="editIPI">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>510</y>
+     <x>620</x>
+     <y>590</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -928,8 +800,8 @@
   <widget class="QLineEdit" name="editFPS">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>480</y>
+     <x>620</x>
+     <y>560</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -950,15 +822,15 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>540</y>
-     <width>131</width>
+     <x>620</x>
+     <y>620</y>
+     <width>141</width>
      <height>17</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <pointsize>8</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -970,15 +842,15 @@
   <widget class="QCheckBox" name="hardControlStartBox">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>600</y>
-     <width>161</width>
+     <x>620</x>
+     <y>680</y>
+     <width>171</width>
      <height>17</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <pointsize>8</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -993,15 +865,15 @@
   <widget class="QCheckBox" name="widthControlBox">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>570</y>
+     <x>620</x>
+     <y>650</y>
      <width>161</width>
      <height>17</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <pointsize>8</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -1016,8 +888,8 @@
   <widget class="QLabel" name="label_15">
    <property name="geometry">
     <rect>
-     <x>1390</x>
-     <y>720</y>
+     <x>830</x>
+     <y>690</y>
      <width>231</width>
      <height>101</height>
     </rect>
@@ -1041,15 +913,15 @@
   <widget class="QCheckBox" name="readMachineStatusBox">
    <property name="geometry">
     <rect>
-     <x>1400</x>
-     <y>750</y>
-     <width>201</width>
+     <x>840</x>
+     <y>720</y>
+     <width>211</width>
      <height>17</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <pointsize>8</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -1064,15 +936,15 @@
   <widget class="QCheckBox" name="readDistanceBox">
    <property name="geometry">
     <rect>
-     <x>1400</x>
-     <y>770</y>
+     <x>840</x>
+     <y>740</y>
      <width>201</width>
      <height>17</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <pointsize>8</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -1087,15 +959,15 @@
   <widget class="QCheckBox" name="dynamicAlgoBox">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>630</y>
+     <x>620</x>
+     <y>710</y>
      <width>161</width>
      <height>17</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <pointsize>8</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -1110,15 +982,15 @@
   <widget class="QCheckBox" name="readWeldSeamBox">
    <property name="geometry">
     <rect>
-     <x>1400</x>
-     <y>790</y>
+     <x>840</x>
+     <y>760</y>
      <width>201</width>
      <height>17</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <pointsize>8</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -1133,15 +1005,15 @@
   <widget class="QCheckBox" name="timeControlBox">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>660</y>
+     <x>620</x>
+     <y>740</y>
      <width>161</width>
      <height>17</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <pointsize>8</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -1156,15 +1028,15 @@
   <widget class="QCheckBox" name="lineDetectionBox">
    <property name="geometry">
     <rect>
-     <x>360</x>
-     <y>690</y>
-     <width>161</width>
-     <height>17</height>
+     <x>1110</x>
+     <y>552</y>
+     <width>131</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <pointsize>8</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
@@ -1173,14 +1045,14 @@
     <string>İKA ya Otomaik Geç</string>
    </property>
    <property name="text">
-    <string>Çizgi Tespiti</string>
+    <string>Çizgi Tespiti (%)</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="editLineScore">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>688</y>
+     <x>1240</x>
+     <y>550</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -1195,24 +1067,11 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QLabel" name="label_16">
-   <property name="geometry">
-    <rect>
-     <x>530</x>
-     <y>690</y>
-     <width>31</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>(%)</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="captureButton_2">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>53</y>
+     <y>13</y>
      <width>101</width>
      <height>25</height>
     </rect>
@@ -1230,21 +1089,24 @@
   <widget class="QCheckBox" name="cannyThinningBox">
    <property name="geometry">
     <rect>
-     <x>1390</x>
-     <y>680</y>
+     <x>1440</x>
+     <y>570</y>
      <width>161</width>
      <height>17</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <pointsize>8</pointsize>
      <weight>50</weight>
      <bold>false</bold>
     </font>
    </property>
    <property name="toolTip">
     <string/>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::RightToLeft</enum>
    </property>
    <property name="text">
     <string>Canny İnceltme</string>
@@ -1253,8 +1115,8 @@
   <widget class="QSlider" name="brightnessSlider">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>480</y>
+     <x>110</x>
+     <y>440</y>
      <width>160</width>
      <height>22</height>
     </rect>
@@ -1293,8 +1155,8 @@
   <widget class="QLabel" name="labelBrightness">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>480</y>
+     <x>290</x>
+     <y>440</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -1315,8 +1177,8 @@
   <widget class="QSlider" name="contrastSlider">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>510</y>
+     <x>110</x>
+     <y>470</y>
      <width>160</width>
      <height>22</height>
     </rect>
@@ -1349,8 +1211,8 @@
   <widget class="QLabel" name="labelContrast">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>510</y>
+     <x>290</x>
+     <y>470</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -1371,8 +1233,8 @@
   <widget class="QSlider" name="gammaSlider">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>540</y>
+     <x>110</x>
+     <y>500</y>
      <width>160</width>
      <height>22</height>
     </rect>
@@ -1405,8 +1267,8 @@
   <widget class="QLabel" name="labelGamma">
    <property name="geometry">
     <rect>
-     <x>210</x>
-     <y>540</y>
+     <x>290</x>
+     <y>500</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -1427,8 +1289,8 @@
   <widget class="QPushButton" name="brightnessReset">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>480</y>
+     <x>340</x>
+     <y>440</y>
      <width>42</width>
      <height>22</height>
     </rect>
@@ -1446,8 +1308,8 @@
   <widget class="QPushButton" name="contrastReset">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>510</y>
+     <x>340</x>
+     <y>470</y>
      <width>42</width>
      <height>22</height>
     </rect>
@@ -1465,8 +1327,8 @@
   <widget class="QPushButton" name="gammaReset">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>540</y>
+     <x>340</x>
+     <y>500</y>
      <width>42</width>
      <height>22</height>
     </rect>
@@ -1485,7 +1347,7 @@
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>60</y>
+     <y>20</y>
      <width>191</width>
      <height>22</height>
     </rect>
@@ -1497,7 +1359,7 @@
   <widget class="QCheckBox" name="checkProcessing">
    <property name="geometry">
     <rect>
-     <x>140</x>
+     <x>350</x>
      <y>20</y>
      <width>101</width>
      <height>17</height>
@@ -1510,8 +1372,8 @@
   <widget class="QLabel" name="labelGaussSize">
    <property name="geometry">
     <rect>
-     <x>800</x>
-     <y>470</y>
+     <x>1290</x>
+     <y>460</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -1532,8 +1394,8 @@
   <widget class="QSlider" name="gaussSizeSlider">
    <property name="geometry">
     <rect>
-     <x>620</x>
-     <y>470</y>
+     <x>1110</x>
+     <y>462</y>
      <width>160</width>
      <height>22</height>
     </rect>
@@ -1578,8 +1440,8 @@
   <widget class="QSlider" name="gaussSDevSlider">
    <property name="geometry">
     <rect>
-     <x>620</x>
-     <y>500</y>
+     <x>1110</x>
+     <y>492</y>
      <width>160</width>
      <height>22</height>
     </rect>
@@ -1624,8 +1486,8 @@
   <widget class="QLabel" name="labelGaussSDev">
    <property name="geometry">
     <rect>
-     <x>800</x>
-     <y>500</y>
+     <x>1290</x>
+     <y>490</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -1646,28 +1508,28 @@
   <widget class="QComboBox" name="algorithmBox">
    <property name="geometry">
     <rect>
-     <x>220</x>
-     <y>570</y>
-     <width>111</width>
+     <x>1110</x>
+     <y>420</y>
+     <width>221</width>
      <height>22</height>
     </rect>
    </property>
    <item>
     <property name="text">
-     <string>Canny</string>
+     <string>0</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>Hough Transform</string>
+     <string>1</string>
     </property>
    </item>
   </widget>
   <widget class="QRadioButton" name="radioLaser">
    <property name="geometry">
     <rect>
-     <x>1050</x>
-     <y>460</y>
+     <x>1060</x>
+     <y>390</y>
      <width>103</width>
      <height>21</height>
     </rect>
@@ -1688,8 +1550,8 @@
   <widget class="QRadioButton" name="radioWoLaser">
    <property name="geometry">
     <rect>
-     <x>1170</x>
-     <y>460</y>
+     <x>1180</x>
+     <y>390</y>
      <width>111</width>
      <height>21</height>
     </rect>
@@ -1708,8 +1570,8 @@
    <property name="geometry">
     <rect>
      <x>880</x>
-     <y>430</y>
-     <width>111</width>
+     <y>390</y>
+     <width>121</width>
      <height>22</height>
     </rect>
    </property>
@@ -1734,46 +1596,11 @@
     </property>
    </item>
   </widget>
-  <widget class="QComboBox" name="detecAlgoBox">
-   <property name="geometry">
-    <rect>
-     <x>1010</x>
-     <y>490</y>
-     <width>201</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <item>
-    <property name="text">
-     <string>Yok</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>detectLongestSolidLines</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>detectMainEdges</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>detectPrimaryVoid</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>detectThinJointCenter</string>
-    </property>
-   </item>
-  </widget>
   <widget class="QSlider" name="mainEdgesSlider">
    <property name="geometry">
     <rect>
-     <x>1390</x>
-     <y>490</y>
+     <x>1110</x>
+     <y>522</y>
      <width>160</width>
      <height>22</height>
     </rect>
@@ -1813,6 +1640,190 @@
    </property>
    <property name="tickInterval">
     <number>1</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_11">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>440</y>
+     <width>80</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="text">
+    <string>Parlaklık</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_17">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>470</y>
+     <width>80</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="text">
+    <string>Kontrast</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_18">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>500</y>
+     <width>80</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="text">
+    <string>Gamma</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_19">
+   <property name="geometry">
+    <rect>
+     <x>1009</x>
+     <y>462</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="text">
+    <string>Denoise Genlik</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_20">
+   <property name="geometry">
+    <rect>
+     <x>999</x>
+     <y>492</y>
+     <width>101</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="text">
+    <string>Denoise Sapma</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_21">
+   <property name="geometry">
+    <rect>
+     <x>980</x>
+     <y>523</y>
+     <width>121</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="text">
+    <string>Ana Kenar Sayısı</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelMainEdgesNumber">
+   <property name="geometry">
+    <rect>
+     <x>1290</x>
+     <y>520</y>
+     <width>42</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

@@ -1038,16 +1038,11 @@ void setupForm::on_edgeDetectionBox_currentIndexChanged(int index){
     edgeDetectionState = index;
 }
 
-void setupForm::on_detecAlgoBox_currentIndexChanged(int index){
-
-    lineDetectAlgos = index;
-}
-
 void setupForm::on_mainEdgesSlider_valueChanged(int value){
     mainEdgesNumber = value;
+    ui->labelMainEdgesNumber->setText(QString::number(mainEdgesNumber));
 }
 
-void setupForm::on_saveButton_clicked()
-{
+void setupForm::on_saveButton_clicked(){
 
 }
