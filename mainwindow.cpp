@@ -1663,6 +1663,9 @@ void MainWindow::readSettings(){
             gaussianSize = settings->value("gausssize", _GAUSS_SIZE).toInt();
             stdDev = settings->value("gaussdev", _GAUSS_DEV).toFloat();
             cannyThinning = settings->value("cannythin", _CANNY_THIN).toBool();
+            edgeDetectionState = settings->value("edgealgo", _EDGE_ALGO).toInt();
+            algorithmType = settings->value("algotype", _ALGO_TYPE).toInt();
+            mainEdgesNumber = settings->value("medgeno", _MAIN_EDGE_NO).toInt();
 
         settings->endGroup();
 
@@ -1740,6 +1743,9 @@ void MainWindow::readSettings(){
         gaussianSize = _GAUSS_SIZE;
         stdDev = _GAUSS_DEV;
         cannyThinning = _CANNY_THIN;
+        edgeDetectionState = _EDGE_ALGO;
+        algorithmType = _ALGO_TYPE;
+        mainEdgesNumber = _MAIN_EDGE_NO;
 
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
@@ -1826,6 +1832,10 @@ void MainWindow::writeSettings(){
 
         QVariant cannythinsw(cannyThinning);
             settings->setValue("cannythin", cannythinsw.toString());
+
+        settings->setValue("edgealgo", QString::number(edgeDetectionState));
+        settings->setValue("algotype", QString::number(algorithmType));
+        settings->setValue("medgeno", QString::number(mainEdgesNumber));
 
     settings->endGroup();
 

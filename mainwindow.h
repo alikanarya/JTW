@@ -51,7 +51,9 @@
 #define _GAUSS_SIZE         5
 #define _GAUSS_DEV          1.4
 #define _CANNY_THIN         true
-
+#define _EDGE_ALGO          0
+#define _ALGO_TYPE          0
+#define _MAIN_EDGE_NO       1
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -207,10 +209,13 @@ public:
     int initialJointWidth;
     int maxJointWidth, minJointWidth;
     int jointWidth;
+    int algorithmType = 0;
+    int edgeDetectionState = 0; // 0:none, 1: sobel, 2: canny4, 3: canny1
 
     bool cannyThinning;
     int gaussianSize = 5;
     float stdDev = 1.4;
+    int mainEdgesNumber = 1;
 
     // Z-Control
     bool zControlActive;

@@ -57,30 +57,40 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
 
     ui->editLineScore->setText( QString::number( w->lineScoreLimit ) );
 
-    ui->labelBrightness->setText( QString::number(w->brightnessVal) );
-    ui->brightnessSlider->setValue( w->brightnessVal );
+    ui->labelBrightness->setText( QString::number(brightnessVal) );
+    ui->brightnessSlider->setValue( brightnessVal );
 
-    ui->labelContrast->setText( QString::number(w->contrastVal) );
-    ui->contrastSlider->setValue( w->contrastVal );
+    ui->labelContrast->setText( QString::number(contrastVal) );
+    ui->contrastSlider->setValue( contrastVal );
 
-    ui->labelGamma->setText( QString::number(w->gammaVal) );
-    ui->gammaSlider->setValue( w->gammaVal );
+    ui->labelGamma->setText( QString::number(gammaVal) );
+    ui->gammaSlider->setValue( gammaVal );
 
-    ui->labelGaussSize->setText( QString::number(w->gaussianSize) );
-    ui->gaussSizeSlider->setValue( (w->gaussianSize-1)/2 );
+    ui->labelGaussSize->setText( QString::number(gaussianSize) );
+    ui->gaussSizeSlider->setValue( (gaussianSize-1)/2 );
 
-    ui->labelGaussSDev->setText( QString::number(w->stdDev) );
-    ui->gaussSDevSlider->setValue( (int)(w->stdDev*10) );
+    ui->labelGaussSDev->setText( QString::number(stdDev) );
+    ui->gaussSDevSlider->setValue( (int)(stdDev*10) );
 
     ui->cannyThinningBox->setChecked( w->cannyThinning );
 
-    if ( w->thinJointAlgoActive ){
+    int algo = algorithmType;
+    if ( thinJointAlgoActive ){
         ui->radioLaser->setChecked(false);
         ui->radioWoLaser->setChecked(true);
+        on_radioWoLaser_clicked();
     } else {
         ui->radioWoLaser->setChecked(false);
         ui->radioLaser->setChecked(true);
+        on_radioLaser_clicked();
     }
+    algorithmType = algo;
+
+    ui->edgeDetectionBox->setCurrentIndex( edgeDetectionState );
+    ui->algorithmBox->setCurrentIndex( algorithmType );
+    ui->mainEdgesSlider->setValue( mainEdgesNumber );
+    ui->labelMainEdgesNumber->setText(QString::number(mainEdgesNumber));
+
 }
 
 void setupForm::edgeDetection(imgProcess *iprocess){
@@ -110,7 +120,7 @@ void setupForm::edgeDetection(imgProcess *iprocess){
                         QDir().mkdir(edgePath);
                     }
             iprocess->prepareCannyArrays();
-            iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
+            iprocess->constructGaussianMatrix(gaussianSize, stdDev);
                 /*D*/if (DEBUG) iprocess->saveMatrix(iprocess->gaussianMatrix, iprocess->gaussianMatrixSize, iprocess->gaussianMatrixSize, edgePath+"01-gaussian matrix.csv");
             for (int i = 0; i < 4 ; i++){
                 iprocess->constructValueMatrix( iprocess->imgOrginal, i );
@@ -155,7 +165,7 @@ void setupForm::edgeDetection(imgProcess *iprocess){
                         QDir().mkdir(edgePath);
                     }
             iprocess->prepareCannyArrays();
-            iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
+            iprocess->constructGaussianMatrix(gaussianSize, stdDev);
                 /*D*/if (DEBUG) iprocess->saveMatrix(iprocess->gaussianMatrix, iprocess->gaussianMatrixSize, iprocess->gaussianMatrixSize, edgePath+"01-gaussian matrix.csv");
             iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
                 /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, edgePath+"02-value matrix.csv" );
@@ -706,6 +716,16 @@ void setupForm::getParameters(){
     voteThreshold = w->voteThreshold;
     voidThreshold = w->voidThreshold;
 
+    brightnessVal = w->brightnessVal;
+    contrastVal = w->contrastVal;
+    gammaVal = w->gammaVal;
+    gaussianSize = w->gaussianSize;
+    stdDev = w->stdDev;
+    thinJointAlgoActive = w->thinJointAlgoActive;
+    edgeDetectionState = w->edgeDetectionState;
+    algorithmType = w->algorithmType;
+    mainEdgesNumber = w->mainEdgesNumber;
+
     ui->editHoughThetaMin->setText(QString::number(thetaMin));
     ui->editHoughThetaMax->setText(QString::number(thetaMax));
     ui->editHoughThetaStep->setText(QString::number(thetaStep, 'f', 1));
@@ -724,7 +744,6 @@ void setupForm::getParameters(){
     ui->editFPS->setText(QString::number(w->fpsTarget));
     ui->editIPI->setText(QString::number(w->iprocessInterval));
 
-    thinJointAlgoActive = w->thinJointAlgoActive;
 
 }
 
@@ -747,13 +766,22 @@ void setupForm::saveExitButton(){
     w->thetaMax = thetaMax = ui->editHoughThetaMax->text().toInt();
     w->thetaStep = thetaStep = ui->editHoughThetaStep->text().toFloat();
 
-    w->thetaMinSub = thetaMinSub = ui->editHoughThetaMinSub->text().toInt();;
-    w->thetaMaxSub = thetaMaxSub = ui->editHoughThetaMaxSub->text().toInt();
-    w->thetaStepSub = thetaStepSub = ui->editHoughThetaStepSub->text().toFloat();
+    //w->thetaMinSub = thetaMinSub = ui->editHoughThetaMinSub->text().toInt();;
+    //w->thetaMaxSub = thetaMaxSub = ui->editHoughThetaMaxSub->text().toInt();
+    //w->thetaStepSub = thetaStepSub = ui->editHoughThetaStepSub->text().toFloat();
 
     w->houghLineNo = houghLineNo = ui->editHoughLineNo->text().toInt();
     w->voteThreshold = voteThreshold = ui->editHoughThreshold->text().toInt();
     w->voidThreshold = voidThreshold = ui->editVoidThreshold->text().toInt();
+    w->brightnessVal = brightnessVal;
+    w->contrastVal = contrastVal;
+    w->gammaVal = gammaVal;
+    w->gaussianSize = gaussianSize;
+    w->stdDev = stdDev;
+    w->thinJointAlgoActive = thinJointAlgoActive;
+    w->edgeDetectionState = edgeDetectionState;
+    w->algorithmType = algorithmType;
+    w->mainEdgesNumber = mainEdgesNumber;
 
     w->fpsTarget = ui->editFPS->text().toInt();
     w->frameInterval = 1000 / w->fpsTarget;
@@ -899,9 +927,9 @@ void setupForm::on_captureButton_2_clicked(){
 
 void setupForm::update(){
 
-    QImage step1 = changeBrightness(w->imageFile, w->brightnessVal);
-    QImage step2 = changeContrast(step1, w->contrastVal);
-    w->imageFileChanged = changeGamma(step2, w->gammaVal);
+    QImage step1 = changeBrightness(w->imageFile, brightnessVal);
+    QImage step2 = changeContrast(step1, contrastVal);
+    w->imageFileChanged = changeGamma(step2, gammaVal);
     w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
 
     if (ui->checkProcessing->isChecked())
@@ -910,7 +938,7 @@ void setupForm::update(){
 
 void setupForm::on_brightnessSlider_sliderReleased(){
 
-    w->brightnessVal = ui->brightnessSlider->value();
+    brightnessVal = ui->brightnessSlider->value();
     //ui->plainTextEdit->appendPlainText(QString::number(w->brightnessVal));
     update();
 }
@@ -922,7 +950,7 @@ void setupForm::on_brightnessSlider_sliderMoved(int position){
 
 void setupForm::on_contrastSlider_sliderReleased(){
 
-    w->contrastVal = ui->contrastSlider->value();
+    contrastVal = ui->contrastSlider->value();
     update();
 }
 
@@ -933,7 +961,7 @@ void setupForm::on_contrastSlider_sliderMoved(int position){
 
 void setupForm::on_gammaSlider_sliderReleased(){
 
-    w->gammaVal = ui->gammaSlider->value();
+    gammaVal = ui->gammaSlider->value();
     update();
 }
 
@@ -944,7 +972,7 @@ void setupForm::on_gammaSlider_sliderMoved(int position){
 
 void setupForm::on_brightnessReset_clicked(){
 
-    w->brightnessVal = 0;
+    brightnessVal = 0;
     ui->brightnessSlider->setValue(0);
     ui->labelBrightness->setText(QString::number(0));
     update();
@@ -952,7 +980,7 @@ void setupForm::on_brightnessReset_clicked(){
 
 void setupForm::on_contrastReset_clicked(){
 
-    w->contrastVal = 100;
+    contrastVal = 100;
     ui->contrastSlider->setValue(100);
     ui->labelContrast->setText(QString::number(100));
     update();
@@ -960,7 +988,7 @@ void setupForm::on_contrastReset_clicked(){
 
 void setupForm::on_gammaReset_clicked(){
 
-    w->gammaVal = 100;
+    gammaVal = 100;
     ui->gammaSlider->setValue(100);
     ui->labelGamma->setText(QString::number(100));
     update();
@@ -978,15 +1006,15 @@ void setupForm::on_fileSlider_sliderMoved(int position){
 
 void setupForm::on_gaussSizeSlider_sliderMoved(int position){
 
-    w->gaussianSize = 2*position+1;
-    ui->labelGaussSize->setText(QString::number(w->gaussianSize));
+    gaussianSize = 2*position+1;
+    ui->labelGaussSize->setText(QString::number(gaussianSize));
     update();
 }
 
 void setupForm::on_gaussSDevSlider_sliderMoved(int position){
 
-    w->stdDev = position / 10.0;
-    ui->labelGaussSDev->setText(QString::number(w->stdDev));
+    stdDev = position / 10.0;
+    ui->labelGaussSDev->setText(QString::number(stdDev));
     update();
 }
 

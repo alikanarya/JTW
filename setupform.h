@@ -50,13 +50,16 @@ public:
     //int centerX,centerY;
     bool matrixFlag = false;
     bool averaging = false;
+    int brightnessVal = 0;
+    int contrastVal = 100;
+    int gammaVal = 100;
 
     //bool cannyThinning;
-    //int gaussianSize = 5;
-    //float stdDev = 1.4;
+    int gaussianSize = 5;
+    float stdDev = 1.4;
     bool thinJointAlgoActive;
     int algorithmType = 0;
-    int edgeDetectionState = 0; // 0:none, 1: sobel, 2: canny
+    int edgeDetectionState = 0; // 0:none, 1: sobel, 2: canny4, 3: canny1
     int lineDetectAlgos = 0; // 0:none, 1: detectLongestSolidLines, 2: detectMainEdges, 3: detectPrimaryVoid
     bool subImageProcessingSwitch;
     bool algoPrerequestsOk = false;
