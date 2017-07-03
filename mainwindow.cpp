@@ -255,8 +255,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     zStartStopRate = 0.3;
 
 
-    if ( thinJointAlgoActive || zControlActive || hardControlStart )
-        QTimer::singleShot(500, this, SLOT(showInfo()));
+    //if ( thinJointAlgoActive || zControlActive || hardControlStart )
+      //  QTimer::singleShot(500, this, SLOT(showInfo()));
 
 }
 
@@ -922,6 +922,69 @@ void MainWindow::zControlButton(){
     } else {
         ui->zControlButton->setStyleSheet("color: rgb(0, 0, 0)");
     }
+}
+
+void MainWindow::edgeDetection(imgProcess *iprocess){
+
+    switch ( edgeDetectionState ) {
+        case 0: // NONE
+            averaging = true;
+            matrixFlag = true;
+            break;
+        case 1: // SOBEL
+            iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
+            iprocess->detectEdgeSobel(); // detect edges of the mono image
+            iprocess->houghTransformFn(iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight);
+            averaging = false;
+            matrixFlag = false;
+            break;
+        case 2: // CANNY 4
+            iprocess->prepareCannyArrays();
+            iprocess->constructGaussianMatrix(gaussianSize, stdDev);
+            for (int i = 0; i < 4 ; i++){
+                iprocess->constructValueMatrix( iprocess->imgOrginal, i );
+                iprocess->gaussianBlur();
+                iprocess->detectEdgeSobelwDirections();
+                iprocess->nonMaximumSuppression(cannyThinning);
+                iprocess->cannyThresholding(true);
+                iprocess->edgeTracing();
+                iprocess->assignEdgeMap();
+            }
+            iprocess->mergeEdgeMaps();
+
+            for (int y = 0; y < iprocess->edgeHeight; y++)
+                for (int x = 0; x < iprocess->edgeWidth; x++){
+                    if (iprocess->edgeMapMatrix[y][x])
+                        iprocess->edgeMatrix[y][x]=255;
+                    else
+                        iprocess->edgeMatrix[y][x]=0;
+                }
+            iprocess->houghTransformEdgeMap();
+            averaging = false;
+            matrixFlag = false;
+            break;
+        case 3: // CANNY 1
+            iprocess->prepareCannyArrays();
+            iprocess->constructGaussianMatrix(gaussianSize, stdDev);
+            iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
+            iprocess->gaussianBlur();
+            iprocess->detectEdgeSobelwDirections();
+            iprocess->nonMaximumSuppression(cannyThinning);
+            iprocess->cannyThresholding(true);
+            iprocess->edgeTracing();
+
+            for (int y = 0; y < iprocess->edgeHeight; y++)  // to display edge image
+                for (int x = 0; x < iprocess->edgeWidth; x++){
+                    if (iprocess->edgeMapMatrix[y][x])
+                        iprocess->edgeMatrix[y][x]=255;
+                    else
+                        iprocess->edgeMatrix[y][x]=0;
+                }
+            iprocess->houghTransformEdgeMap();
+            matrixFlag = false;
+            break;
+    }
+
 }
 
 void MainWindow::processImage(){

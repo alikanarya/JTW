@@ -216,6 +216,8 @@ public:
     int gaussianSize = 5;
     float stdDev = 1.4;
     int mainEdgesNumber = 1;
+    bool matrixFlag = false;
+    bool averaging = false;
 
     // Z-Control
     bool zControlActive;
@@ -358,7 +360,16 @@ public:
     void clearTrack();                              // clears dev. trend & re-paint the axis
     void drawTrack();                               // draws dev. trend
     QImage* takeTargetAreaImage();                  // get target image from current image as a new object
+
+    void edgeDetection(imgProcess *iprocess);
     void processImage();                            // detect corners and plc command
+    void Algo1(imgProcess *iprocess);   // LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines
+    void Algo2(imgProcess *iprocess);   // LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid
+    void Algo3(imgProcess *iprocess);   // woLASER: edge > houghTr > detectMainEdges
+    void Algo4(imgProcess *iprocess);   // woLASER: value > detectThinJointCenter
+    void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
+    void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
+
     void processStandardHT();                       // standard hough transform
     void processSubImageVoidness();                 // sub image based on VOID areas
     void processSubImageSolidness();                // sub image based on SOLID lines
