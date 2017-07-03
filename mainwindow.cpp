@@ -987,50 +987,142 @@ void MainWindow::edgeDetection(imgProcess *iprocess){
 
 }
 
+void MainWindow::Algo1(imgProcess *iprocess){
+// LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines
+
+    if (edgeDetectionState == 0){
+        iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
+        iprocess->houghTransformFn(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight);
+    }
+
+    iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+
+    iprocess->detectLongestSolidLines(averaging, matrixFlag);
+}
+
+void MainWindow::Algo2(imgProcess *iprocess){
+// LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid
+
+    if (edgeDetectionState == 0){
+        iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
+        iprocess->houghTransformFn(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight);
+    }
+
+    iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+
+    iprocess->calcAvgDistAndAngle( houghLineNo );           // calc. avg. distance and theta
+    iprocess->calcVoteAvg();                      // avg. value of max voted line(s)
+
+    iprocess->voteThreshold = voteThreshold;                // acceptable vote value low-limit
+    if ( !iprocess->checkPrimaryLine() )                    // is max voted line  above the low-limit?
+        iprocess->detectVoidLines();                            // detect void lines on hough lines in MONO image
+
+    iprocess->voidThreshold = voidThreshold;                // void threshold to decide max void as primary
+    iprocess->detectPrimaryVoid();                          // decide primary void line & corners/center
+}
+
+void MainWindow::Algo3(imgProcess *iprocess){
+// woLASER: edge > houghTr > detectMainEdges
+
+    if (edgeDetectionState != 0) {
+        iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+        iprocess->thinCornerNum = mainEdgesNumber;
+        iprocess->detectMainEdges(thinJointAlgoActive, false);
+    } else {
+        ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
+    }
+}
+
+void MainWindow::Algo4(imgProcess *iprocess){
+// woLASER: value > detectThinJointCenter
+
+    iprocess->constructValueMatrix( iprocess->imgOrginal );
+    iprocess->detectThinJointCenter(3, 31);
+}
+
+void MainWindow::Algo5(imgProcess *iprocess){
+// woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
+
+    iprocess->constructValueMatrix( iprocess->imgOrginal );
+    iprocess->constructContrastMatix(3);
+    iprocess->houghTransformContrast();;
+    iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+    iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
+    iprocess->detectContrastCenter();
+}
+
+void MainWindow::Algo6(imgProcess *iprocess){
+// woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
+
+    if (edgeDetectionState == 3) {
+        iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+        iprocess->thinCornerNum = 1;//mainEdgesNumber;
+        iprocess->detectMainEdges(thinJointAlgoActive, false);
+        iprocess->thickenEdgeMap(3);
+        iprocess->scoreLineCrossing(true);
+
+    } else {
+        ui->plainTextEdit->appendPlainText("Canny1 kenar tespiti algoritması seçilmelidir");
+    }
+}
+
 void MainWindow::processImage(){
 
+    iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+    iprocessInitSwitch = true;
 
-    if ( lineDetection ) {
+    iprocess->thetaMin = thetaMin;
+    iprocess->thetaMax = thetaMax;
+    iprocess->thetaStep = thetaStep;
 
-        processLineDetection();
+    if (thinJointAlgoActive){    // without laser
+        iprocess->centerX = 0;
+        iprocess->centerY = 0;
+    } else {                     // with laser
+        iprocess->centerX = iprocess->edgeWidth / 2;
+        iprocess->centerY = 0;
+    }
 
-    } else {
+    iprocess->toMono();                                     // convert target to mono
 
-        //if (dynamicAlgo)    thinJointAlgoActive = !weldSeamExists;
+    edgeDetection(iprocess);
 
-        if ( thinJointAlgoActive ) {
-            processEdgeDetection();
-        } else {
-            processSolidnessCanny();
+    if (thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
+
+        switch ( algorithmType ) {
+            case 0: // NONE
+                break;
+            case 1: // MAIN EDGES
+                Algo3(iprocess);
+                break;
+            case 2: // THIN JOINT - DARK AREA
+                Algo4(iprocess);
+                break;
+            case 3: // CONTRAST
+                Algo5(iprocess);
+                break;
+            case 4: // LINE DETECTION WITH MAIN EDGES
+                Algo6(iprocess);
+                break;
+            case 5: // EXPERIMENTAL
+                break;
+        }
+    } else {    // with laser - HORIZONTAL SEARCH
+        switch ( algorithmType ) {
+            case 0: // NONE
+                break;
+            case 1: // LONGEST SOLID LINES
+                Algo1(iprocess);
+                break;
+            case 2: // PRIMARY VOID
+                Algo2(iprocess);
+                break;
+            case 3: // EXPERIMENTAL
+                break;
         }
     }
 
-/*
-    if ( thinJointAlgoActive ) {
 
-//        processThinJoint();
-        processContrastDetection();
-
-    } else {
-
-        if ( !subImageProcessingSwitch ) {
-
-            processStandardHT();
-
-        } else {
-
-            switch ( subImageProcessingType ) {
-                case 0:
-                    processSubImageVoidness();
-                    break;
-                case 1:
-                    processSubImageSolidness();
-                    break;
-            }
-        }
-    }
-
-*/
 
     if ( lineDetection ) {
 
