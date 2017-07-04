@@ -39,6 +39,8 @@ public:
 
     // image processing vars
     int thetaMin, thetaMax;
+    int thetaMinHorLine, thetaMaxHorLine;   // for horizontal laser line
+    int thetaMinVerLine, thetaMaxVerLine;   // for vertical edge lines w/o laser
     float thetaStep;
     int thetaMinSub, thetaMaxSub;
     float thetaStepSub;

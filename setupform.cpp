@@ -702,6 +702,10 @@ bool setupForm::saveButton(){
 
 void setupForm::getParameters(){
 
+    thetaMinHorLine = w->thetaMinHorLine;
+    thetaMaxHorLine = w->thetaMaxHorLine;
+    thetaMinVerLine = w->thetaMinVerLine;
+    thetaMaxVerLine = w->thetaMaxVerLine;
     thetaMin = w->thetaMin;
     thetaMax = w->thetaMax;
     thetaStep = w->thetaStep;
@@ -762,8 +766,14 @@ void setupForm::subImageCheck(){
 
 void setupForm::saveExitButton(){
 
-    w->thetaMin = thetaMin = ui->editHoughThetaMin->text().toInt();;
-    w->thetaMax = thetaMax = ui->editHoughThetaMax->text().toInt();
+    if (thinJointAlgoActive) {
+        w->thetaMinVerLine = w->thetaMin = thetaMin;
+        w->thetaMaxVerLine = w->thetaMax = thetaMax;
+    } else {
+        w->thetaMinHorLine = w->thetaMin = thetaMin;
+        w->thetaMaxHorLine = w->thetaMax = thetaMax;
+    }
+
     w->thetaStep = thetaStep = ui->editHoughThetaStep->text().toFloat();
 
     //w->thetaMinSub = thetaMinSub = ui->editHoughThetaMinSub->text().toInt();;
@@ -1031,26 +1041,31 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
 void setupForm::on_radioLaser_clicked() {
 
     thinJointAlgoActive = false;
-    thetaMin = w->thetaMinHorLine;
-    thetaMax = w->thetaMaxHorLine;
+    thetaMin = thetaMinHorLine;
+    thetaMax = thetaMaxHorLine;
     ui->editHoughThetaMin->setText(QString::number(thetaMin));
     ui->editHoughThetaMax->setText(QString::number(thetaMax));
 
+    int algo = algorithmType;
     ui->algorithmBox->clear();
     ui->algorithmBox->addItem("Yok");
     ui->algorithmBox->addItem("Çizgi");
     ui->algorithmBox->addItem("Boşluk");
     ui->algorithmBox->addItem("Deneme");
+    if (algo > 3) algo = 3;
+    algorithmType = algo;
+    ui->algorithmBox->setCurrentIndex( algorithmType );
 }
 
 void setupForm::on_radioWoLaser_clicked() {
 
     thinJointAlgoActive = true;
-    thetaMin = w->thetaMinVerLine;
-    thetaMax = w->thetaMaxVerLine;
+    thetaMin = thetaMinVerLine;
+    thetaMax = thetaMaxVerLine;
     ui->editHoughThetaMin->setText(QString::number(thetaMin));
     ui->editHoughThetaMax->setText(QString::number(thetaMax));
 
+    int algo = algorithmType;
     ui->algorithmBox->clear();
     ui->algorithmBox->addItem("Yok");
     ui->algorithmBox->addItem("Ana Kenarlar");
@@ -1058,7 +1073,9 @@ void setupForm::on_radioWoLaser_clicked() {
     ui->algorithmBox->addItem("Kontrast");
     ui->algorithmBox->addItem("Ana Kenarlar ile Çizgi");
     ui->algorithmBox->addItem("Deneme");
-
+    if (algo > 5) algo = 5;
+    algorithmType = algo;
+    ui->algorithmBox->setCurrentIndex( algorithmType );
 }
 
 void setupForm::on_edgeDetectionBox_currentIndexChanged(int index){

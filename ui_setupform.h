@@ -622,7 +622,7 @@ public:
         editHoughThetaStep->setInputMask(QApplication::translate("setupForm", "9.9", 0));
         editHoughThetaStep->setText(QApplication::translate("setupForm", "1.0", 0));
         label_8->setText(QApplication::translate("setupForm", "A\303\247\304\261 \303\207\303\266z.", 0));
-        editHoughThetaMin->setInputMask(QApplication::translate("setupForm", "999", 0));
+        editHoughThetaMin->setInputMask(QApplication::translate("setupForm", "#999", 0));
         editHoughThetaMin->setText(QApplication::translate("setupForm", "87", 0));
         label_9->setText(QApplication::translate("setupForm", "A\303\247\304\261 Aral\304\261\304\237\304\261", 0));
         editHoughThetaMax->setInputMask(QApplication::translate("setupForm", "999", 0));

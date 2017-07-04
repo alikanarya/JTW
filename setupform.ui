@@ -446,7 +446,7 @@
     </rect>
    </property>
    <property name="inputMask">
-    <string>999</string>
+    <string>#999</string>
    </property>
    <property name="text">
     <string>87</string>
