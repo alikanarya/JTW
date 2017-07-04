@@ -362,7 +362,7 @@ public:
     QImage* takeTargetAreaImage();                  // get target image from current image as a new object
 
     void edgeDetection(imgProcess *iprocess);
-    void processImage();                            // detect corners and plc command
+    void processImage(bool deleteObject = true);                            // detect corners and plc command
     void Algo1(imgProcess *iprocess);   // LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines
     void Algo2(imgProcess *iprocess);   // LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid
     void Algo3(imgProcess *iprocess);   // woLASER: edge > houghTr > detectMainEdges

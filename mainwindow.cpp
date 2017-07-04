@@ -704,7 +704,7 @@ void MainWindow::analyzeButton(){
 
         int startTime = timeSystem.getSystemTimeMsec();
 
-        processImage();
+        processImage(false);
 
         int endTime = timeSystem.getSystemTimeMsec();
 
@@ -978,11 +978,11 @@ void MainWindow::Algo2(imgProcess *iprocess){
     iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
 
     iprocess->calcAvgDistAndAngle( houghLineNo );           // calc. avg. distance and theta
-    iprocess->calcVoteAvg();                      // avg. value of max voted line(s)
+    iprocess->calcVoteAvg();                                // avg. value of max voted line(s)
 
     iprocess->voteThreshold = voteThreshold;                // acceptable vote value low-limit
-    if ( !iprocess->checkPrimaryLine() )                    // is max voted line  above the low-limit?
-        iprocess->detectVoidLines();                            // detect void lines on hough lines in MONO image
+    iprocess->checkPrimaryLine();                           // is max voted line  above the low-limit?
+    iprocess->detectVoidLines();                            // detect void lines on hough lines in MONO image
 
     iprocess->voidThreshold = voidThreshold;                // void threshold to decide max void as primary
     iprocess->detectPrimaryVoid();                          // decide primary void line & corners/center
@@ -1034,7 +1034,7 @@ void MainWindow::Algo6(imgProcess *iprocess){
     }
 }
 
-void MainWindow::processImage(){
+void MainWindow::processImage(bool deleteObject){
 
     //if ( !imageGetter->imageList.isEmpty() ){
 
@@ -1177,7 +1177,7 @@ void MainWindow::processImage(){
 
         }
 
-        if ( iprocessInitSwitch ) {
+        if ( deleteObject && iprocessInitSwitch ) {
             iprocessInitSwitch = false;
             delete iprocess;
         }

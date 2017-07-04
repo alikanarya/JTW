@@ -37,21 +37,23 @@ public:
         if (analyzeDialog->objectName().isEmpty())
             analyzeDialog->setObjectName(QStringLiteral("analyzeDialog"));
         analyzeDialog->setWindowModality(Qt::WindowModal);
-        analyzeDialog->resize(670, 529);
+        analyzeDialog->resize(670, 760);
         QIcon icon;
         icon.addFile(QStringLiteral(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         analyzeDialog->setWindowIcon(icon);
         labelMono = new QLabel(analyzeDialog);
         labelMono->setObjectName(QStringLiteral("labelMono"));
-        labelMono->setGeometry(QRect(10, 10, 320, 100));
+        labelMono->setGeometry(QRect(10, 10, 320, 320));
         labelMono->setFrameShape(QFrame::Box);
+        labelMono->setScaledContents(true);
         labelAnalyze = new QLabel(analyzeDialog);
         labelAnalyze->setObjectName(QStringLiteral("labelAnalyze"));
-        labelAnalyze->setGeometry(QRect(340, 10, 320, 100));
+        labelAnalyze->setGeometry(QRect(340, 10, 320, 320));
         labelAnalyze->setFrameShape(QFrame::Box);
+        labelAnalyze->setScaledContents(true);
         plainTextEdit = new QPlainTextEdit(analyzeDialog);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
-        plainTextEdit->setGeometry(QRect(10, 120, 651, 331));
+        plainTextEdit->setGeometry(QRect(10, 340, 651, 331));
         QFont font;
         font.setFamily(QStringLiteral("Arial"));
         font.setPointSize(10);
@@ -60,7 +62,7 @@ public:
         plainTextEdit->setReadOnly(true);
         label = new QLabel(analyzeDialog);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(10, 460, 651, 20));
+        label->setGeometry(QRect(10, 680, 651, 20));
         QFont font1;
         font1.setFamily(QStringLiteral("Arial"));
         font1.setPointSize(14);
@@ -71,7 +73,7 @@ public:
         label->setAlignment(Qt::AlignCenter);
         acceptButton = new QPushButton(analyzeDialog);
         acceptButton->setObjectName(QStringLiteral("acceptButton"));
-        acceptButton->setGeometry(QRect(220, 490, 80, 25));
+        acceptButton->setGeometry(QRect(220, 710, 80, 25));
         QFont font2;
         font2.setFamily(QStringLiteral("Arial"));
         font2.setPointSize(10);
@@ -81,13 +83,13 @@ public:
         acceptButton->setStyleSheet(QStringLiteral("color: rgb(0, 255, 127);"));
         cancelButton = new QPushButton(analyzeDialog);
         cancelButton->setObjectName(QStringLiteral("cancelButton"));
-        cancelButton->setGeometry(QRect(360, 490, 80, 25));
+        cancelButton->setGeometry(QRect(360, 710, 80, 25));
         cancelButton->setFont(font2);
         cancelButton->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         cancelButton_2 = new QPushButton(analyzeDialog);
         cancelButton_2->setObjectName(QStringLiteral("cancelButton_2"));
         cancelButton_2->setEnabled(false);
-        cancelButton_2->setGeometry(QRect(580, 490, 80, 25));
+        cancelButton_2->setGeometry(QRect(580, 710, 80, 25));
         cancelButton_2->setFont(font2);
         cancelButton_2->setStyleSheet(QStringLiteral(""));
 
