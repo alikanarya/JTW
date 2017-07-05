@@ -20,16 +20,35 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
 
     ui->setupUi(this);
 
-    ui->labelMono->setPixmap(QPixmap::fromImage(iprocess->imgMono));
-    ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCorner));
+    QImage correctImage;
+    correctImage.load(":/pixmaps/resources/Algo1.jpg");
+    //ui->labelMono->setPixmap(QPixmap::fromImage(iprocess->imgMono));
+    ui->labelMono->setPixmap(QPixmap::fromImage(correctImage));
 
+    if (w->thinJointAlgoActive && w->algorithmType == 2) {
+        minCostedLines *centerline = new minCostedLines();
+        centerline->c = iprocess->centerC;
+        centerline->cost = 0;
+        ui->labelAnalyze->setPixmap(QPixmap::fromImage( iprocess->drawLine(centerline, iprocess->slopeBest) ));
+    } else
+    if (w->thinJointAlgoActive && w->algorithmType == 3) {
+        iprocess->constructContrastMatrixMajor2Lines();
+        ui->labelAnalyze->setPixmap(QPixmap::fromImage( *iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight) ));
+    } else
+    if (w->thinJointAlgoActive && w->algorithmType == 4) {
+        ui->labelAnalyze->setPixmap(QPixmap::fromImage( iprocess->getImageMainEdges(1) ));
+    } else
+        ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCorner));
+
+
+    /*
     ui->plainTextEdit->appendPlainText("ANALİZ SONUCU");
     ui->plainTextEdit->appendPlainText("--------------------------------------------------");
     ui->plainTextEdit->appendPlainText("Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.");
     ui->plainTextEdit->appendPlainText("Analiz Mesajı: " + iprocess->statusMessage);
     ui->plainTextEdit->appendPlainText("Çizgi açısı: " + QString::number(iprocess->angleAvg) + " Derece");
     ui->plainTextEdit->appendPlainText("--------------------------------------------------");
-
+    */
     ui->plainTextEdit->appendPlainText("BU YAZILIM;");
     ui->plainTextEdit->appendPlainText("YAPTIĞI TESPİTİN DOĞRULUĞUNA KENDİLİĞİNDEN KARAR VEREMEZ !");
     ui->plainTextEdit->appendPlainText("BU SEBEPLE YUKARIDAKİ GÖRÜNTÜLERİN OPERATÖR TARAFINDAN ONAYLANMASI GEREKMEKTEDİR.\n");
@@ -46,7 +65,8 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
 
     if (!iprocess->detected) ui->acceptButton->setEnabled(false);
 
-    if (w->thinJointAlgoActive) ui->cancelButton_2->setEnabled(false);  // disable sample button
+    ui->cancelButton_2->setEnabled(false);
+    ui->cancelButton_2->hide();
 }
 
 void analyzeDialog::acceptButton(){

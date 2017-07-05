@@ -74,7 +74,7 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(170, 255, 127);</string>
+    <string notr="true">background-color: rgb(255, 255, 195);</string>
    </property>
    <property name="readOnly">
     <bool>true</bool>
@@ -110,22 +110,19 @@
   <widget class="QPushButton" name="acceptButton">
    <property name="geometry">
     <rect>
-     <x>220</x>
+     <x>213</x>
      <y>710</y>
-     <width>80</width>
-     <height>25</height>
+     <width>100</width>
+     <height>40</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Arial</family>
-     <pointsize>10</pointsize>
+     <pointsize>12</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: rgb(0, 255, 127);</string>
    </property>
    <property name="text">
     <string>EVET</string>
@@ -134,22 +131,19 @@
   <widget class="QPushButton" name="cancelButton">
    <property name="geometry">
     <rect>
-     <x>360</x>
+     <x>353</x>
      <y>710</y>
-     <width>80</width>
-     <height>25</height>
+     <width>100</width>
+     <height>40</height>
     </rect>
    </property>
    <property name="font">
     <font>
      <family>Arial</family>
-     <pointsize>10</pointsize>
+     <pointsize>12</pointsize>
      <weight>75</weight>
      <bold>true</bold>
     </font>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">color: rgb(255, 0, 0);</string>
    </property>
    <property name="text">
     <string>HAYIR</string>
