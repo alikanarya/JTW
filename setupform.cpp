@@ -283,7 +283,7 @@ void setupForm::Algo5(imgProcess *iprocess){
     iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
         /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"05-max hough lines matrix -dist-angle-vote.csv");
     iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
-        /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"06-max hough lines distance sorted.csv");
+        /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLinesSorted_size, path+"06-max hough lines distance sorted.csv");
         /**/if (DEBUG) {
                 ui->plainTextEdit->appendPlainText("major1; dist: " + QString::number(iprocess->major2Lines[0].distance) + ", angle: " + QString::number(iprocess->major2Lines[0].angle));
                 ui->plainTextEdit->appendPlainText("major2; dist: " + QString::number(iprocess->major2Lines[1].distance) + ", angle: " + QString::number(iprocess->major2Lines[1].angle));
@@ -560,14 +560,14 @@ void setupForm::captureButton(){
                         break;
                     case 3: // CONTRAST
                         iprocess->constructContrastMatrixMajor2Lines();
-                            /**/if (DEBUG) iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, savePath + "07-contrast with lines matrix.csv" );
+                            /**/if (DEBUG) iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, path+"07-contrast with lines matrix.csv" );
                         hough = iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight);
                             /**/if (DEBUG) hough->save(path+"08-major 2 lines image.jpg");
                         ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
 
                         iprocess->cornerImage();
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
-                            /*D*/if (DEBUG) iprocess->imgCorner.save(path+"09-corner image.jpg");
+                            /**/if (DEBUG) iprocess->imgCorner.save(path+"09-corner image.jpg");
                         ui->plainTextEdit->appendPlainText("avg dist, angle: " + QString::number(iprocess->distanceAvg) + ", " + QString::number(iprocess->thetaAvg));
                         break;
                     case 4: // LINE DETECTION WITH MAIN EDGES

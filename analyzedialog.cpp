@@ -25,12 +25,12 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
 
     if (w->thinJointAlgoActive) {
 
-        if (w->algorithmType == 1) {
+        if (w->algorithmType == 1) { // MAIN EDGES
             correctImage.load(":/pixmaps/resources/Algo3.jpg");
             ui->labelMono->setPixmap(QPixmap::fromImage(correctImage));
             ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(1) ) );
         } else
-        if (w->algorithmType == 2) {
+        if (w->algorithmType == 2) { // THIN JOINT - DARK AREA
             correctImage.load(":/pixmaps/resources/Algo4.jpg");
             ui->labelMono->setPixmap(QPixmap::fromImage(correctImage));
             minCostedLines *centerline = new minCostedLines();
@@ -38,16 +38,18 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
             centerline->cost = 0;
             ui->labelAnalyze->setPixmap(QPixmap::fromImage( iprocess->drawLine(centerline, iprocess->slopeBest) ));
         } else
-        if (w->algorithmType == 3) {
+        if (w->algorithmType == 3) { // CONTRAST
+            correctImage.load(":/pixmaps/resources/Algo5.jpg");
+            ui->labelMono->setPixmap(QPixmap::fromImage(correctImage));
             iprocess->constructContrastMatrixMajor2Lines();
             ui->labelAnalyze->setPixmap(QPixmap::fromImage( *iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight) ));
         } else
-        if (w->algorithmType == 4) {
+        if (w->algorithmType == 4) { // LINE DETECTION WITH MAIN EDGES
             ui->labelAnalyze->setPixmap(QPixmap::fromImage( iprocess->getImageMainEdges(1) ));
         } else {
             ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCorner));
         }
-    } else {
+    } else { // with laser - HORIZONTAL SEARCH
         correctImage.load(":/pixmaps/resources/Algo1.jpg");
         ui->labelMono->setPixmap(QPixmap::fromImage(correctImage));
         ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCorner));
@@ -70,12 +72,13 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
 //    ui->plainTextEdit->appendPlainText("* Yukarıda soldaki resimde, görüntüde PARLAMA olup olmadığı ve lazer çizgisinin");
 //    ui->plainTextEdit->appendPlainText("NET bir şekilde seçilebilir olup olmadığına dikkat edilir.(İNCE KAYNAK AĞZI UYGULMASI HARİÇ)\n");
 
-    ui->plainTextEdit->appendPlainText("* Yukarıda sağdaki resimde ise KÖŞElerin ve");
-    ui->plainTextEdit->appendPlainText("MERKEZ noktasının doğru tespit edilip edilemediğine dikkat edilir.\n");
+    ui->plainTextEdit->appendPlainText("* Yukarıda sağdaki resimde KÖŞE ve MERKEZ noktalarının DOĞRU tespit edilip");
+    ui->plainTextEdit->appendPlainText("  edilemediğine dikkat edilir.\n");
 
-    ui->plainTextEdit->appendPlainText("Eğer bu kriter(ler)e göre doğru algılama yapılamadıysa, kamera kurulumunda bir hata var demektir.");
-    ui->plainTextEdit->appendPlainText("Yazılımın tespit edebildiği hatalar, yukarıdaki analiz mesajında belirtilir ve sizin onay vermeniz engellenir.");
-    ui->plainTextEdit->appendPlainText("Hata durumunda veya tespit doğruluğundaki anormalliklerde TEKNİK SERVİSİNİZ ile irtibata geçiniz.");
+    ui->plainTextEdit->appendPlainText("Program, doğru algılama yapamadıysa, kamera kurulumunda bir hata var demektir.");
+//    ui->plainTextEdit->appendPlainText("Yazılımın tespit edebildiği hatalar, yukarıdaki analiz mesajında belirtilir ve sizin onay vermeniz engellenir.");
+    ui->plainTextEdit->appendPlainText("Hata durumunda veya tespit doğruluğundaki anormalliklerde");
+    ui->plainTextEdit->appendPlainText("TEKNİK SERVİSİNİZ ile irtibata geçiniz.");
 
     if (!iprocess->detected) ui->acceptButton->setEnabled(false);
 
