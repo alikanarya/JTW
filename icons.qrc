@@ -42,5 +42,7 @@
         <file>resources/good_mono.jpg</file>
         <file>resources/distance.png</file>
         <file>resources/Algo1.jpg</file>
+        <file>resources/Algo4.jpg</file>
+        <file>resources/Algo3.jpg</file>
     </qresource>
 </RCC>

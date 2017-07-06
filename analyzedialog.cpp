@@ -20,25 +20,39 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
 
     ui->setupUi(this);
 
-    QImage correctImage;
-    correctImage.load(":/pixmaps/resources/Algo1.jpg");
     //ui->labelMono->setPixmap(QPixmap::fromImage(iprocess->imgMono));
-    ui->labelMono->setPixmap(QPixmap::fromImage(correctImage));
+    QImage correctImage;
 
-    if (w->thinJointAlgoActive && w->algorithmType == 2) {
-        minCostedLines *centerline = new minCostedLines();
-        centerline->c = iprocess->centerC;
-        centerline->cost = 0;
-        ui->labelAnalyze->setPixmap(QPixmap::fromImage( iprocess->drawLine(centerline, iprocess->slopeBest) ));
-    } else
-    if (w->thinJointAlgoActive && w->algorithmType == 3) {
-        iprocess->constructContrastMatrixMajor2Lines();
-        ui->labelAnalyze->setPixmap(QPixmap::fromImage( *iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight) ));
-    } else
-    if (w->thinJointAlgoActive && w->algorithmType == 4) {
-        ui->labelAnalyze->setPixmap(QPixmap::fromImage( iprocess->getImageMainEdges(1) ));
-    } else
+    if (w->thinJointAlgoActive) {
+
+        if (w->algorithmType == 1) {
+            correctImage.load(":/pixmaps/resources/Algo3.jpg");
+            ui->labelMono->setPixmap(QPixmap::fromImage(correctImage));
+            ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(1) ) );
+        } else
+        if (w->algorithmType == 2) {
+            correctImage.load(":/pixmaps/resources/Algo4.jpg");
+            ui->labelMono->setPixmap(QPixmap::fromImage(correctImage));
+            minCostedLines *centerline = new minCostedLines();
+            centerline->c = iprocess->centerC;
+            centerline->cost = 0;
+            ui->labelAnalyze->setPixmap(QPixmap::fromImage( iprocess->drawLine(centerline, iprocess->slopeBest) ));
+        } else
+        if (w->algorithmType == 3) {
+            iprocess->constructContrastMatrixMajor2Lines();
+            ui->labelAnalyze->setPixmap(QPixmap::fromImage( *iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight) ));
+        } else
+        if (w->algorithmType == 4) {
+            ui->labelAnalyze->setPixmap(QPixmap::fromImage( iprocess->getImageMainEdges(1) ));
+        } else {
+            ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCorner));
+        }
+    } else {
+        correctImage.load(":/pixmaps/resources/Algo1.jpg");
+        ui->labelMono->setPixmap(QPixmap::fromImage(correctImage));
         ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCorner));
+    }
+
 
 
     /*

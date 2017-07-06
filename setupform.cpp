@@ -542,18 +542,19 @@ void setupForm::captureButton(){
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
                         break;
                     case 2: // THIN JOINT
+                        minCostedLines *centerline;
+                        centerline = new minCostedLines();
+                        centerline->c = iprocess->centerC;
+                        centerline->cost = 0;
                             /**/if (DEBUG) {
-                                    minCostedLines *centerline = new minCostedLines();
-                                    centerline->c = iprocess->centerC;
-                                    centerline->cost = 0;
                                     iprocess->drawLine(centerline, iprocess->slopeBest).save(path+"03-centerLine.jpg");
 
                                     iprocess->saveMinCostedLinesArray(iprocess->bestLines, iprocess->anglePrecision, path+"04-best lines.csv");
                                     iprocess->saveMinCostedLinesList(iprocess->lineList, path+"05-lineList.csv");
                                     iprocess->saveList(iprocess->peakPoints, path+"06-peakPoints.csv");
-
                                 }
                         ui->plainTextEdit->appendPlainText("best slope: "+ QString::number(iprocess->slopeBestIndex));
+                        ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->drawLine(centerline, iprocess->slopeBest) ));
                         iprocess->cornerImage();
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
                         break;
