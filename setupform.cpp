@@ -351,7 +351,6 @@ void setupForm::processImage(){
                         path += "-Algo6/"; break;
                     case 5: // EXPERIMENTAL
                         path += "-AlgoY/"; break;
-                        break;
                 }
             } else {    // with laser - HORIZONTAL SEARCH
                 switch ( algorithmType ) {
@@ -1037,6 +1036,27 @@ void setupForm::on_cannyThinningBox_clicked(){
 void setupForm::on_algorithmBox_currentIndexChanged(int index){
 
     algorithmType = index;
+
+    QString algoName = "";
+    if (thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
+        switch ( algorithmType ) {
+            case 0: break;
+            case 1: algoName = "Algo3: woLASER: edge > houghTr > detectMainEdges"; break;  // MAIN EDGES
+            case 2: algoName = "Algo4: woLASER: value > detectThinJointCenter"; break;  // THIN JOINT - DARK AREA
+            case 3: algoName = "Algo5: woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors"; break;  // CONTRAST
+            case 4: algoName = "Algo6: woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing"; break;  // LINE DETECTION WITH MAIN EDGES
+            case 5: algoName = "AlgoY"; break;  // EXPERIMENTAL
+        }
+    } else {    // with laser - HORIZONTAL SEARCH
+        switch ( algorithmType ) {
+            case 0: break;
+            case 1: algoName = "Algo1: LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines"; break;  // LONGEST SOLID LINES
+            case 2: algoName = "Algo2: LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid"; break;  // PRIMARY VOID
+            case 3: algoName = "AlgoX"; break;  // EXPERIMENTAL
+        }
+    }
+
+    ui->plainTextEdit->appendPlainText(algoName);
 }
 
 void setupForm::on_radioLaser_clicked() {
