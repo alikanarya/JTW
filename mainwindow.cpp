@@ -700,7 +700,7 @@ void  MainWindow::cameraDownAction(){
 
 void MainWindow::analyzeButton(){
 
-/**///    if ( !imageGetter->imageList.isEmpty() ) {  // if any image is get
+    if ( !imageGetter->imageList.isEmpty() ) {  // if any image is get
 
         int startTime = timeSystem.getSystemTimeMsec();
 
@@ -721,10 +721,10 @@ void MainWindow::analyzeButton(){
             delete iprocess;
         }
 
-/*
+
     } else {
          ui->plainTextEdit->appendPlainText(timeString() + alarm6);
-    }*/
+    }
 }
 
 void MainWindow::guideButton(){
@@ -1036,7 +1036,7 @@ void MainWindow::Algo6(imgProcess *iprocess){
 
 void MainWindow::processImage(bool deleteObject){
 
-    //if ( !imageGetter->imageList.isEmpty() ){
+    if ( !imageGetter->imageList.isEmpty() ){
 
         targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
 
@@ -1182,7 +1182,7 @@ void MainWindow::processImage(bool deleteObject){
             delete iprocess;
         }
 
-    //}
+    }
 
 
 }
@@ -1569,12 +1569,12 @@ void MainWindow::drawTrack(){
 
 void MainWindow::target2Left(){
 
-    offsetXpos--;
-    offsetX--;
+    offsetXpos -= 5;
+    offsetX -= 5;
 
     if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) ){
-        offsetXpos++;
-        offsetX++;
+        offsetXpos += 5;
+        offsetX += 5;
     }
 
     repaintGuide();
@@ -1582,12 +1582,12 @@ void MainWindow::target2Left(){
 
 void MainWindow::target2Right(){
 
-    offsetXpos++;
-    offsetX++;
+    offsetXpos += 5;
+    offsetX += 5;
 
     if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) ){
-        offsetXpos--;
-        offsetX--;
+        offsetXpos -= 5;
+        offsetX -= 5;
     }
 
     repaintGuide();
