@@ -207,7 +207,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     cmdStatePrev2 = _CMD_CENTER;
     ui->cmdStatus->setIcon(QIcon());
 
-    controlDelay = QString::number(controlDelay).toInt(&controlDelayValid, 10);
+    controlDelay = QString::number(controlDelay).toInt(&controlDelayValid, 10); //controlDelayValid: true if conversion is ok
     timerControlInterval = 100;
     controlThreadCountSize = 60000 / timerControlInterval;   // timer shot count for 60sec plc check
     weldCommandsSize = controlDelay / timerControlInterval;
