@@ -465,7 +465,7 @@ void MainWindow:: plcControl(){
         if (state != cmdStatePrev) {
 
             if (hardControlStart && alignGuide2TrackCenter){
-                goX = false;
+                goX = false;    //dont send command to plc when control is initiated firstly
             } else {
                 goX = true;
 
@@ -501,21 +501,7 @@ void MainWindow:: plcControl(){
 
     }
 
-/* the original
-            if (state == _CMD_RIGHT)
-                ui->cmdStatus->setIcon(cmd2LeftIcon);
-            else if (state == _CMD_LEFT)
-                ui->cmdStatus->setIcon(cmd2RightIcon);
-            else if (state != _CMD_CHECK)
-                ui->cmdStatus->setIcon(QIcon());
-
-            cmdSended = false;
-            if (!threadPLCControl->isRunning()){
-                threadPLCControl->commandState = state;
-                threadPLCControl->start();
-                cmdSended = true;
-            }
-/ *
+/*
             if (state != _CMD_CHECK || state != _CMD_EMERGENCY_ACT) {
                 if (controlDelay == 0){
                     if (!threadPLCControl->isRunning()){
@@ -550,8 +536,6 @@ void MainWindow:: plcControl(){
                 }
             }
 */
-//        }
-
 }
 
 void MainWindow::updateSn(){
