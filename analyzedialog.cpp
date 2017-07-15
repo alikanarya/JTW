@@ -55,6 +55,7 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
         ui->labelAnalyze->setPixmap(QPixmap::fromImage(iprocess->imgCorner));
     }
 
+    ui->plainTextEdit->appendPlainText("Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.\n");
 
 
     /*

@@ -91,6 +91,20 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     ui->mainEdgesSlider->setValue( mainEdgesNumber );
     ui->labelMainEdgesNumber->setText(QString::number(mainEdgesNumber));
 
+    if (edgeDetectionState == 2 || edgeDetectionState == 3){
+        ui->gaussSizeSlider->setEnabled(true);
+        ui->gaussSDevSlider->setEnabled(true);
+        ui->label_19->setEnabled(true);
+        ui->label_20->setEnabled(true);
+        ui->cannyThinningBox->setEnabled(true);
+    } else {
+        ui->gaussSizeSlider->setEnabled(false);
+        ui->gaussSDevSlider->setEnabled(false);
+        ui->label_19->setEnabled(false);
+        ui->label_20->setEnabled(false);
+        ui->cannyThinningBox->setEnabled(false);
+    }
+
 }
 
 void setupForm::edgeDetection(imgProcess *iprocess){
@@ -1038,19 +1052,79 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
     QString algoName = "";
     if (thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
         switch ( algorithmType ) {
-            case 0: break;
-            case 1: algoName = "Algo3: woLASER: edge > houghTr > detectMainEdges"; break;  // MAIN EDGES
-            case 2: algoName = "Algo4: woLASER: value > detectThinJointCenter"; break;  // THIN JOINT - DARK AREA
-            case 3: algoName = "Algo5: woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors"; break;  // CONTRAST
-            case 4: algoName = "Algo6: woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing"; break;  // LINE DETECTION WITH MAIN EDGES
-            case 5: algoName = "AlgoY"; break;  // EXPERIMENTAL
+            case 0: ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    break;
+            case 1: algoName = "Algo3: woLASER: edge > houghTr > detectMainEdges";
+                    ui->label_21->setEnabled(true);
+                    ui->mainEdgesSlider->setEnabled(true);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    break;  // MAIN EDGES
+            case 2: algoName = "Algo4: woLASER: value > detectThinJointCenter";
+                    ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    break;  // THIN JOINT - DARK AREA
+            case 3: algoName = "Algo5: woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors";
+                    ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    break;  // CONTRAST
+            case 4: algoName = "Algo6: woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing";
+                    ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(true);
+                    ui->editLineScore->setEnabled(true);
+                    break;  // LINE DETECTION WITH MAIN EDGES
+            case 5: algoName = "AlgoY";
+                    ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    break;  // EXPERIMENTAL
+            default:
+                    ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    break;
         }
     } else {    // with laser - HORIZONTAL SEARCH
         switch ( algorithmType ) {
-            case 0: break;
-            case 1: algoName = "Algo1: LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines"; break;  // LONGEST SOLID LINES
-            case 2: algoName = "Algo2: LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid"; break;  // PRIMARY VOID
-            case 3: algoName = "AlgoX"; break;  // EXPERIMENTAL
+            case 0: ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    break;
+            case 1: algoName = "Algo1: LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines";
+                    ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    break;  // LONGEST SOLID LINES
+            case 2: algoName = "Algo2: LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid";
+                    ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    break;  // PRIMARY VOID
+            case 3: algoName = "AlgoX";
+                    ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    break;  // EXPERIMENTAL
+            default:
+                    ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    break;
         }
     }
 
@@ -1100,6 +1174,20 @@ void setupForm::on_radioWoLaser_clicked() {
 void setupForm::on_edgeDetectionBox_currentIndexChanged(int index){
 
     edgeDetectionState = index;
+
+    if (edgeDetectionState == 2 || edgeDetectionState == 3){
+        ui->gaussSizeSlider->setEnabled(true);
+        ui->gaussSDevSlider->setEnabled(true);
+        ui->label_19->setEnabled(true);
+        ui->label_20->setEnabled(true);
+        ui->cannyThinningBox->setEnabled(true);
+    } else {
+        ui->gaussSizeSlider->setEnabled(false);
+        ui->gaussSDevSlider->setEnabled(false);
+        ui->label_19->setEnabled(false);
+        ui->label_20->setEnabled(false);
+        ui->cannyThinningBox->setEnabled(false);
+    }
 }
 
 void setupForm::on_mainEdgesSlider_valueChanged(int value){

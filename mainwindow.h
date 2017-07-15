@@ -370,14 +370,6 @@ public:
     void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
 
-    void processStandardHT();                       // standard hough transform
-    void processSubImageVoidness();                 // sub image based on VOID areas
-    void processSubImageSolidness();                // sub image based on SOLID lines
-    void processThinJoint();                        // darkness analysis for thin joint
-    void processContrastDetection();                // contrast anaysis
-    void processEdgeDetection();                    // edge anaysis
-    void processLineDetection();                    // line detection
-    void processSolidnessCanny();                   // SOLID line analysis with canny edges
     void repaintGuide();                            // update guide
     void repaintDevTrend();                         // update deviation trend
     void calcZParameters();
