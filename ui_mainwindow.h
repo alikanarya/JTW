@@ -62,7 +62,6 @@ public:
     QPushButton *leftButton;
     QPushButton *rightButton;
     QPushButton *thinJointButton;
-    QPushButton *zControlButton;
     QLabel *labelDistanceTag;
     QLabel *labelDistance;
     QLineEdit *testEdit;
@@ -374,30 +373,14 @@ public:
         thinJointButton->setFont(font5);
         thinJointButton->setIconSize(QSize(32, 32));
         thinJointButton->setFlat(false);
-        zControlButton = new QPushButton(centralWidget);
-        zControlButton->setObjectName(QStringLiteral("zControlButton"));
-        zControlButton->setEnabled(false);
-        zControlButton->setGeometry(QRect(190, 730, 32, 32));
-        QFont font6;
-        font6.setPointSize(8);
-        font6.setBold(false);
-        font6.setWeight(50);
-        zControlButton->setFont(font6);
-        QIcon icon19;
-        icon19.addFile(QStringLiteral(":/resources/height-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
-        zControlButton->setIcon(icon19);
-        zControlButton->setIconSize(QSize(32, 32));
-        zControlButton->setCheckable(false);
-        zControlButton->setChecked(false);
-        zControlButton->setFlat(true);
         labelDistanceTag = new QLabel(centralWidget);
         labelDistanceTag->setObjectName(QStringLiteral("labelDistanceTag"));
         labelDistanceTag->setGeometry(QRect(510, 600, 43, 44));
-        QFont font7;
-        font7.setPointSize(11);
-        font7.setBold(true);
-        font7.setWeight(75);
-        labelDistanceTag->setFont(font7);
+        QFont font6;
+        font6.setPointSize(11);
+        font6.setBold(true);
+        font6.setWeight(75);
+        labelDistanceTag->setFont(font6);
         labelDistanceTag->setStyleSheet(QStringLiteral("color: rgb(170, 0, 0);"));
         labelDistanceTag->setFrameShape(QFrame::NoFrame);
         labelDistanceTag->setLineWidth(2);
@@ -416,11 +399,11 @@ public:
         testEdit->setObjectName(QStringLiteral("testEdit"));
         testEdit->setEnabled(false);
         testEdit->setGeometry(QRect(130, 730, 51, 20));
-        QFont font8;
-        font8.setPointSize(9);
-        font8.setBold(true);
-        font8.setWeight(75);
-        testEdit->setFont(font8);
+        QFont font7;
+        font7.setPointSize(9);
+        font7.setBold(true);
+        font7.setWeight(75);
+        testEdit->setFont(font7);
         labelDistanceTag2 = new QLabel(centralWidget);
         labelDistanceTag2->setObjectName(QStringLiteral("labelDistanceTag2"));
         labelDistanceTag2->setGeometry(QRect(590, 620, 61, 23));
@@ -456,23 +439,23 @@ public:
         videoButton->setObjectName(QStringLiteral("videoButton"));
         videoButton->setEnabled(true);
         videoButton->setGeometry(QRect(90, 30, 32, 32));
-        QIcon icon20;
-        icon20.addFile(QStringLiteral(":/resources/Record-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
-        videoButton->setIcon(icon20);
+        QIcon icon19;
+        icon19.addFile(QStringLiteral(":/resources/Record-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
+        videoButton->setIcon(icon19);
         videoButton->setIconSize(QSize(32, 32));
         videoButton->setFlat(true);
         setupButton = new QPushButton(centralWidget);
         setupButton->setObjectName(QStringLiteral("setupButton"));
         setupButton->setGeometry(QRect(460, 30, 32, 32));
-        QIcon icon21;
-        icon21.addFile(QStringLiteral(":/resources/height-icon-ON.png"), QSize(), QIcon::Normal, QIcon::Off);
-        setupButton->setIcon(icon21);
+        QIcon icon20;
+        icon20.addFile(QStringLiteral(":/resources/height-icon-ON.png"), QSize(), QIcon::Normal, QIcon::Off);
+        setupButton->setIcon(icon20);
         setupButton->setIconSize(QSize(32, 32));
         setupButton->setFlat(true);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 664, 27));
+        menuBar->setGeometry(QRect(0, 0, 664, 21));
         MainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
@@ -499,14 +482,12 @@ public:
         QObject::connect(leftButton, SIGNAL(clicked()), MainWindow, SLOT(target2Left()));
         QObject::connect(rightButton, SIGNAL(clicked()), MainWindow, SLOT(target2Right()));
         QObject::connect(thinJointButton, SIGNAL(clicked()), MainWindow, SLOT(thinJointButton()));
-        QObject::connect(zControlButton, SIGNAL(clicked()), MainWindow, SLOT(zControlButton()));
         QObject::connect(testEdit, SIGNAL(returnPressed()), MainWindow, SLOT(testEdit()));
         QObject::connect(testButton, SIGNAL(clicked()), MainWindow, SLOT(testButton()));
         QObject::connect(timeEdit, SIGNAL(returnPressed()), MainWindow, SLOT(timeEdit()));
         QObject::connect(videoButton, SIGNAL(clicked()), MainWindow, SLOT(videoButton()));
 
         thinJointButton->setDefault(false);
-        zControlButton->setDefault(false);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -594,10 +575,6 @@ public:
         thinJointButton->setToolTip(QApplication::translate("MainWindow", "\304\260nce Kaynak A\304\237z\304\261 Uygulamas\304\261", 0));
 #endif // QT_NO_TOOLTIP
         thinJointButton->setText(QApplication::translate("MainWindow", "\304\260KA", 0));
-#ifndef QT_NO_TOOLTIP
-        zControlButton->setToolTip(QApplication::translate("MainWindow", "Y\303\274kseklik Kontrol", 0));
-#endif // QT_NO_TOOLTIP
-        zControlButton->setText(QString());
         labelDistanceTag->setText(QString());
         labelDistance->setText(QApplication::translate("MainWindow", "000.0", 0));
         testEdit->setInputMask(QString());

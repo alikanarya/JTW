@@ -957,6 +957,9 @@
    </property>
   </widget>
   <widget class="QCheckBox" name="dynamicAlgoBox">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>620</x>

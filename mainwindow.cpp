@@ -31,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->labelLogoCustomer->hide();
     ui->labelTime->hide();
     ui->emergencyButton->hide();
-    ui->zControlButton->hide();
     ui->testEdit->hide();
     //ui->testButton->hide();
 
@@ -222,14 +221,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 
     if ( zControlActive || readDistance) {
-
-        ui->zControlButton->setIcon(zIconEnabled);
         ui->labelDistance->show();
         ui->labelDistanceTag->show();
         ui->labelDistanceTag2->show();
     } else {
-
-        ui->zControlButton->setIcon(zIconDisabled);
         ui->labelDistance->hide();
         ui->labelDistanceTag->hide();
         ui->labelDistanceTag2->hide();
@@ -846,33 +841,6 @@ void MainWindow::thinJointButton(){
         ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
     }
 
-}
-
-void MainWindow::zControlButton(){
-
-    //zControlActive = !zControlActive;
-
-
-
-    //ui_zctrl = new zctrlDialog(this);
-    //ui_zctrl->show();
-
-    if ( zControlActive ) {
-
-/*
-        QMessageBox msgBox;
-        msgBox.setIcon(QMessageBox::Warning);
-
-        QString str = "Yükseklik Kontrolü Aktif!";
-        msgBox.setText(str);
-        msgBox.setStandardButtons(QMessageBox::Ok);
-        msgBox.setDefaultButton(QMessageBox::Ok);
-        msgBox.exec();
-        */
-
-    } else {
-        ui->zControlButton->setStyleSheet("color: rgb(0, 0, 0)");
-    }
 }
 
 void MainWindow::edgeDetection(imgProcess *iprocess){

@@ -352,6 +352,7 @@ public:
         readDistanceBox->setFont(font3);
         dynamicAlgoBox = new QCheckBox(setupForm);
         dynamicAlgoBox->setObjectName(QStringLiteral("dynamicAlgoBox"));
+        dynamicAlgoBox->setEnabled(false);
         dynamicAlgoBox->setGeometry(QRect(620, 710, 161, 17));
         dynamicAlgoBox->setFont(font3);
         readWeldSeamBox = new QCheckBox(setupForm);

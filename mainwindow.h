@@ -419,7 +419,6 @@ private slots:
     void showLicenseDialog();
     void showReport();
     void thinJointButton();
-    void zControlButton();
 
 
     // process controls

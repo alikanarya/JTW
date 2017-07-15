@@ -878,13 +878,11 @@ setupForm::~setupForm(){
     }
 
     if (w->zControlActive || w->readDistance){
-        //w->ui->zControlButton->setIcon(w->zIconEnabled);
         w->ui->labelDistance->show();
         w->ui->labelDistanceTag->show();
         w->ui->labelDistanceTag2->show();
 
     } else {
-        //w->ui->zControlButton->setIcon(w->zIconDisabled);
         w->ui->labelDistance->hide();
         w->ui->labelDistanceTag->hide();
         w->ui->labelDistanceTag2->hide();
