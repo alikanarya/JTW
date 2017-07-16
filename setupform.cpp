@@ -105,6 +105,11 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
         ui->cannyThinningBox->setEnabled(false);
     }
 
+    ui->checkSubImage->hide();
+    ui->editHoughThetaMaxSub->hide();
+    ui->editHoughThetaMinSub->hide();
+    ui->editHoughThetaStepSub->hide();
+
 }
 
 void setupForm::edgeDetection(imgProcess *iprocess){
@@ -1056,42 +1061,119 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(false);
+                    ui->editHoughLineNo->setEnabled(false);
+                    ui->label_9->setEnabled(false);
+                    ui->editHoughThetaMax->setEnabled(false);
+                    ui->editHoughThetaMin->setEnabled(false);
+                    ui->label_8->setEnabled(false);
+                    ui->editHoughThetaStep->setEnabled(false);
                     break;
             case 1: algoName = "Algo3: woLASER: edge > houghTr > detectMainEdges";
                     ui->label_21->setEnabled(true);
                     ui->mainEdgesSlider->setEnabled(true);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(true);
+                    ui->editHoughLineNo->setEnabled(true);
+                    ui->label_9->setEnabled(true);
+                    ui->editHoughThetaMax->setEnabled(true);
+                    ui->editHoughThetaMin->setEnabled(true);
+                    ui->label_8->setEnabled(true);
+                    ui->editHoughThetaStep->setEnabled(true);
                     break;  // MAIN EDGES
             case 2: algoName = "Algo4: woLASER: value > detectThinJointCenter";
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(false);
+                    ui->editHoughLineNo->setEnabled(false);
+                    ui->label_9->setEnabled(false);
+                    ui->editHoughThetaMax->setEnabled(false);
+                    ui->editHoughThetaMin->setEnabled(false);
+                    ui->label_8->setEnabled(false);
+                    ui->editHoughThetaStep->setEnabled(false);
                     break;  // THIN JOINT - DARK AREA
             case 3: algoName = "Algo5: woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors";
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(true);
+                    ui->editHoughLineNo->setEnabled(true);
+                    ui->label_9->setEnabled(true);
+                    ui->editHoughThetaMax->setEnabled(true);
+                    ui->editHoughThetaMin->setEnabled(true);
+                    ui->label_8->setEnabled(true);
+                    ui->editHoughThetaStep->setEnabled(true);
                     break;  // CONTRAST
             case 4: algoName = "Algo6: woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing";
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(true);
                     ui->editLineScore->setEnabled(true);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(true);
+                    ui->editHoughLineNo->setEnabled(true);
+                    ui->label_9->setEnabled(true);
+                    ui->editHoughThetaMax->setEnabled(true);
+                    ui->editHoughThetaMin->setEnabled(true);
+                    ui->label_8->setEnabled(true);
+                    ui->editHoughThetaStep->setEnabled(true);
                     break;  // LINE DETECTION WITH MAIN EDGES
             case 5: algoName = "AlgoY";
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(false);
+                    ui->editHoughLineNo->setEnabled(false);
+                    ui->label_9->setEnabled(false);
+                    ui->editHoughThetaMax->setEnabled(false);
+                    ui->editHoughThetaMin->setEnabled(false);
+                    ui->label_8->setEnabled(false);
+                    ui->editHoughThetaStep->setEnabled(false);
                     break;  // EXPERIMENTAL
             default:
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(false);
+                    ui->editHoughLineNo->setEnabled(false);
+                    ui->label_9->setEnabled(false);
+                    ui->editHoughThetaMax->setEnabled(false);
+                    ui->editHoughThetaMin->setEnabled(false);
+                    ui->label_8->setEnabled(false);
+                    ui->editHoughThetaStep->setEnabled(false);
                     break;
         }
     } else {    // with laser - HORIZONTAL SEARCH
@@ -1100,30 +1182,85 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(false);
+                    ui->editHoughLineNo->setEnabled(false);
+                    ui->label_9->setEnabled(false);
+                    ui->editHoughThetaMax->setEnabled(false);
+                    ui->editHoughThetaMin->setEnabled(false);
+                    ui->label_8->setEnabled(false);
+                    ui->editHoughThetaStep->setEnabled(false);
                     break;
             case 1: algoName = "Algo1: LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines";
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(true);
+                    ui->editHoughLineNo->setEnabled(true);
+                    ui->label_9->setEnabled(true);
+                    ui->editHoughThetaMax->setEnabled(true);
+                    ui->editHoughThetaMin->setEnabled(true);
+                    ui->label_8->setEnabled(true);
+                    ui->editHoughThetaStep->setEnabled(true);
                     break;  // LONGEST SOLID LINES
             case 2: algoName = "Algo2: LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid";
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(true);
+                    ui->editVoidThreshold->setEnabled(true);
+                    ui->label_7->setEnabled(true);
+                    ui->editHoughThreshold->setEnabled(true);
+                    ui->label_6->setEnabled(true);
+                    ui->editHoughLineNo->setEnabled(true);
+                    ui->label_9->setEnabled(true);
+                    ui->editHoughThetaMax->setEnabled(true);
+                    ui->editHoughThetaMin->setEnabled(true);
+                    ui->label_8->setEnabled(true);
+                    ui->editHoughThetaStep->setEnabled(true);
                     break;  // PRIMARY VOID
             case 3: algoName = "AlgoX";
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(false);
+                    ui->editHoughLineNo->setEnabled(false);
+                    ui->label_9->setEnabled(false);
+                    ui->editHoughThetaMax->setEnabled(false);
+                    ui->editHoughThetaMin->setEnabled(false);
+                    ui->label_8->setEnabled(false);
+                    ui->editHoughThetaStep->setEnabled(false);
                     break;  // EXPERIMENTAL
             default:
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(false);
+                    ui->editHoughLineNo->setEnabled(false);
+                    ui->label_9->setEnabled(false);
+                    ui->editHoughThetaMax->setEnabled(false);
+                    ui->editHoughThetaMin->setEnabled(false);
+                    ui->label_8->setEnabled(false);
+                    ui->editHoughThetaStep->setEnabled(false);
                     break;
         }
     }

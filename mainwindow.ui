@@ -13,7 +13,7 @@
     <x>0</x>
     <y>0</y>
     <width>664</width>
-    <height>845</height>
+    <height>817</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,10 +22,16 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>664</width>
+    <height>817</height>
+   </size>
+  </property>
   <property name="maximumSize">
    <size>
-    <width>2000</width>
-    <height>2000</height>
+    <width>664</width>
+    <height>817</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -102,7 +108,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>220</x>
+      <x>360</x>
       <y>730</y>
       <width>85</width>
       <height>23</height>
@@ -110,7 +116,7 @@
     </property>
     <property name="font">
      <font>
-      <pointsize>12</pointsize>
+      <pointsize>10</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -657,7 +663,7 @@ background-color: rgb(236, 233, 216);</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>730</y>
+      <y>720</y>
       <width>32</width>
       <height>32</height>
      </rect>
@@ -751,9 +757,9 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>760</y>
-      <width>80</width>
+      <x>190</x>
+      <y>730</y>
+      <width>101</width>
       <height>25</height>
      </rect>
     </property>
@@ -1099,7 +1105,7 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QLineEdit" name="timeEdit">
     <property name="geometry">
      <rect>
-      <x>490</x>
+      <x>610</x>
       <y>730</y>
       <width>41</width>
       <height>20</height>
@@ -1109,7 +1115,7 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QLabel" name="labelTimeTag2">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>560</x>
       <y>730</y>
       <width>41</width>
       <height>23</height>
@@ -1141,7 +1147,7 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QLabel" name="labelTimeTag">
     <property name="geometry">
      <rect>
-      <x>310</x>
+      <x>440</x>
       <y>730</y>
       <width>121</width>
       <height>23</height>
@@ -1238,7 +1244,7 @@ background-color: rgb(236, 233, 216);</string>
      <x>0</x>
      <y>0</y>
      <width>664</width>
-     <height>21</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>

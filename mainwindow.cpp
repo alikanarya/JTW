@@ -253,6 +253,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //if ( thinJointAlgoActive || zControlActive || hardControlStart )
       //  QTimer::singleShot(500, this, SLOT(showInfo()));
 
+    ui->thinJointButton->setEnabled(false);
+    ui->thinJointButton->hide();
 }
 
 void MainWindow::showInfo(){
