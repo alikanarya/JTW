@@ -1,11 +1,11 @@
-﻿#include "setupform.h"
+﻿
+#include "setupform.h"
 #include "ui_setupform.h"
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <QTextCodec>
-#include "imgtools.h"
 
 extern MainWindow *w;
 

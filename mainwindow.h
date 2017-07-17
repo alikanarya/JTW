@@ -84,6 +84,7 @@ const int yResArray[9] = {10, 10, 10, 10, 10, 10, 10, 16, 20};
 namespace Ui {
     class MainWindow;
 }
+#include "imgtools.h"
 
 #include "settingsform.h"
 #include "ui_settingsform.h"

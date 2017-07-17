@@ -1,4 +1,5 @@
-﻿#include "mainwindow.h"
+﻿
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <QTextCodec>
@@ -1675,7 +1676,12 @@ void MainWindow::playCam(){
             // show current valid image. valid: not late from previous (<show>)
             if (!lastData->shown && show){
 
-                ui->imageFrame->setPixmap(QPixmap::fromImage(*lastData->image));
+                QImage step1 = changeBrightness(*lastData->image, brightnessVal);
+                QImage step2 = changeContrast(step1, contrastVal);
+                imageFileChanged = changeGamma(step2, gammaVal);
+                ui->imageFrame->setPixmap( QPixmap::fromImage( imageFileChanged ));
+
+//                ui->imageFrame->setPixmap(QPixmap::fromImage(*lastData->image));
                 ui->imageFrame->show();
                 ui->guideFrame->raise();     // if guide is shown, suppress it
                 lastData->shown = true;      // mark last data was SHOWN on display

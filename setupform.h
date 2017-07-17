@@ -4,6 +4,7 @@
 #include "../_Modules/Imgprocess/imgprocess.h"
 #include <QtWidgets/QDialog>
 #include <QTime>
+#include "imgtools.h"
 
 namespace Ui {
     class setupForm;

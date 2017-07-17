@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     ../_Modules/Imgprocess/imgprocess.cpp \
     ../_Modules/Getsystemtime/getsystemtime.cpp \
     ../_Modules/Getimage/getImage.cpp \
-    videosavethread.cpp
+    videosavethread.cpp \
+    imgtools.cpp
 
 HEADERS  += mainwindow.h \
     setupform.h \
