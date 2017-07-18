@@ -105,6 +105,8 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
         ui->cannyThinningBox->setEnabled(false);
     }
 
+    ui->cameraEnhancementsBox->setChecked(w->applyCameraEnhancements);
+
     ui->checkSubImage->hide();
     ui->editHoughThetaMaxSub->hide();
     ui->editHoughThetaMinSub->hide();
@@ -767,6 +769,7 @@ void setupForm::getParameters(){
     ui->editFPS->setText(QString::number(w->fpsTarget));
     ui->editIPI->setText(QString::number(w->iprocessInterval));
 
+    applyCameraEnhancements = w->applyCameraEnhancements;
 
 }
 
@@ -876,6 +879,7 @@ void setupForm::editLineScore(){
 
 void setupForm::exitButton(){
 
+    w->applyCameraEnhancements = applyCameraEnhancements;
     this->close();
 }
 
@@ -921,6 +925,7 @@ setupForm::~setupForm(){
     if ( w->lineDetection )
         w->clearTrack();
 
+
 }
 
 void setupForm::on_captureButton_2_clicked(){
@@ -931,6 +936,10 @@ void setupForm::on_captureButton_2_clicked(){
 
 
     if (!w->loadedFileNamewPath.isEmpty() && !w->loadedFileNamewPath.isNull()){
+
+        w->stopButton();
+        ui->fileSlider->setEnabled(true);
+        ui->checkProcessing->setEnabled(true);
 
         imageLoadedFromFile = true;
 

@@ -54,6 +54,7 @@
 #define _EDGE_ALGO          0
 #define _ALGO_TYPE          0
 #define _MAIN_EDGE_NO       1
+#define _CAM_ENHANCE        false
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -389,6 +390,7 @@ public slots:
     void showInfo();
     void videoButton();
     void saveFinished();
+    void stopButton();                              // stop video resets
 
 signals:
     void cameraDown();
@@ -400,7 +402,6 @@ private slots:
     // gui controls
     void getImageFromCam();                         // saves current image from camera
     void playButton();                              // play video inits
-    void stopButton();                              // stop video resets
     void analyzeButton();                           // analyze current image to check if corners detected or not
     void guideButton();                             // show/hide guide
     void trackButton();                             // track on/off

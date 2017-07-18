@@ -1350,6 +1350,9 @@
    </property>
   </widget>
   <widget class="QSlider" name="fileSlider">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>140</x>
@@ -1363,6 +1366,9 @@
    </property>
   </widget>
   <widget class="QCheckBox" name="checkProcessing">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>350</x>

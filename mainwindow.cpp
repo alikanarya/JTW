@@ -1427,6 +1427,7 @@ void MainWindow::readSettings(){
 
             jointWidthControlActive = settings->value("widthctrl", _WIDTH_CONTROL).toBool();
 
+            applyCameraEnhancements = settings->value("camenhance", _CAM_ENHANCE).toBool();
             brightnessVal = settings->value("brightness", _BRIGHTNESS).toInt();
             contrastVal = settings->value("contrast", _CONTRAST).toInt();
             gammaVal = settings->value("gamma", _GAMMA).toInt();
@@ -1507,6 +1508,7 @@ void MainWindow::readSettings(){
 
         jointWidthControlActive = _WIDTH_CONTROL;
 
+        applyCameraEnhancements = _CAM_ENHANCE;
         brightnessVal = _BRIGHTNESS;
         contrastVal = _CONTRAST;
         gammaVal = _GAMMA;
@@ -1593,6 +1595,8 @@ void MainWindow::writeSettings(){
         QVariant widthsw(jointWidthControlActive);
             settings->setValue("widthctrl", widthsw.toString());
 
+        QVariant camenhancesw(applyCameraEnhancements);
+            settings->setValue("camenhance", camenhancesw.toString());
 
         settings->setValue("brightness", QString::number(brightnessVal));
         settings->setValue("contrast", QString::number(contrastVal));

@@ -449,10 +449,12 @@ public:
         gammaReset->setFont(font);
         fileSlider = new QSlider(setupForm);
         fileSlider->setObjectName(QStringLiteral("fileSlider"));
+        fileSlider->setEnabled(false);
         fileSlider->setGeometry(QRect(140, 20, 191, 22));
         fileSlider->setOrientation(Qt::Horizontal);
         checkProcessing = new QCheckBox(setupForm);
         checkProcessing->setObjectName(QStringLiteral("checkProcessing"));
+        checkProcessing->setEnabled(false);
         checkProcessing->setGeometry(QRect(350, 20, 101, 17));
         labelGaussSize = new QLabel(setupForm);
         labelGaussSize->setObjectName(QStringLiteral("labelGaussSize"));
