@@ -143,6 +143,7 @@ public:
     int brightnessVal = 0;
     int contrastVal = 100;
     int gammaVal = 100;
+    bool applyCameraEnhancements = false;
 
     // icons
     QIcon plcOnlineIcon, plcOfflineIcon;

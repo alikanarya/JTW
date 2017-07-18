@@ -108,6 +108,7 @@ public:
     QLabel *label_20;
     QLabel *label_21;
     QLabel *labelMainEdgesNumber;
+    QCheckBox *cameraEnhancementsBox;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -576,6 +577,10 @@ public:
         labelMainEdgesNumber->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelMainEdgesNumber->setFrameShape(QFrame::Box);
         labelMainEdgesNumber->setAlignment(Qt::AlignCenter);
+        cameraEnhancementsBox = new QCheckBox(setupForm);
+        cameraEnhancementsBox->setObjectName(QStringLiteral("cameraEnhancementsBox"));
+        cameraEnhancementsBox->setGeometry(QRect(184, 420, 71, 17));
+        cameraEnhancementsBox->setFont(font3);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -721,6 +726,10 @@ public:
         label_20->setText(QApplication::translate("setupForm", "Denoise Sapma", 0));
         label_21->setText(QApplication::translate("setupForm", "Ana Kenar Say\304\261s\304\261", 0));
         labelMainEdgesNumber->setText(QApplication::translate("setupForm", "0", 0));
+#ifndef QT_NO_TOOLTIP
+        cameraEnhancementsBox->setToolTip(QApplication::translate("setupForm", "Kaynak ba\305\237lang\304\261c\304\261ndaki geni\305\237li\304\237in %80 ile %120 si aras\304\261n\304\261 ge\303\247erli say", 0));
+#endif // QT_NO_TOOLTIP
+        cameraEnhancementsBox->setText(QApplication::translate("setupForm", "Kamera", 0));
     } // retranslateUi
 
 };

@@ -1832,6 +1832,29 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QCheckBox" name="cameraEnhancementsBox">
+   <property name="geometry">
+    <rect>
+     <x>184</x>
+     <y>420</y>
+     <width>71</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Kaynak başlangıcındaki genişliğin %80 ile %120 si arasını geçerli say</string>
+   </property>
+   <property name="text">
+    <string>Kamera</string>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="icons.qrc"/>

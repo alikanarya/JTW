@@ -957,7 +957,8 @@ void setupForm::update(){
     QImage step1 = changeBrightness(w->imageFile, brightnessVal);
     QImage step2 = changeContrast(step1, contrastVal);
     w->imageFileChanged = changeGamma(step2, gammaVal);
-    w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
+    if (!w->play)
+        w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
 
     if (ui->checkProcessing->isChecked())
         captureButton();
@@ -966,7 +967,8 @@ void setupForm::update(){
 void setupForm::on_brightnessSlider_sliderReleased(){
 
     brightnessVal = ui->brightnessSlider->value();
-    //ui->plainTextEdit->appendPlainText(QString::number(w->brightnessVal));
+    if (w->applyCameraEnhancements)
+        w->brightnessVal = brightnessVal;
     update();
 }
 
@@ -978,6 +980,8 @@ void setupForm::on_brightnessSlider_sliderMoved(int position){
 void setupForm::on_contrastSlider_sliderReleased(){
 
     contrastVal = ui->contrastSlider->value();
+    if (w->applyCameraEnhancements)
+        w->contrastVal = contrastVal;
     update();
 }
 
@@ -989,6 +993,8 @@ void setupForm::on_contrastSlider_sliderMoved(int position){
 void setupForm::on_gammaSlider_sliderReleased(){
 
     gammaVal = ui->gammaSlider->value();
+    if (w->applyCameraEnhancements)
+        w->gammaVal = gammaVal;
     update();
 }
 
@@ -1002,6 +1008,8 @@ void setupForm::on_brightnessReset_clicked(){
     brightnessVal = 0;
     ui->brightnessSlider->setValue(0);
     ui->labelBrightness->setText(QString::number(0));
+    if (w->applyCameraEnhancements)
+        w->brightnessVal = brightnessVal;
     update();
 }
 
@@ -1010,6 +1018,8 @@ void setupForm::on_contrastReset_clicked(){
     contrastVal = 100;
     ui->contrastSlider->setValue(100);
     ui->labelContrast->setText(QString::number(100));
+    if (w->applyCameraEnhancements)
+        w->contrastVal = contrastVal;
     update();
 }
 
@@ -1018,6 +1028,8 @@ void setupForm::on_gammaReset_clicked(){
     gammaVal = 100;
     ui->gammaSlider->setValue(100);
     ui->labelGamma->setText(QString::number(100));
+    if (w->applyCameraEnhancements)
+        w->gammaVal = gammaVal;
     update();
 }
 
@@ -1334,4 +1346,13 @@ void setupForm::on_mainEdgesSlider_valueChanged(int value){
 
 void setupForm::on_saveButton_clicked(){
 
+}
+
+void setupForm::on_cameraEnhancementsBox_stateChanged(int arg1){
+    w->applyCameraEnhancements = ui->cameraEnhancementsBox->isChecked();
+    if (w->applyCameraEnhancements){
+        w->brightnessVal = brightnessVal;
+        w->contrastVal = contrastVal;
+        w->gammaVal = gammaVal;
+    }
 }
