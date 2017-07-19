@@ -124,7 +124,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     cameraChecker = new getImage(urlCam.toString());
 
-    videoFrameSize = 25;
     threadVideoSave = new videoSaveThread();
     connect(threadVideoSave, SIGNAL(saveFinished()), this, SLOT(saveFinished()));
 
@@ -305,7 +304,12 @@ void MainWindow::checker(){
 
 QImage* MainWindow::takeTargetAreaImage(){
 
-    QImage *image = new QImage(*lastData->image);
+    QImage *image;
+    if (applyCameraEnhancements) {
+        image = new QImage(imageFileChanged);
+    } else {
+        image = new QImage(*lastData->image);
+    }
     targetArea = image->copy(offsetX, offsetY, frameWidth, frameHeight);
     return image;
 }
@@ -314,10 +318,17 @@ void MainWindow::getImageFromCam(){
 
     fileName = fileBase + "_" + QDateTime::currentDateTime().toString("hhmmss_zzz") + fileExt;
 
-    if (lastData->image->save(savePath + fileName))
-        ui->plainTextEdit->appendPlainText(fileName + " başarıyla " + savePath + " klasörüne kayıt edildi.");
-    else
-        ui->plainTextEdit->appendPlainText(fileName + " kayıt edilemedi !!!");
+    if (applyCameraEnhancements) {
+        if (imageFileChanged.save(savePath + fileName))
+            ui->plainTextEdit->appendPlainText(fileName + " başarıyla " + savePath + " klasörüne kayıt edildi.");
+        else
+            ui->plainTextEdit->appendPlainText(fileName + " kayıt edilemedi !!!");
+    } else {
+        if (lastData->image->save(savePath + fileName))
+            ui->plainTextEdit->appendPlainText(fileName + " başarıyla " + savePath + " klasörüne kayıt edildi.");
+        else
+            ui->plainTextEdit->appendPlainText(fileName + " kayıt edilemedi !!!");
+    }
 }
 
 void MainWindow::playButton(){
@@ -372,12 +383,9 @@ void MainWindow::update(){
                 firstTimeTick = secondTimeTick;
                 fpsRequest++;
             }
-
         }
-
         //if (msecCount % 5 == 0){  if (!cameraChecker->cameraDown && !threadPlay.isRunning()) threadPlay.run();        }
     }
-
 }
 
 void MainWindow:: plcControl(){
@@ -618,6 +626,7 @@ void MainWindow::updateSn(){
 
         if (fpsReal != 0) timeDelayAvg = timeDelayTotal / fpsReal;      // calc. ave time delay
 
+        fpsRealLast = fpsReal;
         // status bar message
         message = "fps(t/req/sh): " + QString::number(fpsTarget) + "/" + QString::number(fpsRequest) + "/" + QString::number(fpsReal);
         message += seperator;
@@ -993,7 +1002,11 @@ void MainWindow::processImage(bool deleteObject){
 
     if ( !imageGetter->imageList.isEmpty() ){
 
-        targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+        if (applyCameraEnhancements) {
+            targetArea = imageFileChanged.copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+        } else {
+            targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+        }
 
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
         iprocessInitSwitch = true;
@@ -1704,7 +1717,11 @@ void MainWindow::playCam(){
 
                 if ( captureVideo ) {
 
-                    videoList[videoFrameCount] = lastData->image->copy();
+                    if (applyCameraEnhancements) {
+                        videoList[videoFrameCount] = imageFileChanged.copy();
+                    } else {
+                        videoList[videoFrameCount] = lastData->image->copy();
+                    }
                     videoFrameCount++;
 
                     if (videoFrameCount >= videoFrameSize) {
@@ -1742,6 +1759,8 @@ void MainWindow::timeEdit(){
 
 void MainWindow::videoButton(){
 
+    videoFrameSize = videoDuration * fpsRealLast;
+    //ui->plainTextEdit->appendPlainText(QString::number(videoFrameSize)+"-"+QString::number(videoDuration)+"-"+QString::number(fpsRealLast));
     videoList = new QImage[videoFrameSize];
     videoFrameCount = 0;
     ui->videoButton->setEnabled(false);

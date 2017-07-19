@@ -342,7 +342,11 @@ void setupForm::Algo6(imgProcess *iprocess){
 void setupForm::processImage(){
 
     if ( w->play && !w->imageGetter->imageList.isEmpty() ){
-        target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+        if (w->applyCameraEnhancements) {
+            target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+        } else {
+            target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+        }
     }
 
     if ( !w->play &&  imageLoadedFromFile){
@@ -768,6 +772,7 @@ void setupForm::getParameters(){
 
     ui->editFPS->setText(QString::number(w->fpsTarget));
     ui->editIPI->setText(QString::number(w->iprocessInterval));
+    ui->editVideoDuration->setText(QString::number(w->videoDuration));
 
     applyCameraEnhancements = w->applyCameraEnhancements;
 
@@ -818,8 +823,10 @@ void setupForm::saveExitButton(){
     w->fpsTarget = ui->editFPS->text().toInt();
     w->frameInterval = 1000 / w->fpsTarget;
     w->iprocessInterval = ui->editIPI->text().toInt();
+    w->videoDuration = ui->editVideoDuration->text().toInt();
 
     w->writeSettings();
+
 
     this->close();
 }
@@ -1364,4 +1371,7 @@ void setupForm::on_cameraEnhancementsBox_stateChanged(int arg1){
         w->contrastVal = contrastVal;
         w->gammaVal = gammaVal;
     }
+}
+
+void setupForm::on_editVideoDuration_returnPressed(){
 }

@@ -281,7 +281,8 @@ public:
 //    QList<QImage *> videoList;
     QImage *videoList;
     int videoFrameCount;
-    int videoFrameSize;
+    int videoFrameSize = 25;
+    int videoDuration = 1;
 
     /*
     int right_VMEM_BYTE, right_BITofBYTE;
@@ -312,6 +313,7 @@ public:
 
     int fpsTarget;                      // wanted fps
     int fpsReal;                        // shown image number
+    int fpsRealLast = 0;                // shown image number
     int fpsRequest;                     // img request fps because of timing problems
     unsigned int frameNo;               // image requestid given by imagegetter
     unsigned int lateFrame;             // total late image no

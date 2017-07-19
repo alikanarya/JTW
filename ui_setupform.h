@@ -109,6 +109,8 @@ public:
     QLabel *label_21;
     QLabel *labelMainEdgesNumber;
     QCheckBox *cameraEnhancementsBox;
+    QLineEdit *editVideoDuration;
+    QLabel *label_16;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -301,29 +303,29 @@ public:
         line_2->setFrameShadow(QFrame::Sunken);
         label_13 = new QLabel(setupForm);
         label_13->setObjectName(QStringLiteral("label_13"));
-        label_13->setGeometry(QRect(670, 542, 111, 20));
+        label_13->setGeometry(QRect(860, 542, 111, 20));
         label_13->setFont(font1);
         label_13->setFrameShape(QFrame::NoFrame);
         label_13->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
         label_14 = new QLabel(setupForm);
         label_14->setObjectName(QStringLiteral("label_14"));
-        label_14->setGeometry(QRect(670, 572, 131, 20));
+        label_14->setGeometry(QRect(860, 572, 131, 20));
         label_14->setFont(font1);
         label_14->setFrameShape(QFrame::NoFrame);
         label_14->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
         editIPI = new QLineEdit(setupForm);
         editIPI->setObjectName(QStringLiteral("editIPI"));
-        editIPI->setGeometry(QRect(620, 570, 42, 20));
+        editIPI->setGeometry(QRect(810, 570, 42, 20));
         editIPI->setMaxLength(2);
         editIPI->setAlignment(Qt::AlignCenter);
         editFPS = new QLineEdit(setupForm);
         editFPS->setObjectName(QStringLiteral("editFPS"));
-        editFPS->setGeometry(QRect(620, 540, 42, 20));
+        editFPS->setGeometry(QRect(810, 540, 42, 20));
         editFPS->setAlignment(Qt::AlignCenter);
         zctrlBox = new QCheckBox(setupForm);
         zctrlBox->setObjectName(QStringLiteral("zctrlBox"));
         zctrlBox->setEnabled(false);
-        zctrlBox->setGeometry(QRect(620, 600, 141, 17));
+        zctrlBox->setGeometry(QRect(620, 540, 141, 17));
         QFont font3;
         font3.setPointSize(8);
         font3.setBold(false);
@@ -331,11 +333,11 @@ public:
         zctrlBox->setFont(font3);
         hardControlStartBox = new QCheckBox(setupForm);
         hardControlStartBox->setObjectName(QStringLiteral("hardControlStartBox"));
-        hardControlStartBox->setGeometry(QRect(620, 690, 171, 17));
+        hardControlStartBox->setGeometry(QRect(620, 630, 171, 17));
         hardControlStartBox->setFont(font3);
         widthControlBox = new QCheckBox(setupForm);
         widthControlBox->setObjectName(QStringLiteral("widthControlBox"));
-        widthControlBox->setGeometry(QRect(620, 660, 161, 17));
+        widthControlBox->setGeometry(QRect(620, 600, 161, 17));
         widthControlBox->setFont(font3);
         label_15 = new QLabel(setupForm);
         label_15->setObjectName(QStringLiteral("label_15"));
@@ -354,7 +356,7 @@ public:
         dynamicAlgoBox = new QCheckBox(setupForm);
         dynamicAlgoBox->setObjectName(QStringLiteral("dynamicAlgoBox"));
         dynamicAlgoBox->setEnabled(false);
-        dynamicAlgoBox->setGeometry(QRect(620, 630, 161, 17));
+        dynamicAlgoBox->setGeometry(QRect(620, 570, 161, 17));
         dynamicAlgoBox->setFont(font3);
         readWeldSeamBox = new QCheckBox(setupForm);
         readWeldSeamBox->setObjectName(QStringLiteral("readWeldSeamBox"));
@@ -362,7 +364,7 @@ public:
         readWeldSeamBox->setFont(font3);
         timeControlBox = new QCheckBox(setupForm);
         timeControlBox->setObjectName(QStringLiteral("timeControlBox"));
-        timeControlBox->setGeometry(QRect(620, 720, 161, 17));
+        timeControlBox->setGeometry(QRect(620, 660, 161, 17));
         timeControlBox->setFont(font3);
         lineDetectionBox = new QCheckBox(setupForm);
         lineDetectionBox->setObjectName(QStringLiteral("lineDetectionBox"));
@@ -583,6 +585,16 @@ public:
         cameraEnhancementsBox->setObjectName(QStringLiteral("cameraEnhancementsBox"));
         cameraEnhancementsBox->setGeometry(QRect(184, 420, 71, 17));
         cameraEnhancementsBox->setFont(font3);
+        editVideoDuration = new QLineEdit(setupForm);
+        editVideoDuration->setObjectName(QStringLiteral("editVideoDuration"));
+        editVideoDuration->setGeometry(QRect(810, 600, 42, 20));
+        editVideoDuration->setAlignment(Qt::AlignCenter);
+        label_16 = new QLabel(setupForm);
+        label_16->setObjectName(QStringLiteral("label_16"));
+        label_16->setGeometry(QRect(860, 602, 111, 20));
+        label_16->setFont(font1);
+        label_16->setFrameShape(QFrame::NoFrame);
+        label_16->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -732,6 +744,9 @@ public:
         cameraEnhancementsBox->setToolTip(QApplication::translate("setupForm", "Kaynak ba\305\237lang\304\261c\304\261ndaki geni\305\237li\304\237in %80 ile %120 si aras\304\261n\304\261 ge\303\247erli say", 0));
 #endif // QT_NO_TOOLTIP
         cameraEnhancementsBox->setText(QApplication::translate("setupForm", "Kamera", 0));
+        editVideoDuration->setInputMask(QApplication::translate("setupForm", "99", 0));
+        editVideoDuration->setText(QApplication::translate("setupForm", "1", 0));
+        label_16->setText(QApplication::translate("setupForm", "Kay\304\261t S\303\274resi", 0));
     } // retranslateUi
 
 };

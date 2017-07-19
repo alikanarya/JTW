@@ -728,7 +728,7 @@
   <widget class="QLabel" name="label_13">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>860</x>
      <y>542</y>
      <width>111</width>
      <height>20</height>
@@ -753,7 +753,7 @@
   <widget class="QLabel" name="label_14">
    <property name="geometry">
     <rect>
-     <x>670</x>
+     <x>860</x>
      <y>572</y>
      <width>131</width>
      <height>20</height>
@@ -778,7 +778,7 @@
   <widget class="QLineEdit" name="editIPI">
    <property name="geometry">
     <rect>
-     <x>620</x>
+     <x>810</x>
      <y>570</y>
      <width>42</width>
      <height>20</height>
@@ -800,7 +800,7 @@
   <widget class="QLineEdit" name="editFPS">
    <property name="geometry">
     <rect>
-     <x>620</x>
+     <x>810</x>
      <y>540</y>
      <width>42</width>
      <height>20</height>
@@ -823,7 +823,7 @@
    <property name="geometry">
     <rect>
      <x>620</x>
-     <y>600</y>
+     <y>540</y>
      <width>141</width>
      <height>17</height>
     </rect>
@@ -843,7 +843,7 @@
    <property name="geometry">
     <rect>
      <x>620</x>
-     <y>690</y>
+     <y>630</y>
      <width>171</width>
      <height>17</height>
     </rect>
@@ -866,7 +866,7 @@
    <property name="geometry">
     <rect>
      <x>620</x>
-     <y>660</y>
+     <y>600</y>
      <width>161</width>
      <height>17</height>
     </rect>
@@ -963,7 +963,7 @@
    <property name="geometry">
     <rect>
      <x>620</x>
-     <y>630</y>
+     <y>570</y>
      <width>161</width>
      <height>17</height>
     </rect>
@@ -1009,7 +1009,7 @@
    <property name="geometry">
     <rect>
      <x>620</x>
-     <y>720</y>
+     <y>660</y>
      <width>161</width>
      <height>17</height>
     </rect>
@@ -1859,6 +1859,50 @@
    </property>
    <property name="text">
     <string>Kamera</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="editVideoDuration">
+   <property name="geometry">
+    <rect>
+     <x>810</x>
+     <y>600</y>
+     <width>42</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="inputMask">
+    <string>99</string>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_16">
+   <property name="geometry">
+    <rect>
+     <x>860</x>
+     <y>602</y>
+     <width>111</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="text">
+    <string>Kayıt Süresi</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
    </property>
   </widget>
  </widget>

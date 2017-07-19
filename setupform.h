@@ -135,6 +135,7 @@ private slots:
     void on_mainEdgesSlider_valueChanged(int value);
     void on_saveButton_clicked();
     void on_cameraEnhancementsBox_stateChanged(int arg1);
+    void on_editVideoDuration_returnPressed();
 };
 
 #endif // SETUPFORM_H
