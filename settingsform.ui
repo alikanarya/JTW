@@ -916,6 +916,27 @@ p, li { white-space: pre-wrap; }
     <number>20</number>
    </property>
   </widget>
+  <widget class="QCheckBox" name="checkPLCSIM">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>280</y>
+     <width>171</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>10</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>PLC SİMÜLASYON</string>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="icons.qrc"/>

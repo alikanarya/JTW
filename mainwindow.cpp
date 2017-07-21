@@ -548,8 +548,8 @@ void MainWindow:: plcControl(){
 }
 
 void MainWindow::updateSn(){
-    QVariant boolx(permPLC);
-    ui->plainTextEdit->appendPlainText(boolx.toString());
+    //QVariant boolx(permPLC);
+    //ui->plainTextEdit->appendPlainText(boolx.toString());
 
     if (timeControl) {
 
@@ -1399,6 +1399,7 @@ void MainWindow::readSettings(){
             DB_NO = settings->value("dbno", _DB_NO).toInt();
             BYTE_NO = settings->value("byte", _BYTE_NO).toInt();
             connectRequestedonBoot = settings->value("pcon", _PLC_CONN_ONBOOT).toBool();
+            PLCSIM = settings->value("plcsim", _PLCSIM).toBool();
             controlDelay = 0;   //settings->value("ctd", _CONTROL_DELAY).toInt();
             hardControlStart = settings->value("hard", _HARD_START).toBool();
             machineNo = settings->value("makine", _MACHINE_NO).toInt();
@@ -1483,6 +1484,7 @@ void MainWindow::readSettings(){
         DB_NO = _DB_NO;
         BYTE_NO = _BYTE_NO;
         connectRequestedonBoot = _PLC_CONN_ONBOOT;
+        PLCSIM = _PLCSIM;
         controlDelay = _CONTROL_DELAY;
         hardControlStart = _HARD_START;
         machineNo = _MACHINE_NO;
@@ -1569,6 +1571,8 @@ void MainWindow::writeSettings(){
         settings->setValue("byte", QString::number(BYTE_NO));
         QVariant pcon(connectRequestedonBoot);
             settings->setValue("pcon", pcon.toString());
+        QVariant plcsim(PLCSIM);
+            settings->setValue("plcsim", plcsim.toString());
         settings->setValue("ctd", QString::number(controlDelay));
         QVariant hardstart(hardControlStart);
             settings->setValue("hard", hardstart.toString());

@@ -26,6 +26,7 @@
 #define _ERROR_SCALE        1.0
 #define _YRES_ARRAY_INDEX   8
 #define _PLC_CONN_ONBOOT    true
+#define _PLCSIM             false
 #define _PLAY_CAM_ONBOOT    true
 #define _SUB_IPROCESS       true
 #define _SUB_TYPE           0

@@ -61,6 +61,7 @@ public:
     QCheckBox *checkErrorStopVisible;
     QLabel *label_8;
     QLineEdit *editTitle;
+    QCheckBox *checkPLCSIM;
     QButtonGroup *radioGroup;
 
     void setupUi(QWidget *settingsForm)
@@ -318,6 +319,10 @@ public:
         editTitle->setObjectName(QStringLiteral("editTitle"));
         editTitle->setGeometry(QRect(170, 140, 231, 20));
         editTitle->setMaxLength(20);
+        checkPLCSIM = new QCheckBox(settingsForm);
+        checkPLCSIM->setObjectName(QStringLiteral("checkPLCSIM"));
+        checkPLCSIM->setGeometry(QRect(270, 280, 171, 17));
+        checkPLCSIM->setFont(font1);
 
         retranslateUi(settingsForm);
         QObject::connect(setupButton, SIGNAL(clicked()), settingsForm, SLOT(showSetupForm()));
@@ -414,6 +419,7 @@ public:
 #endif // QT_NO_TOOLTIP
         editTitle->setInputMask(QString());
         editTitle->setText(QApplication::translate("settingsForm", "DI\305\236 KAYNAK", 0));
+        checkPLCSIM->setText(QApplication::translate("settingsForm", "PLC S\304\260M\303\234LASYON", 0));
     } // retranslateUi
 
 };

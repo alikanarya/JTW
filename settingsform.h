@@ -54,6 +54,7 @@ private slots:
     void getControlDelay();     // get control delay from gui
     void setTitle();
 
+    void on_checkPLCSIM_clicked();
 };
 
 #endif // SETTINGSFORM_H

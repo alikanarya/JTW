@@ -47,6 +47,7 @@ settingsForm::settingsForm(QWidget *parent) : QDialog(parent), ui(new Ui::settin
 
     ui->label_4->hide();
     ui->editControlDelay->hide();
+    ui->checkPLCSIM->setChecked(w->PLCSIM);
 
   /*
     QIntValidator *validEditHoughLineNo = new QIntValidator(01, 10, this);
@@ -258,6 +259,18 @@ void settingsForm::setTitle(){
     w->title = ui->editTitle->text();
 }
 
+void settingsForm::on_checkPLCSIM_clicked(){
+    if (!ui->checkPLCSIM->isChecked()){
+        w->threadPLCControl->plc->plcInteract = false;
+        w->timerControl->stop();
+    } else {
+        w->threadPLCControl->plc->plcInteract = true;
+        w->timerControl->start();
+    }
+    w->PLCSIM = ui->checkPLCSIM->isChecked();
+}
+
 settingsForm::~settingsForm(){
     delete ui;
 }
+
