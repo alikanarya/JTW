@@ -237,11 +237,12 @@ public:
 
 
     // plc vars
+    bool PLCSIM = false;
     QUrl urlPLC;                            // plc url
     int plcType;                            // selection for S7-200, S7-300, etc
     bool connectRequested;                  // plc connection request
     bool connectRequestedonBoot;            // plc connection request on app. start
-    bool plcInteractPrev;
+    bool plcInteractPrev = false;
     int cmdState,
         cmdStatePrev,                       // to send cmd plc if cmd is changed
         cmdStatePrev2,                      // to make it histeryzisis between start/stop

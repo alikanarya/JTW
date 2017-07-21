@@ -487,17 +487,20 @@ void MainWindow:: plcControl(){
 
         if (goX || !cmdSended || threadPLCControl->commandRead) {
 
-            cmdSended = false;
+            if (!PLCSIM) {
+                cmdSended = false;
 
+                if (!threadPLCControl->isRunning()){
 
-            if (!threadPLCControl->isRunning()){
+                    threadPLCControl->commandState = state;
 
-                threadPLCControl->commandState = state;
+                    threadPLCControl->start();
 
-                threadPLCControl->start();
+                    cmdSended = true;
+                }
 
+            } else {
                 cmdSended = true;
-
             }
         }
 
@@ -545,6 +548,8 @@ void MainWindow:: plcControl(){
 }
 
 void MainWindow::updateSn(){
+    QVariant boolx(permPLC);
+    ui->plainTextEdit->appendPlainText(boolx.toString());
 
     if (timeControl) {
 
@@ -606,7 +611,7 @@ void MainWindow::updateSn(){
     }
     else if (plcInteractPrev && !threadPLCControl->plc->plcInteract){       // 1 -> 0
         permPLC = false;
-        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE4);
+        ui->plainTextEdit->appendPlainText(timeString() + "-" + MESSAGE4);
     }
 
     plcInteractPrev = threadPLCControl->plc->plcInteract;
@@ -616,10 +621,8 @@ void MainWindow::updateSn(){
     else
         ui->plcStatus->setIcon(plcOfflineIcon);
 
-    if ( thinJointAlgoActive )
-        ui->thinJointButton->setStyleSheet("color: rgb(255, 0, 0)");
-    else
-        ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
+    //if ( thinJointAlgoActive ) ui->thinJointButton->setStyleSheet("color: rgb(255, 0, 0)");
+    //else ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
 
     // if video is played
     if (play){
@@ -656,12 +659,18 @@ void MainWindow::updateSn(){
 
 void MainWindow::startTimer(){
 
-    if (!threadPLCControl->isRunning()){
-        cmdState = _CMD_CHECK;
-        threadPLCControl->commandState = cmdState;
-        threadPLCControl->start();
+    if (!PLCSIM) {
+        if (!threadPLCControl->isRunning()){
+            cmdState = _CMD_CHECK;
+            threadPLCControl->commandState = cmdState;
+            threadPLCControl->start();
+            cmdSended = true;
+        }
+    } else {
+        threadPLCControl->plc->plcInteract = true;
         cmdSended = true;
     }
+
     cmdStatePrev = cmdState;
     cmdZStatePrev = _CMD_Z_CENTER;
 
@@ -743,7 +752,7 @@ void MainWindow::trackButton(){
     ui->leftButton->setEnabled( showGuide && !trackOn );
     ui->rightButton->setEnabled( showGuide && !trackOn );
 
-    ui->thinJointButton->setEnabled(!trackOn);
+    //ui->thinJointButton->setEnabled(!trackOn);
 }
 
 void MainWindow::controlButton(){
@@ -1801,7 +1810,7 @@ void MainWindow::on_setupButton_clicked(){
 
 MainWindow::~MainWindow(){
 
-    if (threadPLCControl->plc->plcInteract)
+    if (threadPLCControl->plc->plcInteract && !PLCSIM)
         threadPLCControl->disconnect();
 
 //    delete settings;

@@ -24,17 +24,20 @@ void exitDialog::acceptButton(){
     if (w->timerControlEnabled) {
         w->timerControl->stop();
 
-        if (w->threadPLCControl->isRunning()){
-            // wait for last thread to end if running
-            QTimer::singleShot(500, this, SLOT(wait2Stop()));
-        } else {
-            // send stop signal to plc
-            w->threadPLCControl->commandState = _CMD_STOP;
-            w->threadPLCControl->start();
+        if (!w->PLCSIM) {
+            if (w->threadPLCControl->isRunning()){
+                // wait for last thread to end if running
+                QTimer::singleShot(500, this, SLOT(wait2Stop()));
+            } else {
+                // send stop signal to plc
+                w->threadPLCControl->commandState = _CMD_STOP;
+                w->threadPLCControl->start();
 
-            // wait for stop signal to end
-            QTimer::singleShot(500, this, SLOT(exitAction()));
-        }
+                // wait for stop signal to end
+                QTimer::singleShot(500, this, SLOT(exitAction()));
+            }
+        } else
+            exitAction();
     } else
         exitAction();
 }
