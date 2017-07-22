@@ -383,6 +383,7 @@ public:
 
     void readSettings();                            // read settings from ini file
     void writeSettings();                           // write settings to ini file
+    void checker();
     ~MainWindow();                                  // destructor
 
 public slots:
@@ -395,6 +396,7 @@ public slots:
     void videoButton();
     void saveFinished();
     void stopButton();                              // stop video resets
+    void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
 
 signals:
     void cameraDown();
@@ -424,7 +426,6 @@ private slots:
     void update();                                  // 1msec timer actions
     void updateSn();                                // 1sn timer actions
     void startTimer();                              // 2sn bood delay timer
-    void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
     void cameraDownAction();                        // actions handled when camera is not accesible
 
     void testButton();
@@ -436,7 +437,6 @@ private slots:
 private:
     protect lic;
 
-    void checker();
     bool writeReport();
     void playCam();
 

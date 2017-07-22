@@ -262,10 +262,15 @@ void settingsForm::setTitle(){
 void settingsForm::on_checkPLCSIM_clicked(){
     if (!ui->checkPLCSIM->isChecked()){
         w->threadPLCControl->plc->plcInteract = false;
-        w->timerControl->stop();
+        if (w->timerControlEnabled)
+            w->timerControl->stop();
     } else {
         w->threadPLCControl->plc->plcInteract = true;
-        w->timerControl->start();
+
+        if (w->connectRequestedonBoot)
+            w->timerControl->start();
+        else
+            w->initPlcTimer();
     }
     w->PLCSIM = ui->checkPLCSIM->isChecked();
 }

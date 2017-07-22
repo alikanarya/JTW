@@ -151,20 +151,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         permPLC = false;
         ui->plainTextEdit->appendPlainText(threadPLCControl->plc->message);
         ui->plainTextEdit->appendPlainText(MESSAGE5);
-    } else
-        permPLC = true;
+    } else {
+        if (connectRequestedonBoot){
+            plcInteractPrev = false;
+            timerControlEnabled = false;
+            // wait 2sec. to check first init of plc connection
+            QTimer::singleShot(2000, this, SLOT(startTimer()));
+        }
+    }
 
     checker();
 
     mak_aktif_now = mak_aktif_old = false;
 
-    if (permPLC && connectRequestedonBoot){
-        plcInteractPrev = false;
-
-        timerControlEnabled = false;
-        // wait 2sec. to check first init of plc connection
-        QTimer::singleShot(2000, this, SLOT(startTimer()));
-    }
 
     // 1sn timer
     timerSn = new QTimer(this);
@@ -212,7 +211,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     weldCommandsSize = controlDelay / timerControlInterval;
 
     // start message
-    ui->plainTextEdit->appendPlainText(timeString() + "Sistem başlatılmıştır. Hoş geldiniz.");
+    ui->plainTextEdit->appendPlainText(timeString() + "\n" + "Sistem başlatılmıştır. Hoş geldiniz.");
     lic.checkLicence();
 
     if (lic.licenseState != _LIC2){
@@ -607,11 +606,11 @@ void MainWindow::updateSn(){
     // plc live state
     if (!plcInteractPrev && threadPLCControl->plc->plcInteract){           // 0 -> 1
         permPLC = true;
-        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE6);
+        ui->plainTextEdit->appendPlainText(timeString() + "\n" + MESSAGE6);
     }
     else if (plcInteractPrev && !threadPLCControl->plc->plcInteract){       // 1 -> 0
         permPLC = false;
-        ui->plainTextEdit->appendPlainText(timeString() + "-" + MESSAGE4);
+        ui->plainTextEdit->appendPlainText(timeString() + "\n" + MESSAGE4);
     }
 
     plcInteractPrev = threadPLCControl->plc->plcInteract;
@@ -655,6 +654,8 @@ void MainWindow::updateSn(){
 
     msecCount = 0;
     pause = false;
+
+    ui->plainTextEdit->ensureCursorVisible();
 }
 
 void MainWindow::startTimer(){
@@ -680,7 +681,7 @@ void MainWindow::startTimer(){
 
 void MainWindow::initPlcTimer(){
 
-    ui->plainTextEdit->appendPlainText(timeString() + threadPLCControl->plc->message);
+    ui->plainTextEdit->appendPlainText(timeString() + "\n" + threadPLCControl->plc->message);
     if (threadPLCControl->plc->plcInteract) ui->plcStatus->setIcon(plcOnlineIcon);
 
     timerControlEnabled = true;
@@ -694,7 +695,7 @@ void MainWindow::initPlcTimer(){
 
 void  MainWindow::cameraDownAction(){
 
-    ui->plainTextEdit->appendPlainText(timeString() + alarm7);
+    ui->plainTextEdit->appendPlainText(timeString() + "\n" + alarm7);
     alarmCameraDownLock = true;
 }
 
@@ -723,7 +724,7 @@ void MainWindow::analyzeButton(){
 
 
     } else {
-         ui->plainTextEdit->appendPlainText(timeString() + alarm6);
+         ui->plainTextEdit->appendPlainText(timeString() + "\n" + alarm6);
     }
 }
 
@@ -749,8 +750,8 @@ void MainWindow::trackButton(){
         ui->trackButton->setIcon(trackOffIcon);
     }
 
-    ui->leftButton->setEnabled( showGuide && !trackOn );
-    ui->rightButton->setEnabled( showGuide && !trackOn );
+    //ui->leftButton->setEnabled( showGuide && !trackOn );
+    //ui->rightButton->setEnabled( showGuide && !trackOn );
 
     //ui->thinJointButton->setEnabled(!trackOn);
 }
@@ -767,7 +768,7 @@ void MainWindow::controlButton(){
         weldCommandsSize = controlDelay / timerControlInterval;
 
         ui->controlButton->setIcon(controlOnIcon);
-        ui->plainTextEdit->appendPlainText(timeString() + message1);
+        ui->plainTextEdit->appendPlainText(timeString() + "\n" + message1);
 
         // for report
         errorTotal = 0;
@@ -804,7 +805,10 @@ void MainWindow::controlButton(){
         cmdState = _CMD_STOP;
 
         ui->controlButton->setIcon(controlOffIcon);
-        ui->plainTextEdit->appendPlainText(timeString() + message2);
+        permOperator = false;
+        ui->analyzeButton->setIcon(calculatorOnIcon);
+
+        ui->plainTextEdit->appendPlainText(timeString() + "\n" + message2);
 
         // for report
         if (processCount != 0)
@@ -821,7 +825,7 @@ void MainWindow::controlButton(){
         fileData.append(timeString() + "Kaynak bitirildi.");
         fileData.append("---------.---------.---------.---------.---------.---------");
 
-        if (!writeReport()) ui->plainTextEdit->appendPlainText(timeString() + message5);
+        if (!writeReport()) ui->plainTextEdit->appendPlainText(timeString() + "\n" + message5);
     }
 
     //ui->stopButton->setEnabled(!controlOn);
@@ -836,12 +840,12 @@ void MainWindow::emergencyButton(){
         ui->emergencyButton->setIcon(emergencyOffIcon);
     } else {
         weldCommands.clear();
-        ui->plainTextEdit->appendPlainText(timeString() + alarm10);
+        ui->plainTextEdit->appendPlainText(timeString() + "\n" + alarm10);
         ui->emergencyButton->setIcon(emergencyOnIcon);
     }
 }
 
-void MainWindow::thinJointButton(){
+/**/void MainWindow::thinJointButton(){ // NOT USED
 
     thinJointAlgoActive = !thinJointAlgoActive;
 
@@ -1399,7 +1403,7 @@ void MainWindow::readSettings(){
             DB_NO = settings->value("dbno", _DB_NO).toInt();
             BYTE_NO = settings->value("byte", _BYTE_NO).toInt();
             connectRequestedonBoot = settings->value("pcon", _PLC_CONN_ONBOOT).toBool();
-            PLCSIM = settings->value("plcsim", _PLCSIM).toBool();
+            //PLCSIM = settings->value("plcsim", _PLCSIM).toBool();
             controlDelay = 0;   //settings->value("ctd", _CONTROL_DELAY).toInt();
             hardControlStart = settings->value("hard", _HARD_START).toBool();
             machineNo = settings->value("makine", _MACHINE_NO).toInt();
@@ -1484,7 +1488,7 @@ void MainWindow::readSettings(){
         DB_NO = _DB_NO;
         BYTE_NO = _BYTE_NO;
         connectRequestedonBoot = _PLC_CONN_ONBOOT;
-        PLCSIM = _PLCSIM;
+        //PLCSIM = _PLCSIM;
         controlDelay = _CONTROL_DELAY;
         hardControlStart = _HARD_START;
         machineNo = _MACHINE_NO;
@@ -1571,8 +1575,8 @@ void MainWindow::writeSettings(){
         settings->setValue("byte", QString::number(BYTE_NO));
         QVariant pcon(connectRequestedonBoot);
             settings->setValue("pcon", pcon.toString());
-        QVariant plcsim(PLCSIM);
-            settings->setValue("plcsim", plcsim.toString());
+        //QVariant plcsim(PLCSIM);
+            //settings->setValue("plcsim", plcsim.toString());
         settings->setValue("ctd", QString::number(controlDelay));
         QVariant hardstart(hardControlStart);
             settings->setValue("hard", hardstart.toString());
@@ -1785,7 +1789,7 @@ void MainWindow::videoButton(){
 
 void MainWindow::saveFinished(){
 
-    ui->plainTextEdit->appendPlainText(timeString() + "Video kaydedildi!");
+    ui->plainTextEdit->appendPlainText(timeString() + "\n" + "Video kaydedildi!");
     ui->videoButton->setEnabled(true);
     ui->videoButton->setIcon(videoSaveEnabled);
 }
