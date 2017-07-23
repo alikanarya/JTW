@@ -748,6 +748,10 @@ void MainWindow::trackButton(){
         ui->trackButton->setIcon(trackOnIcon);
     } else {
         ui->trackButton->setIcon(trackOffIcon);
+        if (controlOn) {
+            controlButton();
+            ui->controlButton->setEnabled(false);
+        }
     }
 
     //ui->leftButton->setEnabled( showGuide && !trackOn );
