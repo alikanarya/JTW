@@ -507,7 +507,7 @@ void setupForm::captureButton(){
         // UPDATE GUI
 
         QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
-        goto labelx;
+        //goto labelx;
         ui->plainTextEdit->appendPlainText(message);
 
         //ui->plainTextEdit->appendPlainText(iprocess->statusMessage);    // display message about detection process
@@ -701,7 +701,7 @@ void setupForm::captureButton(){
 
 
         ui->plainTextEdit->appendPlainText("-----------------");
-labelx:
+//labelx:
 
         captured = true;
 

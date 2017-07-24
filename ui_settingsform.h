@@ -326,7 +326,7 @@ public:
         checkPLCSIM->setFont(font1);
         checkTargetAlignButtons = new QCheckBox(settingsForm);
         checkTargetAlignButtons->setObjectName(QStringLiteral("checkTargetAlignButtons"));
-        checkTargetAlignButtons->setGeometry(QRect(170, 170, 241, 17));
+        checkTargetAlignButtons->setGeometry(QRect(170, 170, 281, 17));
         checkTargetAlignButtons->setFont(font1);
 
         retranslateUi(settingsForm);
