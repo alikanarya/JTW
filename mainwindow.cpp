@@ -252,6 +252,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //if ( thinJointAlgoActive || zControlActive || hardControlStart )
       //  QTimer::singleShot(500, this, SLOT(showInfo()));
 
+    ui->leftButton->setEnabled( false );
+    ui->leftButton->hide();
+    ui->rightButton->setEnabled( false );
+    ui->rightButton->hide();
+
     ui->thinJointButton->setEnabled(false);
     ui->thinJointButton->hide();
 }
@@ -736,8 +741,14 @@ void MainWindow::guideButton(){
     showGuide = !showGuide;
     repaintGuide();
 
-    ui->leftButton->setEnabled( showGuide && !trackOn );
-    ui->rightButton->setEnabled( showGuide && !trackOn );
+    //ui->leftButton->setEnabled( showGuide && !trackOn );
+    //ui->rightButton->setEnabled( showGuide && !trackOn );
+}
+
+
+void MainWindow::on_guideAlignButton_clicked(){
+    if (showGuide && trackOn)
+        alignGuide2TrackCenter = true;
 }
 
 void MainWindow::trackButton(){
@@ -809,6 +820,7 @@ void MainWindow::controlButton(){
         cmdState = _CMD_STOP;
 
         ui->controlButton->setIcon(controlOffIcon);
+        ui->controlButton->setEnabled(false);
         permOperator = false;
         ui->analyzeButton->setIcon(calculatorOnIcon);
 
@@ -1669,6 +1681,7 @@ bool MainWindow::writeReport(){
         return false;
 
     QTextStream out(&file);
+    out.setCodec("UTF-8");
     for (int i = 0; i < fileData.size(); i++){
         out << fileData[i] << "\n";
     }
@@ -1805,14 +1818,7 @@ void MainWindow::testEdit(){
 
 void MainWindow::testButton(){
 
-    mak_aktif_now = !mak_aktif_now;
-    //alignGuide2TrackCenter = true;
-    QString _fileName = QFileDialog::getOpenFileName(this,
-        tr("Open Image"), "C:/xampp/htdocs/images", tr("Image Files (*.png *.jpg *.bmp)"));
-
-    //imageFile = new QImage();
-    imageFile.load(_fileName);
-    ui->imageFrame->setPixmap( QPixmap::fromImage( imageFile ));
+    //mak_aktif_now = !mak_aktif_now;
 }
 
 void MainWindow::on_setupButton_clicked(){
@@ -1828,6 +1834,7 @@ MainWindow::~MainWindow(){
 //    delete settings;
     delete ui;
 }
+
 
 
 

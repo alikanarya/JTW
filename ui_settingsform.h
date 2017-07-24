@@ -62,6 +62,7 @@ public:
     QLabel *label_8;
     QLineEdit *editTitle;
     QCheckBox *checkPLCSIM;
+    QCheckBox *checkTargetAlignButtons;
     QButtonGroup *radioGroup;
 
     void setupUi(QWidget *settingsForm)
@@ -93,7 +94,7 @@ public:
         setupButton->setFocusPolicy(Qt::NoFocus);
         label = new QLabel(settingsForm);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(10, 23, 111, 16));
+        label->setGeometry(QRect(10, 53, 111, 16));
         QFont font1;
         font1.setFamily(QStringLiteral("Arial"));
         font1.setPointSize(10);
@@ -102,14 +103,14 @@ public:
         label->setFont(font1);
         errorLimitSlider = new QSlider(settingsForm);
         errorLimitSlider->setObjectName(QStringLiteral("errorLimitSlider"));
-        errorLimitSlider->setGeometry(QRect(170, 20, 100, 25));
+        errorLimitSlider->setGeometry(QRect(170, 50, 100, 25));
         errorLimitSlider->setMinimum(2);
         errorLimitSlider->setMaximum(50);
         errorLimitSlider->setPageStep(5);
         errorLimitSlider->setOrientation(Qt::Horizontal);
         labelErrorLimit = new QLabel(settingsForm);
         labelErrorLimit->setObjectName(QStringLiteral("labelErrorLimit"));
-        labelErrorLimit->setGeometry(QRect(129, 24, 22, 21));
+        labelErrorLimit->setGeometry(QRect(129, 54, 22, 21));
         QFont font2;
         font2.setPointSize(10);
         font2.setBold(true);
@@ -258,7 +259,7 @@ public:
         label_4->setFont(font5);
         targetSlider = new QSlider(settingsForm);
         targetSlider->setObjectName(QStringLiteral("targetSlider"));
-        targetSlider->setGeometry(QRect(170, 80, 240, 25));
+        targetSlider->setGeometry(QRect(170, 110, 240, 25));
         targetSlider->setMinimum(100);
         targetSlider->setMaximum(320);
         targetSlider->setSingleStep(2);
@@ -266,25 +267,25 @@ public:
         targetSlider->setOrientation(Qt::Horizontal);
         label_5 = new QLabel(settingsForm);
         label_5->setObjectName(QStringLiteral("label_5"));
-        label_5->setGeometry(QRect(10, 83, 91, 16));
+        label_5->setGeometry(QRect(10, 113, 91, 16));
         label_5->setFont(font1);
         labelTarget = new QLabel(settingsForm);
         labelTarget->setObjectName(QStringLiteral("labelTarget"));
-        labelTarget->setGeometry(QRect(129, 80, 33, 21));
+        labelTarget->setGeometry(QRect(129, 110, 33, 21));
         labelTarget->setFont(font2);
         labelTarget->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
         label_6 = new QLabel(settingsForm);
         label_6->setObjectName(QStringLiteral("label_6"));
-        label_6->setGeometry(QRect(10, 113, 91, 16));
+        label_6->setGeometry(QRect(10, 143, 91, 16));
         label_6->setFont(font1);
         labelTargetVert = new QLabel(settingsForm);
         labelTargetVert->setObjectName(QStringLiteral("labelTargetVert"));
-        labelTargetVert->setGeometry(QRect(129, 112, 33, 21));
+        labelTargetVert->setGeometry(QRect(129, 142, 33, 21));
         labelTargetVert->setFont(font2);
         labelTargetVert->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
         targetVertSlider = new QSlider(settingsForm);
         targetVertSlider->setObjectName(QStringLiteral("targetVertSlider"));
-        targetVertSlider->setGeometry(QRect(170, 110, 240, 25));
+        targetVertSlider->setGeometry(QRect(170, 140, 240, 25));
         targetVertSlider->setMinimum(100);
         targetVertSlider->setMaximum(320);
         targetVertSlider->setSingleStep(2);
@@ -292,12 +293,12 @@ public:
         targetVertSlider->setOrientation(Qt::Horizontal);
         labelErrorScale = new QLabel(settingsForm);
         labelErrorScale->setObjectName(QStringLiteral("labelErrorScale"));
-        labelErrorScale->setGeometry(QRect(129, 52, 33, 21));
+        labelErrorScale->setGeometry(QRect(129, 82, 33, 21));
         labelErrorScale->setFont(font2);
         labelErrorScale->setStyleSheet(QStringLiteral("color: rgb(0, 255, 0);"));
         errorScaleSlider = new QSlider(settingsForm);
         errorScaleSlider->setObjectName(QStringLiteral("errorScaleSlider"));
-        errorScaleSlider->setGeometry(QRect(170, 50, 100, 25));
+        errorScaleSlider->setGeometry(QRect(170, 80, 100, 25));
         errorScaleSlider->setMinimum(0);
         errorScaleSlider->setMaximum(100);
         errorScaleSlider->setPageStep(5);
@@ -305,24 +306,28 @@ public:
         errorScaleSlider->setOrientation(Qt::Horizontal);
         label_7 = new QLabel(settingsForm);
         label_7->setObjectName(QStringLiteral("label_7"));
-        label_7->setGeometry(QRect(10, 53, 111, 16));
+        label_7->setGeometry(QRect(10, 83, 111, 16));
         label_7->setFont(font1);
         checkErrorStopVisible = new QCheckBox(settingsForm);
         checkErrorStopVisible->setObjectName(QStringLiteral("checkErrorStopVisible"));
-        checkErrorStopVisible->setGeometry(QRect(280, 53, 171, 17));
+        checkErrorStopVisible->setGeometry(QRect(280, 83, 171, 17));
         checkErrorStopVisible->setFont(font1);
         label_8 = new QLabel(settingsForm);
         label_8->setObjectName(QStringLiteral("label_8"));
-        label_8->setGeometry(QRect(10, 143, 91, 16));
+        label_8->setGeometry(QRect(10, 23, 91, 16));
         label_8->setFont(font1);
         editTitle = new QLineEdit(settingsForm);
         editTitle->setObjectName(QStringLiteral("editTitle"));
-        editTitle->setGeometry(QRect(170, 140, 231, 20));
+        editTitle->setGeometry(QRect(170, 20, 231, 20));
         editTitle->setMaxLength(20);
         checkPLCSIM = new QCheckBox(settingsForm);
         checkPLCSIM->setObjectName(QStringLiteral("checkPLCSIM"));
         checkPLCSIM->setGeometry(QRect(270, 280, 171, 17));
         checkPLCSIM->setFont(font1);
+        checkTargetAlignButtons = new QCheckBox(settingsForm);
+        checkTargetAlignButtons->setObjectName(QStringLiteral("checkTargetAlignButtons"));
+        checkTargetAlignButtons->setGeometry(QRect(170, 170, 241, 17));
+        checkTargetAlignButtons->setFont(font1);
 
         retranslateUi(settingsForm);
         QObject::connect(setupButton, SIGNAL(clicked()), settingsForm, SLOT(showSetupForm()));
@@ -418,8 +423,9 @@ public:
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" color:#ff0000;\">Aktif olabilmesi i\303\247in program\304\261 yeniden ba\305\237latman\304\261z gerekir.</span></p></body></html>", 0));
 #endif // QT_NO_TOOLTIP
         editTitle->setInputMask(QString());
-        editTitle->setText(QApplication::translate("settingsForm", "DI\305\236 KAYNAK", 0));
+        editTitle->setText(QApplication::translate("settingsForm", "KAYNAK TAK\304\260B\304\260", 0));
         checkPLCSIM->setText(QApplication::translate("settingsForm", "PLC S\304\260M\303\234LASYON", 0));
+        checkTargetAlignButtons->setText(QApplication::translate("settingsForm", "Hedef Kayd\304\261rma D\303\274\304\237meleri Aktif", 0));
     } // retranslateUi
 
 };

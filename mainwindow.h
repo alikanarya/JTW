@@ -434,6 +434,8 @@ private slots:
 
     void on_setupButton_clicked();
 
+    void on_guideAlignButton_clicked();
+
 private:
     protect lic;
 

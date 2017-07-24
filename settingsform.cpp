@@ -275,7 +275,15 @@ void settingsForm::on_checkPLCSIM_clicked(){
     w->PLCSIM = ui->checkPLCSIM->isChecked();
 }
 
+void settingsForm::on_checkTargetAlignButtons_clicked(){
+    w->ui->leftButton->setEnabled( true );
+    w->ui->leftButton->show();
+    w->ui->rightButton->setEnabled( true );
+    w->ui->rightButton->show();
+}
+
 settingsForm::~settingsForm(){
     delete ui;
 }
+
 

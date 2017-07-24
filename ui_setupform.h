@@ -746,7 +746,7 @@ public:
         cameraEnhancementsBox->setText(QApplication::translate("setupForm", "Kamera", 0));
         editVideoDuration->setInputMask(QApplication::translate("setupForm", "99", 0));
         editVideoDuration->setText(QApplication::translate("setupForm", "1", 0));
-        label_16->setText(QApplication::translate("setupForm", "Kay\304\261t S\303\274resi", 0));
+        label_16->setText(QApplication::translate("setupForm", "Kay\304\261t S\303\274resi (sn)", 0));
     } // retranslateUi
 
 };

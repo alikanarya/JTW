@@ -10,6 +10,7 @@ reportDialog::reportDialog(QString message, QWidget *parent) :
     flags |= Qt::Dialog;
     flags |= Qt::WindowSystemMenuHint;
     flags |= Qt::WindowTitleHint;
+    flags |= Qt::WindowCloseButtonHint;
     this->setWindowFlags(flags);
     this->setAttribute(Qt::WA_DeleteOnClose, true);
 
@@ -17,7 +18,6 @@ reportDialog::reportDialog(QString message, QWidget *parent) :
     ui->plainTextEdit->appendPlainText(message);
 }
 
-reportDialog::~reportDialog()
-{
+reportDialog::~reportDialog(){
     delete ui;
 }

@@ -55,6 +55,7 @@ private slots:
     void setTitle();
 
     void on_checkPLCSIM_clicked();
+    void on_checkTargetAlignButtons_clicked();
 };
 
 #endif // SETTINGSFORM_H

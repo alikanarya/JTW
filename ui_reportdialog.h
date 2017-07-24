@@ -47,7 +47,8 @@ public:
         font.setFamily(QStringLiteral("Arial"));
         font.setPointSize(10);
         plainTextEdit->setFont(font);
-        plainTextEdit->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 127);"));
+        plainTextEdit->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 195);"));
+        plainTextEdit->setReadOnly(true);
 
         retranslateUi(reportDialog);
 

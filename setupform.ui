@@ -1899,7 +1899,7 @@
     <enum>QFrame::NoFrame</enum>
    </property>
    <property name="text">
-    <string>Kayıt Süresi</string>
+    <string>Kayıt Süresi (sn)</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

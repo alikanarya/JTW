@@ -72,6 +72,7 @@ public:
     QLabel *labelTimeTag;
     QPushButton *videoButton;
     QPushButton *setupButton;
+    QPushButton *guideAlignButton;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -154,7 +155,7 @@ public:
         plainTextEdit->setReadOnly(true);
         analyzeButton = new QPushButton(centralWidget);
         analyzeButton->setObjectName(QStringLiteral("analyzeButton"));
-        analyzeButton->setGeometry(QRect(210, 30, 32, 32));
+        analyzeButton->setGeometry(QRect(250, 30, 32, 32));
         QIcon icon4;
         icon4.addFile(QStringLiteral(":/resources/calculator-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         analyzeButton->setIcon(icon4);
@@ -211,7 +212,7 @@ public:
         trackView->setTransformationAnchor(QGraphicsView::NoAnchor);
         settingsButton = new QPushButton(centralWidget);
         settingsButton->setObjectName(QStringLiteral("settingsButton"));
-        settingsButton->setGeometry(QRect(370, 30, 32, 32));
+        settingsButton->setGeometry(QRect(410, 30, 32, 32));
         QIcon icon6;
         icon6.addFile(QStringLiteral(":/resources/settings-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         settingsButton->setIcon(icon6);
@@ -220,7 +221,7 @@ public:
         trackButton = new QPushButton(centralWidget);
         trackButton->setObjectName(QStringLiteral("trackButton"));
         trackButton->setEnabled(false);
-        trackButton->setGeometry(QRect(250, 30, 32, 32));
+        trackButton->setGeometry(QRect(290, 30, 32, 32));
         QIcon icon7;
         icon7.addFile(QStringLiteral(":/resources/Phone-Book-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         trackButton->setIcon(icon7);
@@ -229,7 +230,7 @@ public:
         controlButton = new QPushButton(centralWidget);
         controlButton->setObjectName(QStringLiteral("controlButton"));
         controlButton->setEnabled(false);
-        controlButton->setGeometry(QRect(290, 30, 32, 32));
+        controlButton->setGeometry(QRect(330, 30, 32, 32));
         QIcon icon8;
         icon8.addFile(QStringLiteral(":/resources/Weather-Disabled-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         controlButton->setIcon(icon8);
@@ -331,7 +332,7 @@ public:
         helpButton->setFlat(true);
         reportButton = new QPushButton(centralWidget);
         reportButton->setObjectName(QStringLiteral("reportButton"));
-        reportButton->setGeometry(QRect(330, 30, 32, 32));
+        reportButton->setGeometry(QRect(370, 30, 32, 32));
         QIcon icon15;
         icon15.addFile(QStringLiteral(":/resources/report-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         reportButton->setIcon(icon15);
@@ -366,7 +367,7 @@ public:
         thinJointButton = new QPushButton(centralWidget);
         thinJointButton->setObjectName(QStringLiteral("thinJointButton"));
         thinJointButton->setEnabled(true);
-        thinJointButton->setGeometry(QRect(410, 30, 41, 32));
+        thinJointButton->setGeometry(QRect(300, 730, 41, 21));
         thinJointButton->setFont(font);
         thinJointButton->setIconSize(QSize(32, 32));
         thinJointButton->setFlat(false);
@@ -443,16 +444,24 @@ public:
         videoButton->setFlat(true);
         setupButton = new QPushButton(centralWidget);
         setupButton->setObjectName(QStringLiteral("setupButton"));
-        setupButton->setGeometry(QRect(460, 30, 32, 32));
+        setupButton->setGeometry(QRect(450, 30, 32, 32));
         QIcon icon20;
         icon20.addFile(QStringLiteral(":/resources/height-icon-ON.png"), QSize(), QIcon::Normal, QIcon::Off);
         setupButton->setIcon(icon20);
         setupButton->setIconSize(QSize(32, 32));
         setupButton->setFlat(true);
+        guideAlignButton = new QPushButton(centralWidget);
+        guideAlignButton->setObjectName(QStringLiteral("guideAlignButton"));
+        guideAlignButton->setGeometry(QRect(210, 30, 32, 32));
+        QIcon icon21;
+        icon21.addFile(QStringLiteral(":/resources/target_Align.png"), QSize(), QIcon::Normal, QIcon::Off);
+        guideAlignButton->setIcon(icon21);
+        guideAlignButton->setIconSize(QSize(32, 32));
+        guideAlignButton->setFlat(true);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 664, 27));
+        menuBar->setGeometry(QRect(0, 0, 664, 21));
         MainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
@@ -587,6 +596,10 @@ public:
         setupButton->setToolTip(QApplication::translate("MainWindow", "Ayarlar", 0));
 #endif // QT_NO_TOOLTIP
         setupButton->setText(QString());
+#ifndef QT_NO_TOOLTIP
+        guideAlignButton->setToolTip(QApplication::translate("MainWindow", "Rehber Hizala", 0));
+#endif // QT_NO_TOOLTIP
+        guideAlignButton->setText(QString());
     } // retranslateUi
 
 };
