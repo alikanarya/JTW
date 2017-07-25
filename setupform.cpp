@@ -506,7 +506,7 @@ void setupForm::captureButton(){
 
         // UPDATE GUI
 
-        QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
+        QString message = "-";//"Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
         //goto labelx;
         ui->plainTextEdit->appendPlainText(message);
 
@@ -555,7 +555,7 @@ void setupForm::captureButton(){
                                 for (int i=0; i<iprocess->listHoughData2ndSize;i++)
                                     ui->plainTextEdit->appendPlainText("dist/ang/vote: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
                             }
-
+qDebug() << iprocess->mainEdgesList.size();
                         ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(1) ) );
                             /**/if (DEBUG) iprocess->imgSolidLines.save(path+"05-mainEdges image.jpg");
 
