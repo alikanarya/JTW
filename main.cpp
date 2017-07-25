@@ -4,7 +4,8 @@
 MainWindow *w;
 
 int main(int argc, char *argv[]){
-    QApplication a(argc, argv);
+    int ix = 1;
+    QApplication a(ix, argv);
 
     // turkish char set support
     //QTextCodec::setCodecForTr( QTextCodec::codecForName("ISO-8859-9") );

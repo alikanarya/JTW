@@ -747,7 +747,7 @@ void MainWindow::guideButton(){
 
 
 void MainWindow::on_guideAlignButton_clicked(){
-    if (showGuide && trackOn)
+    if (showGuide && trackOn && !controlOn)
         alignGuide2TrackCenter = true;
 }
 
