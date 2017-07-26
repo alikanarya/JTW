@@ -1819,6 +1819,13 @@ void MainWindow::testEdit(){
 void MainWindow::testButton(){
 
     //mak_aktif_now = !mak_aktif_now;
+    int *array = new int[5];
+    for (int i = 0; i < 5; i++) array[i] = i;
+
+    //QList<range> list;
+
+    //findLocalMinimum(array, 5, list);
+
 }
 
 void MainWindow::on_setupButton_clicked(){
