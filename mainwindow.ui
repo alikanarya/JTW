@@ -61,7 +61,10 @@
      <string/>
     </property>
     <property name="scaledContents">
-     <bool>false</bool>
+     <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QPushButton" name="screenShotButton">
@@ -1273,7 +1276,7 @@ background-color: rgb(236, 233, 216);</string>
      <x>0</x>
      <y>0</y>
      <width>664</width>
-     <height>21</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>

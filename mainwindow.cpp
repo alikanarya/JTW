@@ -251,6 +251,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     //if ( thinJointAlgoActive || zControlActive || hardControlStart )
       //  QTimer::singleShot(500, this, SLOT(showInfo()));
+    ui->imageFrame->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+//    ui->imageFrame->setScaledContents(true);
 
     ui->leftButton->setEnabled( false );
     ui->leftButton->hide();
@@ -1731,10 +1733,10 @@ void MainWindow::playCam(){
                     QImage step1 = changeBrightness(*lastData->image, brightnessVal);
                     QImage step2 = changeContrast(step1, contrastVal);
                     imageFileChanged = changeGamma(step2, gammaVal);
-                    ui->imageFrame->setPixmap( QPixmap::fromImage( imageFileChanged ));
+                    ui->imageFrame->setPixmap( QPixmap::fromImage( imageFileChanged.scaled(imageFileChanged.width(), imageFileChanged.height(), Qt::KeepAspectRatio) ));
 
                 } else {
-                    ui->imageFrame->setPixmap(QPixmap::fromImage(*lastData->image));
+                    ui->imageFrame->setPixmap( QPixmap::fromImage( *lastData->image->scaled(lastData->image->width(), lastData->image->height(), Qt::KeepAspectRatio) ));
                 }
 
                 ui->imageFrame->show();
