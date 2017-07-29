@@ -146,6 +146,10 @@ public:
     int contrastVal = 100;
     int gammaVal = 100;
     bool applyCameraEnhancements = false;
+    int camImageWidth = 480;
+    int camImageHeight = 640;
+    bool getCamImageProperties = false;
+
 
     // icons
     QIcon plcOnlineIcon, plcOfflineIcon;
@@ -181,6 +185,15 @@ public:
     // image framing vars
     int imageWidth, imageHeight;
     int frameWidth, frameHeight;
+    float frameWidthRatio = 0.7;
+    float frameHeightRatio = 0.7;
+    int frameWidthMax, frameHeightMax;
+    float aspectRatio, aspectRatioGUI;
+    bool imgOrientation = false; //false: landscape;aspectRatio>1.33, true: portrait;aspectRatio<=1.33
+    float mapFactorWidth, mapFactorHeight;
+    int mapWidth, mapHeight;
+    int mapOffsetX, mapOffsetY;
+
     int offsetX, offsetY;               // upper left corner coor. of target image
     int centerX;                        // image center x coor.
     QRect imageFrameRect;

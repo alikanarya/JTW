@@ -751,7 +751,7 @@ background-color: rgb(255, 0, 0);</string>
     <string notr="true">color: rgb(0, 0, 255);</string>
    </property>
    <property name="text">
-    <string>100</string>
+    <string>50</string>
    </property>
   </widget>
   <widget class="QSlider" name="targetVertSlider">
@@ -774,6 +774,9 @@ background-color: rgb(255, 0, 0);</string>
    </property>
    <property name="pageStep">
     <number>5</number>
+   </property>
+   <property name="value">
+    <number>100</number>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>

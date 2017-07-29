@@ -88,7 +88,10 @@ void settingsForm::errorScaleSlider(){
 void settingsForm::targetSlider(){
     int pos = ui->targetSlider->sliderPosition();
 
-    if (pos % 2 == 0) w->frameWidth = pos;
+    if (pos % 2 == 0){
+        if (pos <= w->frameWidthMax)
+            w->frameWidth = pos;
+    }
 
     ui->labelTarget->setText(QString::number(w->frameWidth));
     w->repaintGuide();
@@ -97,9 +100,13 @@ void settingsForm::targetSlider(){
 void settingsForm::targetVertSlider(){
     int pos = ui->targetVertSlider->sliderPosition();
 
-    if (pos % 2 == 0) w->frameHeight = pos;
+    if (pos % 2 == 0){
+        if (pos <= w->frameHeightMax)
+            w->frameHeight = pos;
+    }
 
     ui->labelTargetVert->setText(QString::number(w->frameHeight));
+    //ui->labelTargetVert->setText(QString::number(pos));
     w->repaintGuide();
 }
 

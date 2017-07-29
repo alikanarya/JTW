@@ -77,6 +77,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // orginal and target image parameters
     imageWidth = 640;   //image->width();
     imageHeight = 480;  //image->height();
+    aspectRatioGUI = ((float)imageWidth) / imageHeight;
 
     imageFrameRect = ui->imageFrame->geometry();
     guideFrameRect = ui->guideFrame->geometry();
@@ -252,6 +253,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //if ( thinJointAlgoActive || zControlActive || hardControlStart )
       //  QTimer::singleShot(500, this, SLOT(showInfo()));
     ui->imageFrame->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    ui->imageFrame->setStyleSheet("background: black");
 //    ui->imageFrame->setScaledContents(true);
 
     ui->leftButton->setEnabled( false );
@@ -347,6 +349,7 @@ void MainWindow::playButton(){
     timeDelayAvg = 0;
     msecCount = 0;
     alarmCameraDownLock = false;
+    getCamImageProperties = true;
     play = true;
 
     ui->playButton->setIcon(playOnIcon);
@@ -704,6 +707,7 @@ void  MainWindow::cameraDownAction(){
 
     ui->plainTextEdit->appendPlainText(timeString() + "\n" + alarm7);
     alarmCameraDownLock = true;
+    getCamImageProperties = true;
 }
 
 void MainWindow::analyzeButton(){
@@ -1729,14 +1733,73 @@ void MainWindow::playCam(){
             // show current valid image. valid: not late from previous (<show>)
             if (!lastData->shown && show){
 
+                if (getCamImageProperties) {
+                    camImageWidth = lastData->image->width();
+                    camImageHeight = lastData->image->height();
+                    QString message = "Res: " + QString::number(camImageWidth) + "x" + QString::number(camImageHeight) + "\n";
+
+                    if (camImageHeight != 0) {
+
+                        aspectRatio = ((float)camImageWidth )/ camImageHeight;
+                        message += "asr: " + QString::number(aspectRatio, 'f', 2) + "\n";
+
+                        if (aspectRatio  > 1.333)
+                            imgOrientation = false;
+                        else
+                            imgOrientation = true;
+
+                        if (imgOrientation) message += "portrait\n"; else message += "landscape\n";
+
+                        if (!imgOrientation) {  // landscape
+                            mapFactorWidth = 1;
+                            mapWidth = imageWidth;
+                            mapOffsetX = 0;
+                            frameWidthMax = mapWidth * frameWidthRatio;
+
+                            mapFactorHeight = aspectRatioGUI / aspectRatio;
+                            mapHeight = imageHeight * mapFactorHeight;
+                            mapOffsetY = (imageHeight - mapHeight) / 2;
+                            frameHeightMax = mapHeight * frameHeightRatio;
+
+
+                        } else {                // portrait
+
+                        }
+
+                        message += "mapFactorWidth: " + QString::number(mapFactorWidth, 'f', 2) + "\n";
+                        message += "mapWidth: " + QString::number(mapWidth) + "\n";
+                        message += "mapOffsetX: " + QString::number(mapOffsetX) + "\n";
+                        message += "frameWidthMax: " + QString::number(frameWidthMax) + "\n";
+                        message += "mapFactorHeight: " + QString::number(mapFactorHeight, 'f', 2) + "\n";
+                        message += "mapHeight: " + QString::number(mapHeight) + "\n";
+                        message += "mapOffsetY: " + QString::number(mapOffsetY) + "\n";
+                        message += "frameHeightMax: " + QString::number(frameHeightMax) + "\n";
+                    } else
+                        aspectRatio = 0;
+
+
+                    //frameWidth = imageWidth * frameWidthRatio;
+                    //frameHeight = imageHeight * frameHeightRatio;
+//                    frameWidth = camImageWidth * frameWithRatio;
+//                    frameHeight = camImageHeight * frameHeightRatio;
+
+
+
+                    ui->plainTextEdit->appendPlainText(message);
+                    getCamImageProperties = false;
+                    repaintGuide();
+                }
+
                 if (applyCameraEnhancements) {
                     QImage step1 = changeBrightness(*lastData->image, brightnessVal);
                     QImage step2 = changeContrast(step1, contrastVal);
                     imageFileChanged = changeGamma(step2, gammaVal);
-                    ui->imageFrame->setPixmap( QPixmap::fromImage( imageFileChanged.scaled(imageFileChanged.width(), imageFileChanged.height(), Qt::KeepAspectRatio) ));
+                    //ui->imageFrame->setPixmap( QPixmap::fromImage( imageFileChanged.scaled(imageFileChanged.width(), imageFileChanged.height(), Qt::KeepAspectRatio) ));
+                    ui->imageFrame->setPixmap( QPixmap::fromImage( imageFileChanged.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
 
                 } else {
-                    ui->imageFrame->setPixmap( QPixmap::fromImage( *lastData->image->scaled(lastData->image->width(), lastData->image->height(), Qt::KeepAspectRatio) ));
+                    ui->imageFrame->setPixmap( QPixmap::fromImage( lastData->image->scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
+                    //ui->imageFrame->setPixmap( QPixmap::fromImage( *lastData->image ));
                 }
 
                 ui->imageFrame->show();
