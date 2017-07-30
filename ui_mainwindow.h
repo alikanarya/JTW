@@ -82,14 +82,14 @@ public:
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::ApplicationModal);
         MainWindow->setEnabled(true);
-        MainWindow->resize(664, 817);
+        MainWindow->resize(664, 900);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
         MainWindow->setSizePolicy(sizePolicy);
-        MainWindow->setMinimumSize(QSize(664, 817));
-        MainWindow->setMaximumSize(QSize(664, 817));
+        MainWindow->setMinimumSize(QSize(664, 900));
+        MainWindow->setMaximumSize(QSize(664, 900));
         QIcon icon;
         icon.addFile(QStringLiteral(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -98,9 +98,11 @@ public:
         imageFrame = new QLabel(centralWidget);
         imageFrame->setObjectName(QStringLiteral("imageFrame"));
         imageFrame->setGeometry(QRect(10, 70, 644, 484));
+        imageFrame->setStyleSheet(QStringLiteral("background-color: rgb(0, 0, 0);"));
         imageFrame->setFrameShape(QFrame::Box);
         imageFrame->setLineWidth(2);
         imageFrame->setScaledContents(false);
+        imageFrame->setAlignment(Qt::AlignCenter);
         screenShotButton = new QPushButton(centralWidget);
         screenShotButton->setObjectName(QStringLiteral("screenShotButton"));
         screenShotButton->setEnabled(true);
@@ -115,7 +117,7 @@ public:
         labelTime = new QLabel(centralWidget);
         labelTime->setObjectName(QStringLiteral("labelTime"));
         labelTime->setEnabled(false);
-        labelTime->setGeometry(QRect(360, 730, 85, 23));
+        labelTime->setGeometry(QRect(60, 640, 85, 23));
         QFont font;
         font.setPointSize(10);
         font.setBold(true);
@@ -144,7 +146,7 @@ public:
         stopButton->setFlat(true);
         plainTextEdit = new QPlainTextEdit(centralWidget);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
-        plainTextEdit->setGeometry(QRect(10, 560, 158, 160));
+        plainTextEdit->setGeometry(QRect(10, 720, 644, 123));
         QFont font1;
         font1.setPointSize(7);
         plainTextEdit->setFont(font1);
@@ -238,7 +240,7 @@ public:
         controlButton->setFlat(true);
         plcStatus = new QPushButton(centralWidget);
         plcStatus->setObjectName(QStringLiteral("plcStatus"));
-        plcStatus->setGeometry(QRect(500, 690, 32, 32));
+        plcStatus->setGeometry(QRect(500, 682, 32, 32));
         QIcon icon9;
         icon9.addFile(QStringLiteral(":/resources/s7_200-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         plcStatus->setIcon(icon9);
@@ -254,7 +256,7 @@ public:
         infoButton->setFlat(true);
         exitButton = new QPushButton(centralWidget);
         exitButton->setObjectName(QStringLiteral("exitButton"));
-        exitButton->setGeometry(QRect(620, 688, 32, 32));
+        exitButton->setGeometry(QRect(620, 680, 32, 32));
         QIcon icon11;
         icon11.addFile(QStringLiteral(":/resources/exit-48.png"), QSize(), QIcon::Normal, QIcon::Off);
         exitButton->setIcon(icon11);
@@ -276,7 +278,7 @@ public:
         labelLogoCustomer = new QLabel(centralWidget);
         labelLogoCustomer->setObjectName(QStringLiteral("labelLogoCustomer"));
         labelLogoCustomer->setEnabled(false);
-        labelLogoCustomer->setGeometry(QRect(50, 730, 24, 24));
+        labelLogoCustomer->setGeometry(QRect(70, 570, 24, 24));
         labelLogoCustomer->setFrameShape(QFrame::Box);
         labelLogoCustomer->setLineWidth(1);
         labelLogoCustomer->setPixmap(QPixmap(QString::fromUtf8(":/resources/NokselLogo.bmp")));
@@ -284,7 +286,7 @@ public:
         emergencyButton = new QPushButton(centralWidget);
         emergencyButton->setObjectName(QStringLiteral("emergencyButton"));
         emergencyButton->setEnabled(false);
-        emergencyButton->setGeometry(QRect(10, 720, 32, 32));
+        emergencyButton->setGeometry(QRect(20, 570, 32, 32));
         QIcon icon12;
         icon12.addFile(QStringLiteral(":/resources/Emergency-Stop-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         icon12.addFile(QStringLiteral(":/resources/Emergency-Stop-Enabled-Icon.png"), QSize(), QIcon::Normal, QIcon::On);
@@ -293,7 +295,7 @@ public:
         emergencyButton->setFlat(true);
         cameraStatus = new QPushButton(centralWidget);
         cameraStatus->setObjectName(QStringLiteral("cameraStatus"));
-        cameraStatus->setGeometry(QRect(540, 690, 32, 32));
+        cameraStatus->setGeometry(QRect(540, 682, 32, 32));
         QIcon icon13;
         icon13.addFile(QStringLiteral(":/resources/Camera-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         cameraStatus->setIcon(icon13);
@@ -315,7 +317,7 @@ public:
         clearMsgBoxButton = new QPushButton(centralWidget);
         clearMsgBoxButton->setObjectName(QStringLiteral("clearMsgBoxButton"));
         clearMsgBoxButton->setEnabled(false);
-        clearMsgBoxButton->setGeometry(QRect(190, 730, 101, 25));
+        clearMsgBoxButton->setGeometry(QRect(60, 600, 101, 25));
         QFont font4;
         font4.setFamily(QStringLiteral("Arial"));
         font4.setPointSize(10);
@@ -367,7 +369,7 @@ public:
         thinJointButton = new QPushButton(centralWidget);
         thinJointButton->setObjectName(QStringLiteral("thinJointButton"));
         thinJointButton->setEnabled(true);
-        thinJointButton->setGeometry(QRect(300, 730, 41, 21));
+        thinJointButton->setGeometry(QRect(10, 640, 41, 21));
         thinJointButton->setFont(font);
         thinJointButton->setIconSize(QSize(32, 32));
         thinJointButton->setFlat(false);
@@ -396,7 +398,7 @@ public:
         testEdit = new QLineEdit(centralWidget);
         testEdit->setObjectName(QStringLiteral("testEdit"));
         testEdit->setEnabled(false);
-        testEdit->setGeometry(QRect(130, 730, 51, 20));
+        testEdit->setGeometry(QRect(10, 610, 51, 20));
         QFont font6;
         font6.setPointSize(9);
         font6.setBold(true);
@@ -413,13 +415,13 @@ public:
         testButton = new QPushButton(centralWidget);
         testButton->setObjectName(QStringLiteral("testButton"));
         testButton->setEnabled(true);
-        testButton->setGeometry(QRect(80, 730, 41, 23));
+        testButton->setGeometry(QRect(100, 570, 41, 23));
         timeEdit = new QLineEdit(centralWidget);
         timeEdit->setObjectName(QStringLiteral("timeEdit"));
-        timeEdit->setGeometry(QRect(610, 730, 41, 20));
+        timeEdit->setGeometry(QRect(20, 700, 41, 20));
         labelTimeTag2 = new QLabel(centralWidget);
         labelTimeTag2->setObjectName(QStringLiteral("labelTimeTag2"));
-        labelTimeTag2->setGeometry(QRect(560, 730, 41, 23));
+        labelTimeTag2->setGeometry(QRect(120, 670, 41, 23));
         labelTimeTag2->setFont(font);
         labelTimeTag2->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
         labelTimeTag2->setFrameShape(QFrame::NoFrame);
@@ -427,7 +429,7 @@ public:
         labelTimeTag2->setAlignment(Qt::AlignCenter);
         labelTimeTag = new QLabel(centralWidget);
         labelTimeTag->setObjectName(QStringLiteral("labelTimeTag"));
-        labelTimeTag->setGeometry(QRect(440, 730, 121, 23));
+        labelTimeTag->setGeometry(QRect(10, 670, 121, 23));
         labelTimeTag->setFont(font);
         labelTimeTag->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
         labelTimeTag->setFrameShape(QFrame::NoFrame);
@@ -461,7 +463,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 664, 21));
+        menuBar->setGeometry(QRect(0, 0, 664, 27));
         MainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));

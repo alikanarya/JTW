@@ -290,6 +290,7 @@ public:
         targetVertSlider->setMaximum(320);
         targetVertSlider->setSingleStep(2);
         targetVertSlider->setPageStep(5);
+        targetVertSlider->setValue(100);
         targetVertSlider->setOrientation(Qt::Horizontal);
         labelErrorScale = new QLabel(settingsForm);
         labelErrorScale->setObjectName(QStringLiteral("labelErrorScale"));
@@ -410,7 +411,7 @@ public:
         label_5->setText(QApplication::translate("settingsForm", "Hedef Yatay", 0));
         labelTarget->setText(QApplication::translate("settingsForm", "100", 0));
         label_6->setText(QApplication::translate("settingsForm", "Hedef Dikey", 0));
-        labelTargetVert->setText(QApplication::translate("settingsForm", "100", 0));
+        labelTargetVert->setText(QApplication::translate("settingsForm", "50", 0));
         labelErrorScale->setText(QApplication::translate("settingsForm", "100", 0));
         label_7->setText(QApplication::translate("settingsForm", "Stop Y\303\274zdesi", 0));
         checkErrorStopVisible->setText(QApplication::translate("settingsForm", "Ekranda G\303\266r\303\274ns\303\274n", 0));

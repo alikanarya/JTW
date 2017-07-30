@@ -13,7 +13,7 @@
     <x>0</x>
     <y>0</y>
     <width>664</width>
-    <height>817</height>
+    <height>900</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,13 +25,13 @@
   <property name="minimumSize">
    <size>
     <width>664</width>
-    <height>817</height>
+    <height>900</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>664</width>
-    <height>817</height>
+    <height>900</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -64,7 +64,7 @@
      <string/>
     </property>
     <property name="scaledContents">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -114,8 +114,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>360</x>
-      <y>730</y>
+      <x>60</x>
+      <y>640</y>
       <width>85</width>
       <height>23</height>
      </rect>
@@ -206,9 +206,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>560</y>
-      <width>158</width>
-      <height>160</height>
+      <y>720</y>
+      <width>644</width>
+      <height>123</height>
      </rect>
     </property>
     <property name="font">
@@ -518,7 +518,7 @@ background-color: rgb(236, 233, 216);</string>
     <property name="geometry">
      <rect>
       <x>500</x>
-      <y>690</y>
+      <y>682</y>
       <width>32</width>
       <height>32</height>
      </rect>
@@ -576,7 +576,7 @@ background-color: rgb(236, 233, 216);</string>
     <property name="geometry">
      <rect>
       <x>620</x>
-      <y>688</y>
+      <y>680</y>
       <width>32</width>
       <height>32</height>
      </rect>
@@ -640,8 +640,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>730</y>
+      <x>70</x>
+      <y>570</y>
       <width>24</width>
       <height>24</height>
      </rect>
@@ -668,8 +668,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>720</y>
+      <x>20</x>
+      <y>570</y>
       <width>32</width>
       <height>32</height>
      </rect>
@@ -699,7 +699,7 @@ background-color: rgb(236, 233, 216);</string>
     <property name="geometry">
      <rect>
       <x>540</x>
-      <y>690</y>
+      <y>682</y>
       <width>32</width>
       <height>32</height>
      </rect>
@@ -763,8 +763,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>190</x>
-      <y>730</y>
+      <x>60</x>
+      <y>600</y>
       <width>101</width>
       <height>25</height>
      </rect>
@@ -935,8 +935,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>730</y>
+      <x>10</x>
+      <y>640</y>
       <width>41</width>
       <height>21</height>
      </rect>
@@ -1043,8 +1043,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>730</y>
+      <x>10</x>
+      <y>610</y>
       <width>51</width>
       <height>20</height>
      </rect>
@@ -1098,8 +1098,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>730</y>
+      <x>100</x>
+      <y>570</y>
       <width>41</width>
       <height>23</height>
      </rect>
@@ -1111,8 +1111,8 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QLineEdit" name="timeEdit">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>730</y>
+      <x>20</x>
+      <y>700</y>
       <width>41</width>
       <height>20</height>
      </rect>
@@ -1121,8 +1121,8 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QLabel" name="labelTimeTag2">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>730</y>
+      <x>120</x>
+      <y>670</y>
       <width>41</width>
       <height>23</height>
      </rect>
@@ -1153,8 +1153,8 @@ background-color: rgb(236, 233, 216);</string>
    <widget class="QLabel" name="labelTimeTag">
     <property name="geometry">
      <rect>
-      <x>440</x>
-      <y>730</y>
+      <x>10</x>
+      <y>670</y>
       <width>121</width>
       <height>23</height>
      </rect>
@@ -1279,7 +1279,7 @@ background-color: rgb(236, 233, 216);</string>
      <x>0</x>
      <y>0</y>
      <width>664</width>
-     <height>21</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>

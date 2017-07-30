@@ -212,7 +212,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     weldCommandsSize = controlDelay / timerControlInterval;
 
     // start message
-    ui->plainTextEdit->appendPlainText(timeString() + "\n" + "Sistem başlatılmıştır. Hoş geldiniz.");
+    ui->plainTextEdit->appendPlainText(timeString() + "Sistem başlatılmıştır. Hoş geldiniz.");
     lic.checkLicence();
 
     if (lic.licenseState != _LIC2){
@@ -616,11 +616,11 @@ void MainWindow::updateSn(){
     // plc live state
     if (!plcInteractPrev && threadPLCControl->plc->plcInteract){           // 0 -> 1
         permPLC = true;
-        ui->plainTextEdit->appendPlainText(timeString() + "\n" + MESSAGE6);
+        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE6);
     }
     else if (plcInteractPrev && !threadPLCControl->plc->plcInteract){       // 1 -> 0
         permPLC = false;
-        ui->plainTextEdit->appendPlainText(timeString() + "\n" + MESSAGE4);
+        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE4);
     }
 
     plcInteractPrev = threadPLCControl->plc->plcInteract;
@@ -665,7 +665,7 @@ void MainWindow::updateSn(){
     msecCount = 0;
     pause = false;
 
-    ui->plainTextEdit->ensureCursorVisible();
+    //ui->plainTextEdit->ensureCursorVisible();
 }
 
 void MainWindow::startTimer(){
@@ -691,7 +691,7 @@ void MainWindow::startTimer(){
 
 void MainWindow::initPlcTimer(){
 
-    ui->plainTextEdit->appendPlainText(timeString() + "\n" + threadPLCControl->plc->message);
+    ui->plainTextEdit->appendPlainText(timeString() + threadPLCControl->plc->message);
     if (threadPLCControl->plc->plcInteract) ui->plcStatus->setIcon(plcOnlineIcon);
 
     timerControlEnabled = true;
@@ -705,7 +705,7 @@ void MainWindow::initPlcTimer(){
 
 void  MainWindow::cameraDownAction(){
 
-    ui->plainTextEdit->appendPlainText(timeString() + "\n" + alarm7);
+    ui->plainTextEdit->appendPlainText(timeString() + alarm7);
     alarmCameraDownLock = true;
     getCamImageProperties = true;
 }
@@ -735,7 +735,7 @@ void MainWindow::analyzeButton(){
 
 
     } else {
-         ui->plainTextEdit->appendPlainText(timeString() + "\n" + alarm6);
+         ui->plainTextEdit->appendPlainText(timeString() + alarm6);
     }
 }
 
@@ -789,7 +789,7 @@ void MainWindow::controlButton(){
         weldCommandsSize = controlDelay / timerControlInterval;
 
         ui->controlButton->setIcon(controlOnIcon);
-        ui->plainTextEdit->appendPlainText(timeString() + "\n" + message1);
+        ui->plainTextEdit->appendPlainText(timeString() + message1);
 
         // for report
         errorTotal = 0;
@@ -830,7 +830,7 @@ void MainWindow::controlButton(){
         permOperator = false;
         ui->analyzeButton->setIcon(calculatorOnIcon);
 
-        ui->plainTextEdit->appendPlainText(timeString() + "\n" + message2);
+        ui->plainTextEdit->appendPlainText(timeString() + message2);
 
         // for report
         if (processCount != 0)
@@ -847,7 +847,7 @@ void MainWindow::controlButton(){
         fileData.append(timeString() + "Kaynak bitirildi.");
         fileData.append("---------.---------.---------.---------.---------.---------");
 
-        if (!writeReport()) ui->plainTextEdit->appendPlainText(timeString() + "\n" + message5);
+        if (!writeReport()) ui->plainTextEdit->appendPlainText(timeString() + message5);
     }
 
     //ui->stopButton->setEnabled(!controlOn);
@@ -862,7 +862,7 @@ void MainWindow::emergencyButton(){
         ui->emergencyButton->setIcon(emergencyOffIcon);
     } else {
         weldCommands.clear();
-        ui->plainTextEdit->appendPlainText(timeString() + "\n" + alarm10);
+        ui->plainTextEdit->appendPlainText(timeString() + alarm10);
         ui->emergencyButton->setIcon(emergencyOnIcon);
     }
 }
@@ -1700,6 +1700,67 @@ void MainWindow::closeEvent(QCloseEvent*){
     qApp->quit();
 }
 
+void MainWindow::calcImageParametes(QImage img){
+
+    camImageWidth = img.width();
+    camImageHeight = img.height();
+//    camImageWidth = lastData->image->width();
+//    camImageHeight = lastData->image->height();
+    QString message = "Res: " + QString::number(camImageWidth) + "x" + QString::number(camImageHeight) + "\n";
+
+    if (camImageHeight != 0) {
+
+        aspectRatio = ((float)camImageWidth )/ camImageHeight;
+        message += "asr: " + QString::number(aspectRatio, 'f', 2) + "\n";
+
+        if (aspectRatio  > 1.333)   // landscape
+            imgOrientation = false;
+        else                        // portrait
+            imgOrientation = true;
+
+        if (imgOrientation) message += "portrait\n"; else message += "landscape\n";
+
+        if (!imgOrientation) {  // landscape
+            mapFactorWidth = 1;
+            mapWidth = imageWidth;
+            //mapOffsetX = 0;
+            frameWidthMax = mapWidth * frameWidthRatio;
+            frameWidthCam = ((float)camImageWidth * frameWidth) / mapWidth;
+            offsetXCam = (camImageWidth - frameWidthCam) / 2;
+
+            mapFactorHeight = aspectRatioGUI / aspectRatio;
+            mapHeight = imageHeight * mapFactorHeight;
+            //mapOffsetY = (imageHeight - mapHeight) / 2;
+            frameHeightMax = mapHeight * frameHeightRatio;
+            frameHeightCam = ((float)camImageHeight * frameHeight) / mapHeight;
+            offsetYCam = (camImageHeight - frameHeightCam) / 2;
+
+
+        } else {                // portrait
+
+        }
+
+        message += "mapFactorWidth: " + QString::number(mapFactorWidth, 'f', 2) + "\n";
+        message += "mapWidth: " + QString::number(mapWidth) + "\n";
+        message += "mapOffsetX: " + QString::number(mapOffsetX) + "\n";
+        message += "frameWidthMax: " + QString::number(frameWidthMax) + "\n";
+        message += "frameWidthCam: " + QString::number(frameWidthCam) + "\n";
+        message += "offsetXCam: " + QString::number(offsetXCam) + "\n";
+
+        message += "mapFactorHeight: " + QString::number(mapFactorHeight, 'f', 2) + "\n";
+        message += "mapHeight: " + QString::number(mapHeight) + "\n";
+        message += "mapOffsetY: " + QString::number(mapOffsetY) + "\n";
+        message += "frameHeightMax: " + QString::number(frameHeightMax) + "\n";
+        message += "frameHeightCam: " + QString::number(frameHeightCam) + "\n";
+        message += "offsetYCam: " + QString::number(offsetYCam) + "\n";
+    } else
+        aspectRatio = 0;
+
+
+
+    ui->plainTextEdit->appendPlainText(message);
+}
+
 void MainWindow::playCam(){
 
     if (play && !pause){
@@ -1734,58 +1795,7 @@ void MainWindow::playCam(){
             if (!lastData->shown && show){
 
                 if (getCamImageProperties) {
-                    camImageWidth = lastData->image->width();
-                    camImageHeight = lastData->image->height();
-                    QString message = "Res: " + QString::number(camImageWidth) + "x" + QString::number(camImageHeight) + "\n";
-
-                    if (camImageHeight != 0) {
-
-                        aspectRatio = ((float)camImageWidth )/ camImageHeight;
-                        message += "asr: " + QString::number(aspectRatio, 'f', 2) + "\n";
-
-                        if (aspectRatio  > 1.333)
-                            imgOrientation = false;
-                        else
-                            imgOrientation = true;
-
-                        if (imgOrientation) message += "portrait\n"; else message += "landscape\n";
-
-                        if (!imgOrientation) {  // landscape
-                            mapFactorWidth = 1;
-                            mapWidth = imageWidth;
-                            mapOffsetX = 0;
-                            frameWidthMax = mapWidth * frameWidthRatio;
-
-                            mapFactorHeight = aspectRatioGUI / aspectRatio;
-                            mapHeight = imageHeight * mapFactorHeight;
-                            mapOffsetY = (imageHeight - mapHeight) / 2;
-                            frameHeightMax = mapHeight * frameHeightRatio;
-
-
-                        } else {                // portrait
-
-                        }
-
-                        message += "mapFactorWidth: " + QString::number(mapFactorWidth, 'f', 2) + "\n";
-                        message += "mapWidth: " + QString::number(mapWidth) + "\n";
-                        message += "mapOffsetX: " + QString::number(mapOffsetX) + "\n";
-                        message += "frameWidthMax: " + QString::number(frameWidthMax) + "\n";
-                        message += "mapFactorHeight: " + QString::number(mapFactorHeight, 'f', 2) + "\n";
-                        message += "mapHeight: " + QString::number(mapHeight) + "\n";
-                        message += "mapOffsetY: " + QString::number(mapOffsetY) + "\n";
-                        message += "frameHeightMax: " + QString::number(frameHeightMax) + "\n";
-                    } else
-                        aspectRatio = 0;
-
-
-                    //frameWidth = imageWidth * frameWidthRatio;
-                    //frameHeight = imageHeight * frameHeightRatio;
-//                    frameWidth = camImageWidth * frameWithRatio;
-//                    frameHeight = camImageHeight * frameHeightRatio;
-
-
-
-                    ui->plainTextEdit->appendPlainText(message);
+                    calcImageParametes(*lastData->image);
                     getCamImageProperties = false;
                     repaintGuide();
                 }
@@ -1871,7 +1881,7 @@ void MainWindow::videoButton(){
 
 void MainWindow::saveFinished(){
 
-    ui->plainTextEdit->appendPlainText(timeString() + "\n" + "Video kaydedildi!");
+    ui->plainTextEdit->appendPlainText(timeString() + "Video kaydedildi!");
     ui->videoButton->setEnabled(true);
     ui->videoButton->setIcon(videoSaveEnabled);
 }

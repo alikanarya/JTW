@@ -117,9 +117,11 @@ void settingsForm::getParameters(){
     ui->errorScaleSlider->setSliderPosition(w->errorStopScale * 100);
     ui->labelErrorScale->setText(QString::number(w->errorStopScale * 100));
 
+    ui->targetSlider->setMaximum(w->frameWidthMax);
     ui->labelTarget->setText(QString::number(w->frameWidth));
     ui->targetSlider->setSliderPosition(w->frameWidth);
 
+    ui->targetVertSlider->setMaximum(w->frameHeightMax);
     ui->labelTargetVert->setText(QString::number(w->frameHeight));
     ui->targetVertSlider->setSliderPosition(w->frameHeight);
 

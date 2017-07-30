@@ -185,6 +185,7 @@ public:
     // image framing vars
     int imageWidth, imageHeight;
     int frameWidth, frameHeight;
+    int frameWidthCam, frameHeightCam;
     float frameWidthRatio = 0.7;
     float frameHeightRatio = 0.7;
     int frameWidthMax, frameHeightMax;
@@ -194,7 +195,8 @@ public:
     int mapWidth, mapHeight;
     int mapOffsetX, mapOffsetY;
 
-    int offsetX, offsetY;               // upper left corner coor. of target image
+    int offsetX, offsetY;               // upper left corner coor. of target image, for qlabel
+    int offsetXCam, offsetYCam;               // upper left corner coor. of target image, for cam iamge
     int centerX;                        // image center x coor.
     QRect imageFrameRect;
     int offsetXpos;
@@ -389,6 +391,7 @@ public:
     void Algo4(imgProcess *iprocess);   // woLASER: value > detectThinJointCenter
     void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
+    void calcImageParametes(QImage img);
 
     void repaintGuide();                            // update guide
     void repaintDevTrend();                         // update deviation trend

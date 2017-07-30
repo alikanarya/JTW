@@ -343,9 +343,11 @@ void setupForm::processImage(){
 
     if ( w->play && !w->imageGetter->imageList.isEmpty() ){
         if (w->applyCameraEnhancements) {
-            target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+//            target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+            target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
         } else {
-            target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+            //target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+            target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
         }
     }
 
@@ -506,7 +508,7 @@ void setupForm::captureButton(){
 
         // UPDATE GUI
 
-        QString message = "-";//"Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
+        QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
         //goto labelx;
         ui->plainTextEdit->appendPlainText(message);
 
@@ -964,7 +966,8 @@ void setupForm::on_captureButton_2_clicked(){
 
         w->imageFile.load(w->loadedFileNamewPath);
         w->imageFileChanged = w->imageFile;
-        w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFile ));
+        w->calcImageParametes(w->imageFile);
+        w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFile ).scaled(w->imageWidth, w->imageHeight, Qt::KeepAspectRatio));
         captureButton();
     }
 }
