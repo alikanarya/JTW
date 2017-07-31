@@ -80,13 +80,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     aspectRatioGUI = ((float)imageWidth) / imageHeight;
     mapFactorWidth = 1;
     mapWidth = imageWidth;
-    frameWidthMax = mapWidth * 0.7;
+    frameWidthMax = mapWidth * frameWidthRatioMax;
     frameWidthCam = frameWidthMax;
     offsetXCam = 0;
 
     mapFactorHeight = 1;
     mapHeight = imageHeight;
-    frameHeightMax = mapHeight * 0.7;
+    frameHeightMax = mapHeight * frameHeightRatioMax;
     frameHeightCam = frameHeightMax;
     offsetYCam = 0;
 
@@ -1049,9 +1049,11 @@ void MainWindow::processImage(bool deleteObject){
     if ( !imageGetter->imageList.isEmpty() ){
 
         if (applyCameraEnhancements) {
-            targetArea = imageFileChanged.copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+//            targetArea = imageFileChanged.copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+            targetArea = imageFileChanged.copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
         } else {
-            targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+//            targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+            targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
         }
 
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
@@ -1711,12 +1713,10 @@ void MainWindow::closeEvent(QCloseEvent*){
     qApp->quit();
 }
 
-void MainWindow::calcImageParametes(QImage img){
+void MainWindow::calcImageParametes(QImage img, bool info){
 
     camImageWidth = img.width();
     camImageHeight = img.height();
-//    camImageWidth = lastData->image->width();
-//    camImageHeight = lastData->image->height();
     QString message = "Res: " + QString::number(camImageWidth) + "x" + QString::number(camImageHeight);
 
     if (camImageHeight != 0) {
@@ -1729,46 +1729,43 @@ void MainWindow::calcImageParametes(QImage img){
         else                        // portrait
             imgOrientation = true;
 
-        if (imgOrientation) message += " portrait\n"; else message += " landscape\n";
+        if (info && imgOrientation) message += " portrait\n"; else message += " landscape\n";
 
         if (!imgOrientation) {  // landscape
             mapFactorWidth = 1;
             mapWidth = imageWidth;
-            frameWidthMax = mapWidth * frameWidthRatio;
-            frameWidthCam = ((float)camImageWidth * frameWidth) / mapWidth;
-            offsetXCam = (camImageWidth - frameWidthCam) / 2;
-
             mapFactorHeight = aspectRatioGUI / aspectRatio;
             mapHeight = imageHeight * mapFactorHeight;
-            frameHeightMax = mapHeight * 0.7;
-            frameHeightCam = ((float)camImageHeight * frameHeight) / mapHeight;
-            offsetYCam = (camImageHeight - frameHeightCam) / 2;
-
-
         } else {                // portrait
             mapFactorWidth = aspectRatio / aspectRatioGUI;
             mapWidth = imageWidth * mapFactorWidth;
-            frameWidthMax = mapWidth * frameWidthRatio;
-            frameWidthCam = ((float)camImageWidth * frameWidth) / mapWidth;
-            offsetXCam = (camImageWidth - frameWidthCam) / 2;
-
             mapFactorHeight = 1;
             mapHeight = imageHeight;
-            frameHeightMax = mapHeight * frameHeightRatio;
-            frameHeightCam = ((float)camImageHeight * frameHeight) / mapHeight;
-            offsetYCam = (camImageHeight - frameHeightCam) / 2;
-
         }
 
-        message += "mapFactorWidth: " + QString::number(mapFactorWidth, 'f', 2) + " mapFactorHeight: " + QString::number(mapFactorHeight, 'f', 2) + "\n";
-        message += "mapWidth: " + QString::number(mapWidth) + " mapHeight: " + QString::number(mapHeight) + "\n";
-        message += "frameWidthMax: " + QString::number(frameWidthMax) + " frameHeightMax: " + QString::number(frameHeightMax) + "\n";
-        message += "frameWidthCam: " + QString::number(frameWidthCam) + " frameHeightCam: " + QString::number(frameHeightCam) + "\n";
-        message += "offsetXCam: " + QString::number(offsetXCam) + " offsetYCam: " + QString::number(offsetYCam) + "\n";
+        frameWidthMax = mapWidth * frameWidthRatioMax;
+        frameWidthCam = ((float)camImageWidth * frameWidth) / mapWidth;
+        offsetXCam = (camImageWidth - frameWidthCam) / 2;
+        frameHeightMax = mapHeight * frameHeightRatioMax;
+        frameHeightCam = ((float)camImageHeight * frameHeight) / mapHeight;
+        offsetYCam = (camImageHeight - frameHeightCam) / 2;
+
+        if (frameWidth > frameWidthMax) frameWidth = 2 * (frameWidthMax/2); // to obtain even number
+        if (frameHeight > frameHeightMax) frameHeight = 2 * (frameHeightMax/2); // to obtain even number
+
+        if(info) {
+            message += "mapFactorWidth: " + QString::number(mapFactorWidth, 'f', 2) + " mapFactorHeight: " + QString::number(mapFactorHeight, 'f', 2) + "\n";
+            message += "mapWidth: " + QString::number(mapWidth) + " mapHeight: " + QString::number(mapHeight) + "\n";
+            message += "frameWidthMax: " + QString::number(frameWidthMax) + " frameHeightMax: " + QString::number(frameHeightMax) + "\n";
+            message += "frameWidthCam: " + QString::number(frameWidthCam) + " frameHeightCam: " + QString::number(frameHeightCam) + "\n";
+            message += "offsetXCam: " + QString::number(offsetXCam) + " offsetYCam: " + QString::number(offsetYCam) + "\n";
+        }
+
+        message += "Frame Cost: " + QString("%L2").arg(frameWidthCam * frameHeightCam);
+
+        repaintGuide();
     } else
         aspectRatio = 0;
-
-
 
     ui->plainTextEdit->appendPlainText(message);
 }

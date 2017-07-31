@@ -101,20 +101,12 @@ void settingsForm::targetVertSlider(){
     int pos = ui->targetVertSlider->sliderPosition();
 
     if (pos % 2 == 0){
-        if (pos <= w->frameHeightMax)
+       // if (pos <= w->frameHeightMax)
             w->frameHeight = pos;
     }
     ui->labelTargetVert->setText(QString::number(w->frameHeight));
 
-    /*
-    //if (pos % 2 == 0){
-        if (pos <= 70)
-            w->frameHeightRatio = ((float) pos)/100;
-    //}
-    ui->labelTargetVert->setText(QString::number(w->frameHeightRatio));
-w->frameHeight = w->mapHeight * w->frameHeightRatio;
-*/
-//ui->labelTargetVert->setText(QString::number(pos));
+    //ui->labelTargetVert->setText(QString::number(pos));
     w->repaintGuide();
 }
 

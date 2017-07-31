@@ -967,7 +967,7 @@ void setupForm::on_captureButton_2_clicked(){
 
         w->imageFile.load(w->loadedFileNamewPath);
         w->imageFileChanged = w->imageFile;
-        w->calcImageParametes(w->imageFile);
+        w->calcImageParametes(w->imageFile, true);
         w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFile ).scaled(w->imageWidth, w->imageHeight, Qt::KeepAspectRatio));
         captureButton();
     }

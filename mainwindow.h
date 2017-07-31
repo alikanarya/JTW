@@ -186,8 +186,8 @@ public:
     int imageWidth, imageHeight;
     int frameWidth, frameHeight;
     int frameWidthCam, frameHeightCam;
-    float frameWidthRatio = 0.7;
-    float frameHeightRatio = 0.7;
+    float frameWidthRatioMax = 0.7;
+    float frameHeightRatioMax = 0.7;
     int frameWidthMax, frameHeightMax;
     float aspectRatio, aspectRatioGUI;
     bool imgOrientation = false; //false: landscape;aspectRatio>1.33, true: portrait;aspectRatio<=1.33
@@ -390,7 +390,7 @@ public:
     void Algo4(imgProcess *iprocess);   // woLASER: value > detectThinJointCenter
     void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
-    void calcImageParametes(QImage img);
+    void calcImageParametes(QImage img, bool info=false);
 
     void repaintGuide();                            // update guide
     void repaintDevTrend();                         // update deviation trend

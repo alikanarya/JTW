@@ -770,7 +770,7 @@ background-color: rgb(255, 0, 0);</string>
     <number>320</number>
    </property>
    <property name="singleStep">
-    <number>2</number>
+    <number>1</number>
    </property>
    <property name="pageStep">
     <number>5</number>

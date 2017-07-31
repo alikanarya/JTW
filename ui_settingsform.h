@@ -288,7 +288,7 @@ public:
         targetVertSlider->setGeometry(QRect(170, 140, 240, 25));
         targetVertSlider->setMinimum(100);
         targetVertSlider->setMaximum(320);
-        targetVertSlider->setSingleStep(2);
+        targetVertSlider->setSingleStep(1);
         targetVertSlider->setPageStep(5);
         targetVertSlider->setValue(100);
         targetVertSlider->setOrientation(Qt::Horizontal);

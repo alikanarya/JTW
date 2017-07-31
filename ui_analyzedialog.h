@@ -51,6 +51,7 @@ public:
         labelAnalyze->setGeometry(QRect(340, 10, 320, 320));
         labelAnalyze->setFrameShape(QFrame::Box);
         labelAnalyze->setScaledContents(true);
+        labelAnalyze->setAlignment(Qt::AlignCenter);
         plainTextEdit = new QPlainTextEdit(analyzeDialog);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
         plainTextEdit->setGeometry(QRect(10, 340, 651, 331));
