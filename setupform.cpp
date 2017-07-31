@@ -352,7 +352,8 @@ void setupForm::processImage(){
     }
 
     if ( !w->play &&  imageLoadedFromFile){
-        target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+//        target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
+        target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
     }
 
     if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ){

@@ -104,9 +104,17 @@ void settingsForm::targetVertSlider(){
         if (pos <= w->frameHeightMax)
             w->frameHeight = pos;
     }
-
     ui->labelTargetVert->setText(QString::number(w->frameHeight));
-    //ui->labelTargetVert->setText(QString::number(pos));
+
+    /*
+    //if (pos % 2 == 0){
+        if (pos <= 70)
+            w->frameHeightRatio = ((float) pos)/100;
+    //}
+    ui->labelTargetVert->setText(QString::number(w->frameHeightRatio));
+w->frameHeight = w->mapHeight * w->frameHeightRatio;
+*/
+//ui->labelTargetVert->setText(QString::number(pos));
     w->repaintGuide();
 }
 
@@ -124,6 +132,9 @@ void settingsForm::getParameters(){
     ui->targetVertSlider->setMaximum(w->frameHeightMax);
     ui->labelTargetVert->setText(QString::number(w->frameHeight));
     ui->targetVertSlider->setSliderPosition(w->frameHeight);
+
+    //ui->labelTargetVert->setText(QString::number(w->frameHeightRatio*100));
+    //ui->targetVertSlider->setSliderPosition(w->frameHeightRatio*100);
 
     ui->editTitle->setText(w->title);
 
