@@ -191,7 +191,7 @@ public:
     int frameWidthMax, frameHeightMax;
     float aspectRatio, aspectRatioGUI;
     bool imgOrientation = false; //false: landscape;aspectRatio>1.33, true: portrait;aspectRatio<=1.33
-    float mapFactorWidth, mapFactorHeight;
+    float mapFactorWidth, mapFactorHeight, mapFactorX;
     int mapWidth, mapHeight;
 
     int offsetX, offsetY;               // upper left corner coor. of target image, for qlabel

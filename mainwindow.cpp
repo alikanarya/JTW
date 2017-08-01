@@ -1742,26 +1742,30 @@ void MainWindow::calcImageParametes(QImage img, bool info){
             mapFactorHeight = 1;
             mapHeight = imageHeight;
         }
+        mapFactorX = ((float)mapWidth) / camImageWidth;
 
         frameWidthMax = mapWidth * frameWidthRatioMax;
-        frameWidthCam = ((float)camImageWidth * frameWidth) / mapWidth;
-        offsetXCam = (camImageWidth - frameWidthCam) / 2;
         frameHeightMax = mapHeight * frameHeightRatioMax;
-        frameHeightCam = ((float)camImageHeight * frameHeight) / mapHeight;
-        offsetYCam = (camImageHeight - frameHeightCam) / 2;
-
         if (frameWidth > frameWidthMax) frameWidth = 2 * (frameWidthMax/2); // to obtain even number
         if (frameHeight > frameHeightMax) frameHeight = 2 * (frameHeightMax/2); // to obtain even number
+
+        frameWidthCam = ((float)camImageWidth * frameWidth) / mapWidth;
+        frameHeightCam = ((float)camImageHeight * frameHeight) / mapHeight;
+        offsetXCam = (camImageWidth - frameWidthCam) / 2;
+        offsetYCam = (camImageHeight - frameHeightCam) / 2;
+
 
         if(info) {
             message += "mapFactorWidth: " + QString::number(mapFactorWidth, 'f', 2) + " mapFactorHeight: " + QString::number(mapFactorHeight, 'f', 2) + "\n";
             message += "mapWidth: " + QString::number(mapWidth) + " mapHeight: " + QString::number(mapHeight) + "\n";
             message += "frameWidthMax: " + QString::number(frameWidthMax) + " frameHeightMax: " + QString::number(frameHeightMax) + "\n";
             message += "frameWidthCam: " + QString::number(frameWidthCam) + " frameHeightCam: " + QString::number(frameHeightCam) + "\n";
+            message += "frameWidth: " + QString::number(frameWidth) + " frameHeight: " + QString::number(frameHeight) + "\n";
             message += "offsetXCam: " + QString::number(offsetXCam) + " offsetYCam: " + QString::number(offsetYCam) + "\n";
+            message += "mapFactorX: " + QString::number(mapFactorX, 'f', 2) + "\n";
         }
 
-        message += "Frame Cost: " + QString("%L2").arg(frameWidthCam * frameHeightCam);
+        message += "Frame Cost: " + QString("%L2").arg(frameWidthCam * frameHeightCam) + " px.";
 
         repaintGuide();
     } else
@@ -1804,7 +1808,7 @@ void MainWindow::playCam(){
             if (!lastData->shown && show){
 
                 if (getCamImageProperties) {
-                    calcImageParametes(*lastData->image);
+                    calcImageParametes(*lastData->image, true);
                     getCamImageProperties = false;
                     repaintGuide();
                 }
