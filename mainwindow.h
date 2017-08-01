@@ -175,6 +175,7 @@ public:
     int yResIndex;              // yRes array index to get yRes value
     int deviationDataSize;      // list size determined by yRes & trend Y axis pixels
     int eCodeDev;               // deviation error code = 200
+    int error;
 
     // ui control vars
     bool play, pause, showGuide, trackOn, controlOn;
@@ -219,6 +220,8 @@ public:
     int voteThreshold, voidThreshold;
     int errorLimit, errorLimitNeg;          // deviation start limit from center in pixels
     int errorStopLimit, errorStopLimitNeg;  // deviation stop limit from center in pixels
+    int errorLimitCam, errorLimitNegCam;          // deviation start limit from center in pixels
+    int errorStopLimitCam, errorStopLimitNegCam;  // deviation stop limit from center in pixels
     bool subImageProcessingSwitch;          // sub image processing
     int subImageProcessingType;                       // 0: Void Based, 1: Solid Based
     bool thinJointAlgoActive;

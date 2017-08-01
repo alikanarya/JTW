@@ -1131,13 +1131,14 @@ void MainWindow::processImage(bool deleteObject){
 
                 jointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
 
-                int error = iprocess->trackCenterX - (frameWidth/2);
+//                error = iprocess->trackCenterX - (frameWidth/2);
+                error = iprocess->trackCenterX - (frameWidthCam/2);
                 deviationData.append(error);
-
+ui->plainTextEdit->appendPlainText(QString::number(error));
                 if (alignGuide2TrackCenter) {
 
-                    offsetXpos += error;
-
+                    offsetXpos += error * mapFactorX;
+                    offsetXCam += error;
                     repaintGuide();
 
                     alignGuide2TrackCenter = false;
@@ -1166,16 +1167,16 @@ void MainWindow::processImage(bool deleteObject){
                 } else {
                     int index = deviationData.size() - 1;
 
-                    if (deviationData[index] >= errorLimit ){
+                    if (deviationData[index] >= errorLimitCam ){
                         cmdState = _CMD_RIGHT;
                     } else
-                    if (deviationData[index] <= errorLimitNeg){
+                    if (deviationData[index] <= errorLimitNegCam){
                         cmdState = _CMD_LEFT;
                     } else
-                    if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNeg)){
+                    if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNegCam)){
                         cmdState = _CMD_CENTER;
                     } else
-                    if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimit)){
+                    if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimitCam)){
                         cmdState = _CMD_CENTER;
                     } else
                     if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
@@ -1261,9 +1262,9 @@ void MainWindow::drawTrack(){
     }
 
     for (int i=1; i<deviationData.size(); i++){
-        x = sceneCenterX + deviationData[i];
+        x = sceneCenterX + deviationData[i]*mapFactorX;
         y = i*yRes;
-        xPrev = sceneCenterX + deviationData[i-1];
+        xPrev = sceneCenterX + deviationData[i-1]*mapFactorX;
         yPrev = (i-1)*yRes;
         scene->addLine(xPrev,yPrev,x,y,penTrack);
     }
@@ -1272,12 +1273,19 @@ void MainWindow::drawTrack(){
 
 void MainWindow::target2Left(){
 
-    offsetXpos -= 5;
-    offsetX -= 5;
+    int step = 5;
+    if (abs(error * mapFactorX)<25) step = 1;
+
+    offsetXpos -= step;
+    offsetX -= step;
+
+    //offsetXpos -= 5;
+    offsetXCam -= step/mapFactorX;
 
     if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) ){
-        offsetXpos += 5;
-        offsetX += 5;
+        offsetXpos += step;
+        offsetX += step;
+        offsetXCam += step/mapFactorX;
     }
 
     repaintGuide();
@@ -1285,12 +1293,18 @@ void MainWindow::target2Left(){
 
 void MainWindow::target2Right(){
 
-    offsetXpos += 5;
-    offsetX += 5;
+    int step = 5;
+    if (abs(error * mapFactorX)<25) step = 1;
+
+    offsetXpos += step;
+    offsetX += step;
+
+    offsetXCam += step/mapFactorX;
 
     if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) ){
-        offsetXpos -= 5;
-        offsetX -= 5;
+        offsetXpos -= step;
+        offsetX -= step;
+        offsetXCam -= step/mapFactorX;
     }
 
     repaintGuide();
@@ -1766,6 +1780,14 @@ void MainWindow::calcImageParametes(QImage img, bool info){
         }
 
         message += "Frame Cost: " + QString("%L2").arg(frameWidthCam * frameHeightCam) + " px.";
+
+        if (mapFactorX != 0) {
+            errorLimitCam = errorLimit / mapFactorX;
+            errorLimitNegCam = errorLimitNeg / mapFactorX;
+            errorStopLimitCam = errorStopLimit / mapFactorX;
+            errorStopLimitNegCam = errorStopLimitNeg / mapFactorX;
+        }
+
 
         repaintGuide();
     } else
