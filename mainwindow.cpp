@@ -651,7 +651,7 @@ void MainWindow::updateSn(){
 
         fpsRealLast = fpsReal;
         // status bar message
-        message = "fps(t/req/sh): " + QString::number(fpsTarget) + "/" + QString::number(fpsRequest) + "/" + QString::number(fpsReal);
+        message = "fps(t/req/real): " + QString::number(fpsTarget) + "/" + QString::number(fpsRequest) + "/" + QString::number(fpsReal);
         message += seperator;
 
         int rate = 0;
@@ -1859,22 +1859,44 @@ void MainWindow::playCam(){
                 timeDelayTotal += timeDelay;  // overall delay
 
 
-                if ( captureVideo ) {
+                if ( captureVideo ) { // VIDEO SAVE
+
+                    if (videoFrameCount == 0)
+                        folderName = savePath + QDateTime::currentDateTime().toString("yyMMdd_hhmmss") + "/";
+
+                    int index = videoFrameCount % threadVideoSave->bufferLength;
 
                     if (applyCameraEnhancements) {
-                        videoList[videoFrameCount] = imageFileChanged.copy();
+                        //videoList[videoFrameCount] = imageFileChanged.copy();
+                        videoList[index] = imageFileChanged.copy();
                     } else {
-                        videoList[videoFrameCount] = lastData->image->copy();
+                        //videoList[videoFrameCount] = lastData->image->copy();
+                        videoList[index] = lastData->image->copy();
                     }
                     videoFrameCount++;
 
-                    if (videoFrameCount >= videoFrameSize) {
+                    if (videoFrameCount % threadVideoSave->bufferLength == 0 || videoFrameCount >= videoFrameSize) {
 
-                        captureVideo = false;
-                        folderName = savePath + QDateTime::currentDateTime().toString("yyMMdd_hhmmss") + "/";
-                        if (!threadVideoSave->isRunning())
+                        if (!threadVideoSave->isRunning()){
+                            int lastSize = threadVideoSave->bufferLength;
+                            threadVideoSave->lastSave = false;
+
+                            if (videoFrameCount >= videoFrameSize){
+                                lastSize = index+1;
+                                threadVideoSave->lastSave = true;
+                                captureVideo = false;
+                            }
+
+                            threadVideoSave->saveSize = lastSize;
+                            for (int i=0;i<lastSize;i++)
+                                threadVideoSave->buffer[i] = videoList[i];
+                            threadVideoSave->count++;
+
                             threadVideoSave->start();
+                        }
                     }
+
+                    //ui->plainTextEdit->appendPlainText(QString::number(videoFrameCount));
                 }
 
                 // if joint is tracked for some interval
@@ -1905,13 +1927,14 @@ void MainWindow::videoButton(){
 
     videoFrameSize = videoDuration * fpsRealLast;
     //ui->plainTextEdit->appendPlainText(QString::number(videoFrameSize)+"-"+QString::number(videoDuration)+"-"+QString::number(fpsRealLast));
-    videoList = new QImage[videoFrameSize];
+    //videoList = new QImage[videoFrameSize];
+    videoList = new QImage[threadVideoSave->bufferLength];
+    //videoList = (QImage *)malloc(videoFrameSize * sizeof(QImage));
     videoFrameCount = 0;
     ui->videoButton->setEnabled(false);
     captureVideo = true;
 
     ui->videoButton->setIcon(videoSaveDisabled);
-
 }
 
 void MainWindow::saveFinished(){

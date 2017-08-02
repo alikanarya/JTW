@@ -298,6 +298,7 @@ public:
 
     bool captureVideo;
 //    QList<QImage *> videoList;
+    //QList<QImage> videoListx;
     QImage *videoList;
     int videoFrameCount;
     int videoFrameSize = 25;

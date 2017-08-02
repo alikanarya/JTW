@@ -2,6 +2,7 @@
 #define VIDEOSAVETHREAD_H
 
 #include <QThread>
+#include <QImage>
 
 class videoSaveThread : public QThread {
     Q_OBJECT
@@ -9,8 +10,13 @@ class videoSaveThread : public QThread {
 public:
     videoSaveThread();
     void stop();
-
     ~videoSaveThread();
+
+    int bufferLength = 50;
+    int count = -1;
+    QImage buffer[50];
+    bool lastSave = false;
+    int saveSize = 0;
 
 public slots:
 
