@@ -9,6 +9,8 @@
 #include "analyzedialog.h"
 #include "helpdialog.h"
 #include "exitdialog.h"
+#include <QMediaPlayer>
+#include <QVideoWidget>
 
 //#include "../_Modules/Algo/localMinimum.h"
 
@@ -274,6 +276,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->thinJointButton->setEnabled(false);
     ui->thinJointButton->hide();
+
+/*
+    QMediaPlayer *player = new QMediaPlayer;
+    QVideoWidget *vw = new QVideoWidget;
+    player->setVideoOutput(vw);
+//    player->setMedia(QUrl::fromLocalFile("E:/test/video/Laserion02 _Friends for the skin.avi"));
+    player->setMedia(QUrl("rtsp://admin:admin@192.168.3.3:554/cam/realmonitor?channel=1&subtype=1"));
+    vw->setGeometry(700,10,400,300);
+    vw->show();
+    player->play();
+    qDebug()<<player->state();
+    */
 }
 
 void MainWindow::showInfo(){
