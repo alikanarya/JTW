@@ -133,6 +133,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // image getter class & image data inits.
     imageGetter = new getImage(urlCam.toString(), 10);
+/**/imageGetter->url.setUserName("admin");
+/**/imageGetter->url.setPassword("admin");
+
     lastData = new networkData();
     prevData = new networkData();
 
@@ -626,7 +629,8 @@ void MainWindow::updateSn(){
     */
 
     // check camera live state
-    cameraChecker->checkHost();
+/**///    cameraChecker->checkHost();
+/**/cameraChecker->cameraDown = false;
 
     if (cameraChecker->cameraDown){
         ui->cameraStatus->setIcon(cameraOfflineIcon);
