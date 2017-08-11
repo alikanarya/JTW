@@ -11,6 +11,7 @@
 #include "exitdialog.h"
 #include <QMediaPlayer>
 #include <QVideoWidget>
+#include <QCryptographicHash>
 
 //#include "../_Modules/Algo/localMinimum.h"
 
@@ -1970,12 +1971,25 @@ void MainWindow::testEdit(){
 void MainWindow::testButton(){
 
     //mak_aktif_now = !mak_aktif_now;
+    /*
     int *array = new int[5];
     for (int i = 0; i < 5; i++) array[i] = i;
-
     //QList<range> list;
-
     //findLocalMinimum(array, 5, list);
+    */
+
+    QByteArray HA1inp = QString("admin:").toLocal8Bit() + QString("Login to 2C003E7PAW00006:").toLocal8Bit() + QString("admin").toLocal8Bit();
+    QByteArray HA1byte =  QCryptographicHash::hash((HA1inp),QCryptographicHash::Md5).toHex();
+//    QByteArray HA1byte =  QCryptographicHash::hash(("admin:Login to 2C003E7PAW00006:admin"),QCryptographicHash::Md5).toHex();
+    QString HA1 =  QString(HA1byte);
+    QByteArray HA2byte =  QCryptographicHash::hash(("GET:/cgi-bin/mjpg/video.cgi?channel=1&subtype=1"),QCryptographicHash::Md5).toHex();
+    QString HA2 =  QString(HA2byte);
+
+    QByteArray inp = HA1byte+QString(":425529402:00000001:d655ee94b416337a:auth:").toLocal8Bit()+HA2byte;
+    QString Resp =  QString(QCryptographicHash::hash((inp),QCryptographicHash::Md5).toHex());
+    qDebug() << HA1;
+    qDebug() << HA2;
+    qDebug() << Resp;
 
 }
 
