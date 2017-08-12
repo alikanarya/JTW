@@ -136,6 +136,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     imageGetter = new getImage(urlCam.toString(), 10);
 //imageGetter->url.setUserName("admin");
 //imageGetter->url.setPassword("admin");
+    imageGetter->authenticated = true;
 
     lastData = new networkData();
     prevData = new networkData();
@@ -415,7 +416,10 @@ void MainWindow::update(){
             // if time has come to display next image request it
             if (tickDiff >= frameInterval){
                 //if (!threadImgGet.isRunning()) threadImgGet.run();
-                imageGetter->run();
+                //if (imageGetter->authenticated) {
+                    imageGetter->run();
+                    //imageGetter->authenticated = false;
+                //}
 
                 playCam();
                 firstTimeTick = secondTimeTick;
