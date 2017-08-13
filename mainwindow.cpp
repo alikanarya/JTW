@@ -416,10 +416,10 @@ void MainWindow::update(){
             // if time has come to display next image request it
             if (tickDiff >= frameInterval){
                 //if (!threadImgGet.isRunning()) threadImgGet.run();
-                if (imageGetter->_flag) {
+                //if (imageGetter->_flag) {
                     imageGetter->run();
                     //imageGetter->authenticated = false;
-                }
+                //}
 
                 playCam();
                 firstTimeTick = secondTimeTick;
