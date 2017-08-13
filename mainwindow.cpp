@@ -416,14 +416,15 @@ void MainWindow::update(){
             // if time has come to display next image request it
             if (tickDiff >= frameInterval){
                 //if (!threadImgGet.isRunning()) threadImgGet.run();
-                //if (imageGetter->authenticated) {
+                if (imageGetter->_flag) {
                     imageGetter->run();
                     //imageGetter->authenticated = false;
-                //}
+                }
 
                 playCam();
                 firstTimeTick = secondTimeTick;
                 fpsRequest++;
+                //qDebug() << tickDiff;
             }
         }
         //if (msecCount % 5 == 0){  if (!cameraChecker->cameraDown && !threadPlay.isRunning()) threadPlay.run();        }
@@ -1157,7 +1158,7 @@ void MainWindow::processImage(bool deleteObject){
 //                error = iprocess->trackCenterX - (frameWidth/2);
                 error = iprocess->trackCenterX - (frameWidthCam/2);
                 deviationData.append(error);
-ui->plainTextEdit->appendPlainText(QString::number(error));
+//ui->plainTextEdit->appendPlainText(QString::number(error));
                 if (alignGuide2TrackCenter) {
 
                     offsetXpos += error * mapFactorX;

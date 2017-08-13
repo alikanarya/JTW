@@ -807,7 +807,7 @@
     </rect>
    </property>
    <property name="inputMask">
-    <string>99</string>
+    <string>999</string>
    </property>
    <property name="text">
     <string>10</string>

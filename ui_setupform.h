@@ -667,7 +667,7 @@ public:
         label_14->setText(QApplication::translate("setupForm", "\304\260maj \304\260\305\237leme Aral\304\261\304\237\304\261", 0));
         editIPI->setInputMask(QApplication::translate("setupForm", "99", 0));
         editIPI->setText(QApplication::translate("setupForm", "3", 0));
-        editFPS->setInputMask(QApplication::translate("setupForm", "99", 0));
+        editFPS->setInputMask(QApplication::translate("setupForm", "999", 0));
         editFPS->setText(QApplication::translate("setupForm", "10", 0));
         zctrlBox->setText(QApplication::translate("setupForm", "Y\303\274kseklik Kontrol\303\274", 0));
 #ifndef QT_NO_TOOLTIP
