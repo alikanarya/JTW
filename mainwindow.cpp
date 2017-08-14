@@ -423,7 +423,7 @@ void MainWindow::update(){
 
                 playCam();
                 firstTimeTick = secondTimeTick;
-                fpsRequest++;
+                fpsRequest = imageGetter->fpsRequest;
                 //qDebug() << tickDiff;
             }
         }
@@ -691,7 +691,7 @@ void MainWindow::updateSn(){
         ui->statusBar->showMessage(message);
         //----------
 
-        fpsRequest = 0;
+        fpsRequest = imageGetter->fpsRequest = 0;
         fpsReal = 0;
         timeDelayAvg = 0;
         timeDelayTotal = 0;
@@ -1826,7 +1826,7 @@ void MainWindow::playCam(){
 
         if (!imageGetter->imageList.isEmpty()){  // if any image is get
 
-            int size = imageGetter->imageList.length();  // image buufer size
+            int size = imageGetter->imageList.length();  // image buffer size
             bool show = true;
 
             lastData = imageGetter->imageList[size-1];    // get last data
