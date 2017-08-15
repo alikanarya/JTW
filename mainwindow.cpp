@@ -9,8 +9,6 @@
 #include "analyzedialog.h"
 #include "helpdialog.h"
 #include "exitdialog.h"
-#include <QMediaPlayer>
-#include <QVideoWidget>
 #include <QCryptographicHash>
 
 //#include "../_Modules/Algo/localMinimum.h"
@@ -136,8 +134,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     imageGetter = new getImage(urlCam.toString(), 10);
 //imageGetter->url.setUserName("admin");
 //imageGetter->url.setPassword("admin");
-    connect(imageGetter, SIGNAL(downloadCompleted()), this, SLOT(playCam()));
     connect(imageGetter, SIGNAL(downloadCompleted()), this, SLOT(makeNetworkRequest()));
+    connect(imageGetter, SIGNAL(lastDataTaken()), this, SLOT(playCam()));
 
     lastData = new networkData();
     prevData = new networkData();
@@ -190,12 +188,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(timerSn, SIGNAL(timeout()), this, SLOT(updateSn()));
     timerSn->start(1000);
 
-    // 1msec timer
+    /* 1msec timer
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     msecCount = 0;
     firstTimeTick = timeSystem.getSystemTimeMsec();
     timer->start(1);
+    */
 
     settingsPWDOK = false;
     setupPWDOK = false;
@@ -284,16 +283,32 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->thinJointButton->hide();
 
 /*
-    QMediaPlayer *player = new QMediaPlayer;
-    QVideoWidget *vw = new QVideoWidget;
+    player = new QMediaPlayer;
+    vw = new QVideoWidget;
     player->setVideoOutput(vw);
 //    player->setMedia(QUrl::fromLocalFile("E:/M/Movie/Media1/Film_Yabancı/Anime/Laserion/Laserion02 _Friends for the skin.avi"));
     player->setMedia(QUrl("http://admin:admin@192.168.3.3/cgi-bin/mjpg/video.cgi?channel=1&subtype=1"));
+    //player->setMedia(QUrl("http://localhost/laserion.avi"));
     vw->setGeometry(700,10,400,300);
     vw->show();
     player->play();
-    qDebug()<<player->state();
-*/
+    qDebug()<<player->state() << player->errorString() << player->isAudioAvailable();
+    */
+    /*
+    d = new VideoTest;
+    d->vlcInstance = new VlcInstance(VlcCommon::args(), this);
+    d->vlcMedia = new VlcMedia("http://admin:admin@192.168.3.3/cgi-bin/mjpg/video.cgi?channel=1&subtype=1", d->vlcInstance);
+    d->vlcMediaPlayer = new VlcMediaPlayer(d->vlcInstance);
+    d->vlcVideoWidget = new VlcWidgetVideo(this);
+
+    d->vlcMediaPlayer->setVideoWidget(d->vlcVideoWidget);
+    d->vlcVideoWidget->setMediaPlayer(d->vlcMediaPlayer);
+
+    d->vlcVideoWidget->setGeometry(700,10,400,300);
+    d->vlcVideoWidget->show();
+
+    d->vlcMediaPlayer->open(d->vlcMedia);
+    */
 }
 
 void MainWindow::showInfo(){
@@ -411,30 +426,28 @@ void MainWindow::makeNetworkRequest(){
 
     if (play && !pause && !cameraChecker->cameraDown){
         imageGetter->run();
+        fpsRequest = imageGetter->fpsRequest;
     }
 }
 
 void MainWindow::update(){
-
+/*
     msecCount++;
-
     if (play && !pause){
         secondTimeTick = timeSystem.getSystemTimeMsec();    // get current time in msec
         tickDiff = secondTimeTick - firstTimeTick;          // elapsed time from prev.
-
         if (!cameraChecker->cameraDown){
             // if time has come to display next image request it
             if (tickDiff >= frameInterval){
                 //imageGetter->run();
-
                 //playCam();
                 firstTimeTick = secondTimeTick;
-                fpsRequest = imageGetter->fpsRequest;
+                //fpsRequest = imageGetter->fpsRequest;
                 //qDebug() << tickDiff;
             }
         }
         //if (msecCount % 5 == 0){  if (!cameraChecker->cameraDown && !threadPlay.isRunning()) threadPlay.run();        }
-    }
+    }*/
 }
 
 void MainWindow:: plcControl(){
@@ -599,6 +612,9 @@ void MainWindow:: plcControl(){
 void MainWindow::updateSn(){
     //QVariant boolx(permPLC);
     //ui->plainTextEdit->appendPlainText(boolx.toString());
+    //qDebug()<<player->state() << player->errorString() << player->isVideoAvailable();
+    //qDebug()<<player->media().canonicalRequest().url();
+    //qDebug()<<player->media().canonicalResource().videoCodec();
 
     if (timeControl) {
 
