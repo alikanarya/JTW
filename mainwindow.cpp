@@ -136,7 +136,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     imageGetter = new getImage(urlCam.toString(), 10);
 //imageGetter->url.setUserName("admin");
 //imageGetter->url.setPassword("admin");
-    imageGetter->authenticated = true;
+    connect(imageGetter, SIGNAL(downloadCompleted()), this, SLOT(playCam()));
+    connect(imageGetter, SIGNAL(downloadCompleted()), this, SLOT(makeNetworkRequest()));
 
     lastData = new networkData();
     prevData = new networkData();
@@ -388,6 +389,8 @@ void MainWindow::playButton(){
     ui->trackButton->setEnabled(true);
     ui->controlButton->setEnabled(false);
     ui->videoButton->setIcon(videoSaveEnabled);
+
+    makeNetworkRequest();
 }
 
 void MainWindow::stopButton(){
@@ -404,6 +407,13 @@ void MainWindow::stopButton(){
 
 }
 
+void MainWindow::makeNetworkRequest(){
+
+    if (play && !pause && !cameraChecker->cameraDown){
+        imageGetter->run();
+    }
+}
+
 void MainWindow::update(){
 
     msecCount++;
@@ -415,13 +425,9 @@ void MainWindow::update(){
         if (!cameraChecker->cameraDown){
             // if time has come to display next image request it
             if (tickDiff >= frameInterval){
-                //if (!threadImgGet.isRunning()) threadImgGet.run();
-                //if (imageGetter->_flag) {
-                    imageGetter->run();
-                    //imageGetter->authenticated = false;
-                //}
+                //imageGetter->run();
 
-                playCam();
+                //playCam();
                 firstTimeTick = secondTimeTick;
                 fpsRequest = imageGetter->fpsRequest;
                 //qDebug() << tickDiff;

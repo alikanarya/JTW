@@ -416,6 +416,8 @@ public slots:
     void saveFinished();
     void stopButton();                              // stop video resets
     void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
+    void playCam();
+    void makeNetworkRequest();
 
 signals:
     void cameraDown();
@@ -459,7 +461,6 @@ private:
     protect lic;
 
     bool writeReport();
-    void playCam();
 
 
 };
