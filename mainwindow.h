@@ -121,19 +121,6 @@ namespace Ui {
 
 #include <QMediaPlayer>
 #include <QVideoWidget>
-#include "../_Modules/VLC-qt/include/Common.h"
-#include "../_Modules/VLC-qt/include/Instance.h"
-#include "../_Modules/VLC-qt/include/Media.h"
-#include "../_Modules/VLC-qt/include/MediaPlayer.h"
-#include "../_Modules/VLC-qt/include/WidgetVideo.h"
-
-struct VideoTest
-{
-    VlcInstance * vlcInstance;
-    VlcMediaPlayer * vlcMediaPlayer;
-    VlcMedia * vlcMedia;
-    VlcWidgetVideo * vlcVideoWidget;
-};
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -168,7 +155,7 @@ public:
 
     QMediaPlayer *player;
     QVideoWidget *vw;
-    VideoTest *d;
+
 
     // icons
     QIcon plcOnlineIcon, plcOfflineIcon;

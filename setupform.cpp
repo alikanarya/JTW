@@ -191,6 +191,7 @@ void setupForm::edgeDetection(imgProcess *iprocess){
             iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
                 /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, edgePath+"02-value matrix.csv" );
             iprocess->gaussianBlur();
+                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, edgePath+"03-value matrix.csv" );
                 /*D*/if (DEBUG) iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(edgePath+"03-blurred image.jpg");
             iprocess->detectEdgeSobelwDirections();
                 /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"04-edge matrix.csv");
@@ -522,7 +523,7 @@ void setupForm::captureButton(){
 
 
         ui->labelTarget->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
-        ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->imgMono ) );
+        //ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->imgMono ) );
 
         if ( edgeDetectionState != 0) {
             edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
@@ -586,6 +587,7 @@ void setupForm::captureButton(){
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
                         break;
                     case 3: // CONTRAST
+                        ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->getImageContrast() ) );
                         iprocess->constructContrastMatrixMajor2Lines();
                             /**/if (DEBUG) iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, path+"07-contrast with lines matrix.csv" );
                         hough = iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight);
