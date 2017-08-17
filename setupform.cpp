@@ -128,10 +128,10 @@ void setupForm::edgeDetection(imgProcess *iprocess){
                     }
             iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
             iprocess->detectEdgeSobel(); // detect edges of the mono image
-                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"01-edge matrix.csv");
-                /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"02-edge image.jpg");
+                /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"01-edge matrix.csv");
+                /*D*/if (saveAnalysis) iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"02-edge image.jpg");
             iprocess->houghTransformFn(iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight);
-                /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, edgePath+"03-hough space.csv");
+                /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, edgePath+"03-hough space.csv");
             averaging = false;
             matrixFlag = false;
             break;
@@ -142,31 +142,31 @@ void setupForm::edgeDetection(imgProcess *iprocess){
                     }
             iprocess->prepareCannyArrays();
             iprocess->constructGaussianMatrix(gaussianSize, stdDev);
-                /*D*/if (DEBUG) iprocess->saveMatrix(iprocess->gaussianMatrix, iprocess->gaussianMatrixSize, iprocess->gaussianMatrixSize, edgePath+"01-gaussian matrix.csv");
+                /*D*/if (saveAnalysis) iprocess->saveMatrix(iprocess->gaussianMatrix, iprocess->gaussianMatrixSize, iprocess->gaussianMatrixSize, edgePath+"01-gaussian matrix.csv");
             for (int i = 0; i < 4 ; i++){
                 iprocess->constructValueMatrix( iprocess->imgOrginal, i );
-                    /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, edgePath+"02-value matrix"+QString::number(i)+".csv" );
+                    /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, edgePath+"02-value matrix"+QString::number(i)+".csv" );
                 iprocess->gaussianBlur();
-                    /*D*/if (DEBUG) iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(edgePath+"03-blurred image"+QString::number(i)+".jpg");
+                    /*D*/if (saveAnalysis) iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(edgePath+"03-blurred image"+QString::number(i)+".jpg");
                 iprocess->detectEdgeSobelwDirections();
-                    /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"04-edge matrix"+QString::number(i)+".csv");
-                    /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"05-edge gradients matrix"+QString::number(i)+".csv");
-                    /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"06-edge image"+QString::number(i)+".jpg");
+                    /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"04-edge matrix"+QString::number(i)+".csv");
+                    /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"05-edge gradients matrix"+QString::number(i)+".csv");
+                    /*D*/if (saveAnalysis) iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"06-edge image"+QString::number(i)+".jpg");
                 iprocess->nonMaximumSuppression(w->cannyThinning);
-                    /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"07-edge suppressed matrix"+QString::number(i)+".csv");
-                    /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"08-edge suppressed image"+QString::number(i)+".jpg");
+                    /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"07-edge suppressed matrix"+QString::number(i)+".csv");
+                    /*D*/if (saveAnalysis) iprocess->getImage( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"08-edge suppressed image"+QString::number(i)+".jpg");
                 iprocess->cannyThresholding(true);
                     /*D*/if (DEBUG) ui->plainTextEdit->appendPlainText("cannyThresholding"+QString::number(i)+" lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
-                    /*D*/if (DEBUG) iprocess->getImage_cannyThresholds(QImage::Format_RGB16)->save(edgePath+"09-edge strongs weaks image"+QString::number(i)+".jpg");
+                    /*D*/if (saveAnalysis) iprocess->getImage_cannyThresholds(QImage::Format_RGB16)->save(edgePath+"09-edge strongs weaks image"+QString::number(i)+".jpg");
                 iprocess->edgeTracing();
-                    /*D*/if (DEBUG) iprocess->getImage_cannyTracedEdges(QImage::Format_RGB16)->save(edgePath+"10-edge traced image"+QString::number(i)+".jpg");
-                    /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"11-canny image"+QString::number(i)+".jpg");
-                    /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"12-edge map matrix"+QString::number(i)+".csv");
+                    /*D*/if (saveAnalysis) iprocess->getImage_cannyTracedEdges(QImage::Format_RGB16)->save(edgePath+"10-edge traced image"+QString::number(i)+".jpg");
+                    /*D*/if (saveAnalysis) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"11-canny image"+QString::number(i)+".jpg");
+                    /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"12-edge map matrix"+QString::number(i)+".csv");
                 iprocess->assignEdgeMap();
             }
             iprocess->mergeEdgeMaps();
-                /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"13-canny combined image.jpg");
-                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"14-edge map matrix.csv");
+                /*D*/if (saveAnalysis) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"13-canny combined image.jpg");
+                /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"14-edge map matrix.csv");
 
             for (int y = 0; y < iprocess->edgeHeight; y++)
                 for (int x = 0; x < iprocess->edgeWidth; x++){
@@ -176,7 +176,7 @@ void setupForm::edgeDetection(imgProcess *iprocess){
                         iprocess->edgeMatrix[y][x]=0;
                 }
             iprocess->houghTransformEdgeMap();
-                /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, edgePath+"15-hough space.csv");
+                /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, edgePath+"15-hough space.csv");
             averaging = false;
             matrixFlag = false;
             break;
@@ -187,26 +187,26 @@ void setupForm::edgeDetection(imgProcess *iprocess){
                     }
             iprocess->prepareCannyArrays();
             iprocess->constructGaussianMatrix(gaussianSize, stdDev);
-                /*D*/if (DEBUG) iprocess->saveMatrix(iprocess->gaussianMatrix, iprocess->gaussianMatrixSize, iprocess->gaussianMatrixSize, edgePath+"01-gaussian matrix.csv");
+                /*D*/if (saveAnalysis) iprocess->saveMatrix(iprocess->gaussianMatrix, iprocess->gaussianMatrixSize, iprocess->gaussianMatrixSize, edgePath+"01-gaussian matrix.csv");
             iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
-                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, edgePath+"02-value matrix.csv" );
+                /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, edgePath+"02-value matrix.csv" );
             iprocess->gaussianBlur();
-                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, edgePath+"03-value matrix.csv" );
-                /*D*/if (DEBUG) iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(edgePath+"03-blurred image.jpg");
+                /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, edgePath+"03-value matrix.csv" );
+                /*D*/if (saveAnalysis) iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(edgePath+"03-blurred image.jpg");
             iprocess->detectEdgeSobelwDirections();
-                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"04-edge matrix.csv");
-                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"05-edge gradients matrix.csv");
-                /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"06-edge image.jpg");
+                /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"04-edge matrix.csv");
+                /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"05-edge gradients matrix.csv");
+                /*D*/if (saveAnalysis) iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"06-edge image.jpg");
             iprocess->nonMaximumSuppression(w->cannyThinning);
-                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"07-edge suppressed matrix.csv");
-                /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"08-edge suppressed image.jpg");
+                /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"07-edge suppressed matrix.csv");
+                /*D*/if (saveAnalysis) iprocess->getImage( iprocess->edgeSuppressedMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"08-edge suppressed image.jpg");
             iprocess->cannyThresholding(true);
                 /*D*/if (DEBUG) ui->plainTextEdit->appendPlainText("cannyThresholding lo, med, hi: "+QString::number(iprocess->loValue) +", "+QString::number(iprocess->medianValue) +", "+QString::number(iprocess->hiValue));
-                /*D*/if (DEBUG) iprocess->getImage_cannyThresholds(QImage::Format_RGB16)->save(edgePath+"09-edge strongs weaks image.jpg");
+                /*D*/if (saveAnalysis) iprocess->getImage_cannyThresholds(QImage::Format_RGB16)->save(edgePath+"09-edge strongs weaks image.jpg");
             iprocess->edgeTracing();
-                /*D*/if (DEBUG) iprocess->getImage_cannyTracedEdges(QImage::Format_RGB16)->save(edgePath+"10-edge traced image.jpg");
-                /*D*/if (DEBUG) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"11-canny image.jpg");
-                /*D*/if (DEBUG) iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"12-edge map matrix.csv");
+                /*D*/if (saveAnalysis) iprocess->getImage_cannyTracedEdges(QImage::Format_RGB16)->save(edgePath+"10-edge traced image.jpg");
+                /*D*/if (saveAnalysis) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"11-canny image.jpg");
+                /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"12-edge map matrix.csv");
 
             for (int y = 0; y < iprocess->edgeHeight; y++)  // to display edge image
                 for (int x = 0; x < iprocess->edgeWidth; x++){
@@ -216,7 +216,7 @@ void setupForm::edgeDetection(imgProcess *iprocess){
                         iprocess->edgeMatrix[y][x]=0;
                 }
             iprocess->houghTransformEdgeMap();
-                /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, edgePath+"13-hough space.csv");
+                /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, edgePath+"13-hough space.csv");
             matrixFlag = false;
             break;
     }
@@ -229,11 +229,11 @@ void setupForm::Algo1(imgProcess *iprocess){
     if (edgeDetectionState == 0){
         iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
         iprocess->houghTransformFn(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight);
-            /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, path+"03-hough space.csv");
+            /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, path+"03-hough space.csv");
     }
 
     iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
-        /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"04-max hough lines matrix -dist-angle-vote.csv");
+        /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"04-max hough lines matrix -dist-angle-vote.csv");
 
     iprocess->detectLongestSolidLines(averaging, matrixFlag);
     algoPrerequestsOk = true;
@@ -246,11 +246,11 @@ void setupForm::Algo2(imgProcess *iprocess){
     if (edgeDetectionState == 0){
         iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
         iprocess->houghTransformFn(iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight);
-            /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, path+"03-hough space.csv");
+            /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghSpace, iprocess->houghThetaSize, iprocess->houghDistanceMax, path+"03-hough space.csv");
     }
 
     iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
-        /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"04-max hough lines matrix -dist-angle-vote.csv");
+        /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"04-max hough lines matrix -dist-angle-vote.csv");
 
     iprocess->calcAvgDistAndAngle( houghLineNo );           // calc. avg. distance and theta
     voteAvg = iprocess->calcVoteAvg();                      // avg. value of max voted line(s)
@@ -271,10 +271,10 @@ void setupForm::Algo3(imgProcess *iprocess){
 
     if (edgeDetectionState != 0) {
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
-            /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
+            /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
         iprocess->thinCornerNum = mainEdgesNumber;
         iprocess->detectMainEdges(thinJointAlgoActive, DEBUG);
-            /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
+            /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
             /**/if (DEBUG) for (int i=0; i<iprocess->mainEdgesList.size();i++)
                     ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
         algoPrerequestsOk = true;
@@ -299,13 +299,13 @@ void setupForm::Algo5(imgProcess *iprocess){
 
     iprocess->constructValueMatrix( iprocess->imgOrginal );
     iprocess->constructContrastMatix(3);
-        /**/if (DEBUG) iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, path+"03-contrast matrix.csv" );
-        /**/if (DEBUG) iprocess->getImageContrast().save(path+"04-contrast image.jpg");
+        /**/if (saveAnalysis) iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, path+"03-contrast matrix.csv" );
+        /**/if (saveAnalysis) iprocess->getImageContrast().save(path+"04-contrast image.jpg");
     iprocess->houghTransformContrast();;
     iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
-        /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"05-max hough lines matrix -dist-angle-vote.csv");
+        /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"05-max hough lines matrix -dist-angle-vote.csv");
     iprocess->calcAvgDistAndAngleOfMajors(0.30);    // calc. avg. distance and theta
-        /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLinesSorted_size, path+"06-max hough lines distance sorted.csv");
+        /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLinesSorted_size, path+"06-max hough lines distance sorted.csv");
         /**/if (DEBUG) {
                 ui->plainTextEdit->appendPlainText("major1; dist: " + QString::number(iprocess->major2Lines[0].distance) + ", angle: " + QString::number(iprocess->major2Lines[0].angle));
                 ui->plainTextEdit->appendPlainText("major2; dist: " + QString::number(iprocess->major2Lines[1].distance) + ", angle: " + QString::number(iprocess->major2Lines[1].angle));
@@ -321,14 +321,14 @@ void setupForm::Algo6(imgProcess *iprocess){
 
     if (edgeDetectionState == 3) {
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
-            /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
+            /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
         iprocess->thinCornerNum = 1;//mainEdgesNumber;
         iprocess->detectMainEdges(thinJointAlgoActive, DEBUG);
-            /**/if (DEBUG) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
+            /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
             /**/if (DEBUG) for (int i=0; i<iprocess->mainEdgesList.size();i++)
                     ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
         iprocess->thickenEdgeMap(3);
-            /**/if (DEBUG) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"14-canny thickened image.jpg");
+            /**/if (saveAnalysis) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"14-canny thickened image.jpg");
         iprocess->scoreLineCrossing(true);
             /**/ui->plainTextEdit->appendPlainText("skor, yüzde: " + QString::number(iprocess->mainEdgeScore) + ", " + QString::number(iprocess->mainEdgeScorePercent, 'f', 1));
 
@@ -364,7 +364,7 @@ void setupForm::processImage(){
             iprocessInitSwitch = false;
         }
 
-        /*D*/if (DEBUG) {
+        /*D*/if (saveAnalysis) {
             path = savePath + captureTimeStr;
             if (thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
                 switch ( algorithmType ) {
@@ -397,7 +397,7 @@ void setupForm::processImage(){
         }
 
         iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
-            /*D*/if (DEBUG) iprocess->imgOrginal.save(path+"01-orginal image.jpg");
+            /*D*/if (saveAnalysis) iprocess->imgOrginal.save(path+"01-orginal image.jpg");
         iprocessInitSwitch = true;
         //iprocess->_DEBUG = true;
 
@@ -414,7 +414,7 @@ void setupForm::processImage(){
         }
 
         iprocess->toMono();                                     // convert target to mono
-        /*D*/if (DEBUG) iprocess->imgMono.save(path+"02-mono image.jpg");
+        /*D*/if (saveAnalysis) iprocess->imgMono.save(path+"02-mono image.jpg");
 
         edgeDetection(iprocess);
 
@@ -515,7 +515,7 @@ void setupForm::captureButton(){
         ui->plainTextEdit->appendPlainText(message);
 
         //ui->plainTextEdit->appendPlainText(iprocess->statusMessage);    // display message about detection process
-        ui->plainTextEdit->appendPlainText("Sol Köşe (x,y) - Merkez (x,y) - Sağ Köşe (x,y): ");
+        ui->plainTextEdit->appendPlainText("Sol Köşe(x,y) - Merkez(x,y) - Sağ Köşe(x,y): ");
         message = "( " + QString::number(iprocess->leftCornerX) + " , " + QString::number(iprocess->leftCornerY) + " )  -  ( " +
                          QString::number(iprocess->trackCenterX) + " , " + QString::number(iprocess->trackCenterY) + " )  -  ( " +
                          QString::number(iprocess->rightCornerX) + " , " + QString::number(iprocess->rightCornerY) + " )";
@@ -561,10 +561,10 @@ void setupForm::captureButton(){
                             }
 
                         ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(1) ) );
-                            /**/if (DEBUG) iprocess->imgSolidLines.save(path+"05-mainEdges image.jpg");
+                            /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"05-mainEdges image.jpg");
 
                         iprocess->cornerImage();
-                            /*D*/if (DEBUG) iprocess->imgCorner.save(path+"06-corner image.jpg");
+                            /*D*/if (saveAnalysis) iprocess->imgCorner.save(path+"06-corner image.jpg");
                         ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
 
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
@@ -574,7 +574,7 @@ void setupForm::captureButton(){
                         centerline = new minCostedLines();
                         centerline->c = iprocess->centerC;
                         centerline->cost = 0;
-                            /**/if (DEBUG) {
+                            /**/if (saveAnalysis) {
                                     iprocess->drawLine(centerline, iprocess->slopeBest).save(path+"03-centerLine.jpg");
 
                                     iprocess->saveMinCostedLinesArray(iprocess->bestLines, iprocess->anglePrecision, path+"04-best lines.csv");
@@ -589,14 +589,14 @@ void setupForm::captureButton(){
                     case 3: // CONTRAST
                         ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->getImageContrast() ) );
                         iprocess->constructContrastMatrixMajor2Lines();
-                            /**/if (DEBUG) iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, path+"07-contrast with lines matrix.csv" );
+                            /**/if (saveAnalysis) iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, path+"07-contrast with lines matrix.csv" );
                         hough = iprocess->getImage(iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight);
-                            /**/if (DEBUG) hough->save(path+"08-major 2 lines image.jpg");
+                            /**/if (saveAnalysis) hough->save(path+"08-major 2 lines image.jpg");
                         ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
 
                         iprocess->cornerImage();
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
-                            /**/if (DEBUG) iprocess->imgCorner.save(path+"09-corner image.jpg");
+                            /**/if (saveAnalysis) iprocess->imgCorner.save(path+"09-corner image.jpg");
                         ui->plainTextEdit->appendPlainText("avg dist, angle: " + QString::number(iprocess->distanceAvg) + ", " + QString::number(iprocess->thetaAvg));
                         break;
                     case 4: // LINE DETECTION WITH MAIN EDGES
@@ -619,8 +619,8 @@ void setupForm::captureButton(){
                             }
 
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(1) ) );
-                            /**/if (DEBUG) iprocess->imgSolidLines.save(path+"05-mainEdges image.jpg");
-                            /**/if (DEBUG) iprocess->cornerImage().save(path+"06-corners image.jpg");
+                            /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"05-mainEdges image.jpg");
+                            /**/if (saveAnalysis) iprocess->cornerImage().save(path+"06-corners image.jpg");
 
                         if ( iprocess->mainEdgeScorePercent > w->lineScoreLimit){
                             ui->plainTextEdit->appendPlainText( "Ana çizgi bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
@@ -637,10 +637,10 @@ void setupForm::captureButton(){
                     case 0: // NONE
                         break;
                     case 1: // LONGEST SOLID LINES
-                            /**/if (DEBUG) iprocess->saveList(iprocess->solidSpaceMain, path+"05-solid space main matrix.csv");
-                            /**/if (DEBUG) iprocess->saveList(iprocess->solidSpaceMainTrimmed, path+"06-solid space trimmed matrix.csv");
-                            /**/if (DEBUG) iprocess->saveList(iprocess->primaryGroup, path+"07-primary group matrix.csv");
-                            /**/if (DEBUG) iprocess->saveList(iprocess->secondaryGroup, path+"08-secondary group matrix.csv");
+                            /**/if (saveAnalysis) iprocess->saveList(iprocess->solidSpaceMain, path+"05-solid space main matrix.csv");
+                            /**/if (saveAnalysis) iprocess->saveList(iprocess->solidSpaceMainTrimmed, path+"06-solid space trimmed matrix.csv");
+                            /**/if (saveAnalysis) iprocess->saveList(iprocess->primaryGroup, path+"07-primary group matrix.csv");
+                            /**/if (saveAnalysis) iprocess->saveList(iprocess->secondaryGroup, path+"08-secondary group matrix.csv");
 
                         if ( iprocess->primaryLineFound && iprocess->secondaryLineFound )
                             iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[1], 0 );
@@ -648,14 +648,14 @@ void setupForm::captureButton(){
                             if ( iprocess->primaryLineFound )
                                 iprocess->cornerAndPrimaryLineImage( iprocess->major2Lines[0], iprocess->major2Lines[0], 0 );
 
-                            /**/if (DEBUG) iprocess->imgCornerAndPrimaryLines.save(path+"09-major2lines image.jpg");
+                            /**/if (saveAnalysis) iprocess->imgCornerAndPrimaryLines.save(path+"09-major2lines image.jpg");
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
 
-                            /**/if (DEBUG) iprocess->drawSolidLines(iprocess->majorLines).save(path+"10-major lines image.jpg");
-                            /**/if (DEBUG && edgeDetectionState != 0)
+                            /**/if (saveAnalysis) iprocess->drawSolidLines(iprocess->majorLines).save(path+"10-major lines image.jpg");
+                            /**/if (saveAnalysis && edgeDetectionState != 0)
                                     for (int c=0; c < iprocess->majorLines.size(); c++)
                                         iprocess->drawSolidLines2EdgeMatrix( iprocess->majorLines[c], QImage::Format_RGB16)->save(path+"xx-major lines image-" + QString::number(c) + ".jpg");
-                            /**/if (DEBUG && edgeDetectionState == 0)
+                            /**/if (saveAnalysis && edgeDetectionState == 0)
                                     for (int c=0; c < iprocess->majorLines.size(); c++)
                                         iprocess->drawLine2OrginalImage( iprocess->majorLines[c], QImage::Format_RGB16).save(path+"xx-major lines image-" + QString::number(c) + ".jpg");
 
@@ -679,7 +679,7 @@ void setupForm::captureButton(){
 
                         iprocess->cornerAndPrimaryLineImage( iprocess->primaryLine, iprocess->primaryLine, 0 );
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
-                            /**/if (DEBUG) iprocess->imgCornerAndPrimaryLines.save(path+"05-major2lines image.jpg");
+                            /**/if (saveAnalysis) iprocess->imgCornerAndPrimaryLines.save(path+"05-major2lines image.jpg");
                         break;
                     case 3: // EXPERIMENTAL
                         break;
@@ -709,6 +709,7 @@ void setupForm::captureButton(){
 //labelx:
 
         captured = true;
+        saveAnalysis = false;
 
     } else {
 
@@ -719,8 +720,7 @@ void setupForm::captureButton(){
 
 bool setupForm::saveButton(){
 
-    bool saveStatus = true;
-
+    saveAnalysis = true;
     DEBUG = true;
 
     captureButton();
@@ -728,7 +728,7 @@ bool setupForm::saveButton(){
     ui->plainTextEdit->appendPlainText("Dosyalar kaydedildi");
     DEBUG = false;
 
-    return saveStatus;
+    return saveAnalysis;
 }
 
 void setupForm::getParameters(){

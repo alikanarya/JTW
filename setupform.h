@@ -68,6 +68,7 @@ public:
     bool subImageProcessingSwitch;
     bool algoPrerequestsOk = false;
     bool DEBUG = false;
+    bool saveAnalysis = false;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;

@@ -119,8 +119,8 @@ namespace Ui {
 #include "../_Modules/Protect/protect.h"
 #include "videosavethread.h"
 
-#include <QMediaPlayer>
-#include <QVideoWidget>
+//#include <QMediaPlayer>
+//#include <QVideoWidget>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -153,8 +153,8 @@ public:
     int camImageHeight = 640;
     bool getCamImageProperties = false;
 
-    QMediaPlayer *player;
-    QVideoWidget *vw;
+    //QMediaPlayer *player;
+    //QVideoWidget *vw;
 
 
     // icons
