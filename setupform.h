@@ -136,6 +136,8 @@ private slots:
     void on_saveButton_clicked();
     void on_cameraEnhancementsBox_stateChanged(int arg1);
     void on_editVideoDuration_returnPressed();
+    void on_captureNext_clicked();
+    void on_capturePrev_clicked();
 };
 
 #endif // SETUPFORM_H

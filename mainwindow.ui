@@ -277,7 +277,7 @@
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 0);</string>
+     <string notr="true">color: rgb(0, 255, 0);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>

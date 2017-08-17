@@ -952,6 +952,8 @@ void setupForm::on_captureButton_2_clicked(){
 
         w->stopButton();
         ui->fileSlider->setEnabled(true);
+        ui->capturePrev->setEnabled(true);
+        ui->captureNext->setEnabled(true);
         ui->checkProcessing->setEnabled(true);
 
         imageLoadedFromFile = true;
@@ -975,13 +977,50 @@ void setupForm::on_captureButton_2_clicked(){
     }
 }
 
+void setupForm::on_fileSlider_sliderMoved(int position){
+
+    w->filesInDirListIndex = position;
+    w->loadedFileName = w->filesInDirList.at(position);
+
+    //qDebug() << w->filesInDirListIndex << "." << w->loadedFileName;
+    w->imageFile.load(w->fileOpenDir.path() + "/" + w->loadedFileName);
+    w->calcImageParametes(w->imageFile, true);
+    update();
+}
+
+void setupForm::on_captureNext_clicked(){
+
+    if(w->filesInDirListIndex != (w->filesInDirList.size()- 1)){
+        w->filesInDirListIndex++;
+        ui->fileSlider->setSliderPosition(w->filesInDirListIndex);
+
+        w->loadedFileName = w->filesInDirList.at(w->filesInDirListIndex);
+        w->imageFile.load(w->fileOpenDir.path() + "/" + w->loadedFileName);
+        w->calcImageParametes(w->imageFile, true);
+        update();
+    }
+}
+
+void setupForm::on_capturePrev_clicked(){
+
+    if(w->filesInDirListIndex != 0){
+        w->filesInDirListIndex--;
+        ui->fileSlider->setSliderPosition(w->filesInDirListIndex);
+
+        w->loadedFileName = w->filesInDirList.at(w->filesInDirListIndex);
+        w->imageFile.load(w->fileOpenDir.path() + "/" + w->loadedFileName);
+        w->calcImageParametes(w->imageFile, true);
+        update();
+    }
+}
+
 void setupForm::update(){
 
     QImage step1 = changeBrightness(w->imageFile, brightnessVal);
     QImage step2 = changeContrast(step1, contrastVal);
     w->imageFileChanged = changeGamma(step2, gammaVal);
     if (!w->play)
-        w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged ));
+        w->ui->imageFrame->setPixmap( QPixmap::fromImage( w->imageFileChanged.scaled(w->imageWidth, w->imageHeight, Qt::KeepAspectRatio) ));
 
     if (ui->checkProcessing->isChecked())
         captureButton();
@@ -1053,16 +1092,6 @@ void setupForm::on_gammaReset_clicked(){
     ui->labelGamma->setText(QString::number(100));
     if (w->applyCameraEnhancements)
         w->gammaVal = gammaVal;
-    update();
-}
-
-void setupForm::on_fileSlider_sliderMoved(int position){
-
-    w->filesInDirListIndex = position;
-    w->loadedFileName = w->filesInDirList.at(position);
-
-    //qDebug() << w->filesInDirListIndex << "." << w->loadedFileName;
-    w->imageFile.load(w->fileOpenDir.path() + "/" + w->loadedFileName);
     update();
 }
 
@@ -1382,3 +1411,4 @@ void setupForm::on_cameraEnhancementsBox_stateChanged(int arg1){
 
 void setupForm::on_editVideoDuration_returnPressed(){
 }
+

@@ -94,6 +94,9 @@ void settingsForm::targetSlider(){
     }
 
     ui->labelTarget->setText(QString::number(w->frameWidth));
+
+    if (w->play && !w->pause)
+        w->calcImageParametes(*w->lastData->image, true);
     w->repaintGuide();
 }
 
@@ -107,6 +110,8 @@ void settingsForm::targetVertSlider(){
     ui->labelTargetVert->setText(QString::number(w->frameHeight));
 
     //ui->labelTargetVert->setText(QString::number(pos));
+    if (w->play && !w->pause)
+        w->calcImageParametes(*w->lastData->image, true);
     w->repaintGuide();
 }
 

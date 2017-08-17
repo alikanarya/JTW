@@ -168,7 +168,7 @@ public:
         guideFrame->setEnabled(true);
         guideFrame->setGeometry(QRect(170, 72, 324, 480));
         guideFrame->setAutoFillBackground(false);
-        guideFrame->setStyleSheet(QStringLiteral("color: rgb(255, 255, 0);"));
+        guideFrame->setStyleSheet(QStringLiteral("color: rgb(0, 255, 0);"));
         guideFrame->setFrameShape(QFrame::NoFrame);
         guideFrame->setFrameShadow(QFrame::Plain);
         guideFrame->setLineWidth(2);

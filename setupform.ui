@@ -165,7 +165,7 @@
     <string notr="true">color: rgb(0, 0, 255);</string>
    </property>
    <property name="text">
-    <string>Mono İmaj</string>
+    <string>Mono/Kontrast İmaj</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
@@ -1356,7 +1356,7 @@
    <property name="geometry">
     <rect>
      <x>140</x>
-     <y>20</y>
+     <y>15</y>
      <width>191</width>
      <height>22</height>
     </rect>
@@ -1371,8 +1371,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>20</y>
+     <x>410</x>
+     <y>17</y>
      <width>101</width>
      <height>17</height>
     </rect>
@@ -1903,6 +1903,50 @@
    </property>
    <property name="alignment">
     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="captureNext">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>13</y>
+     <width>25</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>+</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="capturePrev">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>13</y>
+     <width>25</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>-</string>
    </property>
   </widget>
  </widget>

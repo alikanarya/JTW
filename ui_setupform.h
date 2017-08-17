@@ -111,6 +111,8 @@ public:
     QCheckBox *cameraEnhancementsBox;
     QLineEdit *editVideoDuration;
     QLabel *label_16;
+    QPushButton *captureNext;
+    QPushButton *capturePrev;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -452,12 +454,12 @@ public:
         fileSlider = new QSlider(setupForm);
         fileSlider->setObjectName(QStringLiteral("fileSlider"));
         fileSlider->setEnabled(false);
-        fileSlider->setGeometry(QRect(140, 20, 191, 22));
+        fileSlider->setGeometry(QRect(140, 15, 191, 22));
         fileSlider->setOrientation(Qt::Horizontal);
         checkProcessing = new QCheckBox(setupForm);
         checkProcessing->setObjectName(QStringLiteral("checkProcessing"));
         checkProcessing->setEnabled(false);
-        checkProcessing->setGeometry(QRect(350, 20, 101, 17));
+        checkProcessing->setGeometry(QRect(410, 17, 101, 17));
         labelGaussSize = new QLabel(setupForm);
         labelGaussSize->setObjectName(QStringLiteral("labelGaussSize"));
         labelGaussSize->setGeometry(QRect(1290, 460, 42, 20));
@@ -595,6 +597,16 @@ public:
         label_16->setFont(font1);
         label_16->setFrameShape(QFrame::NoFrame);
         label_16->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
+        captureNext = new QPushButton(setupForm);
+        captureNext->setObjectName(QStringLiteral("captureNext"));
+        captureNext->setEnabled(false);
+        captureNext->setGeometry(QRect(370, 13, 25, 25));
+        captureNext->setFont(font);
+        capturePrev = new QPushButton(setupForm);
+        capturePrev->setObjectName(QStringLiteral("capturePrev"));
+        capturePrev->setEnabled(false);
+        capturePrev->setGeometry(QRect(340, 13, 25, 25));
+        capturePrev->setFont(font);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -626,7 +638,7 @@ public:
         labelHough->setText(QString());
         labelAnalyze->setText(QString());
         label->setText(QApplication::translate("setupForm", "Hedef Alan \304\260maj\304\261", 0));
-        label_2->setText(QApplication::translate("setupForm", "Mono \304\260maj", 0));
+        label_2->setText(QApplication::translate("setupForm", "Mono/Kontrast \304\260maj", 0));
         label_3->setText(QApplication::translate("setupForm", "Tespit Edilen Kenarlar", 0));
         label_4->setText(QApplication::translate("setupForm", "\303\207izgi Tespiti", 0));
         label_5->setText(QApplication::translate("setupForm", "K\303\266\305\237e Tespiti", 0));
@@ -747,6 +759,8 @@ public:
         editVideoDuration->setInputMask(QApplication::translate("setupForm", "99", 0));
         editVideoDuration->setText(QApplication::translate("setupForm", "1", 0));
         label_16->setText(QApplication::translate("setupForm", "Kay\304\261t S\303\274resi (sn)", 0));
+        captureNext->setText(QApplication::translate("setupForm", "+", 0));
+        capturePrev->setText(QApplication::translate("setupForm", "-", 0));
     } // retranslateUi
 
 };
