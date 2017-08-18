@@ -1,21 +1,21 @@
 #-------------------------------------------------
 #
 # Project created by QtCreator 2010-09-25T00:38:01
-#
+# -----2017-----
 #-------------------------------------------------
 
-#QT       += core gui multimedia multimediawidgets
-QT       += network widgets
-#QT       += core network
+#QT         += core network
+#QT         += core gui multimedia multimediawidgets
+#QTPLUGIN   += libqjpg\            libqtiff
+
+QT         += network widgets
 greaterThan(QT_MAJOR_VERSION, 4): QT       += widgets
 
-TARGET = JTW
-TEMPLATE = app
+TARGET      = JTW
+TEMPLATE    = app
 
-DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x040900
+DEFINES     += QT_DISABLE_DEPRECATED_BEFORE=0x040900
 
-QTPLUGIN += libqjpg\
-            libqtiff
 
 SOURCES += main.cpp\
         mainwindow.cpp \

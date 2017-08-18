@@ -73,6 +73,13 @@ void settingsForm::errorLimitSlider(){
     w->errorStopLimit = w->errorLimit * w->errorStopScale;
     w->errorStopLimitNeg = -1 * w->errorStopLimit;
 
+    if (w->mapFactorX != 0) {
+        w->errorLimitCam = w->errorLimit / w->mapFactorX;
+        w->errorLimitNegCam = w->errorLimitNeg / w->mapFactorX;
+        w->errorStopLimitCam = w->errorStopLimit / w->mapFactorX;
+        w->errorStopLimitNegCam = w->errorStopLimitNeg / w->mapFactorX;
+    }
+
     w->repaintDevTrend();
 }
 
@@ -81,6 +88,11 @@ void settingsForm::errorScaleSlider(){
     w->errorStopLimit = w->errorLimit * w->errorStopScale;
     w->errorStopLimitNeg = -1 * w->errorStopLimit;
     ui->labelErrorScale->setText(QString::number(w->errorStopScale * 100));
+
+    if (w->mapFactorX != 0) {
+        w->errorStopLimitCam = w->errorStopLimit / w->mapFactorX;
+        w->errorStopLimitNegCam = w->errorStopLimitNeg / w->mapFactorX;
+    }
 
     w->repaintDevTrend();
 }

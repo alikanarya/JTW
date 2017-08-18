@@ -1180,7 +1180,7 @@ void MainWindow::processImage(bool deleteObject){
 //                error = iprocess->trackCenterX - (frameWidth/2);
                 error = iprocess->trackCenterX - (frameWidthCam/2);
                 deviationData.append(error);
-//ui->plainTextEdit->appendPlainText(QString::number(error));
+ui->plainTextEdit->appendPlainText(QString::number(error));
                 if (alignGuide2TrackCenter) {
 
                     offsetXpos += error * mapFactorX;
@@ -1319,19 +1319,19 @@ void MainWindow::drawTrack(){
 
 void MainWindow::target2Left(){
 
-    int step = 5;
-    if (abs(error * mapFactorX)<25) step = 1;
+    int step = 2;
+    //if (abs(error * mapFactorX)<25) step = 1;
 
     offsetXpos -= step;
     offsetX -= step;
 
     //offsetXpos -= 5;
-    offsetXCam -= step/mapFactorX;
+    offsetXCam -= step*mapFactorX;
 
     if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) ){
         offsetXpos += step;
         offsetX += step;
-        offsetXCam += step/mapFactorX;
+        offsetXCam += step*mapFactorX;
     }
 
     repaintGuide();
@@ -1339,18 +1339,18 @@ void MainWindow::target2Left(){
 
 void MainWindow::target2Right(){
 
-    int step = 5;
-    if (abs(error * mapFactorX)<25) step = 1;
+    int step = 2;
+    //if (abs(error * mapFactorX)<25) step = 1;
 
     offsetXpos += step;
     offsetX += step;
 
-    offsetXCam += step/mapFactorX;
+    offsetXCam += step*mapFactorX;
 
     if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) ){
         offsetXpos -= step;
         offsetX -= step;
-        offsetXCam -= step/mapFactorX;
+        offsetXCam -= step*mapFactorX;
     }
 
     repaintGuide();
