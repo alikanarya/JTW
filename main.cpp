@@ -6,6 +6,8 @@ MainWindow *w;
 int main(int argc, char *argv[]){
     int ix = 1;
     QApplication a(ix, argv);
+    Q_INIT_RESOURCE (icons);
+
 
     // turkish char set support
     //QTextCodec::setCodecForTr( QTextCodec::codecForName("ISO-8859-9") );

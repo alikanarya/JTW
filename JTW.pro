@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui multimedia multimediawidgets
+#QT       += core gui multimedia multimediawidgets
 QT       += network widgets
 #QT       += core network
 greaterThan(QT_MAJOR_VERSION, 4): QT       += widgets
@@ -13,6 +13,9 @@ TARGET = JTW
 TEMPLATE = app
 
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x040900
+
+QTPLUGIN += libqjpg\
+            libqtiff
 
 SOURCES += main.cpp\
         mainwindow.cpp \
