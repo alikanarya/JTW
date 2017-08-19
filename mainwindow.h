@@ -56,6 +56,7 @@
 #define _ALGO_TYPE          0
 #define _MAIN_EDGE_NO       1
 #define _CAM_ENHANCE        false
+#define _ALIGN              false
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -134,6 +135,7 @@ public:
 
     QSettings *settings;                // settings: to read/write ini file
     QString statusMessage;              // general status message
+    QString seperator = "   ||   ";
 
     plcControlThread *threadPLCControl;
 
@@ -210,7 +212,7 @@ public:
     QRect guideFrameRect, gfBoxRect, gfLineHorRect, gfLineVerRect, gfTolLeftRect, gfTolRightRect;
     QRect sceneRect;
     int sceneCenterX;
-    bool alignGuide2TrackCenter;
+    bool alignGuide2TrackCenter = false;
 
     // image processing parameters
     imgProcess *iprocess, *iprocessLeft, *iprocessRight;    // image processing objects

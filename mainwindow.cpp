@@ -99,7 +99,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //gfTolLeftRect = ui->guideTolLeft->geometry();
     //gfTolRightRect = ui->guideTolRight->geometry();
     offsetXpos = 0;
-    alignGuide2TrackCenter = false;
 
     showGuide = true;       // show guide initially
     repaintGuide();
@@ -472,7 +471,7 @@ void MainWindow:: plcControl(){
 
                 if (mak_aktif_now && !mak_aktif_old) {
 
-                    alignGuide2TrackCenter = true;
+                    controlInitiated = true;
 
                     if (timeControl) {
                         timeControlCounter = 0;
@@ -532,11 +531,12 @@ void MainWindow:: plcControl(){
 
 
         goX = false;
-        if (state != cmdStatePrev) {
 
-            if (hardControlStart && alignGuide2TrackCenter){
-                goX = false;    //dont send command to plc when control is initiated firstly
-            } else {
+        if (controlInitiated){
+            goX = false;    //dont send command to plc when control is initiated firstly
+            //controlInitiated = false;
+        } else {
+            if (state != cmdStatePrev) {
                 goX = true;
 
                 if (state == _CMD_RIGHT)
@@ -547,7 +547,29 @@ void MainWindow:: plcControl(){
                     ui->cmdStatus->setIcon(QIcon());
             }
         }
+        /*
+        if (state != cmdStatePrev) {
 
+            //if (hardControlStart && alignGuide2TrackCenter){
+            if (controlInitiated){
+                goX = false;    //dont send command to plc when control is initiated firstly
+            } else {
+
+                if (alignGuide2TrackCenter && controlInitiated) {
+                    goX = false;
+                } else {
+                    goX = true;
+
+                    if (state == _CMD_RIGHT)
+                        ui->cmdStatus->setIcon(cmd2LeftIcon);
+                    else if (state == _CMD_LEFT)
+                        ui->cmdStatus->setIcon(cmd2RightIcon);
+                    else if (state != _CMD_CHECK)
+                        ui->cmdStatus->setIcon(QIcon());
+                }
+            }
+        }
+        */
 
         if (goX || !cmdSended || threadPLCControl->commandRead) {
 
@@ -650,7 +672,6 @@ void MainWindow::updateSn(){
     pause = true;
 
     QString message;
-    QString seperator = "   ||   ";
 
     /*
     // display: time
@@ -711,6 +732,9 @@ void MainWindow::updateSn(){
 
         message += seperator;
         message += "lf: " + QString::number(lateFrame);
+
+        message += seperator;
+        message += "er: " + QString::number(error);
 
         ui->statusBar->showMessage(message);
         //----------
@@ -812,8 +836,17 @@ void MainWindow::guideButton(){
 
 
 void MainWindow::on_guideAlignButton_clicked(){
-    if (showGuide && trackOn && !controlOn)
-        alignGuide2TrackCenter = true;
+
+    if (showGuide && trackOn && !controlOn){
+        //alignGuide2TrackCenter = true;
+        int _offsetX = offsetX + error * mapFactorX;
+
+        if ( _offsetX >= (offsetXmin+10) && ((_offsetX + frameWidth) <= (offsetXmax - 10)) ){
+            offsetXpos += error * mapFactorX;
+            offsetXCam += error;
+        }
+        repaintGuide();
+    }
 }
 
 void MainWindow::trackButton(){
@@ -881,6 +914,10 @@ void MainWindow::controlButton(){
         controlInitiated = false;
         initialJointWidth = jointWidth = 0;
         maxJointWidth = 1000;
+
+        calcImageParametes(*lastData->image, true);
+        offsetXpos = 0;
+        repaintGuide();
 
         cmdState = _CMD_STOP;
 
@@ -1171,36 +1208,8 @@ void MainWindow::processImage(bool deleteObject){
 //                error = iprocess->trackCenterX - (frameWidth/2);
                 error = iprocess->trackCenterX - (frameWidthCam/2);
                 deviationData.append(error);
-                //ui->plainTextEdit->appendPlainText(QString::number(error));
 
-                if (controlInitiated) {
-
-                    initialJointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
-                    maxJointWidth = initialJointWidth * 1.2;
-                    minJointWidth = initialJointWidth * 0.8;
-                        //ui->plainTextEdit->appendPlainText( QString::number(minJointWidth)+ ", " + QString::number(initialJointWidth) + ", " + QString::number(maxJointWidth) );
-
-                    if (alignGuide2TrackCenter) {
-
-                        //offsetXpos += error * mapFactorX;
-                        //offsetXCam += error;
-                        int _offsetX = offsetX + error * mapFactorX;
-
-                        if ( _offsetX >= (offsetXmin+10) && ((_offsetX + frameWidth) <= (offsetXmax - 10)) ){
-                            offsetXpos += error * mapFactorX;
-                            offsetXCam += error;
-                            qDebug() << "aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
-                        } else {
-                            qDebug() << "not aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
-                        }
-
-                        repaintGuide();
-
-                        //alignGuide2TrackCenter = false;
-                    }
-
-                    controlInitiated = false;
-                }
+                //if (controlInitiated) {                }
 
                 jointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
 
@@ -1254,6 +1263,32 @@ void MainWindow::processImage(bool deleteObject){
                 detectionError = true;
             }
 
+
+            if (iprocess->detected && controlInitiated){
+                goX = false;    //dont send command to plc when control is initiated firstly
+
+                initialJointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
+                maxJointWidth = initialJointWidth * 1.2;
+                minJointWidth = initialJointWidth * 0.8;
+                //ui->plainTextEdit->appendPlainText( QString::number(minJointWidth)+ ", " + QString::number(initialJointWidth) + ", " + QString::number(maxJointWidth) );
+
+                if (alignGuide2TrackCenter) {
+
+                    int _offsetX = offsetX + error * mapFactorX;
+
+                    if ( _offsetX >= (offsetXmin+10) && ((_offsetX + frameWidth) <= (offsetXmax - 10)) ){
+                        offsetXpos += error * mapFactorX;
+                        offsetXCam += error;
+                        //qDebug() << "aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
+                    } else {
+                        //qDebug() << "not aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
+                    }
+
+                    repaintGuide();
+                    //alignGuide2TrackCenter = false;
+                }
+                controlInitiated = false;
+            }
         }
 
         if ( deleteObject && iprocessInitSwitch ) {
@@ -1581,6 +1616,7 @@ void MainWindow::readSettings(){
             edgeDetectionState = settings->value("edgealgo", _EDGE_ALGO).toInt();
             algorithmType = settings->value("algotype", _ALGO_TYPE).toInt();
             mainEdgesNumber = settings->value("medgeno", _MAIN_EDGE_NO).toInt();
+            alignGuide2TrackCenter = settings->value("align", _ALIGN).toBool();
 
         settings->endGroup();
 
@@ -1663,6 +1699,7 @@ void MainWindow::readSettings(){
         edgeDetectionState = _EDGE_ALGO;
         algorithmType = _ALGO_TYPE;
         mainEdgesNumber = _MAIN_EDGE_NO;
+        alignGuide2TrackCenter = _ALIGN;
 
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
@@ -1757,6 +1794,9 @@ void MainWindow::writeSettings(){
         settings->setValue("edgealgo", QString::number(edgeDetectionState));
         settings->setValue("algotype", QString::number(algorithmType));
         settings->setValue("medgeno", QString::number(mainEdgesNumber));
+
+        QVariant alignsw(alignGuide2TrackCenter);
+            settings->setValue("align", alignsw.toString());
 
     settings->endGroup();
 
@@ -2022,7 +2062,8 @@ void MainWindow::testEdit(){
 
 void MainWindow::testButton(){
 
-    //mak_aktif_now = !mak_aktif_now;
+    mak_aktif_now = !mak_aktif_now;
+    qDebug() << "Mak Aktif:" << mak_aktif_now;
     /*
     int *array = new int[5];
     for (int i = 0; i < 5; i++) array[i] = i;
@@ -2030,18 +2071,6 @@ void MainWindow::testButton(){
     //findLocalMinimum(array, 5, list);
     */
 
-    QByteArray HA1inp = QString("admin:").toLocal8Bit() + QString("Login to 2C003E7PAW00006:").toLocal8Bit() + QString("admin").toLocal8Bit();
-    QByteArray HA1byte =  QCryptographicHash::hash((HA1inp),QCryptographicHash::Md5).toHex();
-//    QByteArray HA1byte =  QCryptographicHash::hash(("admin:Login to 2C003E7PAW00006:admin"),QCryptographicHash::Md5).toHex();
-    QString HA1 =  QString(HA1byte);
-    QByteArray HA2byte =  QCryptographicHash::hash(("GET:/cgi-bin/mjpg/video.cgi?channel=1&subtype=1"),QCryptographicHash::Md5).toHex();
-    QString HA2 =  QString(HA2byte);
-
-    QByteArray inp = HA1byte+QString(":425529402:00000001:d655ee94b416337a:auth:").toLocal8Bit()+HA2byte;
-    QString Resp =  QString(QCryptographicHash::hash((inp),QCryptographicHash::Md5).toHex());
-    qDebug() << HA1;
-    qDebug() << HA2;
-    qDebug() << Resp;
 
 }
 

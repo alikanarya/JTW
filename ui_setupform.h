@@ -610,7 +610,7 @@ public:
         capturePrev->setFont(font);
         alignGuideBox = new QCheckBox(setupForm);
         alignGuideBox->setObjectName(QStringLiteral("alignGuideBox"));
-        alignGuideBox->setGeometry(QRect(620, 690, 171, 17));
+        alignGuideBox->setGeometry(QRect(620, 690, 221, 17));
         alignGuideBox->setFont(font3);
 
         retranslateUi(setupForm);
