@@ -200,9 +200,10 @@ public:
     bool imgOrientation = false; //false: landscape;aspectRatio>1.33, true: portrait;aspectRatio<=1.33
     float mapFactorWidth, mapFactorHeight, mapFactorX;
     int mapWidth, mapHeight;
+    int offsetXmin, offsetXmax;
 
     int offsetX, offsetY;               // upper left corner coor. of target image, for qlabel
-    int offsetXCam, offsetYCam;               // upper left corner coor. of target image, for cam iamge
+    float offsetXCam, offsetYCam;               // upper left corner coor. of target image, for cam iamge
     int centerX;                        // image center x coor.
     QRect imageFrameRect;
     int offsetXpos;

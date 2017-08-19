@@ -1949,6 +1949,29 @@
     <string>-</string>
    </property>
   </widget>
+  <widget class="QCheckBox" name="alignGuideBox">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>690</y>
+     <width>171</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Makineden Kaynak Başlangıcı</string>
+   </property>
+   <property name="text">
+    <string>Kaynak Başlangıcında Hizala</string>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="icons.qrc"/>

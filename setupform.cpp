@@ -55,6 +55,8 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
 
     ui->lineDetectionBox->setChecked( w->lineDetection );
 
+    ui->alignGuideBox->setChecked( w->alignGuide2TrackCenter );
+
     ui->editLineScore->setText( QString::number( w->lineScoreLimit ) );
 
     ui->labelBrightness->setText( QString::number(brightnessVal) );
@@ -560,7 +562,7 @@ void setupForm::captureButton(){
                                     ui->plainTextEdit->appendPlainText("dist/ang/vote: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
                             }
 
-                        ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(1) ) );
+                        ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(mainEdgesNumber) ) );
                             /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"05-mainEdges image.jpg");
 
                         iprocess->cornerImage();
@@ -848,6 +850,11 @@ void setupForm::hardControlStartBox(){
 
     w->readMachineStatus = w->hardControlStart;
     ui->readMachineStatusBox->setChecked( w->readMachineStatus );
+}
+
+void setupForm::on_alignGuideBox_clicked(){
+
+    w->alignGuide2TrackCenter = ui->alignGuideBox->isChecked();
 }
 
 void setupForm::widthControl(){
@@ -1411,4 +1418,6 @@ void setupForm::on_cameraEnhancementsBox_stateChanged(int arg1){
 
 void setupForm::on_editVideoDuration_returnPressed(){
 }
+
+
 

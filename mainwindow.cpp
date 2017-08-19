@@ -109,7 +109,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // play video controls
     play = playCamonBoot;
-    if (play) playButton();
     pause = false;
     fpsRequest = 0;
     fpsReal = 0;
@@ -282,7 +281,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->thinJointButton->setEnabled(false);
     ui->thinJointButton->hide();
 
-/*
+    /**/cameraChecker->cameraDown = false;
+    if (play) playButton();
+
+    /*
     player = new QMediaPlayer;
     vw = new QVideoWidget;
     player->setVideoOutput(vw);
@@ -476,8 +478,8 @@ void MainWindow:: plcControl(){
                         timeControlCounter = 0;
                         startTimeControlCount = true;
                     }
-                } else
-                    alignGuide2TrackCenter = false;
+                }
+                //else alignGuide2TrackCenter = false;
 
                 mak_aktif_old = mak_aktif_now;
             }
@@ -1166,29 +1168,43 @@ void MainWindow::processImage(bool deleteObject){
             // if center of track is not an error, append dev. to trend data list OR append error code to list
             if (iprocess->detected){
 
+//                error = iprocess->trackCenterX - (frameWidth/2);
+                error = iprocess->trackCenterX - (frameWidthCam/2);
+                deviationData.append(error);
+                //ui->plainTextEdit->appendPlainText(QString::number(error));
+
                 if (controlInitiated) {
 
                     initialJointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
                     maxJointWidth = initialJointWidth * 1.2;
                     minJointWidth = initialJointWidth * 0.8;
                         //ui->plainTextEdit->appendPlainText( QString::number(minJointWidth)+ ", " + QString::number(initialJointWidth) + ", " + QString::number(maxJointWidth) );
+
+                    if (alignGuide2TrackCenter) {
+
+                        //offsetXpos += error * mapFactorX;
+                        //offsetXCam += error;
+                        int _offsetX = offsetX + error * mapFactorX;
+
+                        if ( _offsetX >= (offsetXmin+10) && ((_offsetX + frameWidth) <= (offsetXmax - 10)) ){
+                            offsetXpos += error * mapFactorX;
+                            offsetXCam += error;
+                            qDebug() << "aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
+                        } else {
+                            qDebug() << "not aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
+                        }
+
+                        repaintGuide();
+
+                        //alignGuide2TrackCenter = false;
+                    }
+
                     controlInitiated = false;
                 }
 
                 jointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
 
-//                error = iprocess->trackCenterX - (frameWidth/2);
-                error = iprocess->trackCenterX - (frameWidthCam/2);
-                deviationData.append(error);
-ui->plainTextEdit->appendPlainText(QString::number(error));
-                if (alignGuide2TrackCenter) {
 
-                    offsetXpos += error * mapFactorX;
-                    offsetXCam += error;
-                    repaintGuide();
-
-                    alignGuide2TrackCenter = false;
-                }
 
                 if (trackOn){
                     errorTotal += abs(error);
@@ -1319,40 +1335,46 @@ void MainWindow::drawTrack(){
 
 void MainWindow::target2Left(){
 
-    int step = 2;
-    //if (abs(error * mapFactorX)<25) step = 1;
+    float step = 5;
+    if (abs(error * mapFactorX)<=20) step = 1;
 
     offsetXpos -= step;
     offsetX -= step;
 
     //offsetXpos -= 5;
-    offsetXCam -= step*mapFactorX;
+    //offsetXCam -= floor(step/mapFactorX+0.5);
+    offsetXCam -= step/mapFactorX;
 
-    if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) ){
+    if ( offsetX < (offsetXmin+10) || ((offsetX + frameWidth) > (offsetXmax - 10)) ){//    if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) ){
         offsetXpos += step;
         offsetX += step;
-        offsetXCam += step*mapFactorX;
+        //offsetXCam += floor(step/mapFactorX+0.5);
+        offsetXCam += step/mapFactorX;
     }
 
+    //ui->plainTextEdit->appendPlainText("offsetX: " + QString::number(offsetX) + " offsetXpos: " + QString::number(offsetXpos) + " offsetXCam: " + QString::number(offsetXCam));
     repaintGuide();
 }
 
 void MainWindow::target2Right(){
 
-    int step = 2;
-    //if (abs(error * mapFactorX)<25) step = 1;
+    float step = 5;
+    if (abs(error * mapFactorX)<=20) step = 1;
 
     offsetXpos += step;
     offsetX += step;
 
-    offsetXCam += step*mapFactorX;
+    //offsetXCam += floor(step/mapFactorX+0.5);
+    offsetXCam += step/mapFactorX;
 
-    if ( offsetX < 5 || ((offsetX + frameWidth) > (imageWidth - 5)) ){
+    if ( offsetX < (offsetXmin+10) || ((offsetX + frameWidth) > (offsetXmax - 10)) ){
         offsetXpos -= step;
         offsetX -= step;
-        offsetXCam -= step*mapFactorX;
+        //offsetXCam -= floor(step/mapFactorX+0.5);
+        offsetXCam -= step/mapFactorX;
     }
 
+    //ui->plainTextEdit->appendPlainText("offsetX: " + QString::number(offsetX) + " offsetXpos: " + QString::number(offsetXpos) + " offsetXCam: " + QString::number(offsetXCam));
     repaintGuide();
 }
 
@@ -1803,6 +1825,9 @@ void MainWindow::calcImageParametes(QImage img, bool info){
             mapHeight = imageHeight;
         }
         mapFactorX = ((float)mapWidth) / camImageWidth;
+
+        offsetXmin = (imageWidth - mapWidth)/2;
+        offsetXmax = offsetXmin + mapWidth;
 
         frameWidthMax = mapWidth * frameWidthRatioMax;
         frameHeightMax = mapHeight * frameHeightRatioMax;

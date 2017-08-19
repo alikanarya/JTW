@@ -139,6 +139,7 @@ private slots:
     void on_editVideoDuration_returnPressed();
     void on_captureNext_clicked();
     void on_capturePrev_clicked();
+    void on_alignGuideBox_clicked();
 };
 
 #endif // SETUPFORM_H

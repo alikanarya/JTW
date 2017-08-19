@@ -113,6 +113,7 @@ public:
     QLabel *label_16;
     QPushButton *captureNext;
     QPushButton *capturePrev;
+    QCheckBox *alignGuideBox;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -607,6 +608,10 @@ public:
         capturePrev->setEnabled(false);
         capturePrev->setGeometry(QRect(340, 13, 25, 25));
         capturePrev->setFont(font);
+        alignGuideBox = new QCheckBox(setupForm);
+        alignGuideBox->setObjectName(QStringLiteral("alignGuideBox"));
+        alignGuideBox->setGeometry(QRect(620, 690, 171, 17));
+        alignGuideBox->setFont(font3);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -761,6 +766,10 @@ public:
         label_16->setText(QApplication::translate("setupForm", "Kay\304\261t S\303\274resi (sn)", 0));
         captureNext->setText(QApplication::translate("setupForm", "+", 0));
         capturePrev->setText(QApplication::translate("setupForm", "-", 0));
+#ifndef QT_NO_TOOLTIP
+        alignGuideBox->setToolTip(QApplication::translate("setupForm", "Makineden Kaynak Ba\305\237lang\304\261c\304\261", 0));
+#endif // QT_NO_TOOLTIP
+        alignGuideBox->setText(QApplication::translate("setupForm", "Kaynak Ba\305\237lang\304\261c\304\261nda Hizala", 0));
     } // retranslateUi
 
 };
