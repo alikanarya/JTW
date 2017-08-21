@@ -114,6 +114,8 @@ public:
     QPushButton *captureNext;
     QPushButton *capturePrev;
     QCheckBox *alignGuideBox;
+    QCheckBox *debugModeBox;
+    QLabel *labelPicNo;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -187,7 +189,7 @@ public:
         captureButton->setFont(font);
         saveButton = new QPushButton(setupForm);
         saveButton->setObjectName(QStringLiteral("saveButton"));
-        saveButton->setGeometry(QRect(120, 390, 131, 25));
+        saveButton->setGeometry(QRect(120, 390, 91, 25));
         saveButton->setFont(font);
         editHoughLineNo = new QLineEdit(setupForm);
         editHoughLineNo->setObjectName(QStringLiteral("editHoughLineNo"));
@@ -612,6 +614,15 @@ public:
         alignGuideBox->setObjectName(QStringLiteral("alignGuideBox"));
         alignGuideBox->setGeometry(QRect(620, 690, 221, 17));
         alignGuideBox->setFont(font3);
+        debugModeBox = new QCheckBox(setupForm);
+        debugModeBox->setObjectName(QStringLiteral("debugModeBox"));
+        debugModeBox->setGeometry(QRect(220, 394, 71, 17));
+        debugModeBox->setFont(font3);
+        labelPicNo = new QLabel(setupForm);
+        labelPicNo->setObjectName(QStringLiteral("labelPicNo"));
+        labelPicNo->setGeometry(QRect(490, 17, 150, 16));
+        labelPicNo->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
+        labelPicNo->setAlignment(Qt::AlignCenter);
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -648,7 +659,7 @@ public:
         label_4->setText(QApplication::translate("setupForm", "\303\207izgi Tespiti", 0));
         label_5->setText(QApplication::translate("setupForm", "K\303\266\305\237e Tespiti", 0));
         captureButton->setText(QApplication::translate("setupForm", "Analiz", 0));
-        saveButton->setText(QApplication::translate("setupForm", "Analiz/Kaydet", 0));
+        saveButton->setText(QApplication::translate("setupForm", "Kaydet", 0));
         editHoughLineNo->setInputMask(QApplication::translate("setupForm", "999", 0));
         editHoughLineNo->setText(QApplication::translate("setupForm", "2", 0));
         label_6->setText(QApplication::translate("setupForm", "\303\207izgi Say\304\261s\304\261", 0));
@@ -770,6 +781,11 @@ public:
         alignGuideBox->setToolTip(QApplication::translate("setupForm", "Makineden Kaynak Ba\305\237lang\304\261c\304\261", 0));
 #endif // QT_NO_TOOLTIP
         alignGuideBox->setText(QApplication::translate("setupForm", "Kaynak Ba\305\237lang\304\261c\304\261nda Hizala", 0));
+#ifndef QT_NO_TOOLTIP
+        debugModeBox->setToolTip(QApplication::translate("setupForm", "Kaynak ba\305\237lang\304\261c\304\261ndaki geni\305\237li\304\237in %80 ile %120 si aras\304\261n\304\261 ge\303\247erli say", 0));
+#endif // QT_NO_TOOLTIP
+        debugModeBox->setText(QApplication::translate("setupForm", "DEBUG", 0));
+        labelPicNo->setText(QApplication::translate("setupForm", "No", 0));
     } // retranslateUi
 
 };

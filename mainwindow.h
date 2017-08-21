@@ -421,6 +421,7 @@ public slots:
     void target2Left();
     void target2Right();
     void showInfo();
+    void showSetupError();
     void videoButton();
     void saveFinished();
     void stopButton();                              // stop video resets

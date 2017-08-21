@@ -124,7 +124,7 @@ void setupForm::edgeDetection(imgProcess *iprocess){
             matrixFlag = true;
             break;
         case 1: // SOBEL
-                /**/if (DEBUG) {
+                /**/if (saveAnalysis) {
                         edgePath = path + "/sobel/";
                         QDir().mkdir(edgePath);
                     }
@@ -138,7 +138,7 @@ void setupForm::edgeDetection(imgProcess *iprocess){
             matrixFlag = false;
             break;
         case 2: // CANNY 4
-                /**/if (DEBUG) {
+                /**/if (saveAnalysis) {
                         edgePath = path + "/canny4/";
                         QDir().mkdir(edgePath);
                     }
@@ -183,7 +183,7 @@ void setupForm::edgeDetection(imgProcess *iprocess){
             matrixFlag = false;
             break;
         case 3: // CANNY 1
-                /**/if (DEBUG) {
+                /**/if (saveAnalysis) {
                         edgePath = path + "/canny1/";
                         QDir().mkdir(edgePath);
                     }
@@ -559,7 +559,7 @@ void setupForm::captureButton(){
 
                                 ui->plainTextEdit->appendPlainText("-2nd hough vals---");
                                 for (int i=0; i<iprocess->listHoughData2ndSize;i++)
-                                    ui->plainTextEdit->appendPlainText("dist/ang/vote: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
+                                    ui->plainTextEdit->appendPlainText("dist/ang/vote: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 1) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 1)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 0));
                             }
 
                         ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(mainEdgesNumber) ) );
@@ -723,12 +723,13 @@ void setupForm::captureButton(){
 bool setupForm::saveButton(){
 
     saveAnalysis = true;
+
     DEBUG = true;
+    ui->debugModeBox->setChecked(DEBUG);
 
     captureButton();
 
     ui->plainTextEdit->appendPlainText("Dosyalar kaydedildi");
-    DEBUG = false;
 
     return saveAnalysis;
 }
@@ -972,6 +973,7 @@ void setupForm::on_captureButton_2_clicked(){
 
         w->loadedFileName = QFileInfo(w->loadedFileNamewPath).fileName();
         w->filesInDirListIndex = w->filesInDirList.indexOf(w->loadedFileName,0);
+        ui->labelPicNo->setText(QString::number(w->filesInDirListIndex)+": "+ w->loadedFileName);
 
         ui->fileSlider->setMaximum(w->filesInDirList.size() - 1);
         ui->fileSlider->setValue(w->filesInDirListIndex);
@@ -988,6 +990,7 @@ void setupForm::on_fileSlider_sliderMoved(int position){
 
     w->filesInDirListIndex = position;
     w->loadedFileName = w->filesInDirList.at(position);
+    ui->labelPicNo->setText(QString::number(w->filesInDirListIndex)+": "+ w->loadedFileName);
 
     //qDebug() << w->filesInDirListIndex << "." << w->loadedFileName;
     w->imageFile.load(w->fileOpenDir.path() + "/" + w->loadedFileName);
@@ -1002,6 +1005,7 @@ void setupForm::on_captureNext_clicked(){
         ui->fileSlider->setSliderPosition(w->filesInDirListIndex);
 
         w->loadedFileName = w->filesInDirList.at(w->filesInDirListIndex);
+        ui->labelPicNo->setText(QString::number(w->filesInDirListIndex)+": "+ w->loadedFileName);
         w->imageFile.load(w->fileOpenDir.path() + "/" + w->loadedFileName);
         w->calcImageParametes(w->imageFile, true);
         update();
@@ -1015,6 +1019,7 @@ void setupForm::on_capturePrev_clicked(){
         ui->fileSlider->setSliderPosition(w->filesInDirListIndex);
 
         w->loadedFileName = w->filesInDirList.at(w->filesInDirListIndex);
+        ui->labelPicNo->setText(QString::number(w->filesInDirListIndex)+": "+ w->loadedFileName);
         w->imageFile.load(w->fileOpenDir.path() + "/" + w->loadedFileName);
         w->calcImageParametes(w->imageFile, true);
         update();
@@ -1419,5 +1424,7 @@ void setupForm::on_cameraEnhancementsBox_stateChanged(int arg1){
 void setupForm::on_editVideoDuration_returnPressed(){
 }
 
+void setupForm::on_debugModeBox_clicked(){
 
-
+    DEBUG = ui->debugModeBox->isChecked();
+}

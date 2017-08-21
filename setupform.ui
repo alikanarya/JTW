@@ -240,7 +240,7 @@
     <rect>
      <x>120</x>
      <y>390</y>
-     <width>131</width>
+     <width>91</width>
      <height>25</height>
     </rect>
    </property>
@@ -251,7 +251,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Analiz/Kaydet</string>
+    <string>Kaydet</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="editHoughLineNo">
@@ -1970,6 +1970,48 @@
    </property>
    <property name="text">
     <string>Kaynak Başlangıcında Hizala</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="debugModeBox">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>394</y>
+     <width>71</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="toolTip">
+    <string>Kaynak başlangıcındaki genişliğin %80 ile %120 si arasını geçerli say</string>
+   </property>
+   <property name="text">
+    <string>DEBUG</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelPicNo">
+   <property name="geometry">
+    <rect>
+     <x>490</x>
+     <y>17</y>
+     <width>150</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
+   </property>
+   <property name="text">
+    <string>No</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

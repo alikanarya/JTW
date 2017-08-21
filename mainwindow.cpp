@@ -318,11 +318,9 @@ void MainWindow::showInfo(){
         msgBox.setIcon(QMessageBox::Warning);
         QString str = "";
 
-
         if ( lineDetection ) {
 
             str += "AKTİF !!! : İz Tespiti Modu\n";
-
         } else {
 
             if (dynamicAlgo)
@@ -335,14 +333,25 @@ void MainWindow::showInfo(){
 
             if (zControlActive)
                 str += "AKTİF !!! : Yükseklik Kontrolü\n";
-
             if (hardControlStart)
                 str += "AKTİF !!! : Makineden Kaynak Başlatma\n";
-
             if (timeControl)
                 str += "AKTİF !!! : Zaman Kontrolü\n";
-
         }
+        msgBox.setText(str);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
+}
+
+void MainWindow::showSetupError(){
+
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Warning);
+        QString str = "";
+
+        str += " KAMERA - TORCH HİZALAMASINDA ÇOK FAZLA HATA VAR !!!\n";
+        str += " OTOMATİK TAKİP BAŞLATILMAYACAKTIR !!!";
 
         msgBox.setText(str);
         msgBox.setStandardButtons(QMessageBox::Ok);
@@ -1281,6 +1290,8 @@ void MainWindow::processImage(bool deleteObject){
                         offsetXCam += error;
                         //qDebug() << "aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
                     } else {
+                        controlButton();
+                        showSetupError();
                         //qDebug() << "not aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
                     }
 
