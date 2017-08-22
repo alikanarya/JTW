@@ -25,7 +25,8 @@ void videoSaveThread::run(){
         delete[] w->videoList;
 */
         for (int i = 0; i < saveSize; i++){
-           buffer[i].save(w->folderName + "pic" + QString::number(count * bufferLength + i) + ".jpg");
+           buffer[i].save(w->folderName + "pic" + QString("%1").arg(count * bufferLength + i, 5, 10, QChar('0')) + ".jpg");
+           //buffer[i].save(w->folderName + "pic" + QString::number(count * bufferLength + i) + ".jpg");
         }
 
         if (lastSave){
