@@ -96,6 +96,7 @@ public slots:
     void Algo4(imgProcess *iprocess);   // woLASER: value > detectThinJointCenter
     void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
+    void Algo7(imgProcess *iprocess);   // woLASER: edge > houghTr > detectScanHorizontal
 
     void update();
 

@@ -342,6 +342,23 @@ void setupForm::Algo6(imgProcess *iprocess){
     }
 }
 
+void setupForm::Algo7(imgProcess *iprocess){
+// woLASER: edge > houghTr > detectScanHorizontal
+
+    if (edgeDetectionState != 0) {
+        iprocess->detectScanHorizontal( iprocess->edgeHeight/2.0 );            // get max voted line(s)
+            if (saveAnalysis) iprocess->saveMatrix(iprocess->horLineVotes, 3, iprocess->edgeWidth, path+"03-max votes on line.csv");
+            //if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
+            //if (DEBUG) for (int i=0; i<iprocess->mainEdgesList.size();i++)
+            //        ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
+        algoPrerequestsOk = true;
+        captured = true;
+    } else {
+        ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
+        algoPrerequestsOk = false;
+    }
+}
+
 void setupForm::processImage(){
 
     if ( w->play && !w->imageGetter->imageList.isEmpty() ){
@@ -440,6 +457,7 @@ void setupForm::processImage(){
                     Algo6(iprocess);
                     break;
                 case 5: // EXPERIMENTAL
+                    Algo7(iprocess);
                     break;
             }
         } else {    // with laser - HORIZONTAL SEARCH
@@ -732,6 +750,8 @@ bool setupForm::saveButton(){
     ui->debugModeBox->setChecked(DEBUG);
 
     captureButton();
+
+    saveAnalysis = false;
 
     ui->plainTextEdit->appendPlainText("Dosyalar kaydedildi");
 
