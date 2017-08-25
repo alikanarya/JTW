@@ -224,7 +224,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     controlDelay = QString::number(controlDelay).toInt(&controlDelayValid, 10); //controlDelayValid: true if conversion is ok
     timerControlInterval = 100;
-    controlThreadCountSize = 60000 / timerControlInterval;   // timer shot count for 60sec plc check
+    controlThreadCountSize = 15000 / timerControlInterval;   // timer shot count for 15sec plc check
     weldCommandsSize = controlDelay / timerControlInterval;
 
     // start message
@@ -480,12 +480,18 @@ void MainWindow:: plcControl(){
 
                 if (mak_aktif_now && !mak_aktif_old) {
 
+                    ui->plainTextEdit->appendPlainText("Makine çalışıyor");
                     controlInitiated = true;
 
                     if (timeControl) {
                         timeControlCounter = 0;
                         startTimeControlCount = true;
                     }
+                }
+
+                if (!mak_aktif_now && mak_aktif_old) {
+                    ui->plainTextEdit->appendPlainText("Makine durdu");
+
                 }
                 //else alignGuide2TrackCenter = false;
 
