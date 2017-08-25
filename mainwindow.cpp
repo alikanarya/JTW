@@ -158,10 +158,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     threadPLCControl = new plcControlThread(plcType, urlPLC.toString());
     threadPLCControl->plc->portNum = 102;
 
-    threadPLCControl->dbNo = DB_NO;
-    threadPLCControl->dbNoRead = 2;
-    threadPLCControl->byteNo = BYTE_NO;
-    threadPLCControl->byteNo2 = threadPLCControl->byteNo + 1;
+    if (plcType == 0){              // S7-200
+        threadPLCControl->dbNo = DB_NO = 1;     //for all variables - V memory
+        threadPLCControl->byteNo = BYTE_NO = 0; //for commands; V0.0-V0.7
+        threadPLCControl->dbNoRead = DB_NO;     //for all variables - V memory
+        threadPLCControl->readByte = 1;         //for plc2pc data; V1.0-V1.7
+        //distance sensor: VW2
+    }
+    else if (plcType == 1){         // S7-300
+        threadPLCControl->dbNo = DB_NO;         //for commands
+        threadPLCControl->byteNo = BYTE_NO;     //for commands
+        threadPLCControl->byteNo2 = BYTE_NO + 1;//for additional commands
+        threadPLCControl->dbNoRead = 2;         //for plc2pc data; DB2
+        threadPLCControl->readByte = 0;         //for plc2pc data; 0
+        //distance sensor: DBx.DBW2 ; x = dbNo or dbNoRead
+    }
+
 
     if (!threadPLCControl->plc->libraryLoaded){
         permPLC = false;

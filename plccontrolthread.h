@@ -24,6 +24,7 @@ public:
     QString plcUrl;
     int dbNo;
     int dbNoRead;
+    int readByte = 0;
     int byteNo;
     int byteNo2;
     /*
@@ -61,8 +62,8 @@ public:
     bool plcCmd_Z_Up();
     bool plcCmd_Z_Down();
 
-    bool readPLC();
-    bool readDistanceValue();
+    bool readPLC(int byte);
+    bool readDistanceValue(int byte, int length);
 
     int getBitofByte(unsigned char byte, int bitNo);
 

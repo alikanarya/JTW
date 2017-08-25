@@ -72,12 +72,12 @@ void plcControlThread::run(){
 
             if (commandRead) {
 
-                readPLC();
+                readPLC(readByte);
 
                 //if ( w->readMachineStatus ) {                }
 
                 if ( w->readDistance ) {
-                    readDistanceValue();
+                    readDistanceValue(2, 2);    //2nd byte and 2 bytes long
                 }
 
                 commandRead = false;
@@ -183,9 +183,9 @@ bool plcControlThread::plcCmd_Z_Down(){
 }
 
 
-bool plcControlThread::readPLC(){
+bool plcControlThread::readPLC(int _byte){
 
-    int result = plc->readBytes(dbNoRead, 0, readLength, readBuffer);
+    int result = plc->readBytes(dbNoRead, _byte, readLength, readBuffer);
 
     if (result == 0){
 
@@ -215,13 +215,13 @@ bool plcControlThread::readPLC(){
     }
 }
 
-bool plcControlThread::readDistanceValue(){
+bool plcControlThread::readDistanceValue(int byte, int length){
 // customized for s7-200 start address:VW2
 // customized for s7-300 start address:DBX.dbw2
 
     int result;
 
-    result = plc->readBytes(dbNo, 2, 2, readBufferInt);
+    result = plc->readBytes(dbNo, byte, length, readBufferInt);
 
     if (result == 0){
 
