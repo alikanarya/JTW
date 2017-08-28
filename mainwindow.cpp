@@ -17,11 +17,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     rectScreen = QApplication::desktop()->geometry();
 
-    // only title on title bar
+
     Qt::WindowFlags flags = 0;
     flags |= Qt::Dialog;
-    //flags |= Qt::FramelessWindowHint;
-    flags |= Qt::WindowTitleHint;
+    flags |= Qt::FramelessWindowHint;
+    //flags |= Qt::WindowTitleHint;   // only title on title bar
     this->setWindowFlags(flags);
     this->setAttribute(Qt::WA_DeleteOnClose, true);
 

@@ -10,25 +10,25 @@
     <x>0</x>
     <y>0</y>
     <width>1680</width>
-    <height>786</height>
+    <height>768</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1019</width>
-    <height>635</height>
+    <width>1680</width>
+    <height>768</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>1680</width>
-    <height>850</height>
+    <height>768</height>
    </size>
   </property>
   <property name="contextMenuPolicy">
@@ -301,8 +301,8 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>1110</x>
-     <y>730</y>
+     <x>1340</x>
+     <y>580</y>
      <width>111</width>
      <height>20</height>
     </rect>
@@ -326,8 +326,8 @@
   <widget class="QLineEdit" name="editHoughThreshold">
    <property name="geometry">
     <rect>
-     <x>1230</x>
-     <y>728</y>
+     <x>1460</x>
+     <y>578</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -345,8 +345,8 @@
   <widget class="QLabel" name="labelVoteAvg">
    <property name="geometry">
     <rect>
-     <x>1280</x>
-     <y>728</y>
+     <x>1510</x>
+     <y>578</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -505,7 +505,7 @@
      <x>20</x>
      <y>540</y>
      <width>580</width>
-     <height>196</height>
+     <height>171</height>
     </rect>
    </property>
    <property name="font">
@@ -526,8 +526,8 @@
   <widget class="QLineEdit" name="editVoidThreshold">
    <property name="geometry">
     <rect>
-     <x>1230</x>
-     <y>698</y>
+     <x>1460</x>
+     <y>548</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -545,8 +545,8 @@
   <widget class="QLabel" name="label_10">
    <property name="geometry">
     <rect>
-     <x>1110</x>
-     <y>700</y>
+     <x>1340</x>
+     <y>550</y>
      <width>111</width>
      <height>20</height>
     </rect>
@@ -571,7 +571,7 @@
    <property name="geometry">
     <rect>
      <x>1540</x>
-     <y>720</y>
+     <y>630</y>
      <width>121</width>
      <height>25</height>
     </rect>
@@ -593,7 +593,7 @@
    <property name="geometry">
     <rect>
      <x>1540</x>
-     <y>750</y>
+     <y>660</y>
      <width>121</width>
      <height>25</height>
     </rect>
@@ -614,8 +614,8 @@
   <widget class="QPushButton" name="clearButton">
    <property name="geometry">
     <rect>
-     <x>265</x>
-     <y>740</y>
+     <x>510</x>
+     <y>510</y>
      <width>90</width>
      <height>25</height>
     </rect>
@@ -636,8 +636,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>1540</x>
-     <y>670</y>
+     <x>960</x>
+     <y>660</y>
      <width>101</width>
      <height>17</height>
     </rect>
@@ -652,8 +652,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>1530</x>
-     <y>690</y>
+     <x>950</x>
+     <y>680</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -674,8 +674,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>1630</x>
-     <y>690</y>
+     <x>1050</x>
+     <y>680</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -696,8 +696,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>1580</x>
-     <y>690</y>
+     <x>1000</x>
+     <y>680</y>
      <width>42</width>
      <height>20</height>
     </rect>

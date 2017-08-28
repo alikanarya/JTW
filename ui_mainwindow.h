@@ -82,14 +82,14 @@ public:
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->setWindowModality(Qt::ApplicationModal);
         MainWindow->setEnabled(true);
-        MainWindow->resize(664, 900);
+        MainWindow->resize(900, 768);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
         MainWindow->setSizePolicy(sizePolicy);
-        MainWindow->setMinimumSize(QSize(664, 900));
-        MainWindow->setMaximumSize(QSize(1328, 900));
+        MainWindow->setMinimumSize(QSize(900, 768));
+        MainWindow->setMaximumSize(QSize(900, 768));
         QIcon icon;
         icon.addFile(QStringLiteral(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         MainWindow->setWindowIcon(icon);
@@ -117,7 +117,7 @@ public:
         labelTime = new QLabel(centralWidget);
         labelTime->setObjectName(QStringLiteral("labelTime"));
         labelTime->setEnabled(false);
-        labelTime->setGeometry(QRect(60, 640, 85, 23));
+        labelTime->setGeometry(QRect(60, 630, 85, 23));
         QFont font;
         font.setPointSize(10);
         font.setBold(true);
@@ -146,7 +146,7 @@ public:
         stopButton->setFlat(true);
         plainTextEdit = new QPlainTextEdit(centralWidget);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
-        plainTextEdit->setGeometry(QRect(10, 720, 644, 123));
+        plainTextEdit->setGeometry(QRect(662, 70, 231, 484));
         QFont font1;
         font1.setPointSize(7);
         plainTextEdit->setFont(font1);
@@ -202,7 +202,7 @@ public:
         guideButton->setFlat(true);
         trackView = new QGraphicsView(centralWidget);
         trackView->setObjectName(QStringLiteral("trackView"));
-        trackView->setGeometry(QRect(170, 559, 324, 160));
+        trackView->setGeometry(QRect(170, 555, 324, 160));
         trackView->setStyleSheet(QLatin1String("color: rgb(0, 0, 0);\n"
 "background-color: rgb(236, 233, 216);"));
         trackView->setFrameShape(QFrame::Box);
@@ -240,7 +240,7 @@ public:
         controlButton->setFlat(true);
         plcStatus = new QPushButton(centralWidget);
         plcStatus->setObjectName(QStringLiteral("plcStatus"));
-        plcStatus->setGeometry(QRect(500, 682, 32, 32));
+        plcStatus->setGeometry(QRect(740, 610, 32, 32));
         QIcon icon9;
         icon9.addFile(QStringLiteral(":/resources/s7_200-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         plcStatus->setIcon(icon9);
@@ -256,7 +256,7 @@ public:
         infoButton->setFlat(true);
         exitButton = new QPushButton(centralWidget);
         exitButton->setObjectName(QStringLiteral("exitButton"));
-        exitButton->setGeometry(QRect(620, 680, 32, 32));
+        exitButton->setGeometry(QRect(860, 608, 32, 32));
         QIcon icon11;
         icon11.addFile(QStringLiteral(":/resources/exit-48.png"), QSize(), QIcon::Normal, QIcon::Off);
         exitButton->setIcon(icon11);
@@ -295,7 +295,7 @@ public:
         emergencyButton->setFlat(true);
         cameraStatus = new QPushButton(centralWidget);
         cameraStatus->setObjectName(QStringLiteral("cameraStatus"));
-        cameraStatus->setGeometry(QRect(540, 682, 32, 32));
+        cameraStatus->setGeometry(QRect(780, 610, 32, 32));
         QIcon icon13;
         icon13.addFile(QStringLiteral(":/resources/Camera-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         cameraStatus->setIcon(icon13);
@@ -369,7 +369,7 @@ public:
         thinJointButton = new QPushButton(centralWidget);
         thinJointButton->setObjectName(QStringLiteral("thinJointButton"));
         thinJointButton->setEnabled(true);
-        thinJointButton->setGeometry(QRect(10, 640, 41, 21));
+        thinJointButton->setGeometry(QRect(10, 630, 41, 21));
         thinJointButton->setFont(font);
         thinJointButton->setIconSize(QSize(32, 32));
         thinJointButton->setFlat(false);
@@ -398,7 +398,7 @@ public:
         testEdit = new QLineEdit(centralWidget);
         testEdit->setObjectName(QStringLiteral("testEdit"));
         testEdit->setEnabled(false);
-        testEdit->setGeometry(QRect(10, 610, 51, 20));
+        testEdit->setGeometry(QRect(10, 600, 51, 20));
         QFont font6;
         font6.setPointSize(9);
         font6.setBold(true);
@@ -418,10 +418,10 @@ public:
         testButton->setGeometry(QRect(100, 570, 41, 23));
         timeEdit = new QLineEdit(centralWidget);
         timeEdit->setObjectName(QStringLiteral("timeEdit"));
-        timeEdit->setGeometry(QRect(20, 700, 41, 20));
+        timeEdit->setGeometry(QRect(20, 680, 41, 20));
         labelTimeTag2 = new QLabel(centralWidget);
         labelTimeTag2->setObjectName(QStringLiteral("labelTimeTag2"));
-        labelTimeTag2->setGeometry(QRect(120, 670, 41, 23));
+        labelTimeTag2->setGeometry(QRect(120, 650, 41, 23));
         labelTimeTag2->setFont(font);
         labelTimeTag2->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
         labelTimeTag2->setFrameShape(QFrame::NoFrame);
@@ -429,7 +429,7 @@ public:
         labelTimeTag2->setAlignment(Qt::AlignCenter);
         labelTimeTag = new QLabel(centralWidget);
         labelTimeTag->setObjectName(QStringLiteral("labelTimeTag"));
-        labelTimeTag->setGeometry(QRect(10, 670, 121, 23));
+        labelTimeTag->setGeometry(QRect(10, 650, 121, 23));
         labelTimeTag->setFont(font);
         labelTimeTag->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
         labelTimeTag->setFrameShape(QFrame::NoFrame);
@@ -463,7 +463,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 664, 21));
+        menuBar->setGeometry(QRect(0, 0, 900, 27));
         MainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
@@ -550,7 +550,7 @@ public:
         exitButton->setToolTip(QApplication::translate("MainWindow", "\303\207\304\261k\304\261\305\237", 0));
 #endif // QT_NO_TOOLTIP
         exitButton->setText(QString());
-        label_3->setText(QApplication::translate("MainWindow", "JTW - Kaynak i\303\247in Birle\305\237me Yeri Takip\303\247isi", 0));
+        label_3->setText(QApplication::translate("MainWindow", "JTW - Kaynak Takibi", 0));
         labelLogoCustomer->setText(QString());
 #ifndef QT_NO_TOOLTIP
         emergencyButton->setToolTip(QApplication::translate("MainWindow", "Acil Stop", 0));
