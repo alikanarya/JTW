@@ -4,6 +4,7 @@
 #include "../_Modules/Imgprocess/imgprocess.h"
 #include <QtWidgets/QDialog>
 #include <QTime>
+#include <QtWidgets>
 #include "imgtools.h"
 
 namespace Ui {
@@ -75,8 +76,17 @@ public:
     bool iprocessInitSwitch, iprocessLeftInitSwitch, iprocessRightInitSwitch;
     bool imageLoadedFromFile = false;
 
+    QGraphicsScene *scene;      // to show graph
+    QPen penAxis;
+    QPen penGraph;
+    QRect sceneRect;
+
+
     explicit setupForm(QWidget *parent = 0);    // constructor
     void getParameters();       // get parameters from mainwindow
+    void clearGraph();
+    void drawGraph(int *array, int size);
+
     ~setupForm();               // destructor
 
 public slots:

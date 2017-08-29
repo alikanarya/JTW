@@ -109,6 +109,15 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
 
     ui->cameraEnhancementsBox->setChecked(w->applyCameraEnhancements);
 
+    // init deviation trend
+    scene = new QGraphicsScene();
+    sceneRect = ui->graphicsView->geometry();
+    ui->graphicsView->setScene(scene);
+
+    penAxis.setColor(Qt::black);    penAxis.setWidth(2);
+    penGraph.setColor(Qt::red);     penGraph.setWidth(1);
+
+    //---------------------------------------------------
     ui->checkSubImage->hide();
     ui->editHoughThetaMaxSub->hide();
     ui->editHoughThetaMinSub->hide();
@@ -397,7 +406,9 @@ void setupForm::processImage(){
                         path += "-Algo5/"; break;
                     case 4: // LINE DETECTION WITH MAIN EDGES
                         path += "-Algo6/"; break;
-                    case 5: // EXPERIMENTAL
+                    case 5: // SCAN HORIZONTAL
+                        path += "-Algo7/"; break;
+                    case 6: // EXPERIMENTAL
                         path += "-AlgoY/"; break;
                 }
             } else {    // with laser - HORIZONTAL SEARCH
@@ -456,8 +467,10 @@ void setupForm::processImage(){
                 case 4: // LINE DETECTION WITH MAIN EDGES
                     Algo6(iprocess);
                     break;
-                case 5: // EXPERIMENTAL
+                case 5: // SCAN HORIZONTAL
                     Algo7(iprocess);
+                    break;
+                case 6: // EXPERIMENTAL
                     break;
             }
         } else {    // with laser - HORIZONTAL SEARCH
@@ -651,7 +664,18 @@ void setupForm::captureButton(){
                             ui->plainTextEdit->appendPlainText( "Ana çizgi bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
                         }
                         break;
-                    case 5: // EXPERIMENTAL
+
+                    case 5: // SCAN HORIZONTAL
+                        {
+                        int *graphArray = new int[iprocess->edgeWidth];
+                        for (int i=0; i<iprocess->edgeWidth; i++){
+                            graphArray[i] = iprocess->horLineVotes[i][2];
+                        }
+
+                        drawGraph(graphArray, iprocess->edgeWidth);
+                        }
+                        break;
+                    case 6: // EXPERIMENTAL
                         break;
                 }
 
@@ -1242,7 +1266,24 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
                     ui->label_8->setEnabled(true);
                     ui->editHoughThetaStep->setEnabled(true);
                     break;  // LINE DETECTION WITH MAIN EDGES
-            case 5: algoName = "AlgoY";
+            case 5: algoName = "Algo7: woLASER: edge > houghTr > detectScanHorizontal";
+                    ui->label_21->setEnabled(false);
+                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(false);
+                    ui->editHoughLineNo->setEnabled(false);
+                    ui->label_9->setEnabled(false);
+                    ui->editHoughThetaMax->setEnabled(false);
+                    ui->editHoughThetaMin->setEnabled(false);
+                    ui->label_8->setEnabled(false);
+                    ui->editHoughThetaStep->setEnabled(false);
+                    break;  // PROJECTION OF FOUND LINES ON PARTICULAR HORIZONTAL LINE
+            case 6: algoName = "AlgoY";
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
@@ -1403,8 +1444,9 @@ void setupForm::on_radioWoLaser_clicked() {
     ui->algorithmBox->addItem("İnce Ağız");
     ui->algorithmBox->addItem("Kontrast");
     ui->algorithmBox->addItem("Ana Kenarlar ile Çizgi");
+    ui->algorithmBox->addItem("Yatay Tarama");
     ui->algorithmBox->addItem("Deneme");
-    if (algo > 5) algo = 5;
+    if (algo > 6) algo = 6;
     algorithmType = algo;
     ui->algorithmBox->setCurrentIndex( algorithmType );
 }
@@ -1446,10 +1488,35 @@ void setupForm::on_cameraEnhancementsBox_stateChanged(int arg1){
     }
 }
 
-void setupForm::on_editVideoDuration_returnPressed(){
-}
+void setupForm::on_editVideoDuration_returnPressed(){}
 
 void setupForm::on_debugModeBox_clicked(){
 
     DEBUG = ui->debugModeBox->isChecked();
+}
+
+void setupForm::clearGraph(){
+    scene->clear();
+    ui->graphicsView->show();
+}
+
+void setupForm::drawGraph(int *array, int size){
+
+    clearGraph();
+
+    int min=2000, max=-1;
+    for (int i=0; i<size; i++){
+        if (array[i] > max) max = array[i];
+        if (array[i] < min) min = array[i];
+    }
+    float yScale = sceneRect.height()*1.0 / (max - min);
+    float xScale = sceneRect.width()*1.0 / size;
+
+    //qDebug() << min << ":" << max << ":" << QString::number(xScale,'f',2) << ":" << QString::number(yScale,'f',2) << ":" << sceneRect.height() << ":" << sceneRect.width();
+    for (int i=1; i<size; i++){
+        scene->addLine((i-1)*xScale, sceneRect.height()-(array[i-1]-min)*yScale,
+                i*xScale, sceneRect.height()-(array[i]-min)*yScale, penGraph);
+    }
+
+    ui->graphicsView->show();
 }
