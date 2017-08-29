@@ -476,6 +476,7 @@ void MainWindow:: plcControl(){
 
     controlThreadCount++;
 
+//ui->plainTextEdit->appendPlainText(QString::number(controlThreadCount));
     checker();
 
     int state = _CMD_STOP;

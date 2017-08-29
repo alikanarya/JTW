@@ -36,7 +36,7 @@ public:
 
     int commandState;
     int commandZState;
-    bool commandRead;
+    bool commandRead = false;
     bool result;
     int checkResult;
     bool plcInteract;
