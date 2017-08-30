@@ -74,9 +74,11 @@
 #define _CMD_Z_UP           11
 #define _CMD_Z_DOWN         12
 
-#define _MAINTITLE "JTW - Kaynak için Birleşme Yeri Takipçisi :: "
+#define _MAINTITLE "JTW - Kaynak Takibi :: "
 #define _TITLE "DIŞ KAYNAK"
 
+#define PROTOCOL_S7200  123
+#define PROTOCOL_S7300  122
 
 //const int yResArray[9] = {1, 2, 4, 6, 8, 10, 12, 16, 20}; // for height 240
 //const int yResArray[9] = {12, 12, 12, 12, 12, 12, 12, 16, 20};
@@ -119,6 +121,8 @@ namespace Ui {
 #include "plccontrolthread.h"
 #include "../_Modules/Protect/protect.h"
 #include "videosavethread.h"
+
+#include <plcqtlib.h>
 
 //#include <QMediaPlayer>
 //#include <QVideoWidget>
@@ -264,12 +268,21 @@ public:
 
 
     // plc vars
+    struct{
+       PlcBYTE bitCommands;
+       PlcBYTE bitDatas;
+       PlcWORD distance;
+    }DB;
+
+    PlcQtLib *plc;
+
     bool PLCSIM = false;
     QUrl urlPLC;                            // plc url
     int plcType;                            // selection for S7-200, S7-300, etc
     bool connectRequested;                  // plc connection request
     bool connectRequestedonBoot;            // plc connection request on app. start
     bool plcInteractPrev = false;
+    bool plcConnected = false;
     int cmdState,
         cmdStatePrev,                       // to send cmd plc if cmd is changed
         cmdStatePrev2,                      // to make it histeryzisis between start/stop
@@ -412,12 +425,18 @@ public:
     void readSettings();                            // read settings from ini file
     void writeSettings();                           // write settings to ini file
     void checker();
+    int getBitofByte(unsigned char byte, int bitNo);
+
     ~MainWindow();                                  // destructor
 
 public slots:
     void showSettingsForm();                        // show settings GUI
     void showSetupForm();                           // show system setup form
     void plcControl();
+    void plcConnection(bool stat);
+    void plcCheck();
+    void plcReadings();
+    void plcCommands();
     void target2Left();
     void target2Right();
     void showInfo();

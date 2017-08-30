@@ -156,8 +156,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // plc
     connectRequested = connectRequestedonBoot;
     threadPLCControl = new plcControlThread(plcType, urlPLC.toString());
-    threadPLCControl->plc->portNum = 102;
 
+    /**threadPLCControl->plc->portNum = 102;
     if (plcType == 0){              // S7-200
         threadPLCControl->dbNo = DB_NO = 1;     //for all variables - V memory
         threadPLCControl->byteNo = BYTE_NO = 0; //for commands; V0.0-V0.7
@@ -172,16 +172,25 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         threadPLCControl->dbNoRead = 2;         //for plc2pc data; DB2
         threadPLCControl->readByte = 0;         //for plc2pc data; 0
         //distance sensor: DBx.DBW2 ; x = dbNo or dbNoRead
-    }
+    }**/
+
+    // plc-new
+    plc=new PlcQtLib("192.168.0.4",1,4,(unsigned char*) &DB);
+    plc->protocol = PROTOCOL_S7200;
+    plc->loopSleepTime = 100;
+    plc->disconnectSleepTime = 500;
+
+    connect(plc, SIGNAL(connected(bool)), this, SLOT(plcConnection(bool)));
+    connect(plc, SIGNAL(dataReady()), this, SLOT(plcReadings()));
 
 
-    if (!threadPLCControl->plc->libraryLoaded){
+    if (!threadPLCControl->plc->libraryLoaded && false){    // to bypass check for new library
         permPLC = false;
         ui->plainTextEdit->appendPlainText(threadPLCControl->plc->message);
         ui->plainTextEdit->appendPlainText(MESSAGE5);
     } else {
         if (connectRequestedonBoot){
-            plcInteractPrev = false;
+            //**plcInteractPrev = false;
             timerControlEnabled = false;
             // wait 2sec. to check first init of plc connection
             QTimer::singleShot(2000, this, SLOT(startTimer()));
@@ -235,8 +244,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->cmdStatus->setIcon(QIcon());
 
     controlDelay = QString::number(controlDelay).toInt(&controlDelayValid, 10); //controlDelayValid: true if conversion is ok
-    timerControlInterval = 100;
+
+    timerControlInterval = 5000;
     controlThreadCountSize = 15000 / timerControlInterval;   // timer shot count for 15sec plc check
+
     weldCommandsSize = controlDelay / timerControlInterval;
 
     // start message
@@ -720,8 +731,9 @@ void MainWindow::updateSn(){
 
     if (cameraChecker->cameraDown && !alarmCameraDownLock) emit cameraDown();
 
+    checker();
 
-    // plc live state
+    /* * plc live state
     if (!plcInteractPrev && threadPLCControl->plc->plcInteract){           // 0 -> 1
         permPLC = true;
         ui->plainTextEdit->appendPlainText(timeString() + MESSAGE6);
@@ -730,13 +742,12 @@ void MainWindow::updateSn(){
         permPLC = false;
         ui->plainTextEdit->appendPlainText(timeString() + MESSAGE4);
     }
+    plcInteractPrev = threadPLCControl->plc->plcInteract;**/
 
-    plcInteractPrev = threadPLCControl->plc->plcInteract;
-
-    if (threadPLCControl->plc->plcInteract)
+    /**if (threadPLCControl->plc->plcInteract)
         ui->plcStatus->setIcon(plcOnlineIcon);
     else
-        ui->plcStatus->setIcon(plcOfflineIcon);
+        ui->plcStatus->setIcon(plcOfflineIcon);**/
 
     //if ( thinJointAlgoActive ) ui->thinJointButton->setStyleSheet("color: rgb(255, 0, 0)");
     //else ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
@@ -782,10 +793,16 @@ void MainWindow::updateSn(){
 void MainWindow::startTimer(){
 
     if (!PLCSIM) {
-        if (!threadPLCControl->isRunning()){
+        /**if (!threadPLCControl->isRunning()){
             cmdState = _CMD_CHECK;
             threadPLCControl->commandState = cmdState;
             threadPLCControl->start();
+            cmdSended = true;
+        }**/
+        if (!plc->isRunning()){
+            cmdState = _CMD_CHECK;
+            //threadPLCControl->commandState = cmdState;
+            plc->start();
             cmdSended = true;
         }
     } else {
@@ -802,13 +819,14 @@ void MainWindow::startTimer(){
 
 void MainWindow::initPlcTimer(){
 
-    ui->plainTextEdit->appendPlainText(timeString() + threadPLCControl->plc->message);
-    if (threadPLCControl->plc->plcInteract) ui->plcStatus->setIcon(plcOnlineIcon);
+    //**ui->plainTextEdit->appendPlainText(timeString() + threadPLCControl->plc->message);
+    //**if (threadPLCControl->plc->plcInteract) ui->plcStatus->setIcon(plcOnlineIcon);
 
     timerControlEnabled = true;
     timerControl = new QTimer(this);
     controlThreadCount = 0;
-    connect(timerControl, SIGNAL(timeout()), this, SLOT(plcControl()));
+    //**connect(timerControl, SIGNAL(timeout()), this, SLOT(plcControl()));
+    connect(timerControl, SIGNAL(timeout()), this, SLOT(plcCheck()));
     controlPause = false;
     timerControl->start(timerControlInterval);
 
@@ -1281,8 +1299,12 @@ void MainWindow::processImage(bool deleteObject){
                     if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
                         cmdState = _CMD_CENTER;
                     }
+
+                    if (controlOn)
+                        plcCommands();
                 }
 
+                cmdStatePrev = cmdState;
                 cmdStatePrev2 = cmdState;
 
             } else {
@@ -2111,14 +2133,115 @@ void MainWindow::on_setupButton_clicked(){
 
 MainWindow::~MainWindow(){
 
-    if (threadPLCControl->plc->plcInteract && !PLCSIM)
-        threadPLCControl->disconnect();
+    //**if (threadPLCControl->plc->plcInteract && !PLCSIM)
+      //**  threadPLCControl->disconnect();
 
-//    delete settings;
+    if (plc->isRunning() && !PLCSIM)
+        plc->stopThread();
+
+    //    delete settings;
     delete ui;
 }
 
+void MainWindow::plcConnection(bool stat){
+
+    plcConnected = stat;
+
+    if (plcConnected){
+        ui->plcStatus->setIcon(plcOnlineIcon);
+        permPLC = true;
+        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE6);
+    } else {
+        ui->plcStatus->setIcon(plcOfflineIcon);
+        permPLC = false;
+        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE4);
+    }
+}
+
+void MainWindow::plcCheck(){
+
+    if (!plcConnected && !plc->isRunning()) {
+        //qDebug() << "check " << ++count << " new run";
+        plc->start();
+    } else {
+        /*
+        if (plcConnected && plc->isRunning())
+            qDebug() << "check " << ++count << " connected & thread is running";
+        else if (plcConnected)
+            qDebug() << "check " << ++count << " connected";
+        else if (plc->isRunning())
+            qDebug() << "check " << ++count << " thread is running";
+        */
+    }
+}
+
+int MainWindow::getBitofByte(unsigned char byte, int bitNo){
+
+    return (byte >> bitNo) & 0x01;
+}
+
+void MainWindow::plcReadings(){
+
+    if ( readDistance ) {
+
+        distanceRaw = PlcWORDtoInt(DB.distance);
+        distance = 300 - ((distanceRaw * 1.0) / 27648.0) * 220.0;
+        ui->labelDistance->setText( QString::number(distance, 'f', 1) );
+    }
 
 
+    if (readMachineStatus){
+        unsigned char *byteptr = &DB.bitDatas;
+        unsigned char byte = *byteptr;
+        //qDebug()<<getBitofByte(byte,0)<<getBitofByte(byte,1)<<getBitofByte(byte,2)<<getBitofByte(byte,3)<<getBitofByte(byte,4)<<getBitofByte(byte,5)<<getBitofByte(byte,6)<<getBitofByte(byte,7);
 
+        if (getBitofByte(byte, 0) == 1) mak_aktif_now = true; else mak_aktif_now = false;
 
+        if (mak_aktif_now && !mak_aktif_old) {
+            ui->plainTextEdit->appendPlainText("Makine çalışıyor");
+
+            if (hardControlStart)
+                controlInitiated = true;
+
+            if (timeControl) {
+                timeControlCounter = 0;
+                startTimeControlCount = true;
+            }
+        }
+
+        if (!mak_aktif_now && mak_aktif_old) {
+            ui->plainTextEdit->appendPlainText("Makine durdu");
+        }
+        //else alignGuide2TrackCenter = false;
+        mak_aktif_old = mak_aktif_now;
+    }
+
+}
+
+void MainWindow::plcCommands(){
+
+    if (controlOn){
+
+        if (cmdState != cmdStatePrev) {
+
+            int commandByte = 0;
+
+            if (cmdState == _CMD_RIGHT){
+                commandByte +=1;
+                ui->cmdStatus->setIcon(cmd2LeftIcon);
+            }
+            else if (cmdState == _CMD_LEFT) {
+                ui->cmdStatus->setIcon(cmd2RightIcon);
+                commandByte +=2;
+            }
+            else if (cmdState == _CMD_CENTER) {
+                ui->cmdStatus->setIcon(QIcon());
+            }
+
+            plc->writeByte(0,commandByte);
+
+        }
+
+    }
+
+}

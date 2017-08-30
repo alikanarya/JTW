@@ -7,8 +7,9 @@
 #QT         += core network
 #QT         += core gui multimedia multimediawidgets
 #QTPLUGIN   += libqjpg\            libqtiff
+#QT         += network widgets
 
-QT         += network widgets
+QT       += core gui network
 greaterThan(QT_MAJOR_VERSION, 4): QT       += widgets
 
 TARGET      = JTW
@@ -16,6 +17,13 @@ TEMPLATE    = app
 
 DEFINES     += QT_DISABLE_DEPRECATED_BEFORE=0x040900
 
+CONFIG += staticlib
+win32{
+    DEFINES += BCCWIN DAVE_LITTLE_ENDIAN
+}
+unix{
+    DEFINES += LINUX DAVE_LITTLE_ENDIAN
+}
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -37,7 +45,9 @@ SOURCES += main.cpp\
     ../_Modules/Getsystemtime/getsystemtime.cpp \
     ../_Modules/Getimage/getImage.cpp \
     videosavethread.cpp \
-    imgtools.cpp
+    imgtools.cpp \
+    plcqtlib.cpp \
+    nodave.c
 
 HEADERS  += mainwindow.h \
     setupform.h \
@@ -63,7 +73,10 @@ HEADERS  += mainwindow.h \
     ../_Modules/Algo/datatypes.h \
     ../_Modules/Algo/localMinimum.h \
     videosavethread.h \
-    imgtools.h
+    imgtools.h \
+    log2.h \
+    nodave.h \
+    plcqtlib.h
 
 FORMS    += mainwindow.ui \
     setupform.ui \
