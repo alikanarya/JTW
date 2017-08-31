@@ -76,16 +76,18 @@ public:
     bool iprocessInitSwitch, iprocessLeftInitSwitch, iprocessRightInitSwitch;
     bool imageLoadedFromFile = false;
 
-    QGraphicsScene *scene;      // to show graph
+    QGraphicsScene *scene1;      // to show graph
+    QRect sceneRect1;
     QPen penAxis;
     QPen penGraph;
-    QRect sceneRect;
+    QGraphicsScene *scene2;      // to show graph
+    QRect sceneRect2;
 
 
     explicit setupForm(QWidget *parent = 0);    // constructor
     void getParameters();       // get parameters from mainwindow
-    void clearGraph();
-    void drawGraph(int *array, int size);
+    void clearGraph(QGraphicsView *graph);
+    void drawGraph(QGraphicsView *graph,int *array, int size);
 
     ~setupForm();               // destructor
 

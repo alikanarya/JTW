@@ -109,10 +109,14 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
 
     ui->cameraEnhancementsBox->setChecked(w->applyCameraEnhancements);
 
-    // init deviation trend
-    scene = new QGraphicsScene();
-    sceneRect = ui->graphicsView->geometry();
-    ui->graphicsView->setScene(scene);
+    // graphs
+    scene1 = new QGraphicsScene();
+    sceneRect1 = ui->graphicsView->geometry();
+    ui->graphicsView->setScene(scene1);
+
+    scene2 = new QGraphicsScene();
+    sceneRect2 = ui->graphicsView2->geometry();
+    ui->graphicsView2->setScene(scene2);
 
     penAxis.setColor(Qt::black);    penAxis.setWidth(2);
     penGraph.setColor(Qt::red);     penGraph.setWidth(1);
@@ -671,10 +675,21 @@ void setupForm::captureButton(){
                         for (int i=0; i<iprocess->edgeWidth; i++){
                             graphArray[i] = iprocess->horLineVotes[i][2];
                         }
+                        drawGraph(ui->graphicsView, graphArray, iprocess->edgeWidth);
 
-                        drawGraph(graphArray, iprocess->edgeWidth);
+                        int *valArray = new int[iprocess->imageWidth];
+                        float sum = 0;
+                        for (int x=0; x<iprocess->imageWidth; x++){
+                            sum = 0;
+                            for (int y=0; y<iprocess->imageHeight; y++)
+                                sum += iprocess->valueMatrix[y][x];
+                            valArray[x] = sum / iprocess->imageHeight;
                         }
-                        break;
+                        drawGraph(ui->graphicsView2, valArray, iprocess->imageWidth);
+
+                        ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
+
+                        }break;
                     case 6: // EXPERIMENTAL
                         break;
                 }
@@ -1495,27 +1510,30 @@ void setupForm::on_debugModeBox_clicked(){
     DEBUG = ui->debugModeBox->isChecked();
 }
 
-void setupForm::clearGraph(){
-    scene->clear();
-    ui->graphicsView->show();
+void setupForm::clearGraph(QGraphicsView *graph){
+    graph->scene()->clear();
+    graph->show();
 }
 
-void setupForm::drawGraph(int *array, int size){
+void setupForm::drawGraph(QGraphicsView *graph, int *array, int size){
 
-    clearGraph();
+    clearGraph(graph);
 
     int min=2000, max=-1;
     for (int i=0; i<size; i++){
         if (array[i] > max) max = array[i];
         if (array[i] < min) min = array[i];
     }
-    float yScale = sceneRect.height()*1.0 / (max - min);
-    float xScale = sceneRect.width()*1.0 / size;
+    int sceneHeight = graph->geometry().height();
+    int sceneWidth = graph->geometry().width();
+
+    float yScale = sceneHeight*1.0 / (max - min);
+    float xScale = sceneWidth*1.0 / size;
 
     //qDebug() << min << ":" << max << ":" << QString::number(xScale,'f',2) << ":" << QString::number(yScale,'f',2) << ":" << sceneRect.height() << ":" << sceneRect.width();
     for (int i=1; i<size; i++){
-        scene->addLine((i-1)*xScale, sceneRect.height()-(array[i-1]-min)*yScale,
-                i*xScale, sceneRect.height()-(array[i]-min)*yScale, penGraph);
+        graph->scene()->addLine((i-1)*xScale, sceneHeight-(array[i-1]-min)*yScale,
+                i*xScale, sceneHeight-(array[i]-min)*yScale, penGraph);
     }
 
     ui->graphicsView->show();
