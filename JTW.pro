@@ -17,7 +17,7 @@ TEMPLATE    = app
 
 DEFINES     += QT_DISABLE_DEPRECATED_BEFORE=0x040900
 
-CONFIG += staticlib
+#CONFIG += staticlib
 win32{
     DEFINES += BCCWIN DAVE_LITTLE_ENDIAN
 }
@@ -101,3 +101,11 @@ OTHER_FILES += \
 win32:RC_FILE = appicon.rc
 
 DISTFILES +=
+
+win32: LIBS += -L$$PWD/../_Modules/qtPLC_lib-master/release/ -lplcQtLib -lws2_32
+
+INCLUDEPATH += $$PWD/../_Modules/qtPLC_lib-master/release
+DEPENDPATH += $$PWD/../_Modules/qtPLC_lib-master/release
+
+win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../_Modules/qtPLC_lib-master/release/plcQtLib.lib
+else:win32-g++: PRE_TARGETDEPS += $$PWD/../_Modules/qtPLC_lib-master/release/libplcQtLib.a
