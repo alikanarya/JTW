@@ -846,7 +846,7 @@
     <rect>
      <x>980</x>
      <y>10</y>
-     <width>631</width>
+     <width>635</width>
      <height>721</height>
     </rect>
    </property>
@@ -854,7 +854,7 @@
     <enum>QTabWidget::West</enum>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -866,9 +866,9 @@
     <widget class="QPlainTextEdit" name="plainTextEdit">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>604</width>
+       <x>3</x>
+       <y>3</y>
+       <width>600</width>
        <height>208</height>
       </rect>
      </property>
@@ -890,8 +890,8 @@
     <widget class="QPushButton" name="clearButton">
      <property name="geometry">
       <rect>
-       <x>514</x>
-       <y>210</y>
+       <x>512</x>
+       <y>213</y>
        <width>90</width>
        <height>25</height>
       </rect>
@@ -2039,9 +2039,9 @@
     <widget class="QLabel" name="label_22">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>270</y>
-       <width>91</width>
+       <width>101</width>
        <height>20</height>
       </rect>
      </property>
@@ -2066,6 +2066,7 @@
       <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
      </property>
     </widget>
+    <zorder>label_15</zorder>
     <zorder>plainTextEdit</zorder>
     <zorder>clearButton</zorder>
     <zorder>labelMainEdgesNumber</zorder>
@@ -2090,7 +2091,6 @@
     <zorder>label_6</zorder>
     <zorder>editHoughThetaMin</zorder>
     <zorder>editLineScore</zorder>
-    <zorder>labelEdge</zorder>
     <zorder>editHoughThetaMaxSub</zorder>
     <zorder>editHoughThreshold</zorder>
     <zorder>label_10</zorder>
@@ -2103,7 +2103,6 @@
     <zorder>readWeldSeamBox</zorder>
     <zorder>readMachineStatusBox</zorder>
     <zorder>readDistanceBox</zorder>
-    <zorder>label_15</zorder>
     <zorder>alignGuideBox</zorder>
     <zorder>zctrlBox</zorder>
     <zorder>hardControlStartBox</zorder>
@@ -2212,8 +2211,8 @@
   <widget class="QLabel" name="label_23">
    <property name="geometry">
     <rect>
-     <x>720</x>
-     <y>380</y>
+     <x>729</x>
+     <y>377</y>
      <width>121</width>
      <height>15</height>
     </rect>
@@ -2233,10 +2232,29 @@
     <enum>QFrame::NoFrame</enum>
    </property>
    <property name="text">
-    <string>KENAR TESPİT ALGO</string>
+    <string>KENAR TESPİT</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="imgParametersButton">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>493</y>
+     <width>211</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>İmaj Parametrelerini Hesapla</string>
    </property>
   </widget>
   <zorder>tabWidget</zorder>
@@ -2278,6 +2296,7 @@
   <zorder>debugModeBox</zorder>
   <zorder>labelPicNo</zorder>
   <zorder>label_23</zorder>
+  <zorder>imgParametersButton</zorder>
  </widget>
  <resources>
   <include location="icons.qrc"/>

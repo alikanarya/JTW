@@ -416,7 +416,7 @@ public:
     void Algo4(imgProcess *iprocess);   // woLASER: value > detectThinJointCenter
     void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
-    void calcImageParametes(QImage img, bool info=false);
+    QString calcImageParametes(QImage img, bool info=false);
 
     void repaintGuide();                            // update guide
     void repaintDevTrend();                         // update deviation trend

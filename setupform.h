@@ -154,6 +154,7 @@ private slots:
     void on_capturePrev_clicked();
     void on_alignGuideBox_clicked();
     void on_debugModeBox_clicked();
+    void on_imgParametersButton_clicked();
 };
 
 #endif // SETUPFORM_H

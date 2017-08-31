@@ -138,7 +138,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     lastData = new networkData();
     prevData = new networkData();
 
-    cameraChecker = new getImage(urlCam.toString());
+    //**cameraChecker = new getImage(urlCam.toString());
 
     threadVideoSave = new videoSaveThread();
     connect(threadVideoSave, SIGNAL(saveFinished()), this, SLOT(saveFinished()));
@@ -251,7 +251,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     weldCommandsSize = controlDelay / timerControlInterval;
 
     // start message
-    ui->plainTextEdit->appendPlainText(timeString() + "Sistem başlatılmıştır. Hoş geldiniz.");
+    ui->plainTextEdit->appendPlainText(timeString() + "Sistem başlatılmıştır.");
     lic.checkLicence();
 
     if (lic.licenseState != _LIC2){
@@ -303,7 +303,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->thinJointButton->setEnabled(false);
     ui->thinJointButton->hide();
 
-    /**/cameraChecker->cameraDown = false;
+    //**cameraChecker->cameraDown = false;
     if (play) playButton();
 
     /*
@@ -384,7 +384,7 @@ void MainWindow::showSetupError(){
 
 void MainWindow::checker(){
 
-    permWeld = !emergencyStop && permOperator && permPLC && play && !cameraChecker->cameraDown && trackOn && controlDelayValid;
+    permWeld = !emergencyStop && permOperator && permPLC && play && !imageGetter->cameraDown && trackOn && controlDelayValid;
 
     ui->controlButton->setEnabled(permWeld);
 }
@@ -457,7 +457,7 @@ void MainWindow::stopButton(){
 
 void MainWindow::makeNetworkRequest(){
 
-    if (play && !pause && !cameraChecker->cameraDown){
+    if (play && !pause){// && !imageGetter->cameraDown){
         imageGetter->run();
         fpsRequest = imageGetter->fpsRequest;
     }
@@ -547,7 +547,7 @@ void MainWindow:: plcControl(){
             } else {
 
 //                if (cameraChecker->cameraDown || !play || detectionError || !permOperator){
-                if (cameraChecker->cameraDown || !play || !permOperator){
+                if (imageGetter->cameraDown || !play || !permOperator){
 
                     state = _CMD_STOP;
                 } else {
@@ -719,17 +719,19 @@ void MainWindow::updateSn(){
     */
 
     // check camera live state
-/**///    cameraChecker->checkHost();
-/**/cameraChecker->cameraDown = false;
+    //**cameraChecker->checkHost();
+    //**cameraChecker->cameraDown = false;
 
-    if (cameraChecker->cameraDown){
+    if (imageGetter->cameraDown){
         ui->cameraStatus->setIcon(cameraOfflineIcon);
+        makeNetworkRequest();
     } else {
         alarmCameraDownLock = false;
         ui->cameraStatus->setIcon(cameraOnlineIcon);
     }
 
-    if (cameraChecker->cameraDown && !alarmCameraDownLock) emit cameraDown();
+    //**if (cameraChecker->cameraDown && !alarmCameraDownLock) emit cameraDown();
+    if (imageGetter->cameraDown && !alarmCameraDownLock) emit cameraDown();
 
     checker();
 
@@ -961,7 +963,7 @@ void MainWindow::controlButton(){
         initialJointWidth = jointWidth = 0;
         maxJointWidth = 1000;
 
-        calcImageParametes(*lastData->image, true);
+        calcImageParametes(*lastData->image, false);
         offsetXpos = 0;
         repaintGuide();
 
@@ -1887,7 +1889,7 @@ void MainWindow::closeEvent(QCloseEvent*){
     qApp->quit();
 }
 
-void MainWindow::calcImageParametes(QImage img, bool info){
+QString MainWindow::calcImageParametes(QImage img, bool info){
 
     camImageWidth = img.width();
     camImageHeight = img.height();
@@ -1933,12 +1935,12 @@ void MainWindow::calcImageParametes(QImage img, bool info){
 
 
         if(info) {
-            message += "mapFactorWidth: " + QString::number(mapFactorWidth, 'f', 2) + " mapFactorHeight: " + QString::number(mapFactorHeight, 'f', 2) + "\n";
-            message += "mapWidth: " + QString::number(mapWidth) + " mapHeight: " + QString::number(mapHeight) + "\n";
-            message += "frameWidthMax: " + QString::number(frameWidthMax) + " frameHeightMax: " + QString::number(frameHeightMax) + "\n";
-            message += "frameWidthCam: " + QString::number(frameWidthCam) + " frameHeightCam: " + QString::number(frameHeightCam) + "\n";
-            message += "frameWidth: " + QString::number(frameWidth) + " frameHeight: " + QString::number(frameHeight) + "\n";
-            message += "offsetXCam: " + QString::number(offsetXCam) + " offsetYCam: " + QString::number(offsetYCam) + "\n";
+            message += "mapFactorWidth: " + QString::number(mapFactorWidth, 'f', 2) + "\n" + "mapFactorHeight: " + QString::number(mapFactorHeight, 'f', 2) + "\n";
+            message += "mapWidth: " + QString::number(mapWidth) + "\n" + "mapHeight: " + QString::number(mapHeight) + "\n";
+            message += "frameWidthMax: " + QString::number(frameWidthMax) + "\n" + "frameHeightMax: " + QString::number(frameHeightMax) + "\n";
+            message += "frameWidthCam: " + QString::number(frameWidthCam) + "\n" + "frameHeightCam: " + QString::number(frameHeightCam) + "\n";
+            message += "frameWidth: " + QString::number(frameWidth) + "\n" + "frameHeight: " + QString::number(frameHeight) + "\n";
+            message += "offsetXCam: " + QString::number(offsetXCam) + "\n" + "offsetYCam: " + QString::number(offsetYCam) + "\n";
             message += "mapFactorX: " + QString::number(mapFactorX, 'f', 2) + "\n";
         }
 
@@ -1956,7 +1958,8 @@ void MainWindow::calcImageParametes(QImage img, bool info){
     } else
         aspectRatio = 0;
 
-    ui->plainTextEdit->appendPlainText(message);
+    //ui->plainTextEdit->appendPlainText(message);
+    return message;
 }
 
 void MainWindow::playCam(){
@@ -1993,7 +1996,7 @@ void MainWindow::playCam(){
             if (!lastData->shown && show){
 
                 if (getCamImageProperties) {
-                    calcImageParametes(*lastData->image, true);
+                    calcImageParametes(*lastData->image, false);
                     getCamImageProperties = false;
                     repaintGuide();
                 }
@@ -2147,15 +2150,17 @@ void MainWindow::plcConnection(bool stat){
 
     plcConnected = stat;
 
-    if (plcConnected){
+    if (!plcInteractPrev && plcConnected){
         ui->plcStatus->setIcon(plcOnlineIcon);
         permPLC = true;
         ui->plainTextEdit->appendPlainText(timeString() + MESSAGE6);
-    } else {
+    } else if (plcInteractPrev && !plcConnected){
         ui->plcStatus->setIcon(plcOfflineIcon);
         permPLC = false;
-        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE4);
+        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE3);
     }
+
+    plcInteractPrev = plcConnected;
 }
 
 void MainWindow::plcCheck(){

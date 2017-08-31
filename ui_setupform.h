@@ -127,6 +127,7 @@ public:
     QGraphicsView *graphicsView3;
     QLabel *labelTarget2;
     QLabel *label_23;
+    QPushButton *imgParametersButton;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -357,21 +358,21 @@ public:
         labelPicNo->setAlignment(Qt::AlignCenter);
         tabWidget = new QTabWidget(setupForm);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(980, 10, 631, 721));
+        tabWidget->setGeometry(QRect(980, 10, 635, 721));
         tabWidget->setTabPosition(QTabWidget::West);
         tabWidget->setUsesScrollButtons(false);
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
         plainTextEdit = new QPlainTextEdit(tab);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
-        plainTextEdit->setGeometry(QRect(0, 0, 604, 208));
+        plainTextEdit->setGeometry(QRect(3, 3, 600, 208));
         QFont font3;
         font3.setFamily(QStringLiteral("Tahoma"));
         plainTextEdit->setFont(font3);
         plainTextEdit->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 195);"));
         clearButton = new QPushButton(tab);
         clearButton->setObjectName(QStringLiteral("clearButton"));
-        clearButton->setGeometry(QRect(514, 210, 90, 25));
+        clearButton->setGeometry(QRect(512, 213, 90, 25));
         clearButton->setFont(font);
         labelMainEdgesNumber = new QLabel(tab);
         labelMainEdgesNumber->setObjectName(QStringLiteral("labelMainEdgesNumber"));
@@ -643,7 +644,7 @@ public:
         editFPS->setAlignment(Qt::AlignCenter);
         label_22 = new QLabel(tab);
         label_22->setObjectName(QStringLiteral("label_22"));
-        label_22->setGeometry(QRect(20, 270, 91, 20));
+        label_22->setGeometry(QRect(10, 270, 101, 20));
         QFont font5;
         font5.setFamily(QStringLiteral("MS Shell Dlg 2"));
         font5.setPointSize(8);
@@ -654,6 +655,7 @@ public:
         label_22->setFrameShape(QFrame::NoFrame);
         label_22->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
         tabWidget->addTab(tab, QString());
+        label_15->raise();
         plainTextEdit->raise();
         clearButton->raise();
         labelMainEdgesNumber->raise();
@@ -678,7 +680,6 @@ public:
         label_6->raise();
         editHoughThetaMin->raise();
         editLineScore->raise();
-        labelEdge->raise();
         editHoughThetaMaxSub->raise();
         editHoughThreshold->raise();
         label_10->raise();
@@ -691,7 +692,6 @@ public:
         readWeldSeamBox->raise();
         readMachineStatusBox->raise();
         readDistanceBox->raise();
-        label_15->raise();
         alignGuideBox->raise();
         zctrlBox->raise();
         hardControlStartBox->raise();
@@ -736,11 +736,15 @@ public:
         tabWidget->addTab(tab_2, QString());
         label_23 = new QLabel(setupForm);
         label_23->setObjectName(QStringLiteral("label_23"));
-        label_23->setGeometry(QRect(720, 380, 121, 15));
+        label_23->setGeometry(QRect(729, 377, 121, 15));
         label_23->setFont(font5);
         label_23->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         label_23->setFrameShape(QFrame::NoFrame);
         label_23->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
+        imgParametersButton = new QPushButton(setupForm);
+        imgParametersButton->setObjectName(QStringLiteral("imgParametersButton"));
+        imgParametersButton->setGeometry(QRect(10, 493, 211, 25));
+        imgParametersButton->setFont(font4);
         tabWidget->raise();
         labelTarget->raise();
         labelMono->raise();
@@ -780,6 +784,7 @@ public:
         debugModeBox->raise();
         labelPicNo->raise();
         label_23->raise();
+        imgParametersButton->raise();
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -799,7 +804,7 @@ public:
         QObject::connect(lineDetectionBox, SIGNAL(stateChanged(int)), setupForm, SLOT(lineDetectionBox()));
         QObject::connect(editLineScore, SIGNAL(returnPressed()), setupForm, SLOT(editLineScore()));
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(setupForm);
@@ -950,7 +955,8 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("setupForm", "Ayarlar", 0));
         labelTarget2->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("setupForm", "Grafik", 0));
-        label_23->setText(QApplication::translate("setupForm", "KENAR TESP\304\260T ALGO", 0));
+        label_23->setText(QApplication::translate("setupForm", "KENAR TESP\304\260T", 0));
+        imgParametersButton->setText(QApplication::translate("setupForm", "\304\260maj Parametrelerini Hesapla", 0));
     } // retranslateUi
 
 };

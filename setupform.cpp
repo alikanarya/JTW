@@ -1538,3 +1538,15 @@ void setupForm::drawGraph(QGraphicsView *graph, int *array, int size){
 
     ui->graphicsView->show();
 }
+
+void setupForm::on_imgParametersButton_clicked(){
+
+    QString message = "";
+
+    if ( w->play && !w->imageGetter->imageList.isEmpty() ){
+        message = w->calcImageParametes(*w->lastData->image, true);
+    } else if ( !w->play &&  imageLoadedFromFile){
+        message = w->calcImageParametes(w->imageFile, true);
+    }
+    ui->plainTextEdit->appendPlainText(message);
+}
