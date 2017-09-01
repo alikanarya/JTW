@@ -35,6 +35,7 @@
         <file>resources/height-icon.png</file>
         <file>resources/height-icon-ON.png</file>
         <file>resources/target_Align.png</file>
+        <file>resources/aygazlogo.jpg</file>
     </qresource>
     <qresource prefix="/pixmaps">
         <file>resources/bad_corner.jpg</file>

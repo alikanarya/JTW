@@ -20,17 +20,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     Qt::WindowFlags flags = 0;
     flags |= Qt::Dialog;
-    flags |= Qt::FramelessWindowHint;
-    //flags |= Qt::WindowTitleHint;   // only title on title bar
+    //flags |= Qt::FramelessWindowHint;
+    flags |= Qt::WindowTitleHint;   // only title on title bar
     this->setWindowFlags(flags);
     this->setAttribute(Qt::WA_DeleteOnClose, true);
 
     ui->setupUi(this);
 
 
-    ui->clearMsgBoxButton->hide();  //  not used now
     //ui->plainTextEdit->appendPlainText(QString::number(rectScreen.width())+"x"+QString::number(rectScreen.height()));
-    ui->labelLogoCustomer->hide();
     ui->labelTime->hide();
     ui->emergencyButton->hide();
     ui->testEdit->hide();
@@ -70,10 +68,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     this->setWindowTitle(_MAINTITLE + title);
 
-    if ( thinJointAlgoActive ) {
-        ui->thinJointButton->setStyleSheet("color: rgb(255, 0, 0)");
-    } else
-        ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
 
     // orginal and target image parameters
     imageWidth = 640;   //image->width();
@@ -299,9 +293,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->leftButton->hide();
     ui->rightButton->setEnabled( false );
     ui->rightButton->hide();
-
-    ui->thinJointButton->setEnabled(false);
-    ui->thinJointButton->hide();
 
     //**cameraChecker->cameraDown = false;
     if (play) playButton();
@@ -1016,8 +1007,6 @@ void MainWindow::emergencyButton(){
     thinJointAlgoActive = !thinJointAlgoActive;
 
     if ( thinJointAlgoActive ) {
-        ui->thinJointButton->setStyleSheet("color: rgb(255, 0, 0)");
-
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Warning);
 
@@ -1027,11 +1016,9 @@ void MainWindow::emergencyButton(){
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setDefaultButton(QMessageBox::Ok);
         msgBox.exec();
-
     } else {
-        ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
+        //ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
     }
-
 }
 
 void MainWindow::edgeDetection(imgProcess *iprocess){
