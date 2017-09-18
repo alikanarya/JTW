@@ -18,9 +18,10 @@ settingsForm::settingsForm(QWidget *parent) : QDialog(parent), ui(new Ui::settin
 
     ui->setupUi(this);
 
-    itemR0C0 = new QTableWidgetItem("camera ip");
-    itemR1C0 = new QTableWidgetItem("plc ip");
-    itemR2C0 = new QTableWidgetItem("byte");
+    itemR0C0 = new QTableWidgetItem("camera jpeg");
+    itemR1C0 = new QTableWidgetItem("camera stream");
+    itemR2C0 = new QTableWidgetItem("plc ip");
+    itemR3C0 = new QTableWidgetItem("byte");
     /*
     itemR3C0 = new QTableWidgetItem("right bit");
     itemR4C0 = new QTableWidgetItem("left byte");
@@ -33,8 +34,8 @@ settingsForm::settingsForm(QWidget *parent) : QDialog(parent), ui(new Ui::settin
     ui->table->setItem(0,0,itemR0C0);
     ui->table->setItem(1,0,itemR1C0);
     ui->table->setItem(2,0,itemR2C0);
-    /*
     ui->table->setItem(3,0,itemR3C0);
+    /*
     ui->table->setItem(4,0,itemR4C0);
     ui->table->setItem(5,0,itemR5C0);
     ui->table->setItem(6,0,itemR6C0);
@@ -128,6 +129,7 @@ void settingsForm::targetVertSlider(){
 }
 
 void settingsForm::getParameters(){
+
     ui->labelErrorLimit->setText(QString::number(w->errorLimit));
     ui->errorLimitSlider->setSliderPosition(w->errorLimit);
 
@@ -174,9 +176,21 @@ void settingsForm::getParameters(){
             break;
     }
 
+    switch (w->camStreamType){
+        case 0:
+            ui->radioCamStream->setChecked(true);
+            ui->radioCamJpeg->setChecked(false);
+            break;
+        case 1:
+            ui->radioCamStream->setChecked(false);
+            ui->radioCamJpeg->setChecked(true);
+            break;
+    }
+
     itemR0C0->setText(w->urlCam.toString());
-    itemR1C0->setText(w->urlPLC.toString());
-    itemR2C0->setText(QString::number(w->BYTE_NO));
+    itemR1C0->setText(w->urlCamStream.toString());
+    itemR2C0->setText(w->urlPLC.toString());
+    itemR3C0->setText(QString::number(w->BYTE_NO));
     /*
     itemR3C0->setText(QString::number(w->right_BITofBYTE));
     itemR4C0->setText(QString::number(w->left_VMEM_BYTE));
@@ -189,8 +203,10 @@ void settingsForm::getParameters(){
 }
 
 void settingsForm::commitChanges(){
+
     w->urlCam.setUrl(itemR0C0->text());
-    w->urlPLC.setUrl(itemR1C0->text());
+    w->urlCamStream.setUrl(itemR1C0->text());
+    w->urlPLC.setUrl(itemR2C0->text());
 
     switch (ui->radioGroup->checkedId()){
         case -2:    // S7-200
@@ -203,7 +219,7 @@ void settingsForm::commitChanges(){
             break;
     }
 
-    w->BYTE_NO = itemR2C0->text().toInt();
+    w->BYTE_NO = itemR3C0->text().toInt();
     /*
     w->right_BITofBYTE = itemR3C0->text().toInt();
     w->left_VMEM_BYTE = itemR4C0->text().toInt();
@@ -213,6 +229,15 @@ void settingsForm::commitChanges(){
     w->emergency_VMEM_BYTE = itemR8C0->text().toInt();
     w->emergency_BITofBYTE = itemR9C0->text().toInt();
     */
+
+    switch (ui->camStreamGroup->checkedId()){
+        case -2:    // JPEG
+            w->camStreamType = 1;
+            break;
+        case -3:    // STREAM
+            w->camStreamType = 0;
+            break;
+    }
 
     w->yResIndex = ui->yResIndexSlider->sliderPosition();
     w->yRes = yResArray[w->yResIndex];
@@ -265,6 +290,17 @@ void settingsForm::changePLCtype(){
             break;
         case -3:    // S7-300
             ui->editDBNo->setEnabled(true);
+            break;
+    }
+}
+
+void settingsForm::changeCamStreamType(){
+    switch (ui->camStreamGroup->checkedId()){
+        case -2:    // Jpeg
+            //qDebug() << "Jpeg";
+            break;
+        case -3:    // Stream
+            //qDebug() << "Stream";
             break;
     }
 }

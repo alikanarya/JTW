@@ -51,6 +51,7 @@ private:
 
 private slots:
     void changePLCtype();
+    void changeCamStreamType();
     void getControlDelay();     // get control delay from gui
     void setTitle();
 

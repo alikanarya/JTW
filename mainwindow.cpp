@@ -1585,7 +1585,9 @@ void MainWindow::readSettings(){
 
     if (QFile::exists(INIFILENAME)){
         settings->beginGroup("kamera");
+            camStreamType = settings->value("camstrm", _CAM_STREAM_TYPE).toInt();
             urlCam.setUrl(settings->value("urlCam", _URL_CAM).toString());
+            urlCamStream.setUrl(settings->value("urlCamStrm", _URL_CAM_STREAM).toString());
             playCamonBoot = settings->value("play", _PLAY_CAM_ONBOOT).toBool();
             fpsTarget = settings->value("fps", _FPS).toInt();
         settings->endGroup();
@@ -1673,7 +1675,9 @@ void MainWindow::readSettings(){
         settings->endGroup();
 
     } else {    // assign default values if file not exist
+        camStreamType = _CAM_STREAM_TYPE;
         urlCam.setUrl(_URL_CAM);
+        urlCamStream.setUrl(_URL_CAM_STREAM);
         playCamonBoot = _PLAY_CAM_ONBOOT;
         fpsTarget = _FPS;
 
@@ -1757,7 +1761,9 @@ void MainWindow::readSettings(){
 void MainWindow::writeSettings(){
 
     settings->beginGroup("kamera");
+        settings->setValue("camstrm", QString::number(camStreamType));
         settings->setValue("urlCam", urlCam.toString());
+        settings->setValue("urlCamStrm", urlCamStream.toString());
         QVariant play(playCamonBoot);
             settings->setValue("play", play.toString());
         settings->setValue("fps", QString::number(fpsTarget));

@@ -3,6 +3,8 @@
 
 #define INIFILENAME         "settings.ini"
 #define _URL_CAM            "http://10.0.0.5/snap.jpg"
+#define _URL_CAM_STREAM     "rtsp://admin:admin@192.168.3.3:554/cam/realmonitor?channel=1&subtype=0"
+#define _CAM_STREAM_TYPE    1
 #define _URL_PLC            "10.0.1.4"
 #define _FPS                25
 #define _IPROCESS_INT       1
@@ -144,6 +146,8 @@ public:
     plcControlThread *threadPLCControl;
 
     QUrl urlCam;                        // camera url
+    QUrl urlCamStream;                  // camera url
+    int camStreamType = 0;              // 0: stream (rtsp), 1: jpeg
     bool playCamonBoot;                 // play camera on app. start
     getImage *imageGetter;              // camera image request & retrieve class
     getImage *cameraChecker;

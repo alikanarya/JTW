@@ -63,21 +63,24 @@ public:
     QLineEdit *editTitle;
     QCheckBox *checkPLCSIM;
     QCheckBox *checkTargetAlignButtons;
+    QRadioButton *radioCamJpeg;
+    QRadioButton *radioCamStream;
     QButtonGroup *radioGroup;
+    QButtonGroup *camStreamGroup;
 
     void setupUi(QWidget *settingsForm)
     {
         if (settingsForm->objectName().isEmpty())
             settingsForm->setObjectName(QStringLiteral("settingsForm"));
         settingsForm->setWindowModality(Qt::WindowModal);
-        settingsForm->resize(450, 600);
+        settingsForm->resize(600, 600);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(settingsForm->sizePolicy().hasHeightForWidth());
         settingsForm->setSizePolicy(sizePolicy);
-        settingsForm->setMinimumSize(QSize(450, 600));
-        settingsForm->setMaximumSize(QSize(450, 600));
+        settingsForm->setMinimumSize(QSize(600, 600));
+        settingsForm->setMaximumSize(QSize(600, 600));
         QIcon icon;
         icon.addFile(QStringLiteral(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         settingsForm->setWindowIcon(icon);
@@ -135,8 +138,8 @@ public:
         QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
         __qtablewidgetitem->setBackground(QColor(0, 0, 0));
         table->setHorizontalHeaderItem(0, __qtablewidgetitem);
-        if (table->rowCount() < 3)
-            table->setRowCount(3);
+        if (table->rowCount() < 4)
+            table->setRowCount(4);
         QFont font3;
         font3.setPointSize(8);
         font3.setBold(true);
@@ -145,19 +148,27 @@ public:
         __qtablewidgetitem1->setFont(font3);
         __qtablewidgetitem1->setBackground(QColor(0, 0, 0));
         table->setVerticalHeaderItem(0, __qtablewidgetitem1);
-        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
-        __qtablewidgetitem2->setFont(font3);
-        table->setVerticalHeaderItem(1, __qtablewidgetitem2);
         QFont font4;
+        font4.setFamily(QStringLiteral("MS Shell Dlg 2"));
+        font4.setPointSize(8);
         font4.setBold(true);
         font4.setWeight(75);
+        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
+        __qtablewidgetitem2->setFont(font4);
+        table->setVerticalHeaderItem(1, __qtablewidgetitem2);
         QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
-        __qtablewidgetitem3->setFont(font4);
+        __qtablewidgetitem3->setFont(font3);
         table->setVerticalHeaderItem(2, __qtablewidgetitem3);
+        QFont font5;
+        font5.setBold(true);
+        font5.setWeight(75);
         QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
-        table->setItem(0, 0, __qtablewidgetitem4);
+        __qtablewidgetitem4->setFont(font5);
+        table->setVerticalHeaderItem(3, __qtablewidgetitem4);
+        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
+        table->setItem(0, 0, __qtablewidgetitem5);
         table->setObjectName(QStringLiteral("table"));
-        table->setGeometry(QRect(10, 310, 431, 151));
+        table->setGeometry(QRect(10, 360, 581, 111));
         table->setFrameShape(QFrame::Box);
         table->setFrameShadow(QFrame::Plain);
         table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -166,12 +177,12 @@ public:
         table->setShowGrid(true);
         table->setGridStyle(Qt::SolidLine);
         table->setCornerButtonEnabled(true);
-        table->setRowCount(3);
+        table->setRowCount(4);
         table->setColumnCount(1);
         table->horizontalHeader()->setVisible(false);
-        table->horizontalHeader()->setDefaultSectionSize(200);
+        table->horizontalHeader()->setDefaultSectionSize(450);
         table->horizontalHeader()->setHighlightSections(true);
-        table->horizontalHeader()->setMinimumSectionSize(200);
+        table->horizontalHeader()->setMinimumSectionSize(450);
         table->verticalHeader()->setVisible(false);
         table->verticalHeader()->setCascadingSectionResizes(false);
         table->verticalHeader()->setDefaultSectionSize(25);
@@ -212,7 +223,7 @@ public:
         line->setFrameShape(QFrame::HLine);
         line_2 = new QFrame(settingsForm);
         line_2->setObjectName(QStringLiteral("line_2"));
-        line_2->setGeometry(QRect(0, 240, 450, 16));
+        line_2->setGeometry(QRect(0, 290, 450, 16));
         line_2->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         line_2->setFrameShadow(QFrame::Plain);
         line_2->setLineWidth(2);
@@ -222,20 +233,20 @@ public:
         radioGroup->setObjectName(QStringLiteral("radioGroup"));
         radioGroup->addButton(radio200);
         radio200->setObjectName(QStringLiteral("radio200"));
-        radio200->setGeometry(QRect(10, 260, 82, 17));
+        radio200->setGeometry(QRect(10, 310, 82, 17));
         radio200->setFont(font);
         radio300 = new QRadioButton(settingsForm);
         radioGroup->addButton(radio300);
         radio300->setObjectName(QStringLiteral("radio300"));
-        radio300->setGeometry(QRect(10, 280, 82, 17));
+        radio300->setGeometry(QRect(10, 330, 82, 17));
         radio300->setFont(font);
         label_3 = new QLabel(settingsForm);
         label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setGeometry(QRect(122, 280, 61, 16));
+        label_3->setGeometry(QRect(122, 330, 61, 16));
         label_3->setFont(font);
         editDBNo = new QLineEdit(settingsForm);
         editDBNo->setObjectName(QStringLiteral("editDBNo"));
-        editDBNo->setGeometry(QRect(200, 277, 51, 20));
+        editDBNo->setGeometry(QRect(200, 327, 51, 20));
         editControlDelay = new QLineEdit(settingsForm);
         editControlDelay->setObjectName(QStringLiteral("editControlDelay"));
         editControlDelay->setEnabled(false);
@@ -251,12 +262,12 @@ public:
         label_4->setObjectName(QStringLiteral("label_4"));
         label_4->setEnabled(false);
         label_4->setGeometry(QRect(280, 500, 121, 20));
-        QFont font5;
-        font5.setFamily(QStringLiteral("Arial"));
-        font5.setPointSize(8);
-        font5.setBold(false);
-        font5.setWeight(50);
-        label_4->setFont(font5);
+        QFont font6;
+        font6.setFamily(QStringLiteral("Arial"));
+        font6.setPointSize(8);
+        font6.setBold(false);
+        font6.setWeight(50);
+        label_4->setFont(font6);
         targetSlider = new QSlider(settingsForm);
         targetSlider->setObjectName(QStringLiteral("targetSlider"));
         targetSlider->setGeometry(QRect(170, 110, 240, 25));
@@ -323,12 +334,24 @@ public:
         editTitle->setMaxLength(20);
         checkPLCSIM = new QCheckBox(settingsForm);
         checkPLCSIM->setObjectName(QStringLiteral("checkPLCSIM"));
-        checkPLCSIM->setGeometry(QRect(270, 280, 171, 17));
+        checkPLCSIM->setGeometry(QRect(270, 330, 171, 17));
         checkPLCSIM->setFont(font1);
         checkTargetAlignButtons = new QCheckBox(settingsForm);
         checkTargetAlignButtons->setObjectName(QStringLiteral("checkTargetAlignButtons"));
         checkTargetAlignButtons->setGeometry(QRect(170, 170, 281, 17));
         checkTargetAlignButtons->setFont(font1);
+        radioCamJpeg = new QRadioButton(settingsForm);
+        camStreamGroup = new QButtonGroup(settingsForm);
+        camStreamGroup->setObjectName(QStringLiteral("camStreamGroup"));
+        camStreamGroup->addButton(radioCamJpeg);
+        radioCamJpeg->setObjectName(QStringLiteral("radioCamJpeg"));
+        radioCamJpeg->setGeometry(QRect(280, 250, 82, 17));
+        radioCamJpeg->setFont(font);
+        radioCamStream = new QRadioButton(settingsForm);
+        camStreamGroup->addButton(radioCamStream);
+        radioCamStream->setObjectName(QStringLiteral("radioCamStream"));
+        radioCamStream->setGeometry(QRect(170, 250, 111, 17));
+        radioCamStream->setFont(font);
 
         retranslateUi(settingsForm);
         QObject::connect(setupButton, SIGNAL(clicked()), settingsForm, SLOT(showSetupForm()));
@@ -346,6 +369,8 @@ public:
         QObject::connect(checkErrorStopVisible, SIGNAL(clicked()), settingsForm, SLOT(checkErrorStopLimitVisible()));
         QObject::connect(errorScaleSlider, SIGNAL(sliderMoved(int)), settingsForm, SLOT(errorScaleSlider()));
         QObject::connect(editTitle, SIGNAL(returnPressed()), settingsForm, SLOT(setTitle()));
+        QObject::connect(radioCamStream, SIGNAL(clicked()), settingsForm, SLOT(changeCamStreamType()));
+        QObject::connect(radioCamJpeg, SIGNAL(clicked()), settingsForm, SLOT(changeCamStreamType()));
 
         QMetaObject::connectSlotsByName(settingsForm);
     } // setupUi
@@ -361,13 +386,15 @@ public:
         QTableWidgetItem *___qtablewidgetitem = table->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QApplication::translate("settingsForm", "Deger", 0));
         QTableWidgetItem *___qtablewidgetitem1 = table->verticalHeaderItem(0);
-        ___qtablewidgetitem1->setText(QApplication::translate("settingsForm", "Kamera IP Adresi", 0));
+        ___qtablewidgetitem1->setText(QApplication::translate("settingsForm", "Kamera JPEG", 0));
         QTableWidgetItem *___qtablewidgetitem2 = table->verticalHeaderItem(1);
-        ___qtablewidgetitem2->setText(QApplication::translate("settingsForm", "PLC IP Adresi", 0));
+        ___qtablewidgetitem2->setText(QApplication::translate("settingsForm", "Kamera Stream", 0));
         QTableWidgetItem *___qtablewidgetitem3 = table->verticalHeaderItem(2);
-        ___qtablewidgetitem3->setText(QApplication::translate("settingsForm", "PLC Byte No", 0));
+        ___qtablewidgetitem3->setText(QApplication::translate("settingsForm", "PLC IP Adresi", 0));
+        QTableWidgetItem *___qtablewidgetitem4 = table->verticalHeaderItem(3);
+        ___qtablewidgetitem4->setText(QApplication::translate("settingsForm", "PLC Byte No", 0));
 #ifndef QT_NO_TOOLTIP
-        ___qtablewidgetitem3->setToolTip(QApplication::translate("settingsForm", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        ___qtablewidgetitem4->setToolTip(QApplication::translate("settingsForm", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
@@ -427,6 +454,8 @@ public:
         editTitle->setText(QApplication::translate("settingsForm", "KAYNAK TAK\304\260B\304\260", 0));
         checkPLCSIM->setText(QApplication::translate("settingsForm", "PLC S\304\260M\303\234LASYON", 0));
         checkTargetAlignButtons->setText(QApplication::translate("settingsForm", "Hedef Kayd\304\261rma D\303\274\304\237meleri Aktif", 0));
+        radioCamJpeg->setText(QApplication::translate("settingsForm", "JPEG", 0));
+        radioCamStream->setText(QApplication::translate("settingsForm", "STREAM", 0));
     } // retranslateUi
 
 };
