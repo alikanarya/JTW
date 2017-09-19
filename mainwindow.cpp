@@ -122,12 +122,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     fileName = savePath + fileBase + fileExt;
     folderName = "";
 
-    // image getter class & image data inits.
-    imageGetter = new getImage(urlCam.toString(), 10);
-//imageGetter->url.setUserName("admin");
-//imageGetter->url.setPassword("admin");
-    connect(imageGetter, SIGNAL(downloadCompleted()), this, SLOT(makeNetworkRequest()));
-    connect(imageGetter, SIGNAL(lastDataTaken()), this, SLOT(playCam()));
+    switch ( camStreamType ) {
+        case 1: // JPEG
+            // image getter class & image data inits.
+            imageGetter = new getImage(urlCam.toString(), 10);
+            //imageGetter->url.setUserName("admin");imageGetter->url.setPassword("admin");
+            connect(imageGetter, SIGNAL(downloadCompleted()), this, SLOT(makeNetworkRequest()));
+            connect(imageGetter, SIGNAL(lastDataTaken()), this, SLOT(playCam()));
+            break;
+        case 0: // STREAM
+            playStream = new threadPlayStream(&mMutex, urlCamStream.toString(), this);
+            connect(playStream, SIGNAL(imageCaptured()), this, SLOT(getImageFromStream()));
+            //connect(playStream, SIGNAL(connected()), this, SLOT(camConnected()));
+            //connect(playStream, SIGNAL(notConnected()), this, SLOT(camNotConnected()));
+            break;
+    }
+
 
     lastData = new networkData();
     prevData = new networkData();
@@ -375,7 +385,7 @@ void MainWindow::showSetupError(){
 
 void MainWindow::checker(){
 
-    permWeld = !emergencyStop && permOperator && permPLC && play && !imageGetter->cameraDown && trackOn && controlDelayValid;
+    permWeld = !emergencyStop && permOperator && permPLC && play && !cameraDownStatus && trackOn && controlDelayValid;
 
     ui->controlButton->setEnabled(permWeld);
 }
@@ -429,14 +439,29 @@ void MainWindow::playButton(){
     ui->controlButton->setEnabled(false);
     ui->videoButton->setIcon(videoSaveEnabled);
 
-    makeNetworkRequest();
+    switch ( camStreamType ) {
+        case 1: // JPEG
+            makeNetworkRequest();
+            break;
+        case 0: // STREAM
+            playStream->start();
+            break;
+    }
 }
 
 void MainWindow::stopButton(){
 
     // reseted vars ????
     play = false;
-    imageGetter->reset();
+
+    switch ( camStreamType ) {
+        case 1: // JPEG
+            imageGetter->reset();
+            break;
+        case 0: // STREAM
+            playStream->stopThread = true;
+            break;
+    }
 
     ui->playButton->setIcon(playOffIcon);
     ui->stopButton->setIcon(stopOnIcon);
@@ -451,6 +476,21 @@ void MainWindow::makeNetworkRequest(){
     if (play && !pause){// && !imageGetter->cameraDown){
         imageGetter->run();
         fpsRequest = imageGetter->fpsRequest;
+    }
+}
+
+void MainWindow::getImageFromStream(){
+
+    QImage img = QImage( (const uchar*) playStream->dest.data, playStream->dest.cols, playStream->dest.rows, playStream->dest.step, QImage::Format_RGB888 );
+    if (img.format() != QImage::Format_Invalid) {
+        //qDebug() << playThread->iter;
+        if (getCamImageProperties) {
+            calcImageParametes(img, false);
+            getCamImageProperties = false;
+            repaintGuide();
+        }
+        //ui->imageFrame->setPixmap(QPixmap::fromImage(img));
+        ui->imageFrame->setPixmap( QPixmap::fromImage( img.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
     }
 }
 
@@ -712,7 +752,7 @@ void MainWindow::updateSn(){
     // check camera live state
     //**cameraChecker->checkHost();
     //**cameraChecker->cameraDown = false;
-
+/***
     if (imageGetter->cameraDown){
         ui->cameraStatus->setIcon(cameraOfflineIcon);
         makeNetworkRequest();
@@ -720,9 +760,10 @@ void MainWindow::updateSn(){
         alarmCameraDownLock = false;
         ui->cameraStatus->setIcon(cameraOnlineIcon);
     }
+***/
 
     //**if (cameraChecker->cameraDown && !alarmCameraDownLock) emit cameraDown();
-    if (imageGetter->cameraDown && !alarmCameraDownLock) emit cameraDown();
+    if (cameraDownStatus && !alarmCameraDownLock) emit cameraDown();
 
     checker();
 
@@ -748,33 +789,43 @@ void MainWindow::updateSn(){
     // if video is played
     if (play){
 
-        if (fpsReal != 0) timeDelayAvg = timeDelayTotal / fpsReal;      // calc. ave time delay
+        switch ( camStreamType ) {
+            case 1: // JPEG
+                {
+                if (fpsReal != 0) timeDelayAvg = timeDelayTotal / fpsReal;      // calc. ave time delay
 
-        fpsRealLast = fpsReal;
-        // status bar message
-        message = "fps(t/req/real): " + QString::number(fpsTarget) + "/" + QString::number(fpsRequest) + "/" + QString::number(fpsReal);
-        message += seperator;
+                fpsRealLast = fpsReal;
+                // status bar message
+                message = "fps(t/req/real): " + QString::number(fpsTarget) + "/" + QString::number(fpsRequest) + "/" + QString::number(fpsReal);
+                message += seperator;
 
-        int rate = 0;
-        if (frameNo != 0) rate = (lateFrame * 100 / frameNo);
-        message += "lr(%): " + QString::number(rate);
-        message += seperator;
+                int rate = 0;
+                if (frameNo != 0) rate = (lateFrame * 100 / frameNo);
+                message += "lr(%): " + QString::number(rate);
+                message += seperator;
 
-        message += "td(ms): " + QString::number(timeDelayAvg);
+                message += "td(ms): " + QString::number(timeDelayAvg);
 
-        message += seperator;
-        message += "lf: " + QString::number(lateFrame);
+                message += seperator;
+                message += "lf: " + QString::number(lateFrame);
 
-        message += seperator;
-        message += "er: " + QString::number(error);
+                message += seperator;
+                message += "er: " + QString::number(error);
 
-        ui->statusBar->showMessage(message);
-        //----------
+                ui->statusBar->showMessage(message);
+                //----------
 
-        fpsRequest = imageGetter->fpsRequest = 0;
-        fpsReal = 0;
-        timeDelayAvg = 0;
-        timeDelayTotal = 0;
+                fpsRequest = imageGetter->fpsRequest = 0;
+                fpsReal = 0;
+                timeDelayAvg = 0;
+                timeDelayTotal = 0;
+                }
+                break;
+            case 0: // STREAM
+                ui->statusBar->showMessage("buffering stream");
+                break;
+        }
+
     }
 
     msecCount = 0;

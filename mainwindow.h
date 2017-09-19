@@ -116,6 +116,7 @@ namespace Ui {
 #include <QNetworkInterface>
 
 #include "../_Modules/Getimage/getimage.h"
+#include "../_Modules/PlayStream/threadplaystream.h"
 #include "../_Modules/Imgprocess/imgprocess.h"
 #include "messages.h"
 #include "../_Modules/S7/s7.h"
@@ -152,6 +153,10 @@ public:
     getImage *imageGetter;              // camera image request & retrieve class
     getImage *cameraChecker;
     networkData *lastData, *prevData;   // current and prev image data vars
+    threadPlayStream *playStream;
+
+    bool cameraDownStatus = true;
+
     videoSaveThread *threadVideoSave;
     QImage imageFile;
     QImage imageFileChanged;
@@ -461,6 +466,7 @@ protected:
 private slots:
     // gui controls
     void getImageFromCam();                         // saves current image from camera
+    void getImageFromStream();
     void playButton();                              // play video inits
     void analyzeButton();                           // analyze current image to check if corners detected or not
     void guideButton();                             // show/hide guide
@@ -494,7 +500,7 @@ private:
     protect lic;
 
     bool writeReport();
-
+    QMutex mMutex;
 
 };
 

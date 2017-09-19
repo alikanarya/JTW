@@ -47,7 +47,8 @@ SOURCES += main.cpp\
     videosavethread.cpp \
     imgtools.cpp \
     plcqtlib.cpp \
-    nodave.c
+    nodave.c \
+    ../_Modules/PlayStream/threadplaystream.cpp
 
 HEADERS  += mainwindow.h \
     setupform.h \
@@ -76,7 +77,8 @@ HEADERS  += mainwindow.h \
     imgtools.h \
     log2.h \
     nodave.h \
-    plcqtlib.h
+    plcqtlib.h \
+    ../_Modules/PlayStream/threadplaystream.h
 
 FORMS    += mainwindow.ui \
     setupform.ui \
@@ -109,3 +111,19 @@ DEPENDPATH += $$PWD/../_Modules/qtPLC_lib-master/release
 
 win32:!win32-g++: PRE_TARGETDEPS += $$PWD/../_Modules/qtPLC_lib-master/release/plcQtLib.lib
 else:win32-g++: PRE_TARGETDEPS += $$PWD/../_Modules/qtPLC_lib-master/release/libplcQtLib.a
+
+#INCLUDEPATH += C:/opencv3/opencv_bin/install/include
+#LIBS += -LC:\\opencv3\\opencv_bin\\bin \
+#    libopencv_core330d \
+#    libopencv_imgcodecs330d \
+#    libopencv_highgui330d \
+#    libopencv_videoio330d \
+#    libopencv_imgproc330d
+
+INCLUDEPATH += C:/opencv3/opencv_binrel/install/include
+LIBS += -LC:\\opencv3\\opencv_binrel\\bin \
+    -llibopencv_core330 \
+    -llibopencv_imgcodecs330 \
+    -llibopencv_highgui330 \
+    -llibopencv_videoio330 \
+    -llibopencv_imgproc330
