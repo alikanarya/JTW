@@ -133,8 +133,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         case 0: // STREAM
             playStream = new threadPlayStream(&mMutex, urlCamStream.toString(), this);
             connect(playStream, SIGNAL(imageCaptured()), this, SLOT(getImageFromStream()));
-            //connect(playStream, SIGNAL(connected()), this, SLOT(camConnected()));
-            //connect(playStream, SIGNAL(notConnected()), this, SLOT(camNotConnected()));
+            connect(playStream, SIGNAL(connected()), this, SLOT(camConnected()));
+            connect(playStream, SIGNAL(notConnected()), this, SLOT(camNotConnected()));
             break;
     }
 
@@ -444,7 +444,11 @@ void MainWindow::playButton(){
             makeNetworkRequest();
             break;
         case 0: // STREAM
-            playStream->start();
+            if (!playStream->isRunning()){
+                playStream->start();
+                playStream->setFps(25);
+                playStream->startCapture();
+            }
             break;
     }
 }
@@ -459,7 +463,12 @@ void MainWindow::stopButton(){
             imageGetter->reset();
             break;
         case 0: // STREAM
-            playStream->stopThread = true;
+            if (playStream->isRunning())
+                playStream->stop();
+            if (!playStream->wait(1000)) {
+                playStream->terminate();
+                playStream->wait();
+            }
             break;
     }
 
@@ -492,6 +501,21 @@ void MainWindow::getImageFromStream(){
         //ui->imageFrame->setPixmap(QPixmap::fromImage(img));
         ui->imageFrame->setPixmap( QPixmap::fromImage( img.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
     }
+}
+
+void MainWindow::camConnected(){
+
+    ui->cameraStatus->setIcon(cameraOnlineIcon);
+
+    cameraDownStatus = false;
+}
+
+void MainWindow::camNotConnected(){
+
+    ui->cameraStatus->setIcon(cameraOfflineIcon);
+
+    cameraDownStatus = true;
+
 }
 
 void MainWindow::update(){
@@ -761,6 +785,13 @@ void MainWindow::updateSn(){
         ui->cameraStatus->setIcon(cameraOnlineIcon);
     }
 ***/
+
+    if ( play && cameraDownStatus && !playStream->isRunning()) {
+
+        playStream->start();
+        playStream->setFps(25);
+        playStream->startCapture();
+    }
 
     //**if (cameraChecker->cameraDown && !alarmCameraDownLock) emit cameraDown();
     if (cameraDownStatus && !alarmCameraDownLock) emit cameraDown();

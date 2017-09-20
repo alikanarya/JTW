@@ -456,6 +456,8 @@ public slots:
     void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
     void playCam();
     void makeNetworkRequest();
+    void camConnected();
+    void camNotConnected();
 
 signals:
     void cameraDown();
