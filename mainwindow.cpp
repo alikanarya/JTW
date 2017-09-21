@@ -129,6 +129,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             //imageGetter->url.setUserName("admin");imageGetter->url.setPassword("admin");
             connect(imageGetter, SIGNAL(downloadCompleted()), this, SLOT(makeNetworkRequest()));
             connect(imageGetter, SIGNAL(lastDataTaken()), this, SLOT(playCam()));
+            connect(imageGetter, SIGNAL(cameraOnlineSignal()), this, SLOT(camConnected()));
+            connect(imageGetter, SIGNAL(cameraDownSignal()), this, SLOT(camNotConnected()));
             break;
         case 0: // STREAM
             playStream = new threadPlayStream(&mMutex, urlCamStream.toString(), this);
@@ -445,9 +447,8 @@ void MainWindow::playButton(){
             break;
         case 0: // STREAM
             if (!playStream->isRunning()){
+                cameraDownStatus = false;
                 playStream->start();
-                playStream->setFps(25);
-                playStream->startCapture();
             }
             break;
     }
@@ -468,6 +469,7 @@ void MainWindow::stopButton(){
             if (!playStream->wait(1000)) {
                 playStream->terminate();
                 playStream->wait();
+                camNotConnected();
             }
             break;
     }
@@ -492,7 +494,7 @@ void MainWindow::getImageFromStream(){
 
     QImage img = QImage( (const uchar*) playStream->dest.data, playStream->dest.cols, playStream->dest.rows, playStream->dest.step, QImage::Format_RGB888 );
     if (img.format() != QImage::Format_Invalid) {
-        //qDebug() << playThread->iter;
+        //qDebug() << playStream->iter;
         if (getCamImageProperties) {
             calcImageParametes(img, false);
             getCamImageProperties = false;
@@ -508,6 +510,11 @@ void MainWindow::camConnected(){
     ui->cameraStatus->setIcon(cameraOnlineIcon);
 
     cameraDownStatus = false;
+
+    if (play && camStreamType == 0) {
+        playStream->setFps(fpsTarget);
+        playStream->startCapture();
+    }
 }
 
 void MainWindow::camNotConnected(){
@@ -515,6 +522,7 @@ void MainWindow::camNotConnected(){
     ui->cameraStatus->setIcon(cameraOfflineIcon);
 
     cameraDownStatus = true;
+    ui->imageFrame->clear();
 
 }
 
@@ -730,9 +738,6 @@ void MainWindow:: plcControl(){
 void MainWindow::updateSn(){
     //QVariant boolx(permPLC);
     //ui->plainTextEdit->appendPlainText(boolx.toString());
-    //qDebug()<<player->state() << player->errorString() << player->isVideoAvailable();
-    //qDebug()<<player->media().canonicalRequest().url();
-    //qDebug()<<player->media().canonicalResource().videoCodec();
 
     if (timeControl) {
 
@@ -776,21 +781,26 @@ void MainWindow::updateSn(){
     // check camera live state
     //**cameraChecker->checkHost();
     //**cameraChecker->cameraDown = false;
-/***
-    if (imageGetter->cameraDown){
-        ui->cameraStatus->setIcon(cameraOfflineIcon);
-        makeNetworkRequest();
-    } else {
-        alarmCameraDownLock = false;
-        ui->cameraStatus->setIcon(cameraOnlineIcon);
-    }
-***/
 
-    if ( play && cameraDownStatus && !playStream->isRunning()) {
+    if ( play && cameraDownStatus ) {
 
-        playStream->start();
-        playStream->setFps(25);
-        playStream->startCapture();
+        switch ( camStreamType ) {
+            case 1: // JPEG
+                makeNetworkRequest();
+                break;
+            case 0: // STREAM
+                if ( playStream->isRunning() ) {
+                    playStream->stop();
+                    if (!playStream->wait(1000)) {
+                        playStream->terminate();
+                        playStream->wait();
+                    }
+                } else {
+                    cameraDownStatus = false;
+                    playStream->start();
+                }
+                break;
+        }
     }
 
     //**if (cameraChecker->cameraDown && !alarmCameraDownLock) emit cameraDown();
