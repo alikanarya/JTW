@@ -8,10 +8,11 @@
 #define message5    "Rapor dosyası yazılamadı"
 
 #define alarm6      "Resim alınamadı !!! Kamera veya bağlantısında problem olabilir."
-#define alarm7      "KAMERA BAĞLANTISI YOK !!!"
+#define alarm7      "KAMERA BAĞLANTISI YOK"
 #define alarm8      "Kaynak gecikmesi için girilen değer geçersiz !!! Tekrar deneyiniz."
 #define alarm9      "Kaynak gecikmesi için girilen değer 500ms'den az olamaz. (Demo için 0 giriniz)"
 #define alarm10     "Komutlar durduruldu !"
+#define alarm11     "KAMERA ONLINE"
 
 #define help10      "Kamera Butonu: Kamera görüntüsünü gösterir"
 

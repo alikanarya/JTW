@@ -156,6 +156,7 @@ public:
     threadPlayStream *playStream;
 
     bool cameraDownStatus = true;
+    bool camReconnectLock = false;
 
     videoSaveThread *threadVideoSave;
     QImage imageFile;
@@ -458,6 +459,7 @@ public slots:
     void makeNetworkRequest();
     void camConnected();
     void camNotConnected();
+    void killCamStreamThread();
 
 signals:
     void cameraDown();

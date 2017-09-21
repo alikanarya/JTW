@@ -152,6 +152,7 @@ public:
         plainTextEdit->setFrameShape(QFrame::Box);
         plainTextEdit->setFrameShadow(QFrame::Sunken);
         plainTextEdit->setLineWidth(1);
+        plainTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         plainTextEdit->setReadOnly(true);
         analyzeButton = new QPushButton(centralWidget);
         analyzeButton->setObjectName(QStringLiteral("analyzeButton"));

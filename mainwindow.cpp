@@ -507,23 +507,41 @@ void MainWindow::getImageFromStream(){
 
 void MainWindow::camConnected(){
 
-    ui->cameraStatus->setIcon(cameraOnlineIcon);
-
+    //qDebug()<<Q_FUNC_INFO;
     cameraDownStatus = false;
+    alarmCameraDownLock = false;
 
     if (play && camStreamType == 0) {
         playStream->setFps(fpsTarget);
         playStream->startCapture();
+        ui->plainTextEdit->appendPlainText(timeString() + alarm11);
     }
+
+    ui->cameraStatus->setIcon(cameraOnlineIcon);
 }
 
 void MainWindow::camNotConnected(){
 
-    ui->cameraStatus->setIcon(cameraOfflineIcon);
-
+    //qDebug()<<Q_FUNC_INFO;
     cameraDownStatus = true;
-    ui->imageFrame->clear();
+    camReconnectLock = false;
+    getCamImageProperties = true;
 
+    ui->cameraStatus->setIcon(cameraOfflineIcon);
+    ui->imageFrame->clear();
+}
+
+void MainWindow::killCamStreamThread(){
+
+    if ( playStream->isRunning() && cameraDownStatus) {
+        playStream->stop();
+        if (!playStream->wait(1000)) {
+            playStream->terminate();
+            playStream->wait();
+        }
+        camReconnectLock = false;
+        //qDebug()<<Q_FUNC_INFO;
+    }
 }
 
 void MainWindow::update(){
@@ -772,17 +790,15 @@ void MainWindow::updateSn(){
 
     QString message;
 
-    /*
-    // display: time
+    /* display: time
     currentDateTime = QDateTime::currentDateTime();
-    ui->labelTime->setText(currentDateTime.toString("hh:mm:ss"));
-    */
+    ui->labelTime->setText(currentDateTime.toString("hh:mm:ss"));*/
 
-    // check camera live state
-    //**cameraChecker->checkHost();
-    //**cameraChecker->cameraDown = false;
+    /* check camera live state
+    cameraChecker->checkHost();
+    cameraChecker->cameraDown = false;*/
 
-    if ( play && cameraDownStatus ) {
+    if ( play && cameraDownStatus && !camReconnectLock) {
 
         switch ( camStreamType ) {
             case 1: // JPEG
@@ -796,39 +812,21 @@ void MainWindow::updateSn(){
                         playStream->wait();
                     }
                 } else {
-                    cameraDownStatus = false;
+                    camReconnectLock = true;
+                    QTimer::singleShot(3000, this, SLOT(killCamStreamThread()));
                     playStream->start();
+                    //qDebug()<<Q_FUNC_INFO;
                 }
                 break;
         }
+        //**if (cameraChecker->cameraDown && !alarmCameraDownLock) emit cameraDown();
+        if (!alarmCameraDownLock) emit cameraDown();
     }
-
-    //**if (cameraChecker->cameraDown && !alarmCameraDownLock) emit cameraDown();
-    if (cameraDownStatus && !alarmCameraDownLock) emit cameraDown();
 
     checker();
 
-    /* * plc live state
-    if (!plcInteractPrev && threadPLCControl->plc->plcInteract){           // 0 -> 1
-        permPLC = true;
-        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE6);
-    }
-    else if (plcInteractPrev && !threadPLCControl->plc->plcInteract){       // 1 -> 0
-        permPLC = false;
-        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE4);
-    }
-    plcInteractPrev = threadPLCControl->plc->plcInteract;**/
-
-    /**if (threadPLCControl->plc->plcInteract)
-        ui->plcStatus->setIcon(plcOnlineIcon);
-    else
-        ui->plcStatus->setIcon(plcOfflineIcon);**/
-
-    //if ( thinJointAlgoActive ) ui->thinJointButton->setStyleSheet("color: rgb(255, 0, 0)");
-    //else ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
-
     // if video is played
-    if (play){
+    if (play && !cameraDownStatus){
 
         switch ( camStreamType ) {
             case 1: // JPEG
@@ -863,7 +861,8 @@ void MainWindow::updateSn(){
                 }
                 break;
             case 0: // STREAM
-                ui->statusBar->showMessage("buffering stream");
+                message = "Streaming: " + QString::number(camImageWidth) + "x" + QString::number(camImageHeight);
+                ui->statusBar->showMessage(message);
                 break;
         }
 
@@ -872,7 +871,26 @@ void MainWindow::updateSn(){
     msecCount = 0;
     pause = false;
 
-    //ui->plainTextEdit->ensureCursorVisible();
+    ui->plainTextEdit->ensureCursorVisible();
+
+    /* * plc live state
+    if (!plcInteractPrev && threadPLCControl->plc->plcInteract){           // 0 -> 1
+        permPLC = true;
+        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE6);
+    }
+    else if (plcInteractPrev && !threadPLCControl->plc->plcInteract){       // 1 -> 0
+        permPLC = false;
+        ui->plainTextEdit->appendPlainText(timeString() + MESSAGE4);
+    }
+    plcInteractPrev = threadPLCControl->plc->plcInteract;**/
+
+    /**if (threadPLCControl->plc->plcInteract)
+        ui->plcStatus->setIcon(plcOnlineIcon);
+    else
+        ui->plcStatus->setIcon(plcOfflineIcon);**/
+
+    //if ( thinJointAlgoActive ) ui->thinJointButton->setStyleSheet("color: rgb(255, 0, 0)");
+    //else ui->thinJointButton->setStyleSheet("color: rgb(0, 0, 0)");
 }
 
 void MainWindow::startTimer(){
@@ -920,6 +938,8 @@ void MainWindow::initPlcTimer(){
 void  MainWindow::cameraDownAction(){
 
     ui->plainTextEdit->appendPlainText(timeString() + alarm7);
+    ui->statusBar->showMessage("Kameraya bağlanılamıyor !");
+
     alarmCameraDownLock = true;
     getCamImageProperties = true;
 }
