@@ -495,14 +495,16 @@ void MainWindow::getImageFromStream(){
     QImage img = QImage( (const uchar*) playStream->dest.data, playStream->dest.cols, playStream->dest.rows, playStream->dest.step, QImage::Format_RGB888 );
     if (img.format() != QImage::Format_Invalid) {
         //qDebug() << playStream->iter;
-        if (getCamImageProperties) {
+        /*if (getCamImageProperties) {
             calcImageParametes(img, false);
             getCamImageProperties = false;
             repaintGuide();
-        }
-        lastData->image = &img;
+        }*/
+        lastData->image = new QImage(img);
+        lastData->shown = false;
+        playCam();
         //ui->imageFrame->setPixmap(QPixmap::fromImage(img));
-        ui->imageFrame->setPixmap( QPixmap::fromImage( img.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
+        //ui->imageFrame->setPixmap( QPixmap::fromImage( img.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
     }
 }
 
@@ -862,8 +864,11 @@ void MainWindow::updateSn(){
                 }
                 break;
             case 0: // STREAM
+                fpsRealLast = fpsReal;
                 message = "Streaming: " + QString::number(camImageWidth) + "x" + QString::number(camImageHeight);
+                message += "@" + QString::number(fpsReal) + "/" + QString::number(fpsTarget);
                 ui->statusBar->showMessage(message);
+                fpsReal = 0;
                 break;
         }
 
@@ -947,7 +952,8 @@ void  MainWindow::cameraDownAction(){
 
 void MainWindow::analyzeButton(){
 
-    if ( !imageGetter->imageList.isEmpty() ) {  // if any image is get
+    //if ( !imageGetter->imageList.isEmpty() ) {  // if any image is get
+    if (lastData->image->format() != QImage::Format_Invalid) {
 
         int startTime = timeSystem.getSystemTimeMsec();
 
@@ -1279,7 +1285,8 @@ void MainWindow::Algo6(imgProcess *iprocess){
 
 void MainWindow::processImage(bool deleteObject){
 
-    if ( !imageGetter->imageList.isEmpty() ){
+    //if ( !imageGetter->imageList.isEmpty() ){
+    if (lastData->image->format() != QImage::Format_Invalid) {
 
         if (applyCameraEnhancements) {
 //            targetArea = imageFileChanged.copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
@@ -2070,12 +2077,12 @@ QString MainWindow::calcImageParametes(QImage img, bool info){
 
 void MainWindow::playCam(){
 
-    switch ( camStreamType ) {
+    /*switch ( camStreamType ) {
         case 1: // JPEG
             break;
         case 0: // STREAM
             break;
-    }
+    }*/
 
     if (play && !pause){
 
@@ -2145,11 +2152,13 @@ void MainWindow::playCam(){
             lastData->shown = true;      // mark last data was SHOWN on display
             fpsReal++;
 
-            // calculate (display time - request time) delay in msec
-            int displayTime = timeSystem.getSystemTimeMsec();
-            int requestTime = calcTotalMsec(lastData->requestHour.toInt(), lastData->requestMinute.toInt(), lastData->requestSecond.toInt(), lastData->requestMSecond.toInt());
-            timeDelay = displayTime - requestTime;
-            timeDelayTotal += timeDelay;  // overall delay
+            if ( camStreamType == 1 ) {
+                // calculate (display time - request time) delay in msec
+                int displayTime = timeSystem.getSystemTimeMsec();
+                int requestTime = calcTotalMsec(lastData->requestHour.toInt(), lastData->requestMinute.toInt(), lastData->requestSecond.toInt(), lastData->requestMSecond.toInt());
+                timeDelay = displayTime - requestTime;
+                timeDelayTotal += timeDelay;  // overall delay
+            }
 
 
             if ( captureVideo ) { // VIDEO SAVE
@@ -2201,11 +2210,6 @@ void MainWindow::playCam(){
                 }
             }
         }
-
-
-
-
-
 
         //} //if (!imageGetter->imageList.isEmpty())
     }
