@@ -500,6 +500,7 @@ void MainWindow::getImageFromStream(){
             getCamImageProperties = false;
             repaintGuide();
         }
+        lastData->image = &img;
         //ui->imageFrame->setPixmap(QPixmap::fromImage(img));
         ui->imageFrame->setPixmap( QPixmap::fromImage( img.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
     }
@@ -2069,117 +2070,144 @@ QString MainWindow::calcImageParametes(QImage img, bool info){
 
 void MainWindow::playCam(){
 
+    switch ( camStreamType ) {
+        case 1: // JPEG
+            break;
+        case 0: // STREAM
+            break;
+    }
+
     if (play && !pause){
 
-        if (!imageGetter->imageList.isEmpty()){  // if any image is get
+        //if (!imageGetter->imageList.isEmpty()){  // if any image is get
 
-            int size = imageGetter->imageList.length();  // image buffer size
-            bool show = true;
+        bool show = true;
 
-            lastData = imageGetter->imageList[size-1];    // get last data
-            frameNo = lastData->requestId.toUInt();       // request id of net. data
+        switch ( camStreamType ) {
+            case 1: // JPEG
+                {
+                if (!imageGetter->imageList.isEmpty()){  // if any image is get
+                    int size = imageGetter->imageList.length();  // image buffer size
+                    //bool show = true;
 
-            // check for current shown data is not a late from prev data
-            if (size >= 2){     // to check min 2 data must exist
+                    lastData = imageGetter->imageList[size-1];    // get last data
+                    frameNo = lastData->requestId.toUInt();       // request id of net. data
 
-                for (int i = size - 2; i >= 0; i--)
+                    // check for current shown data is not a late from prev data
+                    if (size >= 2){     // to check min 2 data must exist
 
-                    if (imageGetter->imageList[i]->shown){       // if past images in the buffer were shown on display
-                        prevData = imageGetter->imageList[i];
+                        for (int i = size - 2; i >= 0; i--)
 
-                        // if prev shown data's request id is higher than the cuurents data's request id
-                        // then current data is late & DONT SHOW IT on display
-                        if (frameNo <= prevData->requestId.toUInt()){
-                            lateFrame++;
-                            show = false;
-                        }
-                        break;
+                            if (imageGetter->imageList[i]->shown){       // if past images in the buffer were shown on display
+                                prevData = imageGetter->imageList[i];
+
+                                // if prev shown data's request id is higher than the cuurents data's request id
+                                // then current data is late & DONT SHOW IT on display
+                                if (frameNo <= prevData->requestId.toUInt()){
+                                    lateFrame++;
+                                    show = false;
+                                }
+                                break;
+                            }
                     }
+
+
+                }
+                }
+                break;
+            case 0: // STREAM
+                break;
+        }
+
+        // show current valid image. valid: not late from previous (<show>) for imageGetter
+        if (!lastData->shown && show){
+
+            if (getCamImageProperties) {
+                calcImageParametes(*lastData->image, false);
+                getCamImageProperties = false;
+                repaintGuide();
             }
 
-            // show current valid image. valid: not late from previous (<show>)
-            if (!lastData->shown && show){
+            if (applyCameraEnhancements) {
+                QImage step1 = changeBrightness(*lastData->image, brightnessVal);
+                QImage step2 = changeContrast(step1, contrastVal);
+                imageFileChanged = changeGamma(step2, gammaVal);
+                //ui->imageFrame->setPixmap( QPixmap::fromImage( imageFileChanged.scaled(imageFileChanged.width(), imageFileChanged.height(), Qt::KeepAspectRatio) ));
+                ui->imageFrame->setPixmap( QPixmap::fromImage( imageFileChanged.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
 
-                if (getCamImageProperties) {
-                    calcImageParametes(*lastData->image, false);
-                    getCamImageProperties = false;
-                    repaintGuide();
-                }
+            } else {
+                ui->imageFrame->setPixmap( QPixmap::fromImage( lastData->image->scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
+                //ui->imageFrame->setPixmap( QPixmap::fromImage( *lastData->image ));
+            }
+
+            ui->imageFrame->show();
+            ui->guideFrame->raise();     // if guide is shown, suppress it
+            lastData->shown = true;      // mark last data was SHOWN on display
+            fpsReal++;
+
+            // calculate (display time - request time) delay in msec
+            int displayTime = timeSystem.getSystemTimeMsec();
+            int requestTime = calcTotalMsec(lastData->requestHour.toInt(), lastData->requestMinute.toInt(), lastData->requestSecond.toInt(), lastData->requestMSecond.toInt());
+            timeDelay = displayTime - requestTime;
+            timeDelayTotal += timeDelay;  // overall delay
+
+
+            if ( captureVideo ) { // VIDEO SAVE
+
+                if (videoFrameCount == 0)
+                    folderName = savePath + QDateTime::currentDateTime().toString("yyMMdd_hhmmss") + "/";
+
+                int index = videoFrameCount % threadVideoSave->bufferLength;
 
                 if (applyCameraEnhancements) {
-                    QImage step1 = changeBrightness(*lastData->image, brightnessVal);
-                    QImage step2 = changeContrast(step1, contrastVal);
-                    imageFileChanged = changeGamma(step2, gammaVal);
-                    //ui->imageFrame->setPixmap( QPixmap::fromImage( imageFileChanged.scaled(imageFileChanged.width(), imageFileChanged.height(), Qt::KeepAspectRatio) ));
-                    ui->imageFrame->setPixmap( QPixmap::fromImage( imageFileChanged.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
-
+                    //videoList[videoFrameCount] = imageFileChanged.copy();
+                    videoList[index] = imageFileChanged.copy();
                 } else {
-                    ui->imageFrame->setPixmap( QPixmap::fromImage( lastData->image->scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
-                    //ui->imageFrame->setPixmap( QPixmap::fromImage( *lastData->image ));
+                    //videoList[videoFrameCount] = lastData->image->copy();
+                    videoList[index] = lastData->image->copy();
                 }
+                videoFrameCount++;
 
-                ui->imageFrame->show();
-                ui->guideFrame->raise();     // if guide is shown, suppress it
-                lastData->shown = true;      // mark last data was SHOWN on display
-                fpsReal++;
+                if (videoFrameCount % threadVideoSave->bufferLength == 0 || videoFrameCount >= videoFrameSize) {
 
-                // calculate (display time - request time) delay in msec
-                int displayTime = timeSystem.getSystemTimeMsec();
-                int requestTime = calcTotalMsec(lastData->requestHour.toInt(), lastData->requestMinute.toInt(), lastData->requestSecond.toInt(), lastData->requestMSecond.toInt());
-                timeDelay = displayTime - requestTime;
-                timeDelayTotal += timeDelay;  // overall delay
+                    if (!threadVideoSave->isRunning()){
+                        int lastSize = threadVideoSave->bufferLength;
+                        threadVideoSave->lastSave = false;
 
-
-                if ( captureVideo ) { // VIDEO SAVE
-
-                    if (videoFrameCount == 0)
-                        folderName = savePath + QDateTime::currentDateTime().toString("yyMMdd_hhmmss") + "/";
-
-                    int index = videoFrameCount % threadVideoSave->bufferLength;
-
-                    if (applyCameraEnhancements) {
-                        //videoList[videoFrameCount] = imageFileChanged.copy();
-                        videoList[index] = imageFileChanged.copy();
-                    } else {
-                        //videoList[videoFrameCount] = lastData->image->copy();
-                        videoList[index] = lastData->image->copy();
-                    }
-                    videoFrameCount++;
-
-                    if (videoFrameCount % threadVideoSave->bufferLength == 0 || videoFrameCount >= videoFrameSize) {
-
-                        if (!threadVideoSave->isRunning()){
-                            int lastSize = threadVideoSave->bufferLength;
-                            threadVideoSave->lastSave = false;
-
-                            if (videoFrameCount >= videoFrameSize){
-                                lastSize = index+1;
-                                threadVideoSave->lastSave = true;
-                                captureVideo = false;
-                            }
-
-                            threadVideoSave->saveSize = lastSize;
-                            for (int i=0;i<lastSize;i++)
-                                threadVideoSave->buffer[i] = videoList[i];
-                            threadVideoSave->count++;
-
-                            threadVideoSave->start();
+                        if (videoFrameCount >= videoFrameSize){
+                            lastSize = index+1;
+                            threadVideoSave->lastSave = true;
+                            captureVideo = false;
                         }
-                    }
 
-                    //ui->plainTextEdit->appendPlainText(QString::number(videoFrameCount));
+                        threadVideoSave->saveSize = lastSize;
+                        for (int i=0;i<lastSize;i++)
+                            threadVideoSave->buffer[i] = videoList[i];
+                        threadVideoSave->count++;
+
+                        threadVideoSave->start();
+                    }
                 }
 
-                // if joint is tracked for some interval
-                if (trackOn && (fpsReal % iprocessInterval) == 0 ){
-                    processImage();  // detect deviation
+                //ui->plainTextEdit->appendPlainText(QString::number(videoFrameCount));
+            }
 
-                    if ( !lineDetection ) {
-                        if (deviationData.size() >= 2) drawTrack();   // draw deviation trend
-                    }
+            // if joint is tracked for some interval
+            if (trackOn && (fpsReal % iprocessInterval) == 0 ){
+                processImage();  // detect deviation
+
+                if ( !lineDetection ) {
+                    if (deviationData.size() >= 2) drawTrack();   // draw deviation trend
                 }
             }
         }
+
+
+
+
+
+
+        //} //if (!imageGetter->imageList.isEmpty())
     }
 }
 
