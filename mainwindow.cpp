@@ -449,6 +449,7 @@ void MainWindow::playButton(){
             if (!playStream->isRunning()){
                 cameraDownStatus = false;
                 playStream->start();
+                //playStream->measureFpsFn(3000);
             }
             break;
     }
@@ -495,15 +496,9 @@ void MainWindow::getImageFromStream(){
     QImage img = QImage( (const uchar*) playStream->dest.data, playStream->dest.cols, playStream->dest.rows, playStream->dest.step, QImage::Format_RGB888 );
     if (img.format() != QImage::Format_Invalid) {
         //qDebug() << playStream->iter;
-        /*if (getCamImageProperties) {
-            calcImageParametes(img, false);
-            getCamImageProperties = false;
-            repaintGuide();
-        }*/
         lastData->image = new QImage(img);
         lastData->shown = false;
         playCam();
-        //ui->imageFrame->setPixmap(QPixmap::fromImage(img));
         //ui->imageFrame->setPixmap( QPixmap::fromImage( img.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
     }
 }
@@ -547,7 +542,7 @@ void MainWindow::killCamStreamThread(){
     }
 }
 
-void MainWindow::update(){
+/* OBSOLETE */void MainWindow::update(){
 /*
     msecCount++;
     if (play && !pause){
@@ -567,16 +562,15 @@ void MainWindow::update(){
     }*/
 }
 
-void MainWindow:: plcControl(){
+/* OBSOLETE */void MainWindow:: plcControl(){
 
     controlThreadCount++;
 
-//ui->plainTextEdit->appendPlainText(QString::number(controlThreadCount));
+    //ui->plainTextEdit->appendPlainText(QString::number(controlThreadCount));
     checker();
 
     int state = _CMD_STOP;
     //int stateZ = _CMD_Z_CENTER;
-
 
     if ( readMachineStatus || readDistance || readWeldSeam ) {
 
@@ -612,10 +606,7 @@ void MainWindow:: plcControl(){
                 ui->labelDistance->setText( QString::number(distance, 'f', 1) );
             }
         }
-
     }
-
-
     if (!controlPause){
 
         // prepare plc command
@@ -693,7 +684,6 @@ void MainWindow:: plcControl(){
             }
         }
         */
-
         if (goX || !cmdSended || threadPLCControl->commandRead) {
 
             if (!PLCSIM) {
@@ -716,9 +706,7 @@ void MainWindow:: plcControl(){
         if (state!= _CMD_CHECK) {
             cmdStatePrev = state;
         }
-
     }
-
 /*
             if (state != _CMD_CHECK || state != _CMD_EMERGENCY_ACT) {
                 if (controlDelay == 0){
@@ -867,6 +855,10 @@ void MainWindow::updateSn(){
                 fpsRealLast = fpsReal;
                 message = "Streaming: " + QString::number(camImageWidth) + "x" + QString::number(camImageHeight);
                 message += "@" + QString::number(fpsReal) + "/" + QString::number(fpsTarget);
+                if (playStream->measureFps)
+                    message += ":" + QString::number(playStream->realFps);
+                message += ":" + QString::number(playStream->propIris);
+                message += ":" + QString::number(playStream->propISO);
                 ui->statusBar->showMessage(message);
                 fpsReal = 0;
                 break;
@@ -2117,8 +2109,6 @@ void MainWindow::playCam(){
                                 break;
                             }
                     }
-
-
                 }
                 }
                 break;
@@ -2210,7 +2200,6 @@ void MainWindow::playCam(){
                 }
             }
         }
-
         //} //if (!imageGetter->imageList.isEmpty())
     }
 }

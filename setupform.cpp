@@ -374,7 +374,8 @@ void setupForm::Algo7(imgProcess *iprocess){
 
 void setupForm::processImage(){
 
-    if ( w->play && !w->imageGetter->imageList.isEmpty() ){
+//    if ( w->play && !w->imageGetter->imageList.isEmpty() ){
+    if ( w->play && (w->lastData->image->format() != QImage::Format_Invalid) ){
         if (w->applyCameraEnhancements) {
 //            target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
             target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
@@ -389,7 +390,8 @@ void setupForm::processImage(){
         target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
     }
 
-    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ){
+//    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ){
+    if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ){
 
         if (iprocessInitSwitch) {
             delete iprocess;
@@ -503,7 +505,8 @@ void setupForm::captureButton(){
     ui->labelHough->clear();
     ui->labelAnalyze->clear();
 
-    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ) {   // if any image is get
+//    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ) {   // if any image is get
+    if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ) {   // if any image is get
 
         ui->labelPrimaryLine->hide();               // hide PRIMARY LINE NOT DETECTED message
 
@@ -1543,7 +1546,8 @@ void setupForm::on_imgParametersButton_clicked(){
 
     QString message = "";
 
-    if ( w->play && !w->imageGetter->imageList.isEmpty() ){
+//    if ( w->play && !w->imageGetter->imageList.isEmpty() ){
+    if ( w->play && (w->lastData->image->format() != QImage::Format_Invalid) ){
         message = w->calcImageParametes(*w->lastData->image, true);
     } else if ( !w->play &&  imageLoadedFromFile){
         message = w->calcImageParametes(w->imageFile, true);
