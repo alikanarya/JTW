@@ -470,7 +470,7 @@ protected:
 private slots:
     // gui controls
     void getImageFromCam();                         // saves current image from camera
-    void getImageFromStream();
+    void getImageFromStream(int captureTime);
     void playButton();                              // play video inits
     void analyzeButton();                           // analyze current image to check if corners detected or not
     void guideButton();                             // show/hide guide

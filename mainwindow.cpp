@@ -134,7 +134,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             break;
         case 0: // STREAM
             playStream = new threadPlayStream(&mMutex, urlCamStream.toString(), this);
-            connect(playStream, SIGNAL(imageCaptured()), this, SLOT(getImageFromStream()));
+            connect(playStream, SIGNAL(imageCaptured(int)), this, SLOT(getImageFromStream(int)));
             connect(playStream, SIGNAL(connected()), this, SLOT(camConnected()));
             connect(playStream, SIGNAL(notConnected()), this, SLOT(camNotConnected()));
             break;
@@ -491,8 +491,9 @@ void MainWindow::makeNetworkRequest(){
     }
 }
 
-void MainWindow::getImageFromStream(){
+void MainWindow::getImageFromStream(int captureTime){
 
+    firstTimeTick = captureTime;
     QImage img = QImage( (const uchar*) playStream->dest.data, playStream->dest.cols, playStream->dest.rows, playStream->dest.step, QImage::Format_RGB888 );
     if (img.format() != QImage::Format_Invalid) {
         //qDebug() << playStream->iter;
@@ -854,11 +855,12 @@ void MainWindow::updateSn(){
             case 0: // STREAM
                 fpsRealLast = fpsReal;
                 message = "Streaming: " + QString::number(camImageWidth) + "x" + QString::number(camImageHeight);
-                message += "@" + QString::number(fpsReal) + "/" + QString::number(fpsTarget);
+                message += "@R=" + QString::number(fpsReal) + "/T=" + QString::number(fpsTarget);
                 if (playStream->measureFps)
-                    message += ":" + QString::number(playStream->realFps);
-                message += ":" + QString::number(playStream->propIris);
-                message += ":" + QString::number(playStream->propISO);
+                    message += "/C=" + QString::number(playStream->realFps);
+                message += seperator;
+                message += "TD=" + QString::number(timeDelay);
+                //message += ":" + QString::number(playStream->propIris);message += ":" + QString::number(playStream->propISO);
                 ui->statusBar->showMessage(message);
                 fpsReal = 0;
                 break;
@@ -2136,11 +2138,14 @@ void MainWindow::playCam(){
                 ui->imageFrame->setPixmap( QPixmap::fromImage( lastData->image->scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
                 //ui->imageFrame->setPixmap( QPixmap::fromImage( *lastData->image ));
             }
-
             ui->imageFrame->show();
             ui->guideFrame->raise();     // if guide is shown, suppress it
             lastData->shown = true;      // mark last data was SHOWN on display
             fpsReal++;
+
+            if ( camStreamType == 0 ) {
+                timeDelay = timeSystem.getSystemTimeMsec() - firstTimeTick;
+            }
 
             if ( camStreamType == 1 ) {
                 // calculate (display time - request time) delay in msec
