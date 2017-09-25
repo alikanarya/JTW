@@ -146,6 +146,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     //**cameraChecker = new getImage(urlCam.toString());
 
+    camApi = new getImage(urlCamStream.host(), false);
+
     threadVideoSave = new videoSaveThread();
     connect(threadVideoSave, SIGNAL(saveFinished()), this, SLOT(saveFinished()));
 
@@ -2248,8 +2250,8 @@ void MainWindow::testEdit(){
 
 void MainWindow::testButton(){
 
-    mak_aktif_now = !mak_aktif_now;
-    qDebug() << "Mak Aktif:" << mak_aktif_now;
+    //mak_aktif_now = !mak_aktif_now;
+    //qDebug() << "Mak Aktif:" << mak_aktif_now;
     /*
     int *array = new int[5];
     for (int i = 0; i < 5; i++) array[i] = i;
@@ -2257,6 +2259,8 @@ void MainWindow::testButton(){
     //findLocalMinimum(array, 5, list);
     */
 
+    qDebug() << camApi->hostName;
+    camApi->apiDahuaGetFocusState();
 
 }
 

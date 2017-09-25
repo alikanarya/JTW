@@ -82,6 +82,7 @@
 #define PROTOCOL_S7200  123
 #define PROTOCOL_S7300  122
 
+
 //const int yResArray[9] = {1, 2, 4, 6, 8, 10, 12, 16, 20}; // for height 240
 //const int yResArray[9] = {12, 12, 12, 12, 12, 12, 12, 16, 20};
 //const int yResArray[9] = {1, 1, 2, 4, 5, 8, 10, 16, 20}; // for height 160
@@ -152,6 +153,7 @@ public:
     bool playCamonBoot;                 // play camera on app. start
     getImage *imageGetter;              // camera image request & retrieve class
     getImage *cameraChecker;
+    getImage *camApi;
     networkData *lastData, *prevData;   // current and prev image data vars
     threadPlayStream *playStream;
 
