@@ -157,8 +157,14 @@ public:
     networkData *lastData, *prevData;   // current and prev image data vars
     threadPlayStream *playStream;
 
+    bool camFocusState = false;         // true; in focus, false; out of focus
+    bool camFocusingActionState = false;// true; focusing in action, false; stable
+    bool camDoAutoFocus = false;
+
     bool cameraDownStatus = true;
     bool camReconnectLock = false;
+    bool timerLock = false;
+    QTimer *timerAutoFocus;
 
     videoSaveThread *threadVideoSave;
     QImage imageFile;
@@ -439,6 +445,9 @@ public:
     void checker();
     int getBitofByte(unsigned char byte, int bitNo);
 
+    void checkFocusState();
+    void doAutoFocus();
+
     ~MainWindow();                                  // destructor
 
 public slots:
@@ -462,6 +471,9 @@ public slots:
     void camConnected();
     void camNotConnected();
     void killCamStreamThread();
+    void focusState(bool state);                    // true; in focus, false; out of focus
+    void checkAutoFocusingState();
+    void focusingActionState(bool);                 // true; focusing in action, false; stable
 
 signals:
     void cameraDown();

@@ -147,6 +147,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //**cameraChecker = new getImage(urlCam.toString());
 
     camApi = new getImage(urlCamStream.host(), false);
+    connect(camApi, SIGNAL(focusState(bool)), this, SLOT(focusState(bool)));
+    connect(camApi, SIGNAL(focusingActionState(bool)), this, SLOT(focusingActionState(bool)));
+    timerAutoFocus = new QTimer(this);
+    connect(timerAutoFocus, SIGNAL(timeout()), this, SLOT(checkAutoFocusingState()));
 
     threadVideoSave = new videoSaveThread();
     connect(threadVideoSave, SIGNAL(saveFinished()), this, SLOT(saveFinished()));
@@ -817,6 +821,16 @@ void MainWindow::updateSn(){
         if (!alarmCameraDownLock) emit cameraDown();
     }
 
+    /*
+    if (!cameraDownStatus && !camApi->busy && !timerLock){
+        camApi->apiDahuaGetFocusState();
+        timerLock = true;
+    }
+    if (!cameraDownStatus && !camApi->busy && timerLock){
+        camApi->apiDahuaGetFocusStatus();
+        timerLock = false;
+    }
+*/
     checker();
 
     // if video is played
@@ -2259,9 +2273,11 @@ void MainWindow::testButton(){
     //findLocalMinimum(array, 5, list);
     */
 
-    qDebug() << camApi->hostName;
-    camApi->apiDahuaGetFocusState();
+    if (!camApi->busy)  camApi->apiDahuaGetFocusStatus();
+    timerAutoFocus->start(100);
 
+    camDoAutoFocus = true;
+    checkFocusState();
 }
 
 void MainWindow::on_setupButton_clicked(){
@@ -2384,4 +2400,43 @@ void MainWindow::plcCommands(){
 
     }
 
+}
+
+void MainWindow::checkFocusState(){
+    if (!cameraDownStatus && !camApi->busy){
+        camApi->apiDahuaGetFocusState();
+    }
+}
+
+void MainWindow::doAutoFocus(){
+    if (!cameraDownStatus && !camApi->busy){
+        camApi->apiDahuaAutoFocus();
+    }
+}
+
+void MainWindow::focusState(bool state){
+    camFocusState = state;
+
+    if (!camFocusState && camDoAutoFocus) {
+        timerLock = true;
+        doAutoFocus();
+        timerAutoFocus->start(100);
+    }
+    qDebug() << camFocusState;
+}
+
+void MainWindow::focusingActionState(bool state){
+    camFocusingActionState = state;
+}
+
+void MainWindow::checkAutoFocusingState(){
+
+    if (!cameraDownStatus && !camApi->busy){
+        if (timerLock){
+            camApi->apiDahuaGetFocusStatus();
+            timerLock = false;
+        } else if (camFocusingActionState) {
+            camApi->apiDahuaGetFocusStatus();
+        }
+    }
 }
