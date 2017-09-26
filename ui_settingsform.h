@@ -18,6 +18,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSlider>
@@ -65,6 +66,12 @@ public:
     QCheckBox *checkTargetAlignButtons;
     QRadioButton *radioCamJpeg;
     QRadioButton *radioCamStream;
+    QPushButton *apiCheckFocus;
+    QPushButton *apiFocusStatus;
+    QPlainTextEdit *plainTextEdit;
+    QPushButton *apiAutoFocus;
+    QPushButton *apiAutoFocus_2;
+    QSlider *manFocusSlider;
     QButtonGroup *radioGroup;
     QButtonGroup *camStreamGroup;
 
@@ -73,14 +80,14 @@ public:
         if (settingsForm->objectName().isEmpty())
             settingsForm->setObjectName(QStringLiteral("settingsForm"));
         settingsForm->setWindowModality(Qt::WindowModal);
-        settingsForm->resize(600, 600);
+        settingsForm->resize(800, 600);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(settingsForm->sizePolicy().hasHeightForWidth());
         settingsForm->setSizePolicy(sizePolicy);
-        settingsForm->setMinimumSize(QSize(600, 600));
-        settingsForm->setMaximumSize(QSize(600, 600));
+        settingsForm->setMinimumSize(QSize(800, 600));
+        settingsForm->setMaximumSize(QSize(800, 600));
         QIcon icon;
         icon.addFile(QStringLiteral(":/resources/Weather-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         settingsForm->setWindowIcon(icon);
@@ -168,7 +175,7 @@ public:
         QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
         table->setItem(0, 0, __qtablewidgetitem5);
         table->setObjectName(QStringLiteral("table"));
-        table->setGeometry(QRect(10, 360, 581, 111));
+        table->setGeometry(QRect(10, 360, 491, 111));
         table->setFrameShape(QFrame::Box);
         table->setFrameShadow(QFrame::Plain);
         table->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -352,6 +359,39 @@ public:
         radioCamStream->setObjectName(QStringLiteral("radioCamStream"));
         radioCamStream->setGeometry(QRect(170, 250, 111, 17));
         radioCamStream->setFont(font);
+        apiCheckFocus = new QPushButton(settingsForm);
+        apiCheckFocus->setObjectName(QStringLiteral("apiCheckFocus"));
+        apiCheckFocus->setGeometry(QRect(510, 10, 131, 29));
+        apiFocusStatus = new QPushButton(settingsForm);
+        apiFocusStatus->setObjectName(QStringLiteral("apiFocusStatus"));
+        apiFocusStatus->setGeometry(QRect(510, 50, 131, 29));
+        plainTextEdit = new QPlainTextEdit(settingsForm);
+        plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
+        plainTextEdit->setGeometry(QRect(510, 360, 281, 231));
+        QFont font7;
+        font7.setPointSize(7);
+        plainTextEdit->setFont(font7);
+        plainTextEdit->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 195);"));
+        plainTextEdit->setFrameShape(QFrame::Box);
+        plainTextEdit->setFrameShadow(QFrame::Sunken);
+        plainTextEdit->setLineWidth(1);
+        plainTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        plainTextEdit->setReadOnly(true);
+        apiAutoFocus = new QPushButton(settingsForm);
+        apiAutoFocus->setObjectName(QStringLiteral("apiAutoFocus"));
+        apiAutoFocus->setGeometry(QRect(510, 90, 131, 29));
+        apiAutoFocus_2 = new QPushButton(settingsForm);
+        apiAutoFocus_2->setObjectName(QStringLiteral("apiAutoFocus_2"));
+        apiAutoFocus_2->setGeometry(QRect(510, 130, 131, 29));
+        manFocusSlider = new QSlider(settingsForm);
+        manFocusSlider->setObjectName(QStringLiteral("manFocusSlider"));
+        manFocusSlider->setGeometry(QRect(510, 170, 240, 25));
+        manFocusSlider->setMinimum(0);
+        manFocusSlider->setMaximum(100);
+        manFocusSlider->setSingleStep(1);
+        manFocusSlider->setPageStep(5);
+        manFocusSlider->setValue(100);
+        manFocusSlider->setOrientation(Qt::Horizontal);
 
         retranslateUi(settingsForm);
         QObject::connect(setupButton, SIGNAL(clicked()), settingsForm, SLOT(showSetupForm()));
@@ -456,6 +496,10 @@ public:
         checkTargetAlignButtons->setText(QApplication::translate("settingsForm", "Hedef Kayd\304\261rma D\303\274\304\237meleri Aktif", 0));
         radioCamJpeg->setText(QApplication::translate("settingsForm", "JPEG", 0));
         radioCamStream->setText(QApplication::translate("settingsForm", "STREAM", 0));
+        apiCheckFocus->setText(QApplication::translate("settingsForm", "Odak Kontrol\303\274", 0));
+        apiFocusStatus->setText(QApplication::translate("settingsForm", "Odak De\304\237erleri", 0));
+        apiAutoFocus->setText(QApplication::translate("settingsForm", "Otomatik Fokus", 0));
+        apiAutoFocus_2->setText(QApplication::translate("settingsForm", "Otomatik Fokus", 0));
     } // retranslateUi
 
 };

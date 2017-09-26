@@ -6,6 +6,7 @@
 
 #include "restartdialog.h"
 #include "ui_restartdialog.h"
+#include "../_Modules/Getimage/getimage.h"
 
 namespace Ui {
     class settingsForm;
@@ -26,6 +27,8 @@ public:
     QTableWidgetItem *itemR7C0; // plc stop bit byte
     QTableWidgetItem *itemR8C0; // plc emergency v-mem byte
     QTableWidgetItem *itemR9C0; // plc emergency bit byte
+
+    getImage *camApi;
 
     explicit settingsForm(QWidget *parent = 0);
     void getParameters();       // get parameters from mainwindow
@@ -57,6 +60,13 @@ private slots:
 
     void on_checkPLCSIM_clicked();
     void on_checkTargetAlignButtons_clicked();
+
+    void on_apiCheckFocus_clicked();
+    void focusState(bool state);                    // true; in focus, false; out of focus
+    void on_apiFocusStatus_clicked();
+    void focusingActionState(bool);                 // true; focusing in action, false; stable
+    void on_apiAutoFocus_clicked();
+    void on_manFocusSlider_sliderReleased();
 };
 
 #endif // SETTINGSFORM_H

@@ -2273,8 +2273,8 @@ void MainWindow::testButton(){
     //findLocalMinimum(array, 5, list);
     */
 
-    if (!camApi->busy)  camApi->apiDahuaGetFocusStatus();
-    timerAutoFocus->start(100);
+    //if (!camApi->busy)  camApi->apiDahuaGetFocusStatus();
+    //timerAutoFocus->start(100);
 
     camDoAutoFocus = true;
     checkFocusState();

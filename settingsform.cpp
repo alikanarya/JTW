@@ -50,6 +50,11 @@ settingsForm::settingsForm(QWidget *parent) : QDialog(parent), ui(new Ui::settin
     ui->editControlDelay->hide();
     ui->checkPLCSIM->setChecked(w->PLCSIM);
 
+    camApi = new getImage(w->urlCamStream.host(), false);
+    connect(camApi, SIGNAL(focusState(bool)), this, SLOT(focusState(bool)));
+    connect(camApi, SIGNAL(focusingActionState(bool)), this, SLOT(focusingActionState(bool)));
+    ui->manFocusSlider->setEnabled(false);
+
   /*
     QIntValidator *validEditHoughLineNo = new QIntValidator(01, 10, this);
     validEditHoughLineNo->setBottom(01);
@@ -351,4 +356,44 @@ settingsForm::~settingsForm(){
     delete ui;
 }
 
+void settingsForm::on_apiCheckFocus_clicked(){
+    if (!w->cameraDownStatus && !camApi->busy){
+        camApi->apiDahuaGetFocusState();
+    }
+}
 
+void settingsForm::focusState(bool state){
+    if (state)
+        ui->plainTextEdit->appendPlainText("Odak Dogru");
+    else
+        ui->plainTextEdit->appendPlainText("Odak Bozuk");
+}
+
+void settingsForm::on_apiFocusStatus_clicked(){
+    if (!w->cameraDownStatus && !camApi->busy){
+        camApi->apiDahuaGetFocusStatus();
+    }
+}
+
+void settingsForm::focusingActionState(bool state){
+    ui->plainTextEdit->appendPlainText("Odak Pozisyonu   : " + QString::number(camApi->focusPos, 'f', 3));
+    ui->plainTextEdit->appendPlainText("Odak Motoru Adim : " + camApi->focusMotorSteps);
+    ui->plainTextEdit->appendPlainText("Odaklama Durumu  : " + camApi->focusStatus);
+    ui->manFocusSlider->setEnabled(true);
+    ui->manFocusSlider->setValue(100*camApi->focusPos);
+}
+
+void settingsForm::on_apiAutoFocus_clicked(){
+    if (!w->cameraDownStatus && !camApi->busy){
+        camApi->apiDahuaAutoFocus();
+        ui->plainTextEdit->appendPlainText("Otomatik fokus komutu gonderildi");
+    }
+}
+
+void settingsForm::on_manFocusSlider_sliderReleased(){
+    if (!w->cameraDownStatus && !camApi->busy){
+        float pos = ui->manFocusSlider->value() / 100.0;
+        camApi->apiDahuaSetFocusPos(pos);
+        ui->plainTextEdit->appendPlainText("Gonderilen fokus pozisyonu: " + QString::number(pos,'f',3));
+    }
+}
