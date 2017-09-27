@@ -166,6 +166,8 @@ public:
     QTimer *timerAutoFocus;
     bool focusCheckBeforeControl = false;
     bool autoFocusBeforeControl = false;
+    int autoFocusPassNo = 0;
+    int autoFocusPassLimit = 2;
 
 
     bool cameraDownStatus = true;

@@ -1046,6 +1046,7 @@ void MainWindow::controlButton(){
 
         if (focusCheckBeforeControl){
             camDoAutoFocus = autoFocusBeforeControl;
+            autoFocusPassNo = 0;
             checkFocusState();
         } else {
             startControl();
@@ -2443,16 +2444,20 @@ void MainWindow::focusState(bool state){
     } else {
         ui->plainTextEdit->appendPlainText(timeString() + alarm13);
         if (camDoAutoFocus) {
-            ui->plainTextEdit->appendPlainText(timeString() + message6);
-            timerLock = true;
-            doAutoFocus();
-            timerAutoFocus->start(100);
+            if (autoFocusPassNo < autoFocusPassLimit) {
+                ui->plainTextEdit->appendPlainText(timeString() + message6);
+                timerLock = true;
+                autoFocusPassNo++;
+                doAutoFocus();
+                timerAutoFocus->start(100);
+            } else {
+                ui->plainTextEdit->appendPlainText(timeString() + alarm14);
+            }
         } else {
             if (controlOn) {
                 ui->plainTextEdit->appendPlainText(timeString() + alarm14);
                 controlOn = false;
             }
-
         }
     }
 }
