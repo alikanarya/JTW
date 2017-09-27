@@ -53,7 +53,11 @@ settingsForm::settingsForm(QWidget *parent) : QDialog(parent), ui(new Ui::settin
     camApi = new getImage(w->urlCamStream.host(), false);
     connect(camApi, SIGNAL(focusState(bool)), this, SLOT(focusState(bool)));
     connect(camApi, SIGNAL(focusingActionState(bool)), this, SLOT(focusingActionState(bool)));
+    connect(camApi, SIGNAL(requestCompleted()), this, SLOT(requestCompleted()));
     ui->manFocusSlider->setEnabled(false);
+
+    timerAutoFocus = new QTimer(this);
+    connect(timerAutoFocus, SIGNAL(timeout()), this, SLOT(checkAutoFocusingState()));
 
   /*
     QIntValidator *validEditHoughLineNo = new QIntValidator(01, 10, this);
@@ -196,6 +200,9 @@ void settingsForm::getParameters(){
     itemR1C0->setText(w->urlCamStream.toString());
     itemR2C0->setText(w->urlPLC.toString());
     itemR3C0->setText(QString::number(w->BYTE_NO));
+
+    ui->focusCheck->setChecked(w->focusCheckBeforeControl);
+    ui->autoFocusCheck->setChecked(w->autoFocusBeforeControl);
     /*
     itemR3C0->setText(QString::number(w->right_BITofBYTE));
     itemR4C0->setText(QString::number(w->left_VMEM_BYTE));
@@ -363,6 +370,7 @@ void settingsForm::on_apiCheckFocus_clicked(){
 }
 
 void settingsForm::focusState(bool state){
+    ui->plainTextEdit->appendPlainText("ok...");
     if (state)
         ui->plainTextEdit->appendPlainText("Odak Dogru");
     else
@@ -376,16 +384,29 @@ void settingsForm::on_apiFocusStatus_clicked(){
 }
 
 void settingsForm::focusingActionState(bool state){
-    ui->plainTextEdit->appendPlainText("Odak Pozisyonu   : " + QString::number(camApi->focusPos, 'f', 3));
-    ui->plainTextEdit->appendPlainText("Odak Motoru Adim : " + camApi->focusMotorSteps);
-    ui->plainTextEdit->appendPlainText("Odaklama Durumu  : " + camApi->focusStatus);
-    ui->manFocusSlider->setEnabled(true);
-    ui->manFocusSlider->setValue(100*camApi->focusPos);
+    camFocusingActionState = state;
+
+    if (!timerAutoFocus->isActive()) {      // ONLY STATUS INFO REQUESTED
+        ui->plainTextEdit->appendPlainText("ok...");
+        ui->plainTextEdit->appendPlainText("Odak Pozisyonu   : " + QString::number(camApi->focusPos, 'f', 3));
+        ui->plainTextEdit->appendPlainText("Odak Motoru Adim : " + camApi->focusMotorSteps);
+        ui->plainTextEdit->appendPlainText("Odaklama Durumu  : " + camApi->focusStatus);
+        ui->manFocusSlider->setEnabled(true);
+        ui->manFocusSlider->setValue(100*camApi->focusPos);
+        ui->manFocusLabel->setText(QString::number(camApi->focusPos,'f',3));
+    } else {    // AUTO FOCUS PROCESS CHECK
+        if (!camFocusingActionState) {
+            timerAutoFocus->stop();
+            ui->plainTextEdit->appendPlainText("Oto fokus işlemi tamamlandı...");
+        }
+    }
 }
 
 void settingsForm::on_apiAutoFocus_clicked(){
     if (!w->cameraDownStatus && !camApi->busy){
+        timerLock = true;
         camApi->apiDahuaAutoFocus();
+        timerAutoFocus->start(100);
         ui->plainTextEdit->appendPlainText("Otomatik fokus komutu gonderildi");
     }
 }
@@ -396,4 +417,36 @@ void settingsForm::on_manFocusSlider_sliderReleased(){
         camApi->apiDahuaSetFocusPos(pos);
         ui->plainTextEdit->appendPlainText("Gonderilen fokus pozisyonu: " + QString::number(pos,'f',3));
     }
+}
+
+void settingsForm::on_manFocusSlider_sliderMoved(int position){
+    float pos = position / 100.0;
+    ui->manFocusLabel->setText(QString::number(pos,'f',3));
+}
+
+void settingsForm::requestCompleted(){
+    ui->plainTextEdit->appendPlainText("işlem tamam...");
+}
+
+void settingsForm::checkAutoFocusingState(){
+    if (!w->cameraDownStatus && !camApi->busy){
+        if (timerLock){
+            camApi->apiDahuaGetFocusStatus();
+            timerLock = false;
+            ui->plainTextEdit->appendPlainText("");
+        } else if (camFocusingActionState) {
+            camApi->apiDahuaGetFocusStatus();
+        }
+        QTextCursor text_cursor = QTextCursor(ui->plainTextEdit->document());
+        text_cursor.movePosition(QTextCursor::End);
+        text_cursor.insertText("*");
+    }
+}
+
+void settingsForm::on_focusCheck_clicked(){
+    w->focusCheckBeforeControl = ui->focusCheck->isChecked();
+}
+
+void settingsForm::on_autoFocusCheck_clicked(){
+    w->autoFocusBeforeControl = ui->autoFocusCheck->isChecked();
 }

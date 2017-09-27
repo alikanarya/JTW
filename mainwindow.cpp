@@ -393,7 +393,8 @@ void MainWindow::showSetupError(){
 
 void MainWindow::checker(){
 
-    permWeld = !emergencyStop && permOperator && permPLC && play && !cameraDownStatus && trackOn && controlDelayValid;
+//    permWeld = !emergencyStop && permOperator && permPLC && play && !cameraDownStatus && trackOn && controlDelayValid;
+    permWeld = !emergencyStop && permOperator && play && !cameraDownStatus && trackOn && controlDelayValid;
 
     ui->controlButton->setEnabled(permWeld);
 }
@@ -1043,38 +1044,11 @@ void MainWindow::controlButton(){
 
     if (controlOn){
 
-        controlInitiated = true;
-
-        weldCommands.clear();
-        weldCommandsSize = controlDelay / timerControlInterval;
-
-        ui->controlButton->setIcon(controlOnIcon);
-        ui->plainTextEdit->appendPlainText(timeString() + message1);
-
-        // for report
-        errorTotal = 0;
-        processCount = 0;
-        controlStartTime = timeSystem.getSystemTimeMsec();
-        errorMax = 0;
-        //QString line = timeString() + "Kaynak başladı."
-        fileData.clear();
-        fileData.append(timeString() + "Kaynak başlatıldı.");
-
-        // z control
-        if (zControlActive) {
-            distanceTarget = distance;
-            calcZParameters();
-        }
-
-        if (timeControl){
-            timeControlCounter = 0;
-            permTime = false;
-            startTimeControlCount = false;
+        if (focusCheckBeforeControl){
+            camDoAutoFocus = autoFocusBeforeControl;
+            checkFocusState();
         } else {
-            timeControlCounter = 0;
-            permTime = true;
-            startTimeControlCount = false;
-
+            startControl();
         }
 
     } else {
@@ -1116,6 +1090,43 @@ void MainWindow::controlButton(){
 
     //ui->stopButton->setEnabled(!controlOn);
     ui->analyzeButton->setEnabled(!controlOn);
+}
+
+void MainWindow::startControl(){
+
+    controlInitiated = true;
+
+    weldCommands.clear();
+    weldCommandsSize = controlDelay / timerControlInterval;
+
+    ui->controlButton->setIcon(controlOnIcon);
+    ui->plainTextEdit->appendPlainText(timeString() + message1);
+
+    // for report
+    errorTotal = 0;
+    processCount = 0;
+    controlStartTime = timeSystem.getSystemTimeMsec();
+    errorMax = 0;
+    //QString line = timeString() + "Kaynak başladı."
+    fileData.clear();
+    fileData.append(timeString() + "Kaynak başlatıldı.");
+
+    // z control
+    if (zControlActive) {
+        distanceTarget = distance;
+        calcZParameters();
+    }
+
+    if (timeControl){
+        timeControlCounter = 0;
+        permTime = false;
+        startTimeControlCount = false;
+    } else {
+        timeControlCounter = 0;
+        permTime = true;
+        startTimeControlCount = false;
+
+    }
 }
 
 void MainWindow::emergencyButton(){
@@ -1720,6 +1731,8 @@ void MainWindow::readSettings(){
             urlCamStream.setUrl(settings->value("urlCamStrm", _URL_CAM_STREAM).toString());
             playCamonBoot = settings->value("play", _PLAY_CAM_ONBOOT).toBool();
             fpsTarget = settings->value("fps", _FPS).toInt();
+            focusCheckBeforeControl = settings->value("fcschk", _FOCUS_CHECK).toBool();
+            autoFocusBeforeControl = settings->value("autofcs", _AUTO_FOCUS).toBool();
         settings->endGroup();
 
         settings->beginGroup("plc");
@@ -1810,6 +1823,8 @@ void MainWindow::readSettings(){
         urlCamStream.setUrl(_URL_CAM_STREAM);
         playCamonBoot = _PLAY_CAM_ONBOOT;
         fpsTarget = _FPS;
+        focusCheckBeforeControl = _FOCUS_CHECK;
+        autoFocusBeforeControl = _AUTO_FOCUS;
 
         urlPLC.setUrl(_URL_PLC);
         plcType = _PLC_TYPE;
@@ -1897,6 +1912,10 @@ void MainWindow::writeSettings(){
         QVariant play(playCamonBoot);
             settings->setValue("play", play.toString());
         settings->setValue("fps", QString::number(fpsTarget));
+        QVariant fcschk(focusCheckBeforeControl);
+            settings->setValue("fcschk", fcschk.toString());
+        QVariant autofcs(autoFocusBeforeControl);
+            settings->setValue("autofcs", autofcs.toString());
     settings->endGroup();
 
     settings->beginGroup("plc");
@@ -2417,16 +2436,38 @@ void MainWindow::doAutoFocus(){
 void MainWindow::focusState(bool state){
     camFocusState = state;
 
-    if (!camFocusState && camDoAutoFocus) {
-        timerLock = true;
-        doAutoFocus();
-        timerAutoFocus->start(100);
+    if (camFocusState) {
+        ui->plainTextEdit->appendPlainText(timeString() + alarm12);
+        if (controlOn)
+            startControl();
+    } else {
+        ui->plainTextEdit->appendPlainText(timeString() + alarm13);
+        if (camDoAutoFocus) {
+            ui->plainTextEdit->appendPlainText(timeString() + message6);
+            timerLock = true;
+            doAutoFocus();
+            timerAutoFocus->start(100);
+        } else {
+            if (controlOn) {
+                ui->plainTextEdit->appendPlainText(timeString() + alarm14);
+                controlOn = false;
+            }
+
+        }
     }
-    qDebug() << camFocusState;
 }
 
 void MainWindow::focusingActionState(bool state){
     camFocusingActionState = state;
+
+    if (!timerAutoFocus->isActive()) {      // ONLY STATUS INFO REQUESTED
+    } else {    // AUTO FOCUS PROCESS CHECK
+        if (!camFocusingActionState) {
+            timerAutoFocus->stop();
+            ui->plainTextEdit->appendPlainText("Oto fokus işlemi tamamlandı...");
+            checkFocusState();
+        }
+    }
 }
 
 void MainWindow::checkAutoFocusingState(){
@@ -2435,8 +2476,12 @@ void MainWindow::checkAutoFocusingState(){
         if (timerLock){
             camApi->apiDahuaGetFocusStatus();
             timerLock = false;
+            ui->plainTextEdit->appendPlainText("");
         } else if (camFocusingActionState) {
             camApi->apiDahuaGetFocusStatus();
         }
+        QTextCursor text_cursor = QTextCursor(ui->plainTextEdit->document());
+        text_cursor.movePosition(QTextCursor::End);
+        text_cursor.insertText("*");
     }
 }

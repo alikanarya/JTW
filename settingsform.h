@@ -3,6 +3,7 @@
 
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QTableWidgetItem>
+#include <QTimer>
 
 #include "restartdialog.h"
 #include "ui_restartdialog.h"
@@ -28,7 +29,12 @@ public:
     QTableWidgetItem *itemR8C0; // plc emergency v-mem byte
     QTableWidgetItem *itemR9C0; // plc emergency bit byte
 
+    QTextCursor text_cursor;
+
     getImage *camApi;
+    QTimer *timerAutoFocus;
+    bool timerLock = false;
+    bool camFocusingActionState = false;
 
     explicit settingsForm(QWidget *parent = 0);
     void getParameters();       // get parameters from mainwindow
@@ -67,6 +73,11 @@ private slots:
     void focusingActionState(bool);                 // true; focusing in action, false; stable
     void on_apiAutoFocus_clicked();
     void on_manFocusSlider_sliderReleased();
+    void on_manFocusSlider_sliderMoved(int position);
+    void requestCompleted();
+    void checkAutoFocusingState();
+    void on_focusCheck_clicked();
+    void on_autoFocusCheck_clicked();
 };
 
 #endif // SETTINGSFORM_H

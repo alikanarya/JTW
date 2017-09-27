@@ -59,6 +59,8 @@
 #define _MAIN_EDGE_NO       1
 #define _CAM_ENHANCE        false
 #define _ALIGN              false
+#define _FOCUS_CHECK        false
+#define _AUTO_FOCUS         false
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -160,11 +162,14 @@ public:
     bool camFocusState = false;         // true; in focus, false; out of focus
     bool camFocusingActionState = false;// true; focusing in action, false; stable
     bool camDoAutoFocus = false;
+    bool timerLock = false;
+    QTimer *timerAutoFocus;
+    bool focusCheckBeforeControl = false;
+    bool autoFocusBeforeControl = false;
+
 
     bool cameraDownStatus = true;
     bool camReconnectLock = false;
-    bool timerLock = false;
-    QTimer *timerAutoFocus;
 
     videoSaveThread *threadVideoSave;
     QImage imageFile;
@@ -447,6 +452,7 @@ public:
 
     void checkFocusState();
     void doAutoFocus();
+    void startControl();
 
     ~MainWindow();                                  // destructor
 

@@ -6,6 +6,7 @@
 #define message3    "Kamera bağlantısı normal"
 #define message4    "Kaynak gecikmesi: "
 #define message5    "Rapor dosyası yazılamadı"
+#define message6    "Oto Fokus Yapılıyor"
 
 #define alarm6      "Resim alınamadı !!! Kamera veya bağlantısında problem olabilir."
 #define alarm7      "KAMERA BAĞLANTISI YOK"
@@ -13,6 +14,9 @@
 #define alarm9      "Kaynak gecikmesi için girilen değer 500ms'den az olamaz. (Demo için 0 giriniz)"
 #define alarm10     "Komutlar durduruldu !"
 #define alarm11     "KAMERA ONLINE"
+#define alarm12     "Kamera Odak Ayarı DOĞRU"
+#define alarm13     "Kamera Odak Ayarı BOZUK !"
+#define alarm14     "KAYNAK BAŞLATILAMADI !"
 
 #define help10      "Kamera Butonu: Kamera görüntüsünü gösterir"
 
