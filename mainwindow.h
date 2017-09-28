@@ -129,7 +129,12 @@ namespace Ui {
 #include "videosavethread.h"
 
 #include <plcqtlib.h>
-
+#include "opencv2/core.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/imgcodecs.hpp"
+#include <iostream>
+#include <fstream>
+using namespace std;
 //#include <QMediaPlayer>
 //#include <QVideoWidget>
 
@@ -169,6 +174,8 @@ public:
     int autoFocusPassNo = 0;
     int autoFocusPassLimit = 2;
 
+    cv::Mat imgDataCV;
+    bool testFlag = false;
 
     bool cameraDownStatus = true;
     bool camReconnectLock = false;

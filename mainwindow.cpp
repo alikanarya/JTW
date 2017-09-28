@@ -11,6 +11,8 @@
 #include "exitdialog.h"
 #include <QCryptographicHash>
 
+
+
 //#include "../_Modules/Algo/localMinimum.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
@@ -506,8 +508,103 @@ void MainWindow::getImageFromStream(int captureTime){
         //qDebug() << playStream->iter;
         lastData->image = new QImage(img);
         lastData->shown = false;
+
+        if (testFlag) {
+            //cv::Mat imgData = playStream->dest.clone();
+            //cv::Mat imgData = cv::imdecode(playStream->dest, cv::IMREAD_GRAYSCALE );
+
+            cv::Mat imgData0(lastData->image->height(),lastData->image->width(),CV_8UC3,(uchar*)lastData->image->bits(),lastData->image->bytesPerLine());
+            cv::Mat imgData; // deep copy just in case (my lack of knowledge with open cv)
+            cvtColor(imgData0, imgData,CV_RGB2GRAY);
+
+            //! [expand]
+                cv::Mat padded;                            //expand input image to optimal size
+                int m = cv::getOptimalDFTSize( imgData.rows );
+                int n = cv::getOptimalDFTSize( imgData.cols ); // on the border add zero values
+                copyMakeBorder(imgData, padded, 0, m - imgData.rows, 0, n - imgData.cols, cv::BORDER_CONSTANT, cv::Scalar::all(0));
+            //! [expand]
+
+            //! [complex_and_real]
+                cv::Mat planes[] = {cv::Mat_<float>(padded), cv::Mat::zeros(padded.size(), CV_32F)};
+                cv::Mat complexI;
+                cv::merge(planes, 2, complexI);         // Add to the expanded another plane with zeros
+            //! [complex_and_real]
+
+            //! [dft]
+                cv::dft(complexI, complexI);            // this way the result may fit in the source matrix
+            //! [dft]
+
+                // compute the magnitude and switch to logarithmic scale
+                // => log(1 + sqrt(Re(DFT(I))^2 + Im(DFT(I))^2))
+            //! [magnitude]
+                cv::split(complexI, planes);                   // planes[0] = Re(DFT(I), planes[1] = Im(DFT(I))
+                cv::magnitude(planes[0], planes[1], planes[0]);// planes[0] = magnitude
+                cv::Mat magI = planes[0];
+            //! [magnitude]
+
+                //! [log]
+                    magI += cv::Scalar::all(1);                    // switch to logarithmic scale
+                    cv::log(magI, magI);
+                //! [log]
+
+                //! [crop_rearrange]
+                    // crop the spectrum, if it has an odd number of rows or columns
+                    magI = magI(cv::Rect(0, 0, magI.cols & -2, magI.rows & -2));
+
+                    // rearrange the quadrants of Fourier image  so that the origin is at the image center
+                    int cx = magI.cols/2;
+                    int cy = magI.rows/2;
+
+                    cv::Mat q0(magI, cv::Rect(0, 0, cx, cy));   // Top-Left - Create a ROI per quadrant
+                    cv::Mat q1(magI, cv::Rect(cx, 0, cx, cy));  // Top-Right
+                    cv::Mat q2(magI, cv::Rect(0, cy, cx, cy));  // Bottom-Left
+                    cv::Mat q3(magI, cv::Rect(cx, cy, cx, cy)); // Bottom-Right
+
+                    cv::Mat tmp;                           // swap quadrants (Top-Left with Bottom-Right)
+                    q0.copyTo(tmp);
+                    q3.copyTo(q0);
+                    tmp.copyTo(q3);
+
+                    q1.copyTo(tmp);                    // swap quadrant (Top-Right with Bottom-Left)
+                    q2.copyTo(q1);
+                    tmp.copyTo(q2);
+                //! [crop_rearrange]
+
+                //! [normalize]
+                    //cv::normalize(magI, magI, 0, 1, cv::NORM_MINMAX); // Transform the matrix with float values into a
+                                                            // viewable image form (float between values 0 and 1).
+                //! [normalize]
+
+                /*
+                cv::FileStorage file("fft.xml", cv::FileStorage::WRITE);
+                file << "matname" << magI;
+                file.release();
+                */
+                ofstream fout("fft.csv");
+                if(!fout) {
+                    cout<<"File Not Opened"<<endl;  return;
+                }
+                for(int i=0; i<magI.rows; i++) {
+                    for(int j=0; j<magI.cols; j++) {
+//                        fout<<magI.at<float>(i,j)<<",";
+                        fout << QString::number(magI.at<float>(i,j),'f',3).toStdString() <<",";
+                    }
+                    fout<<endl;
+                }
+                fout.close();
+
+                double min, max;
+                cv::minMaxLoc(magI, &min, &max);
+                ui->plainTextEdit->appendPlainText("min: " + QString::number(min,'f',3) + " max: " + QString::number(max));
+
+            testFlag = false;
+        }
+
+
         playCam();
         //ui->imageFrame->setPixmap( QPixmap::fromImage( img.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
+
+
     }
 }
 
@@ -2293,11 +2390,41 @@ void MainWindow::testButton(){
     //findLocalMinimum(array, 5, list);
     */
 
-    //if (!camApi->busy)  camApi->apiDahuaGetFocusStatus();
-    //timerAutoFocus->start(100);
+    testFlag = true;
+    //cv::Mat imgData = cv::imdecode(imgDataCV, cv::IMREAD_GRAYSCALE );
+//    cv::Mat imgData = cv::imread("x.jpg", cv::IMREAD_GRAYSCALE);
+/*
+    cv::Mat imgData = imgDataCV;
 
-    camDoAutoFocus = true;
-    checkFocusState();
+    //! [expand]
+        cv::Mat padded;                            //expand input image to optimal size
+        int m = cv::getOptimalDFTSize( imgData.rows );
+        int n = cv::getOptimalDFTSize( imgData.cols ); // on the border add zero values
+        copyMakeBorder(imgData, padded, 0, m - imgData.rows, 0, n - imgData.cols, cv::BORDER_CONSTANT, cv::Scalar::all(0));
+    //! [expand]
+
+    //! [complex_and_real]
+        cv::Mat planes[] = {cv::Mat_<float>(padded), cv::Mat::zeros(padded.size(), CV_32F)};
+        cv::Mat complexI;
+        cv::merge(planes, 2, complexI);         // Add to the expanded another plane with zeros
+    //! [complex_and_real]
+
+    //! [dft]
+        cv::dft(complexI, complexI);            // this way the result may fit in the source matrix
+    //! [dft]
+
+        // compute the magnitude and switch to logarithmic scale
+        // => log(1 + sqrt(Re(DFT(I))^2 + Im(DFT(I))^2))
+    //! [magnitude]
+        cv::split(complexI, planes);                   // planes[0] = Re(DFT(I), planes[1] = Im(DFT(I))
+        cv::magnitude(planes[0], planes[1], planes[0]);// planes[0] = magnitude
+        cv::Mat magI = planes[0];
+    //! [magnitude]
+
+        double min, max;
+        cv::minMaxLoc(magI, &min, &max);
+        ui->plainTextEdit->appendPlainText("min: " + QString::number(min,'f',3) + " max: " + QString::number(max));
+*/
 }
 
 void MainWindow::on_setupButton_clicked(){
