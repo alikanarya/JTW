@@ -452,7 +452,6 @@ public:
     void checker();
     int getBitofByte(unsigned char byte, int bitNo);
 
-    void checkFocusState();
     void doAutoFocus();
     void startControl();
 
@@ -479,6 +478,7 @@ public slots:
     void camConnected();
     void camNotConnected();
     void killCamStreamThread();
+    void checkFocusState();
     void focusState(bool state);                    // true; in focus, false; out of focus
     void checkAutoFocusingState();
     void focusingActionState(bool);                 // true; focusing in action, false; stable

@@ -394,7 +394,7 @@ void MainWindow::showSetupError(){
 void MainWindow::checker(){
 
 //    permWeld = !emergencyStop && permOperator && permPLC && play && !cameraDownStatus && trackOn && controlDelayValid;
-    permWeld = !emergencyStop && permOperator && play && !cameraDownStatus && trackOn && controlDelayValid;
+    permWeld = !emergencyStop && play && !cameraDownStatus && trackOn && controlDelayValid;
 
     ui->controlButton->setEnabled(permWeld);
 }
@@ -2470,12 +2470,13 @@ void MainWindow::focusingActionState(bool state){
         if (!camFocusingActionState) {
             timerAutoFocus->stop();
             ui->plainTextEdit->appendPlainText("Oto fokus işlemi tamamlandı...");
-            checkFocusState();
+            QTimer::singleShot(1000, this, SLOT(checkFocusState()));
+            //checkFocusState();
         }
     }
 }
 
-void MainWindow::checkAutoFocusingState(){
+void MainWindow::checkAutoFocusingState(){  // timerAutoFocus slot
 
     if (!cameraDownStatus && !camApi->busy){
         if (timerLock){
