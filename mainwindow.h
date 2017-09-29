@@ -461,6 +461,7 @@ public:
 
     void doAutoFocus();
     void startControl();
+    float* fourierTransform(QImage *img, bool save=false);
 
     ~MainWindow();                                  // destructor
 
