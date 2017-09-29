@@ -543,8 +543,8 @@ void MainWindow::getImageFromStream(int captureTime){
             //! [magnitude]
 
                 //! [log]
-                    magI += cv::Scalar::all(1);                    // switch to logarithmic scale
-                    cv::log(magI, magI);
+                    //magI += cv::Scalar::all(1);                    // switch to logarithmic scale
+                    //cv::log(magI, magI);
                 //! [log]
 
                 //! [crop_rearrange]
@@ -580,6 +580,7 @@ void MainWindow::getImageFromStream(int captureTime){
                 file << "matname" << magI;
                 file.release();
                 */
+                    /*
                 ofstream fout("fft.csv");
                 if(!fout) {
                     cout<<"File Not Opened"<<endl;  return;
@@ -592,10 +593,12 @@ void MainWindow::getImageFromStream(int captureTime){
                     fout<<endl;
                 }
                 fout.close();
-
-                double min, max;
-                cv::minMaxLoc(magI, &min, &max);
-                ui->plainTextEdit->appendPlainText("min: " + QString::number(min,'f',3) + " max: " + QString::number(max));
+*/
+                    double min, max;
+                    cv::minMaxLoc(magI, &min, &max);
+                    cv::Scalar scal = cv::mean(magI);
+                    float mean = scal.val[0];
+                    ui->plainTextEdit->appendPlainText("min: " + QString::number(min,'f',3) + " max: " + QString::number(max) + " mean: " + QString::number(mean));
 
             testFlag = false;
         }
@@ -985,7 +988,8 @@ void MainWindow::updateSn(){
     msecCount = 0;
     pause = false;
 
-    ui->plainTextEdit->ensureCursorVisible();
+    //ui->plainTextEdit->ensureCursorVisible();
+    QTextCursor(ui->plainTextEdit->document()).movePosition(QTextCursor::End);
 
     /* * plc live state
     if (!plcInteractPrev && threadPLCControl->plc->plcInteract){           // 0 -> 1
@@ -2391,10 +2395,10 @@ void MainWindow::testButton(){
     */
 
     testFlag = true;
-    //cv::Mat imgData = cv::imdecode(imgDataCV, cv::IMREAD_GRAYSCALE );
-//    cv::Mat imgData = cv::imread("x.jpg", cv::IMREAD_GRAYSCALE);
+//    cv::Mat imgData = cv::imdecode(imgDataCV, cv::IMREAD_GRAYSCALE );
+    //cv::Mat imgData = imgDataCV;
 /*
-    cv::Mat imgData = imgDataCV;
+    cv::Mat imgData = cv::imread("05.jpg", cv::IMREAD_GRAYSCALE);
 
     //! [expand]
         cv::Mat padded;                            //expand input image to optimal size
@@ -2421,10 +2425,101 @@ void MainWindow::testButton(){
         cv::Mat magI = planes[0];
     //! [magnitude]
 
+        //! [log]
+            //magI += cv::Scalar::all(1);                    // switch to logarithmic scale
+            //cv::log(magI, magI);
+        //! [log]
+
+        //! [crop_rearrange]
+            // crop the spectrum, if it has an odd number of rows or columns
+            magI = magI(cv::Rect(0, 0, magI.cols & -2, magI.rows & -2));
+
+            // rearrange the quadrants of Fourier image  so that the origin is at the image center
+            int cx = magI.cols/2;
+            int cy = magI.rows/2;
+
+            cv::Mat q0(magI, cv::Rect(0, 0, cx, cy));   // Top-Left - Create a ROI per quadrant
+            cv::Mat q1(magI, cv::Rect(cx, 0, cx, cy));  // Top-Right
+            cv::Mat q2(magI, cv::Rect(0, cy, cx, cy));  // Bottom-Left
+            cv::Mat q3(magI, cv::Rect(cx, cy, cx, cy)); // Bottom-Right
+
+if (false) {
+    ofstream fout0("fftQ0.csv");
+    if(!fout0) { cout<<"File Not Opened"<<endl;  return;   }
+    for(int i=0; i<q0.rows; i++) {
+        for(int j=0; j<q0.cols; j++)
+            fout0 << QString::number(q0.at<float>(i,j),'f',0).toStdString() <<",";
+        fout0<<endl;
+    }
+    fout0.close();
+    ofstream fout1("fftQ1.csv");
+    if(!fout1) { cout<<"File Not Opened"<<endl;  return;   }
+    for(int i=0; i<q1.rows; i++) {
+        for(int j=0; j<q1.cols; j++)
+            fout1 << QString::number(q1.at<float>(i,j),'f',0).toStdString() <<",";
+        fout1<<endl;
+    }
+    fout1.close();
+    ofstream fout2("fftQ2.csv");
+    if(!fout2) { cout<<"File Not Opened"<<endl;  return;   }
+    for(int i=0; i<q2.rows; i++) {
+        for(int j=0; j<q2.cols; j++)
+            fout2 << QString::number(q2.at<float>(i,j),'f',0).toStdString() <<",";
+        fout2<<endl;
+    }
+    fout2.close();
+    ofstream fout3("fftQ3.csv");
+    if(!fout3) { cout<<"File Not Opened"<<endl;  return;   }
+    for(int i=0; i<q3.rows; i++) {
+        for(int j=0; j<q3.cols; j++)
+            fout3 << QString::number(q3.at<float>(i,j),'f',0).toStdString() <<",";
+        fout3<<endl;
+    }
+    fout3.close();
+}
+
+            cv::Mat tmp;                           // swap quadrants (Top-Left with Bottom-Right)
+            q0.copyTo(tmp);
+            q3.copyTo(q0);
+            tmp.copyTo(q3);
+
+            q1.copyTo(tmp);                    // swap quadrant (Top-Right with Bottom-Left)
+            q2.copyTo(q1);
+            tmp.copyTo(q2);
+        //! [crop_rearrange]
+
+        //! [normalize]
+            //cv::normalize(magI, magI, 0, 1, cv::NORM_MINMAX); // Transform the matrix with float values into a
+                                                    // viewable image form (float between values 0 and 1).
+        //! [normalize]
+
+if (false) {
+    ofstream fout("fft.csv");
+    if(!fout) {
+        cout<<"File Not Opened"<<endl;  return;
+    }
+    for(int i=0; i<magI.rows; i++) {
+        for(int j=0; j<magI.cols; j++) {
+//                        fout<<magI.at<float>(i,j)<<",";
+            fout << QString::number(magI.at<float>(i,j),'f',3).toStdString() <<",";
+        }
+        fout<<endl;
+    }
+    fout.close();
+}
+
         double min, max;
         cv::minMaxLoc(magI, &min, &max);
-        ui->plainTextEdit->appendPlainText("min: " + QString::number(min,'f',3) + " max: " + QString::number(max));
+        cv::Scalar scal = cv::mean(magI);
+        float mean = scal.val[0];
+        ui->plainTextEdit->appendPlainText("min: " + QString::number(min,'f',3) + " max: " + QString::number(max) + " mean: " + QString::number(mean));
 */
+        /*
+        cv::FileStorage file("fft.xml", cv::FileStorage::WRITE);
+        file << "matname" << magI;
+        file.release();
+        */
+
 }
 
 void MainWindow::on_setupButton_clicked(){
@@ -2597,7 +2692,7 @@ void MainWindow::focusingActionState(bool state){
         if (!camFocusingActionState) {
             timerAutoFocus->stop();
             ui->plainTextEdit->appendPlainText("Oto fokus işlemi tamamlandı...");
-            QTimer::singleShot(1000, this, SLOT(checkFocusState()));
+            QTimer::singleShot(4000, this, SLOT(checkFocusState()));
             //checkFocusState();
         }
     }

@@ -172,7 +172,7 @@ public:
     bool focusCheckBeforeControl = false;
     bool autoFocusBeforeControl = false;
     int autoFocusPassNo = 0;
-    int autoFocusPassLimit = 2;
+    int autoFocusPassLimit = 4;
 
     cv::Mat imgDataCV;
     bool testFlag = false;
