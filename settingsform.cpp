@@ -425,7 +425,7 @@ void settingsForm::on_manFocusSlider_sliderMoved(int position){
 }
 
 void settingsForm::requestCompleted(){
-    ui->plainTextEdit->appendPlainText("işlem tamam...");
+    ui->plainTextEdit->appendPlainText("islem tamam...");
 }
 
 void settingsForm::checkAutoFocusingState(){

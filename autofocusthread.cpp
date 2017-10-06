@@ -2,24 +2,45 @@
 
 #include <QDebug>
 
-autoFocusThread::autoFocusThread()
-{
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+extern MainWindow *w;
 
+autoFocusThread::autoFocusThread(int _initialSampleSize, int _iterNumber){
+    initialSampleSize = _initialSampleSize;
+    iterNumber = _iterNumber;
 }
 
 void autoFocusThread::run(){
 
-    while (!mStop) {
+    qDebug() << "thread started";
 
-        for (int i=0; i<5; i++){
+    sampleSize = initialSampleSize;
 
-            sleep(1000);
-            qDebug() << i;
-            mMutex.lock();
-            if (restart) condition.wait(&mMutex);
-            mMutex.unlock();
+    for (int i=0; i<iterNumber; i++) {
+
+        step = 1.0 / (sampleSize+1);
+
+        for (int j=1; j<=sampleSize; j++) {
+
+            w->camApi->apiDahuaSetFocusPos(j*step);
         }
 
     }
 
 }
+
+
+
+/*
+while (!mStop) {
+    for (int i=0; i<5; i++){
+        QThread::msleep(1000);
+        qDebug() << i << " ,  " << restart;
+        mMutex.lock();
+        //if (restart)
+            condition.wait(&mMutex);
+        mMutex.unlock();
+    }
+}
+*/

@@ -379,7 +379,7 @@ public:
         labelDistance->setAlignment(Qt::AlignCenter);
         testEdit = new QLineEdit(centralWidget);
         testEdit->setObjectName(QStringLiteral("testEdit"));
-        testEdit->setEnabled(false);
+        testEdit->setEnabled(true);
         testEdit->setGeometry(QRect(620, 588, 51, 20));
         QFont font5;
         font5.setPointSize(9);

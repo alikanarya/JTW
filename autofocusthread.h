@@ -11,11 +11,15 @@ class autoFocusThread : public QThread {
 
 public:
 
-    autoFocusThread();
+    autoFocusThread(int _initialSampleSize, int _iterNumber);
     void stop();
 
     QWaitCondition condition;
-    bool restart;
+    bool restart = true;
+    int initialSampleSize;
+    int sampleSize;
+    int iterNumber;
+    float step;
 
 protected:
     virtual void run();

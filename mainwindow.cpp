@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //ui->plainTextEdit->appendPlainText(QString::number(rectScreen.width())+"x"+QString::number(rectScreen.height()));
     ui->labelTime->hide();
     ui->emergencyButton->hide();
-    ui->testEdit->hide();
+    //ui->testEdit->hide();
     //ui->testButton->hide();
 
     // icon assignmets
@@ -151,6 +151,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     camApi = new getImage(urlCamStream.host(), false);
     connect(camApi, SIGNAL(focusState(bool)), this, SLOT(focusState(bool)));
     connect(camApi, SIGNAL(focusingActionState(bool)), this, SLOT(focusingActionState(bool)));
+    connect(camApi, SIGNAL(requestCompleted()), this, SLOT(apiRequestCompleted()));
     timerAutoFocus = new QTimer(this);
     connect(timerAutoFocus, SIGNAL(timeout()), this, SLOT(checkAutoFocusingState()));
 
@@ -1025,6 +1026,9 @@ void MainWindow::on_guideAlignButton_clicked(){
         }
         repaintGuide();
     }
+    //AF.start();
+    autoFocusThread x(10,2);
+    x.start();
 }
 
 void MainWindow::trackButton(){
@@ -2302,7 +2306,25 @@ void MainWindow::testButton(){
     //findLocalMinimum(array, 5, list);
     */
 
-    testFlag = true;
+    //testFlag = true;
+    //AF.restart = !AF.restart;
+    //if (AF.restart)
+        //AF.condition.wakeAll();
+    testFlag2 = !testFlag2;
+    if (testFlag2){
+        secondTimeTick = timeSystem.getSystemTimeMsec();
+        testFloat1 = ui->testEdit->text().toFloat();
+        testInt1 = abs(testFloat1 - testFloat2) * 3000;
+        QTimer::singleShot(testInt1, this, SLOT(testSlot()));
+        camApi->apiDahuaSetFocusPos(testFloat1);
+        testFloat2 = testFloat1;
+    } else {
+        qDebug() << (timeSystem.getSystemTimeMsec() - secondTimeTick);
+    }
+}
+
+void MainWindow::testSlot(){
+    ui->plainTextEdit->appendPlainText("*");
 }
 
 void MainWindow::on_setupButton_clicked(){
@@ -2495,6 +2517,10 @@ void MainWindow::checkAutoFocusingState(){  // timerAutoFocus slot
         text_cursor.movePosition(QTextCursor::End);
         text_cursor.insertText("*");
     }
+}
+
+void MainWindow::apiRequestCompleted(){
+
 }
 
 float* MainWindow::fourierTransform(QImage *img, bool save){
