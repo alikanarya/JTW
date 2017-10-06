@@ -127,6 +127,7 @@ namespace Ui {
 #include "plccontrolthread.h"
 #include "../_Modules/Protect/protect.h"
 #include "videosavethread.h"
+#include "autofocusthread.h"
 
 #include <plcqtlib.h>
 #include "opencv2/core.hpp"
@@ -173,6 +174,8 @@ public:
     bool autoFocusBeforeControl = false;
     int autoFocusPassNo = 0;
     int autoFocusPassLimit = 4;
+
+    autoFocusThread AF;
 
     cv::Mat imgDataCV;
     bool testFlag = false;

@@ -48,7 +48,8 @@ SOURCES += main.cpp\
     imgtools.cpp \
     plcqtlib.cpp \
     nodave.c \
-    ../_Modules/PlayStream/threadplaystream.cpp
+    ../_Modules/PlayStream/threadplaystream.cpp \
+    autofocusthread.cpp
 
 HEADERS  += mainwindow.h \
     setupform.h \
@@ -78,7 +79,8 @@ HEADERS  += mainwindow.h \
     log2.h \
     nodave.h \
     plcqtlib.h \
-    ../_Modules/PlayStream/threadplaystream.h
+    ../_Modules/PlayStream/threadplaystream.h \
+    autofocusthread.h
 
 FORMS    += mainwindow.ui \
     setupform.ui \
