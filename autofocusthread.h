@@ -20,6 +20,7 @@ public:
     int sampleSize;
     int iterNumber;
     float step;
+    int j;
 
 protected:
     virtual void run();
@@ -28,6 +29,9 @@ private:
 
     bool mStop;
     QMutex mMutex;
+
+signals:
+    void setFocusPos(float);
 
 };
 

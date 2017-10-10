@@ -2310,6 +2310,7 @@ void MainWindow::testButton(){
     //AF.restart = !AF.restart;
     //if (AF.restart)
         //AF.condition.wakeAll();
+    /*
     testFlag2 = !testFlag2;
     if (testFlag2){
         secondTimeTick = timeSystem.getSystemTimeMsec();
@@ -2321,6 +2322,14 @@ void MainWindow::testButton(){
     } else {
         qDebug() << (timeSystem.getSystemTimeMsec() - secondTimeTick);
     }
+    */
+    AF = new autoFocusThread(9,1);
+    connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
+    fftArray = new float*[9];
+    for (int i=0; i<9; i++)
+        fftArray[i] = new float[3];
+    doAutoFocus_Algo = true;
+    AF->start();
 }
 
 void MainWindow::testSlot(){
@@ -2519,8 +2528,16 @@ void MainWindow::checkAutoFocusingState(){  // timerAutoFocus slot
     }
 }
 
-void MainWindow::apiRequestCompleted(){
+void MainWindow::setFocusPos(float pos){
+    if (!cameraDownStatus && !camApi->busy){
+        camApi->apiDahuaSetFocusPos(pos);
+    }
+}
 
+void MainWindow::apiRequestCompleted(){
+    if (doAutoFocus_Algo) {
+        QTimer::singleShot(500, this, SLOT(getFFT()));
+    }
 }
 
 float* MainWindow::fourierTransform(QImage *img, bool save){
@@ -2637,7 +2654,7 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
     cv::minMaxLoc(magI, &min, &max);
     cv::Scalar scal = cv::mean(magI);
     float mean = scal.val[0];
-    ui->plainTextEdit->appendPlainText("min: " + QString::number(min,'f',3) + " max: " + QString::number(max) + " mean: " + QString::number(mean));
+    //ui->plainTextEdit->appendPlainText("min: " + QString::number(min,'f',3) + " max: " + QString::number(max) + " mean: " + QString::number(mean));
 
     int countLow = 0,countHigh = 0;
     for(int i=0; i<magI.rows; i++)
@@ -2647,7 +2664,7 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
             else
                 countHigh++;
 
-    ui->plainTextEdit->appendPlainText("low#: " + QString::number(countLow) + " high#: " + QString::number(countHigh));
+    //ui->plainTextEdit->appendPlainText("low#: " + QString::number(countLow) + " high#: " + QString::number(countHigh));
 
     float *array = new float[3];
     array[0] = min;
@@ -2655,4 +2672,15 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
     array[2] = mean;
 
     return array;
+}
+
+void MainWindow::getFFT(){
+    if (!cameraDownStatus){
+        fftArray[AF->j-1] = fourierTransform(lastData->image, false);
+        ui->plainTextEdit->appendPlainText(QString::number(AF->j)+
+                                           //" min: "+QString::number(fftArray[AF->j-1][0])+
+                                           //" max: "+QString::number(fftArray[AF->j-1][1])+
+                                           " mean: "+QString::number(fftArray[AF->j-1][2],'f',2));
+        AF->condition.wakeAll();
+    }
 }

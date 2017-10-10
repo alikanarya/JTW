@@ -21,10 +21,15 @@ void autoFocusThread::run(){
 
         step = 1.0 / (sampleSize+1);
 
-        for (int j=1; j<=sampleSize; j++) {
+        for (j=1; j<=sampleSize; j++) {
 
-            w->camApi->apiDahuaSetFocusPos(j*step);
-        }
+            //w->camApi->apiDahuaSetFocusPos(j*step);
+            emit setFocusPos(j*step);
+
+            mMutex.lock();
+            //if (restart)
+                condition.wait(&mMutex);
+            mMutex.unlock();        }
 
     }
 

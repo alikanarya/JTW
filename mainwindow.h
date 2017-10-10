@@ -175,7 +175,9 @@ public:
     int autoFocusPassNo = 0;
     int autoFocusPassLimit = 4;
 
-    //autoFocusThread AF;
+    autoFocusThread *AF;
+    bool doAutoFocus_Algo = false;
+    float **fftArray;
 
     cv::Mat imgDataCV;
 
@@ -497,8 +499,10 @@ public slots:
     void focusState(bool state);                    // true; in focus, false; out of focus
     void checkAutoFocusingState();
     void focusingActionState(bool);                 // true; focusing in action, false; stable
+    void setFocusPos(float);
     void apiRequestCompleted();
     void testSlot();
+    void getFFT();
 
 signals:
     void cameraDown();
