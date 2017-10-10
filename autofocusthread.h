@@ -19,7 +19,9 @@ public:
     int initialSampleSize;
     int sampleSize;
     int iterNumber;
+    float dMax;
     float step;
+    float sampleStart, sampleEnd;
     int j;
 
 protected:

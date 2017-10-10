@@ -2681,6 +2681,20 @@ void MainWindow::getFFT(){
                                            //" min: "+QString::number(fftArray[AF->j-1][0])+
                                            //" max: "+QString::number(fftArray[AF->j-1][1])+
                                            " mean: "+QString::number(fftArray[AF->j-1][2],'f',2));
+        if (AF->j == AF->sampleSize){
+            float max = fftArray[0][2];
+            int index = 0;
+            for (int i=1; i<AF->sampleSize; i++){
+                if (fftArray[i][2] > max){
+                    index = i;
+                    max = fftArray[i][2];
+                }
+            }
+            float pos = (index+1)*AF->step;
+            ui->plainTextEdit->appendPlainText("posOfMax: " + QString::number(pos, 'f', 2));
+            float newDist = qMax(abs(pos - AF->sampleStart), abs(AF->sampleEnd - pos))/2;
+            ui->plainTextEdit->appendPlainText("newDist: " + QString::number(newDist, 'f', 2));
+        }
         AF->condition.wakeAll();
     }
 }

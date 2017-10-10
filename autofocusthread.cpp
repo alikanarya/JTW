@@ -16,10 +16,14 @@ void autoFocusThread::run(){
     qDebug() << "thread started";
 
     sampleSize = initialSampleSize;
+    dMax = 1.0;
 
     for (int i=0; i<iterNumber; i++) {
 
-        step = 1.0 / (sampleSize+1);
+        step = dMax / (sampleSize+1);
+        sampleStart = step;
+        sampleEnd = step*sampleSize;
+        dMax = sampleEnd - sampleStart;
 
         for (j=1; j<=sampleSize; j++) {
 
@@ -29,7 +33,8 @@ void autoFocusThread::run(){
             mMutex.lock();
             //if (restart)
                 condition.wait(&mMutex);
-            mMutex.unlock();        }
+            mMutex.unlock();
+        }
 
     }
 
