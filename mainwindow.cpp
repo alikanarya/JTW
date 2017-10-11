@@ -2692,8 +2692,18 @@ void MainWindow::getFFT(){
             }
             float pos = (index+1)*AF->step;
             ui->plainTextEdit->appendPlainText("posOfMax: " + QString::number(pos, 'f', 2));
-            float newDist = qMax(abs(pos - AF->sampleStart), abs(AF->sampleEnd - pos))/2;
-            ui->plainTextEdit->appendPlainText("newDist: " + QString::number(newDist, 'f', 2));
+            float distLeft = pos - AF->sampleStart;
+            float distRight = AF->sampleEnd - pos;
+
+            float newDistHalf = ((int)(qMax(abs(distLeft), abs(distRight))*100/2)) / 100.0;
+            float newdistLeft = distLeft - newDistHalf;
+            float newdistRight = distRight - newDistHalf;
+            if (newdistLeft < 0) newdistLeft = distLeft;
+            if (newdistRight < 0) newdistRight = distRight;
+
+            ui->plainTextEdit->appendPlainText("newDistHalf: " + QString::number(newDistHalf, 'f', 12));
+            ui->plainTextEdit->appendPlainText("newdistLeft: " + QString::number(newdistLeft, 'f', 12));
+            ui->plainTextEdit->appendPlainText("newdistRight: " + QString::number(newdistRight, 'f', 12));
         }
         AF->condition.wakeAll();
     }
