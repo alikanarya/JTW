@@ -13,22 +13,25 @@ autoFocusThread::autoFocusThread(int _initialSampleSize, int _iterNumber){
 
 void autoFocusThread::run(){
 
-    qDebug() << "thread started";
+    //qDebug() << "thread started";
 
     sampleSize = initialSampleSize;
     dMax = 1.0;
 
-    for (int i=0; i<iterNumber; i++) {
+    for (i=0; i<iterNumber; i++) {
 
-        step = dMax / (sampleSize+1);
-        sampleStart = step;
-        sampleEnd = step*sampleSize;
-        dMax = sampleEnd - sampleStart;
+        if (i == 0) {
+            step = dMax / (sampleSize+1);
+            sampleStart = step;
+            sampleEnd = step*sampleSize;
+            dMax = sampleEnd - sampleStart;
+            offset = 0;
+        }
 
         for (j=1; j<=sampleSize; j++) {
 
             //w->camApi->apiDahuaSetFocusPos(j*step);
-            emit setFocusPos(j*step);
+            emit setFocusPos(j*step + offset);
 
             mMutex.lock();
             //if (restart)

@@ -22,7 +22,8 @@ public:
     float dMax;
     float step;
     float sampleStart, sampleEnd;
-    int j;
+    double offset;
+    int i, j;
 
 protected:
     virtual void run();
