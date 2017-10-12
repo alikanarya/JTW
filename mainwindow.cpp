@@ -2323,7 +2323,7 @@ void MainWindow::testButton(){
         qDebug() << (timeSystem.getSystemTimeMsec() - secondTimeTick);
     }
     */
-    AF = new autoFocusThread(9,2);
+    AF = new autoFocusThread(9,3);
     connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
     fftArray = new float*[9];
     for (int i=0; i<9; i++)
@@ -2677,7 +2677,7 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
 void MainWindow::getFFT(){
     if (!cameraDownStatus){
         fftArray[AF->j-1] = fourierTransform(lastData->image, false);
-        ui->plainTextEdit->appendPlainText(QString::number(AF->j)+
+        ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round((AF->j*AF->step+AF->offset)*10000) / 10000.0)+
                                            //" min: "+QString::number(fftArray[AF->j-1][0])+
                                            //" max: "+QString::number(fftArray[AF->j-1][1])+
                                            " mean: "+QString::number(fftArray[AF->j-1][2],'f',2));
@@ -2690,12 +2690,13 @@ void MainWindow::getFFT(){
                     max = fftArray[i][2];
                 }
             }
-            double pos = round((index+1)*AF->step*100) / 100.0;
+            double pos = round(((index+1)*AF->step+AF->offset)*10000) / 10000.0;
             ui->plainTextEdit->appendPlainText("posOfMax: " + QString::number(pos, 'f', 12));
-            double distLeft = round((pos - AF->sampleStart)*100) / 100.0;
-            double distRight = round((AF->sampleEnd - pos)*100) / 100.0;
+            double distLeft = round((pos - AF->sampleStart)*10000) / 10000.0;
+            double distRight = round((AF->sampleEnd - pos)*10000) / 10000.0;
+            qDebug() << distLeft << " " << distRight;
 
-            double newDistHalf = round(qMax(abs(distLeft), abs(distRight))*100/2) / 100.0;
+            double newDistHalf = round(qMax(abs(distLeft), abs(distRight))*10000/2) / 10000.0;
 
             double newdistLeft;// = round((pos - newDistHalf)*100) / 100.0;
             if ((pos - newDistHalf) >= AF->sampleStart)
@@ -2717,23 +2718,25 @@ void MainWindow::getFFT(){
             if (newdistRight < 0) newdistRight = distRight;
             */
 
-            double newDist = round((newdistLeft + newdistRight)*100)/100.0;
-            double newsamplestart = round((pos - newdistLeft)*100)/100.0;
+            double newDist = round((newdistLeft + newdistRight)*10000)/10000.0;
             double newstep = newDist * AF->step / AF->dMax;
+            double newsamplestart = round((pos - newdistLeft)*10000)/10000.0;
 //            double newstep = round((newDist * AF->step / AF->dMax)*10000)/10000.0;
             int newsamplesize = newDist / newstep;
 
             AF->sampleSize = newsamplesize-1;
             AF->dMax = newDist;
             AF->step = newstep;
-            AF->sampleStart = newsamplestart;
+            AF->sampleStart =  round((newsamplestart + newstep)*10000)/10000.0;
+            AF->sampleEnd = round((AF->step * (AF->sampleSize-1)+AF->sampleStart)*10000)/10000.0 ;
             AF->offset = newsamplestart;
 
             ui->plainTextEdit->appendPlainText("newDistHalf: " + QString::number(newDistHalf, 'f', 12));
             ui->plainTextEdit->appendPlainText("newdistLeft: " + QString::number(newdistLeft, 'f', 12));
             ui->plainTextEdit->appendPlainText("newdistRight: " + QString::number(newdistRight, 'f', 12));
             ui->plainTextEdit->appendPlainText("newDist: " + QString::number(newDist, 'f', 12));
-            ui->plainTextEdit->appendPlainText("newsamplestart: " + QString::number(newsamplestart, 'f', 12));
+            ui->plainTextEdit->appendPlainText("sampleStart: " + QString::number(AF->sampleStart, 'f', 12));
+            ui->plainTextEdit->appendPlainText("sampleEnd: " + QString::number(AF->sampleEnd, 'f', 12));
             ui->plainTextEdit->appendPlainText("newstep: " + QString::number(newstep, 'f', 12));
             ui->plainTextEdit->appendPlainText("newsamplesize: " + QString::number(newsamplesize));
 

@@ -19,9 +19,9 @@ public:
     int initialSampleSize;
     int sampleSize;
     int iterNumber;
-    float dMax;
-    float step;
-    float sampleStart, sampleEnd;
+    double dMax;
+    double step;
+    double sampleStart, sampleEnd;
     double offset;
     int i, j;
 
