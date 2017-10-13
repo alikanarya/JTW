@@ -11,7 +11,7 @@ class autoFocusThread : public QThread {
 
 public:
 
-    autoFocusThread(int _initialSampleSize, int _iterNumber);
+    autoFocusThread(double _start, double _end, int _initialSampleSize, int _iterNumber);
     void stop();
 
     QWaitCondition condition;
@@ -24,6 +24,7 @@ public:
     double sampleStart, sampleEnd;
     double offset;
     int i, j;
+    double pos;
 
 protected:
     virtual void run();
@@ -35,6 +36,7 @@ private:
 
 signals:
     void setFocusPos(float);
+    void iterationFinished();
 
 };
 

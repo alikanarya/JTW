@@ -178,6 +178,7 @@ public:
     autoFocusThread *AF;
     bool doAutoFocus_Algo = false;
     float **fftArray;
+    QList<double> fftList;
 
     cv::Mat imgDataCV;
 
@@ -503,6 +504,7 @@ public slots:
     void apiRequestCompleted();
     void testSlot();
     void getFFT();
+    void iterationFinished();
 
 signals:
     void cameraDown();
