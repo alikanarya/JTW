@@ -2304,9 +2304,6 @@ void MainWindow::testButton(){
     */
 
     //testFlag = true;
-    //AF.restart = !AF.restart;
-    //if (AF.restart)
-        //AF.condition.wakeAll();
     /*
     testFlag2 = !testFlag2;
     if (testFlag2){
@@ -2320,17 +2317,41 @@ void MainWindow::testButton(){
         qDebug() << (timeSystem.getSystemTimeMsec() - secondTimeTick);
     }
     */
-    AF = new autoFocusThread(0,1,11,3);
+    /*
+    AF = new autoFocusThread(0,1,11,4);
     connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
     connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
-    /*
-    fftArray = new float*[9];
-    for (int i=0; i<11; i++)
-        fftArray[i] = new float[3];
-        */
     fftList.clear();
     doAutoFocus_Algo = true;
     AF->start();
+    */
+    /*
+    cv::Mat imgData0(lastData->image->height(), lastData->image->width(), CV_8UC3, (uchar*)lastData->image->bits(), lastData->image->bytesPerLine());
+    cv::Mat imgData; // deep copy just in case (my lack of knowledge with open cv)
+    cvtColor(imgData0, imgData, CV_RGB2GRAY);
+    */
+/*
+    cv::Mat imgData0(lastData->image->height(), lastData->image->width(), CV_8UC3, (uchar*)lastData->image->bits(), lastData->image->bytesPerLine());
+    cv::Mat imgData; // deep copy just in case (my lack of knowledge with open cv)
+    cvtColor(imgData0, imgData, CV_BGR2GRAY );
+    ofstream fout("gray.csv");
+    if(!fout) { cout<<"File Not Opened"<<endl; }
+    for(int i=0; i<imgData.rows; i++) {
+        for(int j=0; j<imgData.cols; j++) {
+//                        fout<<magI.at<float>(i,j)<<",";
+            fout << QString::number(imgData.at<float>(i,j),'f',3).toStdString() <<",";
+        }
+        fout<<endl;
+    }
+    fout.close();
+*/
+    //QImage *x = new QImage(*lastData->image);
+    QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
+    x.save("gray.jpg");
+
+    imgProcess z(x,x.width(),x.height());
+    z.constructValueMatrix(x);
+    z.saveMatrix(z.valueMatrix,x.width(),x.height(),"gray.csv");
 }
 
 void MainWindow::testSlot(){
@@ -2537,7 +2558,7 @@ void MainWindow::setFocusPos(float pos){
 
 void MainWindow::apiRequestCompleted(){
     if (doAutoFocus_Algo) {
-        QTimer::singleShot(1000, this, SLOT(getFFT()));
+        QTimer::singleShot(2000, this, SLOT(getFFT()));
     }
 }
 
@@ -2677,76 +2698,10 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
 
 void MainWindow::getFFT(){
     if (!cameraDownStatus){
-//        fftArray[AF->j-1] = fourierTransform(lastData->image, false);
         fftList.append( fourierTransform(lastData->image, false)[2] );
-//        ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round((AF->j*AF->step+AF->offset)*10000) / 10000.0)+
         ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round(AF->pos*10000) / 10000.0)+
-                                           //" min: "+QString::number(fftArray[AF->j-1][0])+
-                                           //" max: "+QString::number(fftArray[AF->j-1][1])+
-//                                           " mean: "+QString::number(fftArray[AF->j-1][2],'f',2));
                                            " mean: "+QString::number(fftList.last(),'f',2));
 
-        /*if (AF->j == AF->sampleSize){
-            float max = fftArray[0][2];
-            int index = 0;
-            for (int i=1; i<AF->sampleSize; i++){
-                if (fftArray[i][2] > max){
-                    index = i;
-                    max = fftArray[i][2];
-                }
-            }
-            double pos = round(((index+1)*AF->step+AF->offset)*10000) / 10000.0;
-            ui->plainTextEdit->appendPlainText("posOfMax: " + QString::number(pos, 'f', 12));
-            double distLeft = round((pos - AF->sampleStart)*10000) / 10000.0;
-            double distRight = round((AF->sampleEnd - pos)*10000) / 10000.0;
-            qDebug() << distLeft << " " << distRight;
-
-            double newDistHalf = round(qMax(abs(distLeft), abs(distRight))*10000/2) / 10000.0;
-
-            double newdistLeft;// = round((pos - newDistHalf)*100) / 100.0;
-            if ((pos - newDistHalf) >= AF->sampleStart)
-                newdistLeft = newDistHalf;
-            else
-                newdistLeft = distLeft;
-
-            double newdistRight;// = round((pos - newDistHalf)*100) / 100.0;
-            if ((pos + newDistHalf) <= AF->sampleEnd)
-                newdistRight = newDistHalf;
-            else
-                newdistRight = distRight;
-
-
-            double newDist = round((newdistLeft + newdistRight)*10000)/10000.0;
-            double newstep = newDist * AF->step / AF->dMax;
-            double newsamplestart = round((pos - newdistLeft)*10000)/10000.0;
-//            double newstep = round((newDist * AF->step / AF->dMax)*10000)/10000.0;
-            int newsamplesize = newDist / newstep;
-
-            AF->sampleSize = newsamplesize-1;
-            AF->dMax = newDist;
-            AF->step = newstep;
-            AF->sampleStart =  round((newsamplestart + newstep)*10000)/10000.0;
-            AF->sampleEnd = round((AF->step * (AF->sampleSize-1)+AF->sampleStart)*10000)/10000.0 ;
-            AF->offset = newsamplestart;
-
-            ui->plainTextEdit->appendPlainText("newDistHalf: " + QString::number(newDistHalf, 'f', 12));
-            ui->plainTextEdit->appendPlainText("newdistLeft: " + QString::number(newdistLeft, 'f', 12));
-            ui->plainTextEdit->appendPlainText("newdistRight: " + QString::number(newdistRight, 'f', 12));
-            ui->plainTextEdit->appendPlainText("newDist: " + QString::number(newDist, 'f', 12));
-            ui->plainTextEdit->appendPlainText("sampleStart: " + QString::number(AF->sampleStart, 'f', 12));
-            ui->plainTextEdit->appendPlainText("sampleEnd: " + QString::number(AF->sampleEnd, 'f', 12));
-            ui->plainTextEdit->appendPlainText("newstep: " + QString::number(newstep, 'f', 12));
-            ui->plainTextEdit->appendPlainText("newsamplesize: " + QString::number(newsamplesize));
-
-            if (AF->i == 0) {
-                for (int y = 0; y < 9; y++) delete []fftArray[y];
-                delete []fftArray;
-            }
-            fftArray = new float*[AF->sampleSize];
-            for (int i=0; i<AF->sampleSize; i++)
-                fftArray[i] = new float[3];
-        }
-        */
         AF->condition.wakeAll();
     }
 }

@@ -25,13 +25,6 @@ void autoFocusThread::run(){
 
     for (i=0; i<iterNumber; i++) {
 
-        /*if (i == 0) {
-            step = dMax / (sampleSize+1);
-            sampleStart = step;
-            sampleEnd = step*sampleSize;
-            dMax = sampleEnd - sampleStart;
-            offset = 0;
-        }*/
         dMax = sampleEnd - sampleStart;
         if (i==0){
             step = dMax / (sampleSize-1);
@@ -39,9 +32,11 @@ void autoFocusThread::run(){
             step = dMax * stepPrev / dMaxPrev;
             sampleSize = dMax / step;
         }
+        step = round(step*1000000) / 1000000.0;
 
         j=0;
         for (pos=sampleStart; pos<=sampleEnd; pos+=step) {
+            pos = round(pos*1000000)/1000000.0;
             emit setFocusPos(pos);
             mMutex.lock();
             condition.wait(&mMutex);
@@ -54,16 +49,10 @@ void autoFocusThread::run(){
 
         emit iterationFinished();
 
-        /*for (j=1; j<=sampleSize; j++) {
-            emit setFocusPos(j*step + offset);
-            mMutex.lock();
-            condition.wait(&mMutex);
-            mMutex.unlock();
-        }*/
-
-
+        mMutex.lock();
+        condition.wait(&mMutex);
+        mMutex.unlock();
     }
-
 }
 
 
