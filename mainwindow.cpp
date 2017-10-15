@@ -2317,41 +2317,27 @@ void MainWindow::testButton(){
         qDebug() << (timeSystem.getSystemTimeMsec() - secondTimeTick);
     }
     */
-    /*
-    AF = new autoFocusThread(0,1,11,4);
+
+    AF = new autoFocusThread(0.5,0.7,11,4);
     connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
     connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
     fftList.clear();
     doAutoFocus_Algo = true;
     AF->start();
-    */
-    /*
-    cv::Mat imgData0(lastData->image->height(), lastData->image->width(), CV_8UC3, (uchar*)lastData->image->bits(), lastData->image->bytesPerLine());
-    cv::Mat imgData; // deep copy just in case (my lack of knowledge with open cv)
-    cvtColor(imgData0, imgData, CV_RGB2GRAY);
-    */
+
 /*
-    cv::Mat imgData0(lastData->image->height(), lastData->image->width(), CV_8UC3, (uchar*)lastData->image->bits(), lastData->image->bytesPerLine());
-    cv::Mat imgData; // deep copy just in case (my lack of knowledge with open cv)
-    cvtColor(imgData0, imgData, CV_BGR2GRAY );
-    ofstream fout("gray.csv");
-    if(!fout) { cout<<"File Not Opened"<<endl; }
-    for(int i=0; i<imgData.rows; i++) {
-        for(int j=0; j<imgData.cols; j++) {
-//                        fout<<magI.at<float>(i,j)<<",";
-            fout << QString::number(imgData.at<float>(i,j),'f',3).toStdString() <<",";
-        }
-        fout<<endl;
-    }
-    fout.close();
-*/
-    //QImage *x = new QImage(*lastData->image);
     QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
-    x.save("gray.jpg");
+    //x.save("gray.jpg");
 
     imgProcess z(x,x.width(),x.height());
     z.constructValueMatrix(x);
-    z.saveMatrix(z.valueMatrix,x.width(),x.height(),"gray.csv");
+    //z.saveMatrix(z.valueMatrix,x.width(),x.height(),"gray.csv");
+    z.normalizeValueMatrix(255.0);
+    //z.saveMatrix(z.valueMatrixNorm,x.width(),x.height(),"grayn.csv");
+    qDebug() << z.calcEntropyMatrix(5);
+    //z.saveMatrix(z.fuzzyEntropyMatrix,z.FEM_width,z.FEM_height,"entropy.csv");
+*/
+
 }
 
 void MainWindow::testSlot(){
@@ -2558,7 +2544,7 @@ void MainWindow::setFocusPos(float pos){
 
 void MainWindow::apiRequestCompleted(){
     if (doAutoFocus_Algo) {
-        QTimer::singleShot(2000, this, SLOT(getFFT()));
+        QTimer::singleShot(2000, this, SLOT(calcFocusValue()));
     }
 }
 
@@ -2696,6 +2682,12 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
     return array;
 }
 
+void MainWindow::calcFocusValue(){
+
+    //getFFT();
+    getFuzzyEntropy();
+}
+
 void MainWindow::getFFT(){
     if (!cameraDownStatus){
         fftList.append( fourierTransform(lastData->image, false)[2] );
@@ -2706,6 +2698,24 @@ void MainWindow::getFFT(){
     }
 }
 
+void MainWindow::getFuzzyEntropy(){
+    if (!cameraDownStatus){
+        QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
+        //x.save("gray.jpg");
+
+        imgProcess z(x,x.width(),x.height());
+        z.constructValueMatrix(x);
+        //z.saveMatrix(z.valueMatrix,x.width(),x.height(),"gray.csv");
+        z.normalizeValueMatrix(255.0);
+        //z.saveMatrix(z.valueMatrixNorm,x.width(),x.height(),"grayn.csv");
+        fftList.append( z.calcEntropyMatrix(5) );
+        //z.saveMatrix(z.fuzzyEntropyMatrix,z.FEM_width,z.FEM_height,"entropy.csv");
+        ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round(AF->pos*10000) / 10000.0)+
+                                           " mean: "+QString::number(fftList.last(),'f',2));
+
+        AF->condition.wakeAll();
+    }
+}
 void MainWindow::iterationFinished(){
     double max = fftList.at(0);
     int index = 0;

@@ -503,7 +503,9 @@ public slots:
     void setFocusPos(float);
     void apiRequestCompleted();
     void testSlot();
+    void calcFocusValue();
     void getFFT();
+    void getFuzzyEntropy();
     void iterationFinished();
 
 signals:
