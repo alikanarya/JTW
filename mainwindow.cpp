@@ -2318,12 +2318,14 @@ void MainWindow::testButton(){
     }
     */
 
+    /*
     AF = new autoFocusThread(0.5,0.7,11,4);
     connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
     connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
     fftList.clear();
     doAutoFocus_Algo = true;
     AF->start();
+    */
 
 /*
     QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
@@ -2337,6 +2339,36 @@ void MainWindow::testButton(){
     qDebug() << z.calcEntropyMatrix(5);
     //z.saveMatrix(z.fuzzyEntropyMatrix,z.FEM_width,z.FEM_height,"entropy.csv");
 */
+    QList<double> x1;
+    x1.append(0.48);
+    x1.append(0.498);
+    x1.append(0.516);
+    x1.append(0.534);
+    x1.append(0.552);
+    x1.append(0.57);
+    x1.append(0.588);
+    x1.append(0.606);
+    x1.append(0.624);
+    x1.append(0.642);
+    x1.append(0.66);
+    QList<double> y1;
+    y1.append(7119.07);
+    y1.append(8751.89);
+    y1.append(10542.97);
+    y1.append(17454.47);
+    y1.append(32340.52);
+    y1.append(49140.77);
+    y1.append(42045.07);
+    y1.append(20953.09);
+    y1.append(13780.45);
+    y1.append(10275.88);
+    y1.append(8000);
+    bool flag;
+    double *prm = calcFittingPrms(x1,y1,flag);
+    QString str = "prms: ";
+    for (int i=0; i<6; i++)
+        str += QString::number(prm[i],'f',4) + " ";
+    ui->plainTextEdit->appendPlainText(str);
 
 }
 
@@ -2716,6 +2748,99 @@ void MainWindow::getFuzzyEntropy(){
         AF->condition.wakeAll();
     }
 }
+
+double* MainWindow::calcFittingPrms(QList<double> _x, QList<double> _y, bool &stat, bool ref, QList<double> *refY){
+
+    QString debugStr = "";
+    stat = false;
+    double *prm = new double[6];
+    for (int i=0; i<6; i++) prm[i] = -1;
+
+    QList<double> x;
+    double minX = *std::min_element(_x.begin(), _x.end());
+    debugStr = "x-xmin: ";
+    for (int i=0; i<_x.size(); i++){
+        x.append( _x.at(i) - minX );
+        debugStr += QString::number(x.at(i), 'f', 4) + " ";
+    }
+    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+
+    QList<double> y;
+    double maxY = *std::max_element(_y.begin(), _y.end());
+    debugStr = "y/ymax: ";
+    if (maxY != 0)
+        for (int i=0; i<_y.size(); i++){
+            y.append( _y.at(i) / (maxY * 1.05) );
+            debugStr += QString::number(y.at(i), 'f', 4) + " ";
+        }
+    else
+        return prm;
+    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+
+    double minY = *std::min_element(y.begin(), y.end());
+    debugStr = "y-ymin: ";
+    for (int i=0; i<y.size(); i++){
+        y[i] -= minY*0.95;
+        debugStr += QString::number(y.at(i), 'f', 4) + " ";
+    }
+    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+
+
+    int samples = x.size();
+    double N = 0, A = 0, B = 0, C = 0, D = 0, Y1 = 0, Y2 = 0, Y3 = 0;
+    double y2, lnY;
+    for (int i = 0; i < samples; i++){
+        y2 = pow( y.at(i),2 );
+        N += y2;
+        A += x.at(i) * y2;
+        B += pow( x.at(i),2 ) * y2;
+        C += pow( x.at(i),3 ) * y2;
+        D += pow( x.at(i),4 ) * y2;
+        if (ref)
+            lnY = log( refY->at(i) );
+        else
+            lnY = log( y.at(i) );
+        Y1 += y2 * lnY;
+        Y2 += x.at(i) * y2 * lnY;
+        Y3 += pow( x.at(i),2 ) * y2 * lnY;
+    }
+
+    double bDiv = pow(C*N - A*B, 2) - (B*N - pow(A, 2)) * (D*N - pow(B, 2));
+
+    double b = 0;
+    if ( bDiv != 0 )
+        prm[1] = b = ( (C*N - A*B) * (Y3*N - B*Y1) - (D*N - pow(B, 2)) * (Y2*N - A*Y1) ) / bDiv;
+    else
+        return prm;
+
+    double c = 0;
+    if ( (C*N - A*B) != 0 )
+        prm[2] = c = ( Y2*N - A*Y1 - (B*N - pow(A, 2)) * b ) / (C*N - A*B);
+    else
+        return prm;
+
+    double a = 0;
+    if ( N != 0)
+        prm[0] = a = ( Y1 - A*b - B*c ) / N;
+    else
+        return prm;
+
+    double u = 0;
+    double sigma = 0;
+    double magA = 0;
+    if ( c != 0 ) {
+        prm[3] = u = -1 * b / (2 * c);
+        prm[4] = sigma = sqrt( (-1 / (2 * c)) );
+        prm[5] = magA = exp( a - pow(b,2) / (4*c) );
+    } else
+        return prm;
+
+
+
+    stat = true;
+    return prm;
+}
+
 void MainWindow::iterationFinished(){
     double max = fftList.at(0);
     int index = 0;
