@@ -472,7 +472,7 @@ public:
     void doAutoFocus();
     void startControl();
     float* fourierTransform(QImage *img, bool save=false);
-    double* calcFittingPrms(QList<double> x, QList<double> y, bool &stat, bool ref = false, QList<double>* refY = NULL);
+    double* calcFittingPrms(QList<double> x, QList<double> y, QList<double> refY, bool &stat, bool ref = false);
 
     ~MainWindow();                                  // destructor
 

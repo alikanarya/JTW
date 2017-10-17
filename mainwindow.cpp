@@ -2340,32 +2340,81 @@ void MainWindow::testButton(){
     //z.saveMatrix(z.fuzzyEntropyMatrix,z.FEM_width,z.FEM_height,"entropy.csv");
 */
     QList<double> x1;
-    x1.append(0.48);
-    x1.append(0.498);
-    x1.append(0.516);
-    x1.append(0.534);
-    x1.append(0.552);
-    x1.append(0.57);
-    x1.append(0.588);
-    x1.append(0.606);
-    x1.append(0.624);
-    x1.append(0.642);
+    x1.append(0.4500);
+    x1.append(0.4800);
+    x1.append(0.5100);
+    x1.append(0.5400);
+    x1.append(0.5700);
+    x1.append(0.6000);
+    x1.append(0.6300);
     x1.append(0.66);
+    x1.append(0.69);
+    x1.append(0.72);
+    x1.append(0.75);
     QList<double> y1;
-    y1.append(7119.07);
-    y1.append(8751.89);
-    y1.append(10542.97);
-    y1.append(17454.47);
-    y1.append(32340.52);
-    y1.append(49140.77);
-    y1.append(42045.07);
-    y1.append(20953.09);
-    y1.append(13780.45);
-    y1.append(10275.88);
-    y1.append(8000);
+    y1.append(5860.86);
+    y1.append(6712.87);
+    y1.append(10196.77);
+    y1.append(22098.76);
+    y1.append(44638.93);
+    y1.append(28472.61);
+    y1.append(12381.37);
+    y1.append(9225.13);
+    y1.append(7032.68);
+    y1.append(7048.07);
+    y1.append(6451.81);
+
+
+    QString debugStr = "";
+
+    // x Xnorm
+    QList<double> x;
+    double minX = *std::min_element(x1.begin(), x1.end());
+    debugStr = "x-xmin: ";
+    for (int i=0; i<x1.size(); i++){
+        x.append( x1.at(i) - minX );
+        debugStr += QString::number(x.at(i), 'f', 4) + " ";
+    }
+    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+
+    // y Ynorm
+    QList<double> y;
+    double maxY = *std::max_element(y1.begin(), y1.end());
+    debugStr = "y/ymax: ";
+    if (maxY != 0)
+        for (int i=0; i<y1.size(); i++){
+            y.append( y1.at(i) / (maxY * 1.05) );
+            debugStr += QString::number(y.at(i), 'f', 4) + " ";
+        }
+//    else
+    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+
+    // y Ynorm -YnormMin
+    double minY = *std::min_element(y.begin(), y.end());
+    debugStr = "y-ymin: ";
+    for (int i=0; i<y.size(); i++){
+        y[i] -= minY*0.95;
+        debugStr += QString::number(y.at(i), 'f', 4) + " ";
+    }
+    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+
     bool flag;
-    double *prm = calcFittingPrms(x1,y1,flag);
+    double *prm = calcFittingPrms(x,y,y,flag,false);
     QString str = "prms: ";
+    for (int i=0; i<6; i++)
+        str += QString::number(prm[i],'f',4) + " ";
+    ui->plainTextEdit->appendPlainText(str);
+
+
+    QList<double> yNew;
+    double _y;
+    for (int i=0; i<x1.size(); i++) {
+        _y = exp( prm[0]+prm[1]*x[i]+prm[2]*pow(x[i],2) );
+        yNew.append(_y);
+    }
+
+    prm = calcFittingPrms(x,yNew,y,flag,true);
+    str = "prms: ";
     for (int i=0; i<6; i++)
         str += QString::number(prm[i],'f',4) + " ";
     ui->plainTextEdit->appendPlainText(str);
@@ -2749,42 +2798,12 @@ void MainWindow::getFuzzyEntropy(){
     }
 }
 
-double* MainWindow::calcFittingPrms(QList<double> _x, QList<double> _y, bool &stat, bool ref, QList<double> *refY){
+double* MainWindow::calcFittingPrms(QList<double> x, QList<double> y, QList<double> refY, bool &stat, bool ref){
 
     QString debugStr = "";
     stat = false;
     double *prm = new double[6];
     for (int i=0; i<6; i++) prm[i] = -1;
-
-    QList<double> x;
-    double minX = *std::min_element(_x.begin(), _x.end());
-    debugStr = "x-xmin: ";
-    for (int i=0; i<_x.size(); i++){
-        x.append( _x.at(i) - minX );
-        debugStr += QString::number(x.at(i), 'f', 4) + " ";
-    }
-    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
-
-    QList<double> y;
-    double maxY = *std::max_element(_y.begin(), _y.end());
-    debugStr = "y/ymax: ";
-    if (maxY != 0)
-        for (int i=0; i<_y.size(); i++){
-            y.append( _y.at(i) / (maxY * 1.05) );
-            debugStr += QString::number(y.at(i), 'f', 4) + " ";
-        }
-    else
-        return prm;
-    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
-
-    double minY = *std::min_element(y.begin(), y.end());
-    debugStr = "y-ymin: ";
-    for (int i=0; i<y.size(); i++){
-        y[i] -= minY*0.95;
-        debugStr += QString::number(y.at(i), 'f', 4) + " ";
-    }
-    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
-
 
     int samples = x.size();
     double N = 0, A = 0, B = 0, C = 0, D = 0, Y1 = 0, Y2 = 0, Y3 = 0;
@@ -2797,7 +2816,7 @@ double* MainWindow::calcFittingPrms(QList<double> _x, QList<double> _y, bool &st
         C += pow( x.at(i),3 ) * y2;
         D += pow( x.at(i),4 ) * y2;
         if (ref)
-            lnY = log( refY->at(i) );
+            lnY = log( refY.at(i) );
         else
             lnY = log( y.at(i) );
         Y1 += y2 * lnY;
