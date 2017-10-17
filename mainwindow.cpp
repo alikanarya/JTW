@@ -2399,25 +2399,38 @@ void MainWindow::testButton(){
     ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
 
     bool flag;
-    double *prm = calcFittingPrms(x,y,y,flag,false);
-    QString str = "prms: ";
-    for (int i=0; i<6; i++)
-        str += QString::number(prm[i],'f',4) + " ";
-    ui->plainTextEdit->appendPlainText(str);
-
-
     QList<double> yNew;
-    double _y;
-    for (int i=0; i<x1.size(); i++) {
-        _y = exp( prm[0]+prm[1]*x[i]+prm[2]*pow(x[i],2) );
-        yNew.append(_y);
-    }
+    double *prm, _y, error;
+    QString str;
 
-    prm = calcFittingPrms(x,yNew,y,flag,true);
-    str = "prms: ";
-    for (int i=0; i<6; i++)
-        str += QString::number(prm[i],'f',4) + " ";
-    ui->plainTextEdit->appendPlainText(str);
+    for (int j=0; j<10; j++) {
+
+        if (j==0)
+            prm = calcFittingPrms(x,y,y,flag,false);
+        else
+            prm = calcFittingPrms(x,yNew,y,flag,true);
+
+        if (flag){
+            str = "prms: ";
+            for (int i=0; i<6; i++)
+                str += QString::number(prm[i],'f',4) + " ";
+
+            yNew.clear();
+            error = 0;
+            for (int i=0; i<x1.size(); i++) {
+                _y = exp( prm[0]+prm[1]*x[i]+prm[2]*pow(x[i],2) );
+                yNew.append(_y);
+                error += pow( y[i]-_y, 2 );
+            }
+            error /= x1.size();
+            error = sqrt(error);
+            str += "err: " + QString::number(error, 'f', 4);
+            ui->plainTextEdit->appendPlainText(str);
+        } else {
+            ui->plainTextEdit->appendPlainText("Fokus değerlerinde hata");
+            break;
+        }
+    }
 
 }
 
