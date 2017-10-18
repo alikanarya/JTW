@@ -2318,15 +2318,16 @@ void MainWindow::testButton(){
     }
     */
 
-    /*
-    AF = new autoFocusThread(0.5,0.7,11,4);
+
+    AF = new autoFocusThread(0.25, 0.75, 3, 1);
     connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
     connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
     focusValListY.clear();
     focusValListX.clear();
     doAutoFocus_Algo = true;
+    autoFocusPassNo = 1;
     AF->start();
-    */
+
 
 /*
     QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
@@ -2340,6 +2341,7 @@ void MainWindow::testButton(){
     qDebug() << z.calcEntropyMatrix(5);
     //z.saveMatrix(z.fuzzyEntropyMatrix,z.FEM_width,z.FEM_height,"entropy.csv");
 */
+    /*
     QList<double> x1;
     x1.append(0.4500);
     x1.append(0.4800);
@@ -2366,7 +2368,7 @@ void MainWindow::testButton(){
     y1.append(6451.81);
 
     qDebug() << findCurveFitting(x1, y1, 10);
-
+*/
 }
 
 void MainWindow::testSlot(){
@@ -2819,15 +2821,12 @@ void MainWindow::iterationFinished(){
         }
     }
 
-    focusValListY.clear();
-    focusValListX.clear();
-
     double pos = round((index*AF->step + AF->sampleStart)*10000) / 10000.0;
     ui->plainTextEdit->appendPlainText("posOfMax: " + QString::number(pos, 'f', 12));
 
     double distLeft = round((pos - AF->sampleStart)*10000) / 10000.0;
     double distRight = round((AF->sampleEnd - pos)*10000) / 10000.0;
-    qDebug() << distLeft << " " << distRight;
+    qDebug() << "pass# " << autoFocusPassNo << " distL:" << distLeft << " distR:" << distRight;
 
     double newDistHalf = round(qMax(abs(distLeft), abs(distRight))*10000/2) / 10000.0;
 
@@ -2843,8 +2842,8 @@ void MainWindow::iterationFinished(){
     else
         newdistRight = distRight;
 
-    AF->sampleStart = pos - newdistLeft;
-    AF->sampleEnd = pos + newdistRight;
+    double start = AF->sampleStart = pos - newdistLeft;
+    double end = AF->sampleEnd = pos + newdistRight;
 
     ui->plainTextEdit->appendPlainText("newDistHalf: " + QString::number(newDistHalf, 'f', 12));
     ui->plainTextEdit->appendPlainText("newdistLeft: " + QString::number(newdistLeft, 'f', 12));
@@ -2853,7 +2852,28 @@ void MainWindow::iterationFinished(){
     ui->plainTextEdit->appendPlainText("sampleStart: " + QString::number(AF->sampleStart, 'f', 12));
     ui->plainTextEdit->appendPlainText("sampleEnd: " + QString::number(AF->sampleEnd, 'f', 12));
 
+
+    qDebug() << findCurveFitting(focusValListX, focusValListY, 10);
+
+    AF->stopCmd = true;
     AF->condition.wakeAll();
+    //AF->terminate();
+    AF->wait();
+    delete AF;
+
+
+    if ( autoFocusPassNo < autoFocusPassLimit ) {
+        autoFocusPassNo++;
+//        AF = new autoFocusThread(start, end, 11, 1);
+        AF = new autoFocusThread(0.5, 0.6, 11, 1);
+        connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
+        connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
+        focusValListY.clear();
+        focusValListX.clear();
+        AF->start();
+    }
+
+
 
 }
 
@@ -2906,8 +2926,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
 
         if (flag){
             str = "prms: ";
-            for (int i=0; i<6; i++)
-                str += QString::number(prm[i],'f',4) + " ";
+            for (int i=0; i<6; i++) str += QString::number(prm[i],'f',4) + " ";
 
             yNew.clear();
             error = 0;
@@ -2919,7 +2938,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
             error /= x1.size();
             error = sqrt(error);
 
-            str += "err: " + QString::number(error, 'f', 4);
+            str += "err: " + QString::number(error, 'f', 6);
             ui->plainTextEdit->appendPlainText(str);
 
             if (error < 0.05)
@@ -2929,7 +2948,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
                 errorprev = error;
             else {
                 errorD = abs(error - errorprev);
-                if (errorD < 0.01)
+                if (errorD < 0.0001)
                     break;
                 if (error > errorprev)
                     break;

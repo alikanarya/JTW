@@ -16,6 +16,7 @@ public:
 
     QWaitCondition condition;
     bool restart = true;
+    bool stopCmd = false;
     int initialSampleSize;
     int sampleSize;
     int iterNumber;

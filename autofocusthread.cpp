@@ -52,6 +52,8 @@ void autoFocusThread::run(){
         mMutex.lock();
         condition.wait(&mMutex);
         mMutex.unlock();
+        if (stopCmd)
+            break;
     }
 }
 
