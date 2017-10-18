@@ -178,7 +178,10 @@ public:
     autoFocusThread *AF;
     bool doAutoFocus_Algo = false;
     float **fftArray;
-    QList<double> fftList;
+    QList<double> focusValListY;
+    QList<double> focusValListX;
+    double focusValX_offset;
+
 
     cv::Mat imgDataCV;
 
@@ -508,6 +511,7 @@ public slots:
     void getFFT();
     void getFuzzyEntropy();
     void iterationFinished();
+    double findCurveFitting(QList<double> x1, QList<double> y1, int iterNo);
 
 signals:
     void cameraDown();

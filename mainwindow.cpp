@@ -2322,7 +2322,8 @@ void MainWindow::testButton(){
     AF = new autoFocusThread(0.5,0.7,11,4);
     connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
     connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
-    fftList.clear();
+    focusValListY.clear();
+    focusValListX.clear();
     doAutoFocus_Algo = true;
     AF->start();
     */
@@ -2364,73 +2365,7 @@ void MainWindow::testButton(){
     y1.append(7048.07);
     y1.append(6451.81);
 
-
-    QString debugStr = "";
-
-    // x Xnorm
-    QList<double> x;
-    double minX = *std::min_element(x1.begin(), x1.end());
-    debugStr = "x-xmin: ";
-    for (int i=0; i<x1.size(); i++){
-        x.append( x1.at(i) - minX );
-        debugStr += QString::number(x.at(i), 'f', 4) + " ";
-    }
-    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
-
-    // y Ynorm
-    QList<double> y;
-    double maxY = *std::max_element(y1.begin(), y1.end());
-    debugStr = "y/ymax: ";
-    if (maxY != 0)
-        for (int i=0; i<y1.size(); i++){
-            y.append( y1.at(i) / (maxY * 1.05) );
-            debugStr += QString::number(y.at(i), 'f', 4) + " ";
-        }
-//    else
-    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
-
-    // y Ynorm -YnormMin
-    double minY = *std::min_element(y.begin(), y.end());
-    debugStr = "y-ymin: ";
-    for (int i=0; i<y.size(); i++){
-        y[i] -= minY*0.95;
-        debugStr += QString::number(y.at(i), 'f', 4) + " ";
-    }
-    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
-
-    bool flag;
-    QList<double> yNew;
-    double *prm, _y, error;
-    QString str;
-
-    for (int j=0; j<10; j++) {
-
-        if (j==0)
-            prm = calcFittingPrms(x,y,y,flag,false);
-        else
-            prm = calcFittingPrms(x,yNew,y,flag,true);
-
-        if (flag){
-            str = "prms: ";
-            for (int i=0; i<6; i++)
-                str += QString::number(prm[i],'f',4) + " ";
-
-            yNew.clear();
-            error = 0;
-            for (int i=0; i<x1.size(); i++) {
-                _y = exp( prm[0]+prm[1]*x[i]+prm[2]*pow(x[i],2) );
-                yNew.append(_y);
-                error += pow( y[i]-_y, 2 );
-            }
-            error /= x1.size();
-            error = sqrt(error);
-            str += "err: " + QString::number(error, 'f', 4);
-            ui->plainTextEdit->appendPlainText(str);
-        } else {
-            ui->plainTextEdit->appendPlainText("Fokus değerlerinde hata");
-            break;
-        }
-    }
+    qDebug() << findCurveFitting(x1, y1, 10);
 
 }
 
@@ -2784,9 +2719,9 @@ void MainWindow::calcFocusValue(){
 
 void MainWindow::getFFT(){
     if (!cameraDownStatus){
-        fftList.append( fourierTransform(lastData->image, false)[2] );
+        focusValListY.append( fourierTransform(lastData->image, false)[2] );
         ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round(AF->pos*10000) / 10000.0)+
-                                           " mean: "+QString::number(fftList.last(),'f',2));
+                                           " mean: "+QString::number(focusValListY.last(),'f',2));
 
         AF->condition.wakeAll();
     }
@@ -2802,10 +2737,11 @@ void MainWindow::getFuzzyEntropy(){
         //z.saveMatrix(z.valueMatrix,x.width(),x.height(),"gray.csv");
         z.normalizeValueMatrix(255.0);
         //z.saveMatrix(z.valueMatrixNorm,x.width(),x.height(),"grayn.csv");
-        fftList.append( z.calcEntropyMatrix(5) );
+        focusValListY.append( z.calcEntropyMatrix(5) );
+        focusValListX.append( AF->pos*10000 / 10000.0 );
         //z.saveMatrix(z.fuzzyEntropyMatrix,z.FEM_width,z.FEM_height,"entropy.csv");
         ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round(AF->pos*10000) / 10000.0)+
-                                           " mean: "+QString::number(fftList.last(),'f',2));
+                                           " mean: "+QString::number(focusValListY.last(),'f',2));
 
         AF->condition.wakeAll();
     }
@@ -2874,16 +2810,17 @@ double* MainWindow::calcFittingPrms(QList<double> x, QList<double> y, QList<doub
 }
 
 void MainWindow::iterationFinished(){
-    double max = fftList.at(0);
+    double max = focusValListY.at(0);
     int index = 0;
-    for (int i=1; i<fftList.size(); i++){
-        if (fftList.at(i) > max){
+    for (int i=1; i<focusValListY.size(); i++){
+        if (focusValListY.at(i) > max){
             index = i;
-            max = fftList.at(i);
+            max = focusValListY.at(i);
         }
     }
 
-    fftList.clear();
+    focusValListY.clear();
+    focusValListX.clear();
 
     double pos = round((index*AF->step + AF->sampleStart)*10000) / 10000.0;
     ui->plainTextEdit->appendPlainText("posOfMax: " + QString::number(pos, 'f', 12));
@@ -2918,5 +2855,93 @@ void MainWindow::iterationFinished(){
 
     AF->condition.wakeAll();
 
-
 }
+
+double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iterNo){
+
+    QString debugStr = "";
+
+    // x Xnorm
+    QList<double> x;
+    double minX = *std::min_element(x1.begin(), x1.end());
+    debugStr = "x-xmin: ";
+    for (int i=0; i<x1.size(); i++){
+        x.append( x1.at(i) - minX );
+        debugStr += QString::number(x.at(i), 'f', 4) + " ";
+    }
+    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+
+    // y Ynorm
+    QList<double> y;
+    double maxY = *std::max_element(y1.begin(), y1.end());
+    debugStr = "y/ymax: ";
+    if (maxY != 0)
+        for (int i=0; i<y1.size(); i++){
+            y.append( y1.at(i) / (maxY * 1.05) );
+            debugStr += QString::number(y.at(i), 'f', 4) + " ";
+        }
+//    else
+    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+
+    // y Ynorm -YnormMin
+    double minY = *std::min_element(y.begin(), y.end());
+    debugStr = "y-ymin: ";
+    for (int i=0; i<y.size(); i++){
+        y[i] -= minY*0.95;
+        debugStr += QString::number(y.at(i), 'f', 4) + " ";
+    }
+    ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+
+    bool flag;
+    QList<double> yNew;
+    double *prm, _y, error, errorprev, errorD;
+    QString str;
+
+    for (int j=0; j<iterNo; j++) {
+
+        if (j==0)
+            prm = calcFittingPrms(x,y,y,flag,false);
+        else
+            prm = calcFittingPrms(x,yNew,y,flag,true);
+
+        if (flag){
+            str = "prms: ";
+            for (int i=0; i<6; i++)
+                str += QString::number(prm[i],'f',4) + " ";
+
+            yNew.clear();
+            error = 0;
+            for (int i=0; i<x1.size(); i++) {
+                _y = exp( prm[0]+prm[1]*x[i]+prm[2]*pow(x[i],2) );
+                yNew.append(_y);
+                error += pow( y[i]-_y, 2 );
+            }
+            error /= x1.size();
+            error = sqrt(error);
+
+            str += "err: " + QString::number(error, 'f', 4);
+            ui->plainTextEdit->appendPlainText(str);
+
+            if (error < 0.05)
+                break;
+
+            if (j==0)
+                errorprev = error;
+            else {
+                errorD = abs(error - errorprev);
+                if (errorD < 0.01)
+                    break;
+                if (error > errorprev)
+                    break;
+                errorprev = error;
+            }
+
+        } else {
+            ui->plainTextEdit->appendPlainText("Fokus değerlerinde hata");
+            return -1;
+        }
+    }
+
+    return prm[3];
+}
+
