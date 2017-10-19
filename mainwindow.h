@@ -177,6 +177,10 @@ public:
 
     autoFocusThread *AF;
     bool doAutoFocus_Algo = false;
+    bool autoFocusAlgo2Step = false;
+    bool autoFocusAlgo2Step_Auto = false;
+    double sampleStart, sampleEnd;
+    int sampleNo;
     float **fftArray;
     QList<double> focusValListY;
     QList<double> focusValListX;
@@ -473,6 +477,8 @@ public:
     int getBitofByte(unsigned char byte, int bitNo);
 
     void doAutoFocus();
+    void doAutoFocusAlgo_Deep(double start, double end, int sampleNo, int depth);
+    void doAutoFocusAlgo_2Step(double start1, double end1, int sampleNo1, int sampleNo2, bool start_end_2nd_auto = true, double start2 = 0, double end2 = 0);
     void startControl();
     float* fourierTransform(QImage *img, bool save=false);
     double* calcFittingPrms(QList<double> x, QList<double> y, QList<double> refY, bool &stat, bool ref = false);

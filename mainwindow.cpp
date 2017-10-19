@@ -2318,7 +2318,7 @@ void MainWindow::testButton(){
     }
     */
 
-
+/*
     AF = new autoFocusThread(0.25, 0.75, 3, 1);
     connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
     connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
@@ -2327,7 +2327,9 @@ void MainWindow::testButton(){
     doAutoFocus_Algo = true;
     autoFocusPassNo = 1;
     AF->start();
-
+*/
+    //doAutoFocusAlgo_2Step(0.25, 0.75, 3, 5, false, 0.55, 0.6);
+    doAutoFocusAlgo_2Step(0.2, 0.8, 4, 3, true);
 
 /*
     QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
@@ -2507,6 +2509,33 @@ void MainWindow::doAutoFocus(){
     if (!cameraDownStatus && !camApi->busy){
         camApi->apiDahuaAutoFocus();
     }
+}
+
+void MainWindow::doAutoFocusAlgo_Deep(double start, double end, int sampleNo, int depth){
+
+}
+
+void MainWindow::doAutoFocusAlgo_2Step(double start1, double end1, int sampleNo1, int sampleNo2, bool start_end_2nd_auto, double start2, double end2){
+
+    autoFocusAlgo2Step = true;
+    autoFocusAlgo2Step_Auto = start_end_2nd_auto;
+    autoFocusPassLimit = 2;
+    autoFocusPassNo = 1;
+
+    if ( !start_end_2nd_auto ) {
+        sampleStart = start2;
+        sampleEnd = end2;
+    }
+
+    sampleNo = sampleNo2;
+
+    AF = new autoFocusThread(start1, end1, sampleNo1, 1);
+    connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
+    connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
+    focusValListY.clear();
+    focusValListX.clear();
+    doAutoFocus_Algo = true;
+    AF->start();
 }
 
 void MainWindow::focusState(bool state){
@@ -2853,25 +2882,37 @@ void MainWindow::iterationFinished(){
     ui->plainTextEdit->appendPlainText("sampleEnd: " + QString::number(AF->sampleEnd, 'f', 12));
 
 
-    qDebug() << findCurveFitting(focusValListX, focusValListY, 10);
+    qDebug() << "pos: " << findCurveFitting(focusValListX, focusValListY, 10);
 
-    AF->stopCmd = true;
-    AF->condition.wakeAll();
-    //AF->terminate();
-    AF->wait();
-    delete AF;
+    if ( autoFocusAlgo2Step ) {
+        AF->stopCmd = true;
+        AF->condition.wakeAll();
+        //AF->terminate();
+        AF->wait();
+        delete AF;
 
+        if ( autoFocusPassNo < autoFocusPassLimit ) {
+            autoFocusPassNo++;
 
-    if ( autoFocusPassNo < autoFocusPassLimit ) {
-        autoFocusPassNo++;
-//        AF = new autoFocusThread(start, end, 11, 1);
-        AF = new autoFocusThread(0.5, 0.6, 11, 1);
-        connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
-        connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
-        focusValListY.clear();
-        focusValListX.clear();
-        AF->start();
+            if ( autoFocusAlgo2Step_Auto )
+                AF = new autoFocusThread( start, end, sampleNo, 1 );
+            else
+                AF = new autoFocusThread( sampleStart, sampleEnd, sampleNo, 1 );
+
+            connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
+            connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
+            focusValListY.clear();
+            focusValListX.clear();
+            AF->start();
+        } else {
+            autoFocusAlgo2Step = false;
+            autoFocusAlgo2Step_Auto = false;
+            doAutoFocus_Algo = false;
+            autoFocusPassNo = 0;
+        }
     }
+
+
 
 
 
@@ -2890,6 +2931,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
         debugStr += QString::number(x.at(i), 'f', 4) + " ";
     }
     ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+    focusValX_offset = minX;
 
     // y Ynorm
     QList<double> y;
@@ -2914,7 +2956,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
 
     bool flag;
     QList<double> yNew;
-    double *prm, _y, error, errorprev, errorD;
+    double *prm, _y, error, errorprev, errorD, uPrev, u;
     QString str;
 
     for (int j=0; j<iterNo; j++) {
@@ -2926,7 +2968,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
 
         if (flag){
             str = "prms: ";
-            for (int i=0; i<6; i++) str += QString::number(prm[i],'f',4) + " ";
+            for (int i=0; i<6; i++) str += QString::number(prm[i],'f',6) + " ";
 
             yNew.clear();
             error = 0;
@@ -2941,19 +2983,26 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
             str += "err: " + QString::number(error, 'f', 6);
             ui->plainTextEdit->appendPlainText(str);
 
-            if (error < 0.05)
+            if (error < 0.01){
+                u = prm[3];
                 break;
-
-            if (j==0)
-                errorprev = error;
-            else {
-                errorD = abs(error - errorprev);
-                if (errorD < 0.0001)
-                    break;
-                if (error > errorprev)
-                    break;
-                errorprev = error;
             }
+
+            if (j > 0) {
+                errorD = abs(error - errorprev);
+
+                if (error > errorprev) {
+                    u = uPrev;
+                    break;
+                } else if (errorD < 0.000001) {
+                    u = prm[3];
+                    break;
+                }
+
+            }
+
+            errorprev = error;
+            uPrev = prm[3];
 
         } else {
             ui->plainTextEdit->appendPlainText("Fokus değerlerinde hata");
@@ -2961,6 +3010,6 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
         }
     }
 
-    return prm[3];
+    return ( focusValX_offset + u );
 }
 
