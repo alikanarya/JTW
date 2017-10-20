@@ -179,7 +179,7 @@ public:
     bool doAutoFocus_Algo = false;
     bool autoFocusAlgo2Step = false;
     bool autoFocusAlgo2Step_Auto = false;
-    double sampleStart, sampleEnd;
+    double sampleStart, sampleEnd, sigma;
     int sampleNo;
     float **fftArray;
     QList<double> focusValListY;

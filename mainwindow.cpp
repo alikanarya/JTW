@@ -2328,9 +2328,9 @@ void MainWindow::testButton(){
     autoFocusPassNo = 1;
     AF->start();
 */
-    //doAutoFocusAlgo_2Step(0.25, 0.75, 3, 5, false, 0.55, 0.6);
-    //doAutoFocusAlgo_2Step(0.2, 0.8, 4, 3, true);
-    doAutoFocusAlgo_Deep(0,1,5,4);
+    //doAutoFocusAlgo_2Step(0.25, 0.75, 3, 8, false, 0.40, 0.55);
+    doAutoFocusAlgo_2Step(0.2, 0.8, 4, 8, true);
+    //doAutoFocusAlgo_Deep(0,1,5,4);
 
 /*
     QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
@@ -2884,8 +2884,12 @@ void MainWindow::iterationFinished(){
     else
         newdistRight = distRight;
 
-    double start = AF->sampleStart = pos - newdistLeft;
-    double end = AF->sampleEnd = pos + newdistRight;
+    //double start = AF->sampleStart = pos - newdistLeft;
+    //double end = AF->sampleEnd = pos + newdistRight;
+
+    AF->sampleStart = pos - newdistLeft;
+    AF->sampleEnd = pos + newdistRight;
+
 
     if (debugmsg) {
         ui->plainTextEdit->appendPlainText("newDistHalf: " + QString::number(newDistHalf, 'f', 12));
@@ -2898,6 +2902,9 @@ void MainWindow::iterationFinished(){
 
     double bestPos = findCurveFitting(focusValListX, focusValListY, 10);
     ui->plainTextEdit->appendPlainText("bestPos: " + QString::number(bestPos, 'f', 12));
+
+    double start = pos - sigma;
+    double end = pos + sigma;
 
     if ( autoFocusAlgo2Step ) {
         AF->stopCmd = true;
@@ -2952,7 +2959,7 @@ void MainWindow::iterationFinished(){
 
 double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iterNo){
 
-    bool debugmsg = false;
+    bool debugmsg = true;
     QString debugStr = "";
 
     // x Xnorm
@@ -2989,7 +2996,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
 
     bool flag;
     QList<double> yNew;
-    double *prm, _y, error, errorprev, errorD, uPrev, u;
+    double *prm, _y, error, errorprev, errorD, uPrev, u, sigmaPrev;
     QString str;
 
     for (int j=0; j<iterNo; j++) {
@@ -3016,11 +3023,12 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
             error /= x1.size();
             error = sqrt(error);
 
-            str = "err: " + QString::number(error, 'f', 6);
+            str += "err: " + QString::number(error, 'f', 6);
             ui->plainTextEdit->appendPlainText(str);
 
             if (error < 0.01){
                 u = prm[3];
+                sigma = prm[4];
                 break;
             }
 
@@ -3029,9 +3037,11 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
 
                 if (error > errorprev) {
                     u = uPrev;
+                    sigma = sigmaPrev;
                     break;
                 } else if (errorD < 0.000001) {
                     u = prm[3];
+                    sigma = prm[4];
                     break;
                 }
 
@@ -3039,6 +3049,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
 
             errorprev = error;
             uPrev = prm[3];
+            sigmaPrev = prm[4];
 
         } else {
             ui->plainTextEdit->appendPlainText("Fokus değerlerinde hata");
