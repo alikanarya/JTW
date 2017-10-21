@@ -183,14 +183,15 @@ public:
     bool autoFocusAlgo2Step_Auto = false;
     bool autoFocusAlgoLocal = false;
     bool autoFocusAlgoGlobal = false;
+    bool extraIteration = false;
     double sampleStart, sampleEnd, sigma;
-    double sampleStart0, sampleEnd0;
+    double sampleStart0, sampleEnd0, sampleStartPrev, sampleEndPrev;
     int sampleNo;
     float **fftArray;
     QList<double> focusValListY;
     QList<double> focusValListX;
     double focusValX_offset;
-
+    double bestFocusPos = 0.5;
 
     cv::Mat imgDataCV;
 

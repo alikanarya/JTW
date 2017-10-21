@@ -2533,6 +2533,7 @@ void MainWindow::doAutoFocusAlgo_2Step(double start1, double end1, int sampleNo1
     autoFocusAlgo2Step_Auto = start_end_2nd_auto;
     autoFocusPassLimit = 2;
     autoFocusPassNo = 1;
+    extraIteration = true;
 
     if ( !start_end_2nd_auto ) {
         sampleStart = start2;
@@ -2920,6 +2921,8 @@ void MainWindow::iterationFinished(){
     else
         newdistRight = distRight;
 
+    sampleStartPrev = AF->sampleStart;
+    sampleEndPrev = AF->sampleEnd;
     double start = AF->sampleStart = pos - newdistLeft;
     double end = AF->sampleEnd = pos + newdistRight;
 
@@ -2940,8 +2943,8 @@ void MainWindow::iterationFinished(){
         ui->plainTextEdit->appendPlainText("sampleEnd: " + QString::number(AF->sampleEnd, 'f', 12));
     }
 
-    double bestPos = findCurveFitting(focusValListX, focusValListY, 10);
-    ui->plainTextEdit->appendPlainText("bestPos: " + QString::number(bestPos, 'f', 12));
+    bestFocusPos = findCurveFitting(focusValListX, focusValListY, 10);
+    ui->plainTextEdit->appendPlainText("bestPos: " + QString::number(bestFocusPos, 'f', 12));
 
     //double start = pos - sigma;
     //double end = pos + sigma;
@@ -2952,6 +2955,15 @@ void MainWindow::iterationFinished(){
         //AF->terminate();
         AF->wait();
         delete AF;
+
+        if ( autoFocusPassNo == 2 && extraIteration &&
+             (bestFocusPos < (sampleStartPrev + sigma) || bestFocusPos > (sampleEndPrev - sigma) ) && extraIteration ){
+            autoFocusPassLimit = 3;
+            if ((pos - newDistHalf) >= 0)
+                start = pos - newDistHalf ;
+            if ((pos + newDistHalf) <= 1)
+                end = pos + newDistHalf;
+        }
 
         if ( autoFocusPassNo < autoFocusPassLimit ) {
             autoFocusPassNo++;
@@ -2971,6 +2983,8 @@ void MainWindow::iterationFinished(){
             autoFocusAlgo2Step_Auto = false;
             doAutoFocus_Algo = false;
             autoFocusPassNo = 0;
+            extraIteration = false;
+            setFocusPos(bestFocusPos);
         }
 
     } else
