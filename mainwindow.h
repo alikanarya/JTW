@@ -174,12 +174,17 @@ public:
     bool autoFocusBeforeControl = false;
     int autoFocusPassNo = 0;
     int autoFocusPassLimit = 2;
+    double camFocusPos = 0;
 
     autoFocusThread *AF;
     bool doAutoFocus_Algo = false;
+    int autoFocusAlgo_scheme = 0;   //0: single step, 1: deep search, 2: 2 steps, 3:
     bool autoFocusAlgo2Step = false;
     bool autoFocusAlgo2Step_Auto = false;
+    bool autoFocusAlgoLocal = false;
+    bool autoFocusAlgoGlobal = false;
     double sampleStart, sampleEnd, sigma;
+    double sampleStart0, sampleEnd0;
     int sampleNo;
     float **fftArray;
     QList<double> focusValListY;
@@ -477,8 +482,10 @@ public:
     int getBitofByte(unsigned char byte, int bitNo);
 
     void doAutoFocus();
-    void doAutoFocusAlgo_Deep(double start, double end, int sampleNo, int depth);
+    void doAutoFocusAlgo(double start, double end, int sampleNo, int depth);
     void doAutoFocusAlgo_2Step(double start1, double end1, int sampleNo1, int sampleNo2, bool start_end_2nd_auto = true, double start2 = 0, double end2 = 0);
+    void doAutoFocusAlgo_Local();
+    void doAutoFocusAlgo_A();
     void startControl();
     float* fourierTransform(QImage *img, bool save=false);
     double* calcFittingPrms(QList<double> x, QList<double> y, QList<double> refY, bool &stat, bool ref = false);
@@ -508,6 +515,7 @@ public slots:
     void killCamStreamThread();
     void checkFocusState();
     void focusState(bool state);                    // true; in focus, false; out of focus
+    void checkFocusStatus();
     void checkAutoFocusingState();
     void focusingActionState(bool);                 // true; focusing in action, false; stable
     void setFocusPos(float);
@@ -521,6 +529,7 @@ public slots:
 
 signals:
     void cameraDown();
+    void focusStepsOK_Global();
 
 protected:
     void closeEvent(QCloseEvent*);                  // exit from application
