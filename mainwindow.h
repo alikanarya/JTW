@@ -174,7 +174,7 @@ public:
     bool autoFocusBeforeControl = false;
     int autoFocusPassNo = 0;
     int autoFocusPassLimit = 2;
-    double camFocusPos = 0;
+    double camFocusPos = 0.5;
 
     autoFocusThread *AF;
     bool doAutoFocus_Algo = false;
@@ -182,7 +182,6 @@ public:
     bool autoFocusAlgo2Step = false;
     bool autoFocusAlgo2Step_Auto = false;
     bool autoFocusAlgoLocal = false;
-    bool autoFocusAlgoGlobal = false;
     bool extraIteration = false;
     double sampleStart, sampleEnd, sigma;
     double sampleStart0, sampleEnd0, sampleStartPrev, sampleEndPrev;
@@ -484,9 +483,9 @@ public:
 
     void doAutoFocus();
     void doAutoFocusAlgo(double start, double end, int sampleNo, int depth);
+    void doAutoFocusAlgo_2StepStart();
     void doAutoFocusAlgo_2Step(double start1, double end1, int sampleNo1, int sampleNo2, bool start_end_2nd_auto = true, double start2 = 0, double end2 = 0);
     void doAutoFocusAlgo_Local();
-    void doAutoFocusAlgo_A();
     void startControl();
     float* fourierTransform(QImage *img, bool save=false);
     double* calcFittingPrms(QList<double> x, QList<double> y, QList<double> refY, bool &stat, bool ref = false);
@@ -530,7 +529,6 @@ public slots:
 
 signals:
     void cameraDown();
-    void focusStepsOK_Global();
 
 protected:
     void closeEvent(QCloseEvent*);                  // exit from application

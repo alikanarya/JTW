@@ -2329,9 +2329,10 @@ void MainWindow::testButton(){
     AF->start();
 */
     //doAutoFocusAlgo_2Step(0.25, 0.75, 3, 8, false, 0.40, 0.55);
-    doAutoFocusAlgo_2Step(0.2, 0.8, 3, 6, true);
+    //doAutoFocusAlgo_2Step(0.2, 0.8, 3, 6, true);
     //doAutoFocusAlgo_Deep(0,1,5,4);
     //doAutoFocusAlgo_Local();
+    doAutoFocusAlgo_2StepStart();
 
 /*
     QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
@@ -2527,6 +2528,11 @@ void MainWindow::doAutoFocusAlgo(double start, double end, int sampleNo, int dep
     AF->start();
 }
 
+void MainWindow::doAutoFocusAlgo_2StepStart(){
+    autoFocusAlgo2Step = true;
+    checkFocusStatus();
+}
+
 void MainWindow::doAutoFocusAlgo_2Step(double start1, double end1, int sampleNo1, int sampleNo2, bool start_end_2nd_auto, double start2, double end2){
 
     autoFocusAlgo2Step = true;
@@ -2554,12 +2560,6 @@ void MainWindow::doAutoFocusAlgo_2Step(double start1, double end1, int sampleNo1
 void MainWindow::doAutoFocusAlgo_Local() {
     autoFocusAlgoLocal = true;
     checkFocusStatus();
-}
-
-void MainWindow::doAutoFocusAlgo_A() {
-
-    doAutoFocusAlgo(0.2, 0.8, 3, 1);
-
 }
 
 void MainWindow::focusState(bool state){
@@ -2601,9 +2601,8 @@ void MainWindow::focusingActionState(bool state){
 
     if (!timerAutoFocus->isActive()) {      // ONLY STATUS INFO REQUESTED
         camFocusPos = camApi->focusPos;
-
+        qDebug() << camFocusPos;
         if (autoFocusAlgoLocal) {
-
             double start = camFocusPos - 0.05;
             if (start < 0) start = 0;
             double end = camFocusPos + 0.05;
@@ -2615,7 +2614,12 @@ void MainWindow::focusingActionState(bool state){
             focusValListX.clear();
             doAutoFocus_Algo = true;
             AF->start();
+        }
 
+        if (autoFocusAlgo2Step) {
+            double start = camFocusPos/2;
+            double end = camFocusPos + (1-camFocusPos)/2;
+            doAutoFocusAlgo_2Step(start, end, 3, 6, true);
         }
     } else {    // AUTO FOCUS PROCESS CHECK
         if (!camFocusingActionState) {
@@ -2651,7 +2655,7 @@ void MainWindow::setFocusPos(float pos){
 
 void MainWindow::apiRequestCompleted(){
     if (doAutoFocus_Algo) {
-        QTimer::singleShot(2000, this, SLOT(calcFocusValue()));
+        QTimer::singleShot(500, this, SLOT(calcFocusValue()));
     }
 }
 
@@ -2831,7 +2835,7 @@ double* MainWindow::calcFittingPrms(QList<double> x, QList<double> y, QList<doub
     QString debugStr = "";
     stat = false;
     double *prm = new double[6];
-    for (int i=0; i<6; i++) prm[i] = -1;
+    for (int i=0; i<6; i++) prm[i] = -12345;
 
     int samples = x.size();
     double N = 0, A = 0, B = 0, C = 0, D = 0, Y1 = 0, Y2 = 0, Y3 = 0;
@@ -2877,12 +2881,14 @@ double* MainWindow::calcFittingPrms(QList<double> x, QList<double> y, QList<doub
     double magA = 0;
     if ( c != 0 ) {
         prm[3] = u = -1 * b / (2 * c);
-        prm[4] = sigma = sqrt( (-1 / (2 * c)) );
+        if ( c < 0 )
+            prm[4] = sigma = sqrt( (-1 / (2 * c)) );
+        else
+            return prm;
+
         prm[5] = magA = exp( a - pow(b,2) / (4*c) );
     } else
         return prm;
-
-
 
     stat = true;
     return prm;
@@ -2957,7 +2963,8 @@ void MainWindow::iterationFinished(){
         delete AF;
 
         if ( autoFocusPassNo == 2 && extraIteration &&
-             (bestFocusPos < (sampleStartPrev + sigma) || bestFocusPos > (sampleEndPrev - sigma) ) && extraIteration ){
+             ( bestFocusPos < (sampleStartPrev + sigma) || bestFocusPos > (sampleEndPrev - sigma) ||
+               bestFocusPos > 1 || bestFocusPos < 0 || sigma == -12345) ){
             autoFocusPassLimit = 3;
             if ((pos - newDistHalf) >= 0)
                 start = pos - newDistHalf ;
@@ -2984,16 +2991,16 @@ void MainWindow::iterationFinished(){
             doAutoFocus_Algo = false;
             autoFocusPassNo = 0;
             extraIteration = false;
-            setFocusPos(bestFocusPos);
+            if ( bestFocusPos < 1 && bestFocusPos > 0 && sigma != -12345 ){
+                setFocusPos(bestFocusPos);
+            } else
+                setFocusPos(camFocusPos);
+
         }
 
     } else
     if ( autoFocusAlgoLocal ) {
         autoFocusAlgoLocal = false;
-    } else
-    if ( autoFocusAlgoGlobal ) {
-        emit focusStepsOK_Global();
-
     } else {
 
         if ( autoFocusPassNo < autoFocusPassLimit ) {
@@ -3021,6 +3028,7 @@ void MainWindow::iterationFinished(){
 
 double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iterNo){
 
+    bool debugmsg0 = false;
     bool debugmsg = true;
     QString debugStr = "";
 
@@ -3032,7 +3040,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
         x.append( x1.at(i) - minX );
         debugStr += QString::number(x.at(i), 'f', 4) + " ";
     }
-    if (debugmsg) ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+    if (debugmsg0) ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
     focusValX_offset = minX;
 
     // y Ynorm
@@ -3045,7 +3053,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
             debugStr += QString::number(y.at(i), 'f', 4) + " ";
         }
 //    else
-    if (debugmsg) ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+    if (debugmsg0) ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
 
     // y Ynorm -YnormMin
     double minY = *std::min_element(y.begin(), y.end());
@@ -3054,7 +3062,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
         y[i] -= minY*0.95;
         debugStr += QString::number(y.at(i), 'f', 4) + " ";
     }
-    if (debugmsg) ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
+    if (debugmsg0) ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
 
     bool flag;
     QList<double> yNew;
