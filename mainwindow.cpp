@@ -2318,34 +2318,14 @@ void MainWindow::testButton(){
     }
     */
 
-/*
-    AF = new autoFocusThread(0.25, 0.75, 3, 1);
-    connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
-    connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
-    focusValListY.clear();
-    focusValListX.clear();
-    doAutoFocus_Algo = true;
-    autoFocusPassNo = 1;
-    AF->start();
-*/
+
     //doAutoFocusAlgo_2Step(0.25, 0.75, 3, 8, false, 0.40, 0.55);
     //doAutoFocusAlgo_2Step(0.2, 0.8, 3, 6, true);
     //doAutoFocusAlgo_Deep(0,1,5,4);
     //doAutoFocusAlgo_Local();
     doAutoFocusAlgo_2StepStart();
 
-/*
-    QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
-    //x.save("gray.jpg");
 
-    imgProcess z(x,x.width(),x.height());
-    z.constructValueMatrix(x);
-    //z.saveMatrix(z.valueMatrix,x.width(),x.height(),"gray.csv");
-    z.normalizeValueMatrix(255.0);
-    //z.saveMatrix(z.valueMatrixNorm,x.width(),x.height(),"grayn.csv");
-    qDebug() << z.calcEntropyMatrix(5);
-    //z.saveMatrix(z.fuzzyEntropyMatrix,z.FEM_width,z.FEM_height,"entropy.csv");
-*/
     /*
     QList<double> x1;
     x1.append(0.4500);
@@ -2371,7 +2351,6 @@ void MainWindow::testButton(){
     y1.append(7032.68);
     y1.append(7048.07);
     y1.append(6451.81);
-
     qDebug() << findCurveFitting(x1, y1, 10);
 */
 }
@@ -2623,10 +2602,15 @@ void MainWindow::focusingActionState(bool state){
         }
     } else {    // AUTO FOCUS PROCESS CHECK
         if (!camFocusingActionState) {
-            timerAutoFocus->stop();
-            ui->plainTextEdit->appendPlainText("Oto fokus işlemi tamamlandı...");
-            QTimer::singleShot(4000, this, SLOT(checkFocusState()));
-            //checkFocusState();
+            if (camDoAutoFocus) {
+                timerAutoFocus->stop();
+                ui->plainTextEdit->appendPlainText("Oto fokus işlemi tamamlandı...");
+                QTimer::singleShot(4000, this, SLOT(checkFocusState()));
+                //checkFocusState();
+            }
+            if (doAutoFocus_Algo) {
+
+            }
         }
     }
 }
@@ -2655,7 +2639,7 @@ void MainWindow::setFocusPos(float pos){
 
 void MainWindow::apiRequestCompleted(){
     if (doAutoFocus_Algo) {
-        QTimer::singleShot(500, this, SLOT(calcFocusValue()));
+        QTimer::singleShot(2000, this, SLOT(calcFocusValue()));
     }
 }
 
@@ -2916,16 +2900,31 @@ void MainWindow::iterationFinished(){
     double newDistHalf = round(qMax(abs(distLeft), abs(distRight))*10000/2) / 10000.0;
 
     double newdistLeft;
-    if ((pos - newDistHalf) >= AF->sampleStart)
-        newdistLeft = newDistHalf;
-    else
-        newdistLeft = distLeft;
-
     double newdistRight;
-    if ((pos + newDistHalf) <= AF->sampleEnd)
-        newdistRight = newDistHalf;
-    else
-        newdistRight = distRight;
+
+    if (index > 0 && index < (focusValListY.size()-1) ) {    // if not at extreme points
+
+        if ((pos - newDistHalf) >= AF->sampleStart)
+            newdistLeft = newDistHalf;
+        else
+            newdistLeft = distLeft;
+
+        if ((pos + newDistHalf) <= AF->sampleEnd)
+            newdistRight = newDistHalf;
+        else
+            newdistRight = distRight;
+    } else {
+
+        if ((pos - newDistHalf) >= 0)
+            newdistLeft = newDistHalf ;
+
+        if ((pos + newDistHalf) <= 1)
+            newdistRight = newDistHalf;
+
+        if (autoFocusAlgo2Step) extraIterationForce = true;
+
+    }
+
 
     sampleStartPrev = AF->sampleStart;
     sampleEndPrev = AF->sampleEnd;
@@ -2935,10 +2934,10 @@ void MainWindow::iterationFinished(){
     //AF->sampleStart = pos - newdistLeft;
     //AF->sampleEnd = pos + newdistRight;
 
-    if (autoFocusPassNo == 1) {
+    /*if (autoFocusPassNo == 1) {
         sampleStart0 = AF->sampleStart;
         sampleEnd0 = AF->sampleEnd;
-    }
+    }*/
 
     if (debugmsg) {
         ui->plainTextEdit->appendPlainText("newDistHalf: " + QString::number(newDistHalf, 'f', 12));
@@ -2962,14 +2961,10 @@ void MainWindow::iterationFinished(){
         AF->wait();
         delete AF;
 
-        if ( autoFocusPassNo == 2 && extraIteration &&
+        if ( extraIterationForce || (autoFocusPassNo == 2 && extraIteration &&
              ( bestFocusPos < (sampleStartPrev + sigma) || bestFocusPos > (sampleEndPrev - sigma) ||
-               bestFocusPos > 1 || bestFocusPos < 0 || sigma == -12345) ){
+               bestFocusPos > 1 || bestFocusPos < 0 || sigma == -12345)) ){
             autoFocusPassLimit = 3;
-            if ((pos - newDistHalf) >= 0)
-                start = pos - newDistHalf ;
-            if ((pos + newDistHalf) <= 1)
-                end = pos + newDistHalf;
         }
 
         if ( autoFocusPassNo < autoFocusPassLimit ) {
@@ -2991,6 +2986,7 @@ void MainWindow::iterationFinished(){
             doAutoFocus_Algo = false;
             autoFocusPassNo = 0;
             extraIteration = false;
+            extraIterationForce = false;
             if ( bestFocusPos < 1 && bestFocusPos > 0 && sigma != -12345 ){
                 setFocusPos(bestFocusPos);
             } else
