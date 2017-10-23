@@ -515,6 +515,36 @@ void MainWindow::getImageFromStream(int captureTime){
             testFlag = false;
         }
 
+        if (focusValCalc) {
+
+            double y = fourierTransform(lastData->image, false)[2];
+
+            /*
+            QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
+            imgProcess z(x,x.width(),x.height());
+            z.constructValueMatrix(x);
+            z.normalizeValueMatrix(255.0);
+            double y = z.calcEntropyMatrix(5);
+            */
+            focusVal += y;
+            //qDebug() << focusValCalcNo << "   " << y;
+            focusValCalcNo++;
+
+            if (focusValCalcNo == focusValCalcLimit){
+                focusVal /= focusValCalcLimit;
+                focusValCalc = false;
+                focusValCalcNo = 0;
+                focusValListY.append( focusVal );
+                focusValListX.append( AF->pos*10000 / 10000.0 );
+
+                ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round(AF->pos*10000) / 10000.0)+
+                                                   " mean: "+QString::number(focusValListY.last(),'f',2));
+
+                AF->condition.wakeAll();
+
+            }
+        }
+
         playCam();
         //ui->imageFrame->setPixmap( QPixmap::fromImage( img.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
     }
@@ -2481,12 +2511,6 @@ void MainWindow::plcCommands(){
 
 }
 
-void MainWindow::checkFocusState(){
-    if (!cameraDownStatus && !camApi->busy){
-        camApi->apiDahuaGetFocusState();
-    }
-}
-
 void MainWindow::doAutoFocus(){
     if (!cameraDownStatus && !camApi->busy){
         camApi->apiDahuaAutoFocus();
@@ -2539,6 +2563,12 @@ void MainWindow::doAutoFocusAlgo_2Step(double start1, double end1, int sampleNo1
 void MainWindow::doAutoFocusAlgo_Local() {
     autoFocusAlgoLocal = true;
     checkFocusStatus();
+}
+
+void MainWindow::checkFocusState(){
+    if (!cameraDownStatus && !camApi->busy){
+        camApi->apiDahuaGetFocusState();
+    }
 }
 
 void MainWindow::focusState(bool state){
@@ -2609,7 +2639,9 @@ void MainWindow::focusingActionState(bool state){
                 //checkFocusState();
             }
             if (doAutoFocus_Algo) {
-
+                timerAutoFocus->stop();
+                //ui->plainTextEdit->appendPlainText("motor durdu...");
+                QTimer::singleShot(500, this, SLOT(calcFocusValue()));
             }
         }
     }
@@ -2621,25 +2653,33 @@ void MainWindow::checkAutoFocusingState(){  // timerAutoFocus slot
         if (timerLock){
             camApi->apiDahuaGetFocusStatus();
             timerLock = false;
-            ui->plainTextEdit->appendPlainText("");
+            if (camDoAutoFocus) ui->plainTextEdit->appendPlainText("");
         } else if (camFocusingActionState) {
             camApi->apiDahuaGetFocusStatus();
         }
-        QTextCursor text_cursor = QTextCursor(ui->plainTextEdit->document());
-        text_cursor.movePosition(QTextCursor::End);
-        text_cursor.insertText("*");
+
+        if (camDoAutoFocus) {
+            QTextCursor text_cursor = QTextCursor(ui->plainTextEdit->document());
+            text_cursor.movePosition(QTextCursor::End);
+            text_cursor.insertText("*");
+        }
     }
 }
 
 void MainWindow::setFocusPos(float pos){
     if (!cameraDownStatus && !camApi->busy){
         camApi->apiDahuaSetFocusPos(pos);
+
+        if (doAutoFocus_Algo) {
+            timerLock = true;
+            timerAutoFocus->start(100);
+        }
     }
 }
 
 void MainWindow::apiRequestCompleted(){
     if (doAutoFocus_Algo) {
-        QTimer::singleShot(2000, this, SLOT(calcFocusValue()));
+        //QTimer::singleShot(2000, this, SLOT(calcFocusValue()));
     }
 }
 
@@ -2756,7 +2796,7 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
     double min, max;
     cv::minMaxLoc(magI, &min, &max);
     cv::Scalar scal = cv::mean(magI);
-    float mean = scal.val[0];
+    float mean = scal.val[0] * 2;
     //ui->plainTextEdit->appendPlainText("min: " + QString::number(min,'f',3) + " max: " + QString::number(max) + " mean: " + QString::number(mean));
 
     int countLow = 0,countHigh = 0;
@@ -2779,7 +2819,12 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
 
 void MainWindow::calcFocusValue(){
 
-    getFFT();
+
+    focusValCalcNo = 0;
+    focusVal = 0;
+    focusValCalc = true;
+
+    //getFFT();
     //getFuzzyEntropy();
 }
 
@@ -2787,6 +2832,7 @@ void MainWindow::getFFT(){
     if (!cameraDownStatus){
         focusValListY.append( fourierTransform(lastData->image, false)[2] );
         focusValListX.append( AF->pos*10000 / 10000.0 );
+
         ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round(AF->pos*10000) / 10000.0)+
                                            " mean: "+QString::number(focusValListY.last(),'f',2));
 

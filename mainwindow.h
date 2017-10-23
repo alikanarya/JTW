@@ -192,6 +192,10 @@ public:
     QList<double> focusValListX;
     double focusValX_offset;
     double bestFocusPos = 0.5;
+    bool focusValCalc = false;
+    int focusValCalcNo = 0;
+    int focusValCalcLimit = 10;
+    double focusVal = 0;
 
     cv::Mat imgDataCV;
 

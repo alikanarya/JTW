@@ -35,7 +35,8 @@ void autoFocusThread::run(){
         step = round(step*1000000) / 1000000.0;
 
         j=0;
-        for (pos=sampleStart; pos < (sampleEnd+step); pos+=step) {
+        for (pos=sampleStart; pos < (sampleEnd+step*0.5) && pos <= 1 && pos >= 0; pos+=step) {
+        //for (pos=sampleStart; pos < (sampleEnd+step); pos+=step) {
             pos = round(pos*1000000)/1000000.0;
             emit setFocusPos(pos);
             mMutex.lock();
