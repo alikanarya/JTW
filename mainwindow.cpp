@@ -525,7 +525,10 @@ void MainWindow::getImageFromStream(int captureTime){
             z.gaussianBlur();
             double y = fourierTransform(z.getImage( z.valueMatrix, z.imageWidth, z.imageHeight ), false)[2];
 */
-            double y = fourierTransform(lastData->image, false)[2];
+            //QImage tmp = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );
+            QImage tmp = lastData->image->copy( offsetXCam+frameWidthCam/4.0, offsetYCam+frameHeightCam/4.0, frameWidthCam/2.0, frameHeightCam/2.0 );
+            double y = fourierTransform(&tmp, false)[2];
+//            double y = fourierTransform(lastData->image, false)[2];
 
 /*
             QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
@@ -2361,9 +2364,12 @@ void MainWindow::testButton(){
     //doAutoFocusAlgo_2Step(0.2, 0.8, 3, 6, true);
     //doAutoFocusAlgo_Deep(0,1,5,4);
     //doAutoFocusAlgo_Local();
-    //doAutoFocusAlgo_2StepStart();
+    doAutoFocusAlgo_2StepStart();
 
-    cv::Mat imgData0(lastData->image->height(), lastData->image->width(), CV_8UC3, (uchar*)lastData->image->bits(), lastData->image->bytesPerLine());
+    /*
+    QImage _targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
+    cv::Mat imgData0(_targetArea.height(), _targetArea.width(), CV_8UC3, (uchar*)_targetArea.bits(), _targetArea.bytesPerLine());
+    //cv::Mat imgData0(lastData->image->height(), lastData->image->width(), CV_8UC3, (uchar*)lastData->image->bits(), lastData->image->bytesPerLine());
     cv::Mat imgData; // deep copy just in case (my lack of knowledge with open cv)
     //cv::Mat imgDataBlur;
     //cv::GaussianBlur(imgData0, imgDataBlur, cv::Size(5,5), 0, 0);
@@ -2380,7 +2386,7 @@ void MainWindow::testButton(){
     cv::minMaxLoc(imgDataLapAbs, &min, &max);
     //cv::Scalar scal = cv::mean(imgDataLapAbs);
     qDebug() <<  max;//scal.val[0];
-
+*/
     /*
     QList<double> x1;
     x1.append(0.4500);
