@@ -208,6 +208,7 @@ void setupForm::edgeDetection(imgProcess *iprocess){
             iprocess->gaussianBlur();
                 /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, edgePath+"03-value matrix.csv" );
                 /*D*/if (saveAnalysis) iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(edgePath+"03-blurred image.jpg");
+            ui->labelMono->setPixmap( QPixmap::fromImage ( *iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight ) ) );
             iprocess->detectEdgeSobelwDirections();
                 /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"04-edge matrix.csv");
                 /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"05-edge gradients matrix.csv");

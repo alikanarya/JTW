@@ -516,16 +516,24 @@ void MainWindow::getImageFromStream(int captureTime){
         }
 
         if (focusValCalc) {
-
+/*
+            QImage x = lastData->image->copy();
+            imgProcess z(x,x.width(),x.height());
+            z.prepareCannyArrays();
+            z.constructGaussianMatrix(5, 1.1);
+            z.constructValueMatrix(z.imgOrginal, 0);
+            z.gaussianBlur();
+            double y = fourierTransform(z.getImage( z.valueMatrix, z.imageWidth, z.imageHeight ), false)[2];
+*/
             double y = fourierTransform(lastData->image, false)[2];
 
-            /*
+/*
             QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
             imgProcess z(x,x.width(),x.height());
             z.constructValueMatrix(x);
             z.normalizeValueMatrix(255.0);
             double y = z.calcEntropyMatrix(5);
-            */
+*/
             focusVal += y;
             //qDebug() << focusValCalcNo << "   " << y;
             focusValCalcNo++;
@@ -2353,8 +2361,25 @@ void MainWindow::testButton(){
     //doAutoFocusAlgo_2Step(0.2, 0.8, 3, 6, true);
     //doAutoFocusAlgo_Deep(0,1,5,4);
     //doAutoFocusAlgo_Local();
-    doAutoFocusAlgo_2StepStart();
+    //doAutoFocusAlgo_2StepStart();
 
+    cv::Mat imgData0(lastData->image->height(), lastData->image->width(), CV_8UC3, (uchar*)lastData->image->bits(), lastData->image->bytesPerLine());
+    cv::Mat imgData; // deep copy just in case (my lack of knowledge with open cv)
+    //cv::Mat imgDataBlur;
+    //cv::GaussianBlur(imgData0, imgDataBlur, cv::Size(5,5), 0, 0);
+    cvtColor(imgData0, imgData, CV_RGB2GRAY);
+    cv::Mat imgDataLap;
+    cv::Laplacian(imgData, imgDataLap,3);
+    cv::Mat imgDataLapAbs;
+    cv::convertScaleAbs( imgDataLap, imgDataLapAbs );
+    //cv::Mat maxArray = cv::max(0, imgDataLapAbs );
+    //qDebug() << maxArray;
+
+
+    double min, max;
+    cv::minMaxLoc(imgDataLapAbs, &min, &max);
+    //cv::Scalar scal = cv::mean(imgDataLapAbs);
+    qDebug() <<  max;//scal.val[0];
 
     /*
     QList<double> x1;
@@ -2687,7 +2712,10 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
 
     cv::Mat imgData0(img->height(), img->width(), CV_8UC3, (uchar*)img->bits(), img->bytesPerLine());
     cv::Mat imgData; // deep copy just in case (my lack of knowledge with open cv)
-    cvtColor(imgData0, imgData, CV_RGB2GRAY);
+    cv::Mat imgDataBlur;
+    cv::GaussianBlur(imgData0, imgDataBlur, cv::Size(5,5), 0, 0);
+    cvtColor(imgDataBlur, imgData, CV_RGB2GRAY);
+    //cvtColor(imgData0, imgData, CV_RGB2GRAY);
 
     // [expand]
     cv::Mat padded;                            //expand input image to optimal size
@@ -2796,7 +2824,7 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
     double min, max;
     cv::minMaxLoc(magI, &min, &max);
     cv::Scalar scal = cv::mean(magI);
-    float mean = scal.val[0] * 2;
+    float mean = scal.val[0];
     //ui->plainTextEdit->appendPlainText("min: " + QString::number(min,'f',3) + " max: " + QString::number(max) + " mean: " + QString::number(mean));
 
     int countLow = 0,countHigh = 0;
@@ -2941,7 +2969,7 @@ void MainWindow::iterationFinished(){
 
     double distLeft = round((pos - AF->sampleStart)*10000) / 10000.0;
     double distRight = round((AF->sampleEnd - pos)*10000) / 10000.0;
-    qDebug() << "pass# " << autoFocusPassNo;// << " distL:" << distLeft << " distR:" << distRight;
+    //qDebug() << "pass# " << autoFocusPassNo;// << " distL:" << distLeft << " distR:" << distRight;
 
     double newDistHalf = round(qMax(abs(distLeft), abs(distRight))*10000/2) / 10000.0;
 
@@ -3071,7 +3099,7 @@ void MainWindow::iterationFinished(){
 double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iterNo){
 
     bool debugmsg0 = false;
-    bool debugmsg = true;
+    bool debugmsg = false;
     QString debugStr = "";
 
     // x Xnorm
@@ -3094,7 +3122,8 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
             y.append( y1.at(i) / (maxY * 1.05) );
             debugStr += QString::number(y.at(i), 'f', 4) + " ";
         }
-//    else
+    else
+        return -1;
     if (debugmsg0) ui->plainTextEdit->appendPlainText(debugStr); debugStr = "";
 
     // y Ynorm -YnormMin
@@ -3135,7 +3164,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
             error /= x1.size();
             error = sqrt(error);
 
-            str += "err: " + QString::number(error, 'f', 6);
+            str = "err: " + QString::number(error, 'f', 6);
             ui->plainTextEdit->appendPlainText(str);
 
             if (error < 0.01){

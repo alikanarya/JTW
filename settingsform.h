@@ -79,6 +79,7 @@ private slots:
     void checkAutoFocusingState();
     void on_focusCheck_clicked();
     void on_autoFocusCheck_clicked();
+    void on_testButton_clicked();
 };
 
 #endif // SETTINGSFORM_H

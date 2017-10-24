@@ -462,3 +462,7 @@ void settingsForm::on_focusCheck_clicked(){
 void settingsForm::on_autoFocusCheck_clicked(){
     w->autoFocusBeforeControl = ui->autoFocusCheck->isChecked();
 }
+
+void settingsForm::on_testButton_clicked(){
+    w->testButton();
+}

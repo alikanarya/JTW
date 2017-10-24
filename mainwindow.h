@@ -194,7 +194,7 @@ public:
     double bestFocusPos = 0.5;
     bool focusValCalc = false;
     int focusValCalcNo = 0;
-    int focusValCalcLimit = 10;
+    int focusValCalcLimit = 5;
     double focusVal = 0;
 
     cv::Mat imgDataCV;
@@ -513,11 +513,15 @@ public slots:
     void saveFinished();
     void stopButton();                              // stop video resets
     void initPlcTimer();                            // 2sec first connect(plc) time delay to start plc control timer
+
+    void testButton();
+
     void playCam();
     void makeNetworkRequest();
     void camConnected();
     void camNotConnected();
     void killCamStreamThread();
+
     void checkFocusState();
     void focusState(bool state);                    // true; in focus, false; out of focus
     void checkFocusStatus();
@@ -563,7 +567,6 @@ private slots:
     void startTimer();                              // 2sn bood delay timer
     void cameraDownAction();                        // actions handled when camera is not accesible
 
-    void testButton();
     void testEdit();
     void timeEdit();
 

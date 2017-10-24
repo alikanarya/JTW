@@ -1250,6 +1250,19 @@ p, li { white-space: pre-wrap; }
     <string>DAHUA API FONKSİYONLARI</string>
    </property>
   </widget>
+  <widget class="QPushButton" name="testButton">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>140</y>
+     <width>41</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Test</string>
+   </property>
+  </widget>
  </widget>
  <resources>
   <include location="icons.qrc"/>
@@ -1547,7 +1560,7 @@ p, li { white-space: pre-wrap; }
   <slot>changeCamStreamType()</slot>
  </slots>
  <buttongroups>
-  <buttongroup name="radioGroup"/>
   <buttongroup name="camStreamGroup"/>
+  <buttongroup name="radioGroup"/>
  </buttongroups>
 </ui>

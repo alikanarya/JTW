@@ -77,8 +77,9 @@ public:
     QCheckBox *focusCheck;
     QCheckBox *autoFocusCheck;
     QLabel *label_11;
-    QButtonGroup *radioGroup;
+    QPushButton *testButton;
     QButtonGroup *camStreamGroup;
+    QButtonGroup *radioGroup;
 
     void setupUi(QWidget *settingsForm)
     {
@@ -419,6 +420,9 @@ public:
         label_11->setObjectName(QStringLiteral("label_11"));
         label_11->setGeometry(QRect(510, 180, 201, 16));
         label_11->setFont(font);
+        testButton = new QPushButton(settingsForm);
+        testButton->setObjectName(QStringLiteral("testButton"));
+        testButton->setGeometry(QRect(510, 140, 41, 29));
 
         retranslateUi(settingsForm);
         QObject::connect(setupButton, SIGNAL(clicked()), settingsForm, SLOT(showSetupForm()));
@@ -532,6 +536,7 @@ public:
         focusCheck->setText(QApplication::translate("settingsForm", "Kaynak \303\226ncesi Fokus Kontrol\303\274", 0));
         autoFocusCheck->setText(QApplication::translate("settingsForm", "Kaynak \303\226ncesi Oto Fokus", 0));
         label_11->setText(QApplication::translate("settingsForm", "DAHUA API FONKS\304\260YONLARI", 0));
+        testButton->setText(QApplication::translate("settingsForm", "Test", 0));
     } // retranslateUi
 
 };
