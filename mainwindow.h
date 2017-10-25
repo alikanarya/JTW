@@ -196,6 +196,8 @@ public:
     int focusValCalcNo = 0;
     int focusValCalcLimit = 5;
     double focusVal = 0;
+    int focusROI = 0;   //0:full image 1:target frame >1:// target frame portion
+    int focusValueAlgo = 0; //0:fft 1:fuzzy entropy 2:laplacian
 
     cv::Mat imgDataCV;
 
@@ -531,6 +533,7 @@ public slots:
     void apiRequestCompleted();
     void testSlot();
     void calcFocusValue();
+    double calcFocusValueLaplacian(int frame, bool blur = true);
     void getFFT();
     void getFuzzyEntropy();
     void iterationFinished();

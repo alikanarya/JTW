@@ -516,28 +516,34 @@ void MainWindow::getImageFromStream(int captureTime){
         }
 
         if (focusValCalc) {
-/*
-            QImage x = lastData->image->copy();
-            imgProcess z(x,x.width(),x.height());
-            z.prepareCannyArrays();
-            z.constructGaussianMatrix(5, 1.1);
-            z.constructValueMatrix(z.imgOrginal, 0);
-            z.gaussianBlur();
-            double y = fourierTransform(z.getImage( z.valueMatrix, z.imageWidth, z.imageHeight ), false)[2];
-*/
-            //QImage tmp = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );
-            QImage tmp = lastData->image->copy( offsetXCam+frameWidthCam/4.0, offsetYCam+frameHeightCam/4.0, frameWidthCam/2.0, frameHeightCam/2.0 );
-            double y = fourierTransform(&tmp, false)[2];
-//            double y = fourierTransform(lastData->image, false)[2];
 
-/*
-            QImage x = lastData->image->convertToFormat(QImage::Format_Grayscale8);
-            imgProcess z(x,x.width(),x.height());
-            z.constructValueMatrix(x);
-            z.normalizeValueMatrix(255.0);
-            double y = z.calcEntropyMatrix(5);
-*/
-            focusVal += y;
+            QImage _targetArea;
+
+            if (focusROI == 0) // full image
+                _targetArea = lastData->image->copy();
+            else if (focusROI == 1)    // target frame
+                _targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );
+            else {   // target frame portion
+                int shiftX =  (frameWidthCam - frameWidthCam*1.0/focusROI) / 2.0;
+                int shiftY =  (frameHeightCam - frameHeightCam*1.0/focusROI) / 2.0;
+                _targetArea = lastData->image->copy( offsetXCam+shiftX, offsetYCam+shiftY, frameWidthCam/focusROI, frameHeightCam/focusROI );
+            }
+
+            double val;
+            switch ( focusValueAlgo ) {
+                case 0:
+                    val = fourierTransform(&_targetArea, false)[2];
+                    break;
+                case 1:
+                    QImage x = _targetArea.convertToFormat(QImage::Format_Grayscale8);
+                    imgProcess z(x, x.width(), x.height());
+                    z.constructValueMatrix(x);
+                    z.normalizeValueMatrix(255.0);
+                    val = z.calcEntropyMatrix(5);
+                break;
+            }
+
+            focusVal += val;
             //qDebug() << focusValCalcNo << "   " << y;
             focusValCalcNo++;
 
@@ -1053,7 +1059,6 @@ void MainWindow::guideButton(){
     //ui->leftButton->setEnabled( showGuide && !trackOn );
     //ui->rightButton->setEnabled( showGuide && !trackOn );
 }
-
 
 void MainWindow::on_guideAlignButton_clicked(){
 
@@ -2364,29 +2369,10 @@ void MainWindow::testButton(){
     //doAutoFocusAlgo_2Step(0.2, 0.8, 3, 6, true);
     //doAutoFocusAlgo_Deep(0,1,5,4);
     //doAutoFocusAlgo_Local();
-    doAutoFocusAlgo_2StepStart();
-
-    /*
-    QImage _targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
-    cv::Mat imgData0(_targetArea.height(), _targetArea.width(), CV_8UC3, (uchar*)_targetArea.bits(), _targetArea.bytesPerLine());
-    //cv::Mat imgData0(lastData->image->height(), lastData->image->width(), CV_8UC3, (uchar*)lastData->image->bits(), lastData->image->bytesPerLine());
-    cv::Mat imgData; // deep copy just in case (my lack of knowledge with open cv)
-    //cv::Mat imgDataBlur;
-    //cv::GaussianBlur(imgData0, imgDataBlur, cv::Size(5,5), 0, 0);
-    cvtColor(imgData0, imgData, CV_RGB2GRAY);
-    cv::Mat imgDataLap;
-    cv::Laplacian(imgData, imgDataLap,3);
-    cv::Mat imgDataLapAbs;
-    cv::convertScaleAbs( imgDataLap, imgDataLapAbs );
-    //cv::Mat maxArray = cv::max(0, imgDataLapAbs );
-    //qDebug() << maxArray;
+    //doAutoFocusAlgo_2StepStart();
+    qDebug() << calcFocusValueLaplacian(0, true);
 
 
-    double min, max;
-    cv::minMaxLoc(imgDataLapAbs, &min, &max);
-    //cv::Scalar scal = cv::mean(imgDataLapAbs);
-    qDebug() <<  max;//scal.val[0];
-*/
     /*
     QList<double> x1;
     x1.append(0.4500);
@@ -2853,13 +2839,50 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
 
 void MainWindow::calcFocusValue(){
 
-
     focusValCalcNo = 0;
     focusVal = 0;
     focusValCalc = true;
+    focusROI = 0;
+    focusValueAlgo = 0;
 
     //getFFT();
     //getFuzzyEntropy();
+}
+
+double MainWindow::calcFocusValueLaplacian(int roi, bool blur){
+
+    QImage _targetArea;
+
+    if (roi == 0) // full image
+        _targetArea = lastData->image->copy();
+    else if (roi == 1)    // target frame
+        _targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
+    else {   // target frame portion
+        int shiftX =  (frameWidthCam - frameWidthCam*1.0/roi) / 2.0;
+        int shiftY =  (frameHeightCam - frameHeightCam*1.0/roi) / 2.0;
+        _targetArea = lastData->image->copy( offsetXCam+shiftX, offsetYCam+shiftY, frameWidthCam/roi, frameHeightCam/roi );
+    }
+
+    cv::Mat imgData0(_targetArea.height(), _targetArea.width(), CV_8UC3, (uchar*)_targetArea.bits(), _targetArea.bytesPerLine());
+    cv::Mat imgData;
+
+    if (blur) {
+        cv::Mat imgDataBlur;
+        cv::GaussianBlur(imgData0, imgDataBlur, cv::Size(5,5), 0, 0);
+        cvtColor(imgDataBlur, imgData, CV_RGB2GRAY);
+    } else {
+        cvtColor(imgData0, imgData, CV_RGB2GRAY);
+    }
+
+    cv::Mat imgDataLap;
+    cv::Laplacian(imgData, imgDataLap,3);
+    cv::Mat imgDataLapAbs;
+    cv::convertScaleAbs( imgDataLap, imgDataLapAbs );
+
+    double min, max = 0;
+    cv::minMaxLoc(imgDataLapAbs, &min, &max);
+
+    return max;
 }
 
 void MainWindow::getFFT(){
