@@ -55,6 +55,7 @@ public slots:
     void targetSlider();        // target area horizontal size adjustment
     void targetVertSlider();    // target area vertical size adjustment
     void getFFT();
+    void focusValueCalculated(double val);
 
 private:
     Ui::settingsForm *ui;
@@ -80,6 +81,7 @@ private slots:
     void on_focusCheck_clicked();
     void on_autoFocusCheck_clicked();
     void on_testButton_clicked();
+    void on_calcFocusValueButton_clicked();
 };
 
 #endif // SETTINGSFORM_H

@@ -2,7 +2,7 @@
 #define SETUPFORM_H
 
 #include "../_Modules/Imgprocess/imgprocess.h"
-#include <QtWidgets/QDialog>
+//#include <QtWidgets/QDialog>
 #include <QTime>
 #include <QtWidgets>
 #include "imgtools.h"

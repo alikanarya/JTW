@@ -535,12 +535,18 @@ void MainWindow::getImageFromStream(int captureTime){
                     val = fourierTransform(&_targetArea, false)[2];
                     break;
                 case 1:
+                    {
                     QImage x = _targetArea.convertToFormat(QImage::Format_Grayscale8);
                     imgProcess z(x, x.width(), x.height());
                     z.constructValueMatrix(x);
                     z.normalizeValueMatrix(255.0);
                     val = z.calcEntropyMatrix(5);
-                break;
+                    }
+                    break;
+                case 2:
+                    val = calcFocusValueLaplacian(_targetArea);
+                    break;
+
             }
 
             focusVal += val;
@@ -549,16 +555,20 @@ void MainWindow::getImageFromStream(int captureTime){
 
             if (focusValCalcNo == focusValCalcLimit){
                 focusVal /= focusValCalcLimit;
+                emit focusValueCalculated(focusVal);
+                qDebug() << focusVal;
                 focusValCalc = false;
                 focusValCalcNo = 0;
-                focusValListY.append( focusVal );
-                focusValListX.append( AF->pos*10000 / 10000.0 );
 
-                ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round(AF->pos*10000) / 10000.0)+
-                                                   " mean: "+QString::number(focusValListY.last(),'f',2));
+                if (doAutoFocus_Algo) {
+                    focusValListY.append( focusVal );
+                    focusValListX.append( AF->pos*10000 / 10000.0 );
 
-                AF->condition.wakeAll();
+                    ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round(AF->pos*10000) / 10000.0)+
+                                                       " mean: "+QString::number(focusValListY.last(),'f',2));
 
+                    AF->condition.wakeAll();
+                }
             }
         }
 
@@ -2370,8 +2380,9 @@ void MainWindow::testButton(){
     //doAutoFocusAlgo_Deep(0,1,5,4);
     //doAutoFocusAlgo_Local();
     //doAutoFocusAlgo_2StepStart();
-    qDebug() << calcFocusValueLaplacian(0, true);
+    //qDebug() << calcFocusValueLaplacian(2);
 
+    calcFocusValue(2, 1, 5);
 
     /*
     QList<double> x1;
@@ -2658,7 +2669,7 @@ void MainWindow::focusingActionState(bool state){
             if (doAutoFocus_Algo) {
                 timerAutoFocus->stop();
                 //ui->plainTextEdit->appendPlainText("motor durdu...");
-                QTimer::singleShot(500, this, SLOT(calcFocusValue()));
+                QTimer::singleShot(500, this, SLOT(calcFocusValueSlot()));
             }
         }
     }
@@ -2837,19 +2848,24 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
     return array;
 }
 
-void MainWindow::calcFocusValue(){
+void MainWindow::calcFocusValueSlot(){
+    calcFocusValue(0, 1, 5);
+}
 
+void MainWindow::calcFocusValue(int algo, int roi, int number){
+
+    focusValCalcLimit = number;
     focusValCalcNo = 0;
     focusVal = 0;
     focusValCalc = true;
-    focusROI = 0;
-    focusValueAlgo = 0;
+    focusROI = roi;
+    focusValueAlgo = algo;
 
     //getFFT();
     //getFuzzyEntropy();
 }
 
-double MainWindow::calcFocusValueLaplacian(int roi, bool blur){
+double MainWindow::calcFocusValueLaplacian(int roi){
 
     QImage _targetArea;
 
@@ -2862,18 +2878,25 @@ double MainWindow::calcFocusValueLaplacian(int roi, bool blur){
         int shiftY =  (frameHeightCam - frameHeightCam*1.0/roi) / 2.0;
         _targetArea = lastData->image->copy( offsetXCam+shiftX, offsetYCam+shiftY, frameWidthCam/roi, frameHeightCam/roi );
     }
-
     cv::Mat imgData0(_targetArea.height(), _targetArea.width(), CV_8UC3, (uchar*)_targetArea.bits(), _targetArea.bytesPerLine());
     cv::Mat imgData;
+    cvtColor(imgData0, imgData, CV_RGB2GRAY);
+    cv::Mat imgDataLap;
+    cv::Laplacian(imgData, imgDataLap,3);
+    cv::Mat imgDataLapAbs;
+    cv::convertScaleAbs( imgDataLap, imgDataLapAbs );
 
-    if (blur) {
-        cv::Mat imgDataBlur;
-        cv::GaussianBlur(imgData0, imgDataBlur, cv::Size(5,5), 0, 0);
-        cvtColor(imgDataBlur, imgData, CV_RGB2GRAY);
-    } else {
-        cvtColor(imgData0, imgData, CV_RGB2GRAY);
-    }
+    double min, max = 0;
+    cv::minMaxLoc(imgDataLapAbs, &min, &max);
 
+    return max;
+}
+
+double MainWindow::calcFocusValueLaplacian(QImage img){
+
+    cv::Mat imgData0(img.height(), img.width(), CV_8UC3, (uchar*)img.bits(), img.bytesPerLine());
+    cv::Mat imgData;
+    cvtColor(imgData0, imgData, CV_RGB2GRAY);
     cv::Mat imgDataLap;
     cv::Laplacian(imgData, imgDataLap,3);
     cv::Mat imgDataLapAbs;

@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
@@ -78,8 +79,15 @@ public:
     QCheckBox *autoFocusCheck;
     QLabel *label_11;
     QPushButton *testButton;
-    QButtonGroup *camStreamGroup;
+    QComboBox *focusAlgoBox;
+    QLabel *label_12;
+    QLabel *label_13;
+    QLabel *label_14;
+    QLineEdit *editFocusRoi;
+    QLineEdit *editFocusNumber;
+    QPushButton *calcFocusValueButton;
     QButtonGroup *radioGroup;
+    QButtonGroup *camStreamGroup;
 
     void setupUi(QWidget *settingsForm)
     {
@@ -388,7 +396,7 @@ public:
         apiAutoFocus->setGeometry(QRect(510, 290, 131, 29));
         manFocusSlider = new QSlider(settingsForm);
         manFocusSlider->setObjectName(QStringLiteral("manFocusSlider"));
-        manFocusSlider->setGeometry(QRect(510, 370, 240, 25));
+        manFocusSlider->setGeometry(QRect(510, 370, 280, 25));
         manFocusSlider->setMinimum(0);
         manFocusSlider->setMaximum(100);
         manFocusSlider->setSingleStep(1);
@@ -397,12 +405,12 @@ public:
         manFocusSlider->setOrientation(Qt::Horizontal);
         manFocusLabel = new QLabel(settingsForm);
         manFocusLabel->setObjectName(QStringLiteral("manFocusLabel"));
-        manFocusLabel->setGeometry(QRect(753, 370, 41, 21));
+        manFocusLabel->setGeometry(QRect(740, 346, 41, 21));
         manFocusLabel->setFont(font2);
         manFocusLabel->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         label_9 = new QLabel(settingsForm);
         label_9->setObjectName(QStringLiteral("label_9"));
-        label_9->setGeometry(QRect(510, 350, 281, 16));
+        label_9->setGeometry(QRect(510, 350, 201, 16));
         label_9->setFont(font1);
         label_10 = new QLabel(settingsForm);
         label_10->setObjectName(QStringLiteral("label_10"));
@@ -423,6 +431,30 @@ public:
         testButton = new QPushButton(settingsForm);
         testButton->setObjectName(QStringLiteral("testButton"));
         testButton->setGeometry(QRect(510, 140, 41, 29));
+        focusAlgoBox = new QComboBox(settingsForm);
+        focusAlgoBox->setObjectName(QStringLiteral("focusAlgoBox"));
+        focusAlgoBox->setGeometry(QRect(510, 30, 121, 22));
+        label_12 = new QLabel(settingsForm);
+        label_12->setObjectName(QStringLiteral("label_12"));
+        label_12->setGeometry(QRect(510, 61, 31, 16));
+        label_12->setFont(font1);
+        label_13 = new QLabel(settingsForm);
+        label_13->setObjectName(QStringLiteral("label_13"));
+        label_13->setGeometry(QRect(617, 60, 31, 16));
+        label_13->setFont(font1);
+        label_14 = new QLabel(settingsForm);
+        label_14->setObjectName(QStringLiteral("label_14"));
+        label_14->setGeometry(QRect(510, 10, 201, 16));
+        label_14->setFont(font);
+        editFocusRoi = new QLineEdit(settingsForm);
+        editFocusRoi->setObjectName(QStringLiteral("editFocusRoi"));
+        editFocusRoi->setGeometry(QRect(553, 57, 51, 20));
+        editFocusNumber = new QLineEdit(settingsForm);
+        editFocusNumber->setObjectName(QStringLiteral("editFocusNumber"));
+        editFocusNumber->setGeometry(QRect(660, 57, 51, 20));
+        calcFocusValueButton = new QPushButton(settingsForm);
+        calcFocusValueButton->setObjectName(QStringLiteral("calcFocusValueButton"));
+        calcFocusValueButton->setGeometry(QRect(726, 56, 61, 20));
 
         retranslateUi(settingsForm);
         QObject::connect(setupButton, SIGNAL(clicked()), settingsForm, SLOT(showSetupForm()));
@@ -531,12 +563,32 @@ public:
         apiFocusStatus->setText(QApplication::translate("settingsForm", "Odak De\304\237erleri", 0));
         apiAutoFocus->setText(QApplication::translate("settingsForm", "Otomatik Fokus", 0));
         manFocusLabel->setText(QApplication::translate("settingsForm", "0.000", 0));
-        label_9->setText(QApplication::translate("settingsForm", "Manuel Odak Pozisyonu: Yak\304\261n <> Uzak", 0));
+        label_9->setText(QApplication::translate("settingsForm", "Odak Pozisyonu: Yak\304\261n <> Uzak", 0));
         label_10->setText(QApplication::translate("settingsForm", "Kamera Ak\304\261\305\237 Modu", 0));
         focusCheck->setText(QApplication::translate("settingsForm", "Kaynak \303\226ncesi Fokus Kontrol\303\274", 0));
         autoFocusCheck->setText(QApplication::translate("settingsForm", "Kaynak \303\226ncesi Oto Fokus", 0));
         label_11->setText(QApplication::translate("settingsForm", "DAHUA API FONKS\304\260YONLARI", 0));
         testButton->setText(QApplication::translate("settingsForm", "Test", 0));
+        focusAlgoBox->clear();
+        focusAlgoBox->insertItems(0, QStringList()
+         << QApplication::translate("settingsForm", "FFT", 0)
+         << QApplication::translate("settingsForm", "Fuzzy Entropy", 0)
+         << QApplication::translate("settingsForm", "Laplacian", 0)
+        );
+#ifndef QT_NO_TOOLTIP
+        label_12->setToolTip(QApplication::translate("settingsForm", "<html><head/><body><p>0: Tam Resim, 1: Hedef Alan, &gt;=2: Hedef Alan Kesri</p></body></html>", 0));
+#endif // QT_NO_TOOLTIP
+        label_12->setText(QApplication::translate("settingsForm", "ROI", 0));
+#ifndef QT_NO_TOOLTIP
+        label_13->setToolTip(QApplication::translate("settingsForm", "<html><head/><body><p>Hesaplanacak kare say\304\261s\304\261</p></body></html>", 0));
+#endif // QT_NO_TOOLTIP
+        label_13->setText(QApplication::translate("settingsForm", "Say\304\261", 0));
+        label_14->setText(QApplication::translate("settingsForm", "FOKUS DE\304\236ER\304\260 HESAPLAMA", 0));
+        editFocusRoi->setInputMask(QApplication::translate("settingsForm", "999", 0));
+        editFocusRoi->setText(QApplication::translate("settingsForm", "1", 0));
+        editFocusNumber->setInputMask(QApplication::translate("settingsForm", "999", 0));
+        editFocusNumber->setText(QApplication::translate("settingsForm", "5", 0));
+        calcFocusValueButton->setText(QApplication::translate("settingsForm", "Hesapla", 0));
     } // retranslateUi
 
 };

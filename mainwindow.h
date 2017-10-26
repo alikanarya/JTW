@@ -532,8 +532,10 @@ public slots:
     void setFocusPos(float);
     void apiRequestCompleted();
     void testSlot();
-    void calcFocusValue();
-    double calcFocusValueLaplacian(int frame, bool blur = true);
+    void calcFocusValue(int algo, int roi, int number);
+    void calcFocusValueSlot();
+    double calcFocusValueLaplacian(int frame);
+    double calcFocusValueLaplacian(QImage img);
     void getFFT();
     void getFuzzyEntropy();
     void iterationFinished();
@@ -541,6 +543,7 @@ public slots:
 
 signals:
     void cameraDown();
+    void focusValueCalculated(double val);
 
 protected:
     void closeEvent(QCloseEvent*);                  // exit from application

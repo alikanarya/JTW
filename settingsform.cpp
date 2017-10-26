@@ -59,6 +59,8 @@ settingsForm::settingsForm(QWidget *parent) : QDialog(parent), ui(new Ui::settin
     timerAutoFocus = new QTimer(this);
     connect(timerAutoFocus, SIGNAL(timeout()), this, SLOT(checkAutoFocusingState()));
 
+    connect(w, SIGNAL(focusValueCalculated(double)), this, SLOT(focusValueCalculated(double)));
+
   /*
     QIntValidator *validEditHoughLineNo = new QIntValidator(01, 10, this);
     validEditHoughLineNo->setBottom(01);
@@ -465,4 +467,16 @@ void settingsForm::on_autoFocusCheck_clicked(){
 
 void settingsForm::on_testButton_clicked(){
     w->testButton();
+}
+
+void settingsForm::on_calcFocusValueButton_clicked(){
+    int algo = ui->focusAlgoBox->currentIndex();
+    int roi = ui->editFocusRoi->text().toInt();
+    int number = ui->editFocusNumber->text().toInt();
+    w->calcFocusValue( algo, roi, number);
+
+}
+
+void settingsForm::focusValueCalculated(double val){
+    ui->plainTextEdit->appendPlainText("Fokus Değeri: " + QString::number(val,'f',2));
 }
