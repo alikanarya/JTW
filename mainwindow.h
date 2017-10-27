@@ -196,6 +196,7 @@ public:
     int focusValCalcNo = 0;
     int focusValCalcLimit = 5;
     double focusVal = 0;
+    double focusVal0 = 0;
     int focusROI = 0;   //0:full image 1:target frame >1:// target frame portion
     int focusValueAlgo = 0; //0:fft 1:fuzzy entropy 2:laplacian
 
@@ -492,6 +493,7 @@ public:
     void doAutoFocusAlgo(double start, double end, int sampleNo, int depth);
     void doAutoFocusAlgo_2StepStart();
     void doAutoFocusAlgo_2Step(double start1, double end1, int sampleNo1, int sampleNo2, bool start_end_2nd_auto = true, double start2 = 0, double end2 = 0);
+    void doAutoFocusAlgo_Local_Start(double halfDistance);
     void doAutoFocusAlgo_Local();
     void startControl();
     float* fourierTransform(QImage *img, bool save=false);
@@ -534,6 +536,7 @@ public slots:
     void testSlot();
     void calcFocusValue(int algo, int roi, int number);
     void calcFocusValueSlot();
+    void focusValueCalculatedSlot(double val);
     double calcFocusValueLaplacian(int frame);
     double calcFocusValueLaplacian(QImage img);
     void getFFT();

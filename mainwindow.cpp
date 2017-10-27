@@ -155,6 +155,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     timerAutoFocus = new QTimer(this);
     connect(timerAutoFocus, SIGNAL(timeout()), this, SLOT(checkAutoFocusingState()));
 
+    connect(this, SIGNAL(focusValueCalculated(double)), this, SLOT(focusValueCalculatedSlot(double)));
+
     threadVideoSave = new videoSaveThread();
     connect(threadVideoSave, SIGNAL(saveFinished()), this, SLOT(saveFinished()));
 
@@ -555,8 +557,6 @@ void MainWindow::getImageFromStream(int captureTime){
 
             if (focusValCalcNo == focusValCalcLimit){
                 focusVal /= focusValCalcLimit;
-                emit focusValueCalculated(focusVal);
-                qDebug() << focusVal;
                 focusValCalc = false;
                 focusValCalcNo = 0;
 
@@ -568,7 +568,10 @@ void MainWindow::getImageFromStream(int captureTime){
                                                        " mean: "+QString::number(focusValListY.last(),'f',2));
 
                     AF->condition.wakeAll();
+                } else {
+                    qDebug() << "focus value: " << focusVal;
                 }
+                emit focusValueCalculated(focusVal);
             }
         }
 
@@ -2378,11 +2381,10 @@ void MainWindow::testButton(){
     //doAutoFocusAlgo_2Step(0.25, 0.75, 3, 8, false, 0.40, 0.55);
     //doAutoFocusAlgo_2Step(0.2, 0.8, 3, 6, true);
     //doAutoFocusAlgo_Deep(0,1,5,4);
-    //doAutoFocusAlgo_Local();
+    doAutoFocusAlgo_Local();
     //doAutoFocusAlgo_2StepStart();
-    //qDebug() << calcFocusValueLaplacian(2);
 
-    calcFocusValue(2, 1, 5);
+    //calcFocusValue(2, 1, 5);
 
     /*
     QList<double> x1;
@@ -2540,13 +2542,20 @@ void MainWindow::plcCommands(){
 }
 
 void MainWindow::doAutoFocus(){
+     /* API COMMAND
+      * CAM BUILTIN AUTOFOCUS ALGORITHM
+      */
     if (!cameraDownStatus && !camApi->busy){
         camApi->apiDahuaAutoFocus();
     }
 }
 
 void MainWindow::doAutoFocusAlgo(double start, double end, int sampleNo, int depth){
-
+     /* ALGO BASED AUTOFOCUS
+      * recursive autofocus
+      * scan number: depth
+      * start/end points are autodetermined
+      */
     autoFocusPassLimit = depth;
     autoFocusPassNo = 1;
 
@@ -2560,12 +2569,20 @@ void MainWindow::doAutoFocusAlgo(double start, double end, int sampleNo, int dep
 }
 
 void MainWindow::doAutoFocusAlgo_2StepStart(){
+    /* ALGO BASED AUTOFOCUS
+     * get motor position before starting 2 step autofocus algorithm
+     */
     autoFocusAlgo2Step = true;
-    checkFocusStatus();
+    checkFocusStatus();     // get current motor position // SLOT>> focusingActionState(bool)
 }
 
 void MainWindow::doAutoFocusAlgo_2Step(double start1, double end1, int sampleNo1, int sampleNo2, bool start_end_2nd_auto, double start2, double end2){
-
+    /* ALGO BASED AUTOFOCUS
+     * 2 step algorithm
+     * 1st step for global scan
+     * 2nd step for narrower area; manual or autodetermined start/end points
+     * if there is a problem at scan results, run 3rd scan for more narrower area
+     */
     autoFocusAlgo2Step = true;
     autoFocusAlgo2Step_Auto = start_end_2nd_auto;
     autoFocusPassLimit = 2;
@@ -2588,18 +2605,45 @@ void MainWindow::doAutoFocusAlgo_2Step(double start1, double end1, int sampleNo1
     AF->start();
 }
 
+void MainWindow::doAutoFocusAlgo_Local_Start(double halfDistance){
+    /* ALGO BASED AUTOFOCUS
+     * start local autofocus algorithm
+     */
+    double start = camFocusPos - halfDistance;
+    if (start < 0) start = 0;
+    double end = camFocusPos + halfDistance;
+    if (end > 1) end = 1;
+    AF = new autoFocusThread(start, end, 6, 1);
+    connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
+    connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
+    focusValListY.clear();
+    focusValListX.clear();
+    doAutoFocus_Algo = true;
+    AF->start();    // SLOT>> iterationFinished();
+}
+
 void MainWindow::doAutoFocusAlgo_Local() {
+    /* ALGO BASED AUTOFOCUS
+     * check close neighborhood of current position
+     * if focus value is not good after scan, run 2step algorithm
+     */
     autoFocusAlgoLocal = true;
-    checkFocusStatus();
+    checkFocusStatus();     // get current motor position // SLOT>> focusingActionState(bool)
 }
 
 void MainWindow::checkFocusState(){
+    /* API COMMAND
+     * focus state: "in focus" or "out of focus"
+     */
     if (!cameraDownStatus && !camApi->busy){
         camApi->apiDahuaGetFocusState();
     }
 }
 
 void MainWindow::focusState(bool state){
+    /* focus state
+     * "in focus" or "out of focus"
+     */
     camFocusState = state;
 
     if (camFocusState) {
@@ -2628,45 +2672,52 @@ void MainWindow::focusState(bool state){
 }
 
 void MainWindow::checkFocusStatus(){
+    /* API COMMAND
+     * motor position,
+     * motor steps,
+     * focussing action; normal: no movement / autofocus: motor in motion
+     */
     if (!cameraDownStatus && !camApi->busy){
         camApi->apiDahuaGetFocusStatus();
     }
 }
 
 void MainWindow::focusingActionState(bool state){
+    /* focussing action; normal: no movement / autofocus: motor in motion
+     * motor position
+     * from status check
+     */
     camFocusingActionState = state;
 
     if (!timerAutoFocus->isActive()) {      // ONLY STATUS INFO REQUESTED
+
         camFocusPos = camApi->focusPos;
-        qDebug() << camFocusPos;
+        qDebug() << "camFocusPos: " << camFocusPos;
+
         if (autoFocusAlgoLocal) {
-            double start = camFocusPos - 0.05;
-            if (start < 0) start = 0;
-            double end = camFocusPos + 0.05;
-            if (end > 1) end = 1;
-            AF = new autoFocusThread(start, end, 6, 1);
-            connect(AF, SIGNAL(setFocusPos(float)), this, SLOT(setFocusPos(float)));
-            connect(AF, SIGNAL(iterationFinished()), this, SLOT(iterationFinished()));
-            focusValListY.clear();
-            focusValListX.clear();
-            doAutoFocus_Algo = true;
-            AF->start();
+            calcFocusValue(2, 1, 5);
         }
 
         if (autoFocusAlgo2Step) {
+
             double start = camFocusPos/2;
             double end = camFocusPos + (1-camFocusPos)/2;
             doAutoFocusAlgo_2Step(start, end, 3, 6, true);
         }
     } else {    // AUTO FOCUS PROCESS CHECK
+
         if (!camFocusingActionState) {
+
             if (camDoAutoFocus) {
+
                 timerAutoFocus->stop();
                 ui->plainTextEdit->appendPlainText("Oto fokus işlemi tamamlandı...");
                 QTimer::singleShot(4000, this, SLOT(checkFocusState()));
                 //checkFocusState();
             }
+
             if (doAutoFocus_Algo) {
+
                 timerAutoFocus->stop();
                 //ui->plainTextEdit->appendPlainText("motor durdu...");
                 QTimer::singleShot(500, this, SLOT(calcFocusValueSlot()));
@@ -2695,6 +2746,9 @@ void MainWindow::checkAutoFocusingState(){  // timerAutoFocus slot
 }
 
 void MainWindow::setFocusPos(float pos){
+    /* API COMMAND
+     * send focus motor position
+     */
     if (!cameraDownStatus && !camApi->busy){
         camApi->apiDahuaSetFocusPos(pos);
 
@@ -2829,7 +2883,7 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
     cv::Scalar scal = cv::mean(magI);
     float mean = scal.val[0];
     //ui->plainTextEdit->appendPlainText("min: " + QString::number(min,'f',3) + " max: " + QString::number(max) + " mean: " + QString::number(mean));
-
+    /*
     int countLow = 0,countHigh = 0;
     for(int i=0; i<magI.rows; i++)
         for(int j=0; j<magI.cols; j++)
@@ -2838,8 +2892,8 @@ float* MainWindow::fourierTransform(QImage *img, bool save){
             else
                 countHigh++;
 
-    //ui->plainTextEdit->appendPlainText("low#: " + QString::number(countLow) + " high#: " + QString::number(countHigh));
-
+    ui->plainTextEdit->appendPlainText("low#: " + QString::number(countLow) + " high#: " + QString::number(countHigh));
+    */
     float *array = new float[3];
     array[0] = min;
     array[1] = max;
@@ -2863,6 +2917,15 @@ void MainWindow::calcFocusValue(int algo, int roi, int number){
 
     //getFFT();
     //getFuzzyEntropy();
+}
+
+void MainWindow::focusValueCalculatedSlot(double val){
+
+    if (autoFocusAlgoLocal) {
+        focusVal0 = val;
+        doAutoFocusAlgo_Local_Start(0.05);
+    }
+
 }
 
 double MainWindow::calcFocusValueLaplacian(int roi){
@@ -3081,6 +3144,7 @@ void MainWindow::iterationFinished(){
     //double end = pos + sigma;
 
     if ( autoFocusAlgo2Step ) {
+
         AF->stopCmd = true;
         AF->condition.wakeAll();
         //AF->terminate();
@@ -3122,7 +3186,11 @@ void MainWindow::iterationFinished(){
 
     } else
     if ( autoFocusAlgoLocal ) {
+
         autoFocusAlgoLocal = false;
+        doAutoFocus_Algo = false;
+        //calcFocusValue(2, 1, 5);
+
     } else {
 
         if ( autoFocusPassNo < autoFocusPassLimit ) {
