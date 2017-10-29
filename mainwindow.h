@@ -182,6 +182,7 @@ public:
     bool autoFocusAlgo2Step = false;
     bool autoFocusAlgo2Step_Auto = false;
     bool autoFocusAlgoLocal = false;
+    bool autoFocusAlgoLocal_Start = false;
     bool extraIteration = false;
     bool extraIterationForce = false;
     double sampleStart, sampleEnd, sigma;

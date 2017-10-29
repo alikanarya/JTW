@@ -2628,6 +2628,7 @@ void MainWindow::doAutoFocusAlgo_Local() {
      * if focus value is not good after scan, run 2step algorithm
      */
     autoFocusAlgoLocal = true;
+    autoFocusAlgoLocal_Start = true;
     checkFocusStatus();     // get current motor position // SLOT>> focusingActionState(bool)
 }
 
@@ -2921,8 +2922,9 @@ void MainWindow::calcFocusValue(int algo, int roi, int number){
 
 void MainWindow::focusValueCalculatedSlot(double val){
 
-    if (autoFocusAlgoLocal) {
+    if (autoFocusAlgoLocal && autoFocusAlgoLocal_Start) {
         focusVal0 = val;
+        autoFocusAlgoLocal_Start = false;
         doAutoFocusAlgo_Local_Start(0.05);
     }
 
@@ -3189,6 +3191,14 @@ void MainWindow::iterationFinished(){
 
         autoFocusAlgoLocal = false;
         doAutoFocus_Algo = false;
+
+        if ( ( bestFocusPos < (sampleStartPrev + sigma) || bestFocusPos > (sampleEndPrev - sigma) ||
+               bestFocusPos > 1 || bestFocusPos < 0 || sigma == -12345) ){
+            doAutoFocusAlgo_2StepStart();
+        } else {
+            setFocusPos(bestFocusPos);
+        }
+
         //calcFocusValue(2, 1, 5);
 
     } else {
