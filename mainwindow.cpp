@@ -2384,6 +2384,7 @@ void MainWindow::testButton(){
     doAutoFocusAlgo_Local();
     //doAutoFocusAlgo_2StepStart();
 
+    //autoFocusBeforeControl = true;
     //calcFocusValue(2, 1, 5);
 
     /*
@@ -2921,6 +2922,19 @@ void MainWindow::calcFocusValue(int algo, int roi, int number){
 }
 
 void MainWindow::focusValueCalculatedSlot(double val){
+
+    if (autoFocusBeforeControl){
+        autoFocusBeforeControl = false;
+        focusVal0 = val;
+
+        if (focusVal0 > laplacianGoodValue)
+            ui->plainTextEdit->appendPlainText("Fokus değeri iyi");
+        else {
+            ui->plainTextEdit->appendPlainText("Fokus değeri iyi değil");
+            ui->plainTextEdit->appendPlainText("Oto fokus yapılacak");
+            doAutoFocusAlgo_Local();
+        }
+    }
 
     if (autoFocusAlgoLocal && autoFocusAlgoLocal_Start) {
         focusVal0 = val;

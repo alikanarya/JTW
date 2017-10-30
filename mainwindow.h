@@ -200,6 +200,7 @@ public:
     double focusVal0 = 0;
     int focusROI = 0;   //0:full image 1:target frame >1:// target frame portion
     int focusValueAlgo = 0; //0:fft 1:fuzzy entropy 2:laplacian
+    int laplacianGoodValue = 200;
 
     cv::Mat imgDataCV;
 
