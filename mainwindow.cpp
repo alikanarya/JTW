@@ -3179,15 +3179,17 @@ void MainWindow::iterationFinished(){
 
         if ( extraIterationForce || (autoFocusPassNo == 2 && extraIteration &&
              ( bestFocusPos < (sampleStartPrev + sigma) || bestFocusPos > (sampleEndPrev - sigma) ||
-               bestFocusPos > 1 || bestFocusPos < 0 || sigma == -12345)) ){
+               bestFocusPos > 1 || bestFocusPos < 0 || sigma == -12345) )){
             autoFocusPassLimit = 3;
-            start = bestFocusPos - 0.05;
-            end = bestFocusPos + 0.05;
         }
 
         if ( autoFocusPassNo < autoFocusPassLimit ) {
             autoFocusPassNo++;
 
+            if (bestFocusPos < 1 && bestFocusPos > 0 && autoFocusPassNo == 3) {
+                start = bestFocusPos - 0.05;
+                end = bestFocusPos + 0.05;
+            }
             if ( autoFocusAlgo2Step_Auto ) {
                 AF = new autoFocusThread( start, end, sampleNo, 1 );
             } else
