@@ -35,6 +35,7 @@ public:
     QTimer *timerAutoFocus;
     bool timerLock = false;
     bool camFocusingActionState = false;
+    bool checkFocusLaplacian = false;
 
     explicit settingsForm(QWidget *parent = 0);
     void getParameters();       // get parameters from mainwindow
@@ -82,6 +83,9 @@ private slots:
     void on_autoFocusCheck_clicked();
     void on_testButton_clicked();
     void on_calcFocusValueButton_clicked();
+    void on_algoCheckFocus_clicked();
+    void on_algoAutoFocusLocal_clicked();
+    void on_algoAutoFocus2Step_clicked();
 };
 
 #endif // SETTINGSFORM_H

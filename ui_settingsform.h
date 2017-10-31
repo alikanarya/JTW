@@ -86,6 +86,10 @@ public:
     QLineEdit *editFocusRoi;
     QLineEdit *editFocusNumber;
     QPushButton *calcFocusValueButton;
+    QPushButton *algoCheckFocus;
+    QPushButton *algoAutoFocusLocal;
+    QPushButton *algoAutoFocus2Step;
+    QCheckBox *autoFocusAfterCheck;
     QButtonGroup *radioGroup;
     QButtonGroup *camStreamGroup;
 
@@ -375,10 +379,10 @@ public:
         radioCamStream->setFont(font);
         apiCheckFocus = new QPushButton(settingsForm);
         apiCheckFocus->setObjectName(QStringLiteral("apiCheckFocus"));
-        apiCheckFocus->setGeometry(QRect(510, 210, 131, 29));
+        apiCheckFocus->setGeometry(QRect(510, 310, 90, 29));
         apiFocusStatus = new QPushButton(settingsForm);
         apiFocusStatus->setObjectName(QStringLiteral("apiFocusStatus"));
-        apiFocusStatus->setGeometry(QRect(510, 250, 131, 29));
+        apiFocusStatus->setGeometry(QRect(605, 310, 90, 29));
         plainTextEdit = new QPlainTextEdit(settingsForm);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
         plainTextEdit->setGeometry(QRect(510, 400, 281, 191));
@@ -393,7 +397,7 @@ public:
         plainTextEdit->setReadOnly(true);
         apiAutoFocus = new QPushButton(settingsForm);
         apiAutoFocus->setObjectName(QStringLiteral("apiAutoFocus"));
-        apiAutoFocus->setGeometry(QRect(510, 290, 131, 29));
+        apiAutoFocus->setGeometry(QRect(700, 310, 90, 29));
         manFocusSlider = new QSlider(settingsForm);
         manFocusSlider->setObjectName(QStringLiteral("manFocusSlider"));
         manFocusSlider->setGeometry(QRect(510, 370, 280, 25));
@@ -426,11 +430,11 @@ public:
         autoFocusCheck->setFont(font1);
         label_11 = new QLabel(settingsForm);
         label_11->setObjectName(QStringLiteral("label_11"));
-        label_11->setGeometry(QRect(510, 180, 201, 16));
+        label_11->setGeometry(QRect(510, 280, 201, 16));
         label_11->setFont(font);
         testButton = new QPushButton(settingsForm);
         testButton->setObjectName(QStringLiteral("testButton"));
-        testButton->setGeometry(QRect(510, 140, 41, 29));
+        testButton->setGeometry(QRect(510, 180, 41, 29));
         focusAlgoBox = new QComboBox(settingsForm);
         focusAlgoBox->setObjectName(QStringLiteral("focusAlgoBox"));
         focusAlgoBox->setGeometry(QRect(510, 30, 121, 22));
@@ -455,6 +459,26 @@ public:
         calcFocusValueButton = new QPushButton(settingsForm);
         calcFocusValueButton->setObjectName(QStringLiteral("calcFocusValueButton"));
         calcFocusValueButton->setGeometry(QRect(726, 56, 61, 20));
+        algoCheckFocus = new QPushButton(settingsForm);
+        algoCheckFocus->setObjectName(QStringLiteral("algoCheckFocus"));
+        algoCheckFocus->setGeometry(QRect(510, 90, 90, 29));
+        algoAutoFocusLocal = new QPushButton(settingsForm);
+        algoAutoFocusLocal->setObjectName(QStringLiteral("algoAutoFocusLocal"));
+        algoAutoFocusLocal->setGeometry(QRect(606, 90, 90, 29));
+        algoAutoFocus2Step = new QPushButton(settingsForm);
+        algoAutoFocus2Step->setObjectName(QStringLiteral("algoAutoFocus2Step"));
+        algoAutoFocus2Step->setGeometry(QRect(700, 90, 90, 29));
+        autoFocusAfterCheck = new QCheckBox(settingsForm);
+        autoFocusAfterCheck->setObjectName(QStringLiteral("autoFocusAfterCheck"));
+        autoFocusAfterCheck->setGeometry(QRect(510, 120, 91, 17));
+        QFont font8;
+        font8.setFamily(QStringLiteral("Arial"));
+        font8.setPointSize(8);
+        font8.setBold(false);
+        font8.setItalic(true);
+        font8.setWeight(50);
+        autoFocusAfterCheck->setFont(font8);
+        autoFocusAfterCheck->setLayoutDirection(Qt::LeftToRight);
 
         retranslateUi(settingsForm);
         QObject::connect(setupButton, SIGNAL(clicked()), settingsForm, SLOT(showSetupForm()));
@@ -589,6 +613,10 @@ public:
         editFocusNumber->setInputMask(QApplication::translate("settingsForm", "999", 0));
         editFocusNumber->setText(QApplication::translate("settingsForm", "5", 0));
         calcFocusValueButton->setText(QApplication::translate("settingsForm", "Hesapla", 0));
+        algoCheckFocus->setText(QApplication::translate("settingsForm", "Fokus Kontrol\303\274", 0));
+        algoAutoFocusLocal->setText(QApplication::translate("settingsForm", "Oto Fokus Lokal", 0));
+        algoAutoFocus2Step->setText(QApplication::translate("settingsForm", "Oto Fokus 2Step", 0));
+        autoFocusAfterCheck->setText(QApplication::translate("settingsForm", "Oto Fokus", 0));
     } // retranslateUi
 
 };

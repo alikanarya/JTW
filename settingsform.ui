@@ -1026,8 +1026,8 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>510</x>
-     <y>210</y>
-     <width>131</width>
+     <y>310</y>
+     <width>90</width>
      <height>29</height>
     </rect>
    </property>
@@ -1038,9 +1038,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QPushButton" name="apiFocusStatus">
    <property name="geometry">
     <rect>
-     <x>510</x>
-     <y>250</y>
-     <width>131</width>
+     <x>605</x>
+     <y>310</y>
+     <width>90</width>
      <height>29</height>
     </rect>
    </property>
@@ -1084,9 +1084,9 @@ p, li { white-space: pre-wrap; }
   <widget class="QPushButton" name="apiAutoFocus">
    <property name="geometry">
     <rect>
-     <x>510</x>
-     <y>290</y>
-     <width>131</width>
+     <x>700</x>
+     <y>310</y>
+     <width>90</width>
      <height>29</height>
     </rect>
    </property>
@@ -1233,7 +1233,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>510</x>
-     <y>180</y>
+     <y>280</y>
      <width>201</width>
      <height>16</height>
     </rect>
@@ -1254,7 +1254,7 @@ p, li { white-space: pre-wrap; }
    <property name="geometry">
     <rect>
      <x>510</x>
-     <y>140</y>
+     <y>180</y>
      <width>41</width>
      <height>29</height>
     </rect>
@@ -1400,6 +1400,70 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Hesapla</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="algoCheckFocus">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>90</y>
+     <width>90</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Fokus Kontrolü</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="algoAutoFocusLocal">
+   <property name="geometry">
+    <rect>
+     <x>606</x>
+     <y>90</y>
+     <width>90</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Oto Fokus Lokal</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="algoAutoFocus2Step">
+   <property name="geometry">
+    <rect>
+     <x>700</x>
+     <y>90</y>
+     <width>90</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Oto Fokus 2Step</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="autoFocusAfterCheck">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>120</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <italic>true</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="text">
+    <string>Oto Fokus</string>
    </property>
   </widget>
  </widget>

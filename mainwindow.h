@@ -172,6 +172,7 @@ public:
     QTimer *timerAutoFocus;
     bool focusCheckBeforeControl = false;
     bool autoFocusBeforeControl = false;
+    bool autoFocusAfterFocusCheck = false;
     int autoFocusPassNo = 0;
     int autoFocusPassLimit = 2;
     double camFocusPos = 0.5;
@@ -201,6 +202,7 @@ public:
     int focusROI = 0;   //0:full image 1:target frame >1:// target frame portion
     int focusValueAlgo = 0; //0:fft 1:fuzzy entropy 2:laplacian
     int laplacianGoodValue = 200;
+    int laplacianBypassLocalAlgoValue = 100;
 
     cv::Mat imgDataCV;
 

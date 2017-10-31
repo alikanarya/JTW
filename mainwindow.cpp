@@ -517,63 +517,6 @@ void MainWindow::getImageFromStream(int captureTime){
             testFlag = false;
         }
 
-        if (focusValCalc) {
-
-            QImage _targetArea;
-
-            if (focusROI == 0) // full image
-                _targetArea = lastData->image->copy();
-            else if (focusROI == 1)    // target frame
-                _targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );
-            else {   // target frame portion
-                int shiftX =  (frameWidthCam - frameWidthCam*1.0/focusROI) / 2.0;
-                int shiftY =  (frameHeightCam - frameHeightCam*1.0/focusROI) / 2.0;
-                _targetArea = lastData->image->copy( offsetXCam+shiftX, offsetYCam+shiftY, frameWidthCam/focusROI, frameHeightCam/focusROI );
-            }
-
-            double val;
-            switch ( focusValueAlgo ) {
-                case 0:
-                    val = fourierTransform(&_targetArea, false)[2];
-                    break;
-                case 1:
-                    {
-                    QImage x = _targetArea.convertToFormat(QImage::Format_Grayscale8);
-                    imgProcess z(x, x.width(), x.height());
-                    z.constructValueMatrix(x);
-                    z.normalizeValueMatrix(255.0);
-                    val = z.calcEntropyMatrix(5);
-                    }
-                    break;
-                case 2:
-                    val = calcFocusValueLaplacian(_targetArea);
-                    break;
-
-            }
-
-            focusVal += val;
-            //qDebug() << focusValCalcNo << "   " << y;
-            focusValCalcNo++;
-
-            if (focusValCalcNo == focusValCalcLimit){
-                focusVal /= focusValCalcLimit;
-                focusValCalc = false;
-                focusValCalcNo = 0;
-
-                if (doAutoFocus_Algo) {
-                    focusValListY.append( focusVal );
-                    focusValListX.append( AF->pos*10000 / 10000.0 );
-
-                    ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round(AF->pos*10000) / 10000.0)+
-                                                       " mean: "+QString::number(focusValListY.last(),'f',2));
-
-                    AF->condition.wakeAll();
-                } else {
-                    qDebug() << "focus value: " << focusVal;
-                }
-                emit focusValueCalculated(focusVal);
-            }
-        }
 
         playCam();
         //ui->imageFrame->setPixmap( QPixmap::fromImage( img.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
@@ -865,6 +808,7 @@ void MainWindow::updateSn(){
     /* check camera live state
     cameraChecker->checkHost();
     cameraChecker->cameraDown = false;*/
+    cameraDownStatus = false;
 
     if ( play && cameraDownStatus && !camReconnectLock) {
 
@@ -2185,6 +2129,66 @@ void MainWindow::playCam(){
 
     if (play && !pause){
 
+
+        if (focusValCalc) {
+
+            QImage _targetArea;
+
+            if (focusROI == 0) // full image
+                _targetArea = lastData->image->copy();
+            else if (focusROI == 1)    // target frame
+                _targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );
+            else {   // target frame portion
+                int shiftX =  (frameWidthCam - frameWidthCam*1.0/focusROI) / 2.0;
+                int shiftY =  (frameHeightCam - frameHeightCam*1.0/focusROI) / 2.0;
+                _targetArea = lastData->image->copy( offsetXCam+shiftX, offsetYCam+shiftY, frameWidthCam/focusROI, frameHeightCam/focusROI );
+            }
+
+            double val;
+            switch ( focusValueAlgo ) {
+                case 0:
+                    val = fourierTransform(&_targetArea, false)[2];
+                    break;
+                case 1:
+                    {
+                    QImage x = _targetArea.convertToFormat(QImage::Format_Grayscale8);
+                    imgProcess z(x, x.width(), x.height());
+                    z.constructValueMatrix(x);
+                    z.normalizeValueMatrix(255.0);
+                    val = z.calcEntropyMatrix(5);
+                    }
+                    break;
+                case 2:
+                    val = calcFocusValueLaplacian(_targetArea);
+                    break;
+
+            }
+
+            focusVal += val;
+            //qDebug() << focusValCalcNo << "   " << y;
+            focusValCalcNo++;
+
+            if (focusValCalcNo == focusValCalcLimit){
+                focusVal /= focusValCalcLimit;
+                focusValCalc = false;
+                focusValCalcNo = 0;
+
+                if (doAutoFocus_Algo) {
+                    focusValListY.append( focusVal );
+                    focusValListX.append( AF->pos*10000 / 10000.0 );
+
+                    //qDebug() << "getImageFromStream doAutoFocus_Algo focus value: " << focusVal;
+                    ui->plainTextEdit->appendPlainText(QString::number(AF->j)+" pos: " + QString::number(round(AF->pos*10000) / 10000.0)+
+                                                       " mean: "+QString::number(focusValListY.last(),'f',2));
+
+                    AF->condition.wakeAll();
+                } else {
+                    //qDebug() << "getImageFromStream !doAutoFocus_Algo focus value: " << focusVal;
+                }
+                emit focusValueCalculated(focusVal);
+            }
+        }
+
         //if (!imageGetter->imageList.isEmpty()){  // if any image is get
 
         bool show = true;
@@ -2381,11 +2385,9 @@ void MainWindow::testButton(){
     //doAutoFocusAlgo_2Step(0.25, 0.75, 3, 8, false, 0.40, 0.55);
     //doAutoFocusAlgo_2Step(0.2, 0.8, 3, 6, true);
     //doAutoFocusAlgo_Deep(0,1,5,4);
-    doAutoFocusAlgo_Local();
+    //doAutoFocusAlgo_Local();
     //doAutoFocusAlgo_2StepStart();
 
-    //autoFocusBeforeControl = true;
-    //calcFocusValue(2, 1, 5);
 
     /*
     QList<double> x1;
@@ -2628,6 +2630,7 @@ void MainWindow::doAutoFocusAlgo_Local() {
      * check close neighborhood of current position
      * if focus value is not good after scan, run 2step algorithm
      */
+    doAutoFocus_Algo = false;
     autoFocusAlgoLocal = true;
     autoFocusAlgoLocal_Start = true;
     checkFocusStatus();     // get current motor position // SLOT>> focusingActionState(bool)
@@ -2923,8 +2926,9 @@ void MainWindow::calcFocusValue(int algo, int roi, int number){
 
 void MainWindow::focusValueCalculatedSlot(double val){
 
-    if (autoFocusBeforeControl){
-        autoFocusBeforeControl = false;
+    if (autoFocusAfterFocusCheck){
+        autoFocusAfterFocusCheck = false;
+
         focusVal0 = val;
 
         if (focusVal0 > laplacianGoodValue)
@@ -2932,15 +2936,21 @@ void MainWindow::focusValueCalculatedSlot(double val){
         else {
             ui->plainTextEdit->appendPlainText("Fokus değeri iyi değil");
             ui->plainTextEdit->appendPlainText("Oto fokus yapılacak");
-            doAutoFocusAlgo_Local();
+            if (focusVal0 > laplacianBypassLocalAlgoValue)
+                doAutoFocusAlgo_Local();
+            else
+                doAutoFocusAlgo_2StepStart();
+        }
+
+    } else {
+
+        if (autoFocusAlgoLocal && autoFocusAlgoLocal_Start) {
+            focusVal0 = val;
+            autoFocusAlgoLocal_Start = false;
+            doAutoFocusAlgo_Local_Start(0.05);
         }
     }
 
-    if (autoFocusAlgoLocal && autoFocusAlgoLocal_Start) {
-        focusVal0 = val;
-        autoFocusAlgoLocal_Start = false;
-        doAutoFocusAlgo_Local_Start(0.05);
-    }
 
 }
 
@@ -3171,6 +3181,8 @@ void MainWindow::iterationFinished(){
              ( bestFocusPos < (sampleStartPrev + sigma) || bestFocusPos > (sampleEndPrev - sigma) ||
                bestFocusPos > 1 || bestFocusPos < 0 || sigma == -12345)) ){
             autoFocusPassLimit = 3;
+            start = bestFocusPos - 0.05;
+            end = bestFocusPos + 0.05;
         }
 
         if ( autoFocusPassNo < autoFocusPassLimit ) {

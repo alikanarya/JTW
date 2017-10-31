@@ -479,4 +479,28 @@ void settingsForm::on_calcFocusValueButton_clicked(){
 
 void settingsForm::focusValueCalculated(double val){
     ui->plainTextEdit->appendPlainText("Fokus Değeri: " + QString::number(val,'f',2));
+
+    if (checkFocusLaplacian) {
+        checkFocusLaplacian = false;
+        ui->autoFocusAfterCheck->setChecked(false);
+
+        if (val > w->laplacianGoodValue)
+            ui->plainTextEdit->appendPlainText("Fokus değeri iyi");
+        else
+            ui->plainTextEdit->appendPlainText("Fokus değeri iyi değil");
+    }
+}
+
+void settingsForm::on_algoCheckFocus_clicked(){
+    checkFocusLaplacian = true;
+    w->autoFocusAfterFocusCheck = ui->autoFocusAfterCheck->isChecked();
+    w->calcFocusValue(2, 1, 5);
+}
+
+void settingsForm::on_algoAutoFocusLocal_clicked(){
+    w->doAutoFocusAlgo_Local();
+}
+
+void settingsForm::on_algoAutoFocus2Step_clicked(){
+    w->doAutoFocusAlgo_2StepStart();
 }
