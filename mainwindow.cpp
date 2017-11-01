@@ -540,7 +540,7 @@ void MainWindow::camConnected(){
 
 void MainWindow::camNotConnected(){
 
-    //qDebug()<<Q_FUNC_INFO;
+    qDebug()<<Q_FUNC_INFO;
     cameraDownStatus = true;
     camReconnectLock = false;
     getCamImageProperties = true;
@@ -558,7 +558,7 @@ void MainWindow::killCamStreamThread(){
             playStream->wait();
         }
         camReconnectLock = false;
-        //qDebug()<<Q_FUNC_INFO;
+        qDebug()<<Q_FUNC_INFO;
     }
 }
 
@@ -808,7 +808,6 @@ void MainWindow::updateSn(){
     /* check camera live state
     cameraChecker->checkHost();
     cameraChecker->cameraDown = false;*/
-    cameraDownStatus = false;
 
     if ( play && cameraDownStatus && !camReconnectLock) {
 
@@ -827,7 +826,7 @@ void MainWindow::updateSn(){
                     camReconnectLock = true;
                     QTimer::singleShot(3000, this, SLOT(killCamStreamThread()));
                     playStream->start();
-                    //qDebug()<<Q_FUNC_INFO;
+                    qDebug()<<Q_FUNC_INFO;
                 }
                 break;
         }

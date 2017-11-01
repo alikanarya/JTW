@@ -214,6 +214,9 @@ void settingsForm::getParameters(){
     itemR8C0->setText(QString::number(w->emergency_VMEM_BYTE));
     itemR9C0->setText(QString::number(w->emergency_BITofBYTE));
     */
+
+    ui->editGoodValue->setText(QString::number(w->laplacianGoodValue));
+    ui->editBypassLocalValue->setText(QString::number(w->laplacianBypassLocalAlgoValue));
 }
 
 void settingsForm::commitChanges(){
@@ -504,4 +507,12 @@ void settingsForm::on_algoAutoFocusLocal_clicked(){
 
 void settingsForm::on_algoAutoFocus2Step_clicked(){
     w->doAutoFocusAlgo_2StepStart();
+}
+
+void settingsForm::on_editGoodValue_returnPressed(){
+    w->laplacianGoodValue = ui->editGoodValue->text().toInt();
+}
+
+void settingsForm::on_editBypassLocalValue_returnPressed(){
+    w->laplacianBypassLocalAlgoValue = ui->editBypassLocalValue->text().toInt();
 }

@@ -90,6 +90,10 @@ public:
     QPushButton *algoAutoFocusLocal;
     QPushButton *algoAutoFocus2Step;
     QCheckBox *autoFocusAfterCheck;
+    QLabel *label_15;
+    QLineEdit *editGoodValue;
+    QLabel *label_16;
+    QLineEdit *editBypassLocalValue;
     QButtonGroup *radioGroup;
     QButtonGroup *camStreamGroup;
 
@@ -436,7 +440,7 @@ public:
         label_11->setFont(font);
         testButton = new QPushButton(settingsForm);
         testButton->setObjectName(QStringLiteral("testButton"));
-        testButton->setGeometry(QRect(510, 180, 41, 29));
+        testButton->setGeometry(QRect(460, 560, 41, 29));
         focusAlgoBox = new QComboBox(settingsForm);
         focusAlgoBox->setObjectName(QStringLiteral("focusAlgoBox"));
         focusAlgoBox->setGeometry(QRect(510, 30, 121, 25));
@@ -481,6 +485,20 @@ public:
         font8.setWeight(50);
         autoFocusAfterCheck->setFont(font8);
         autoFocusAfterCheck->setLayoutDirection(Qt::LeftToRight);
+        label_15 = new QLabel(settingsForm);
+        label_15->setObjectName(QStringLiteral("label_15"));
+        label_15->setGeometry(QRect(510, 145, 101, 16));
+        label_15->setFont(font1);
+        editGoodValue = new QLineEdit(settingsForm);
+        editGoodValue->setObjectName(QStringLiteral("editGoodValue"));
+        editGoodValue->setGeometry(QRect(690, 142, 51, 20));
+        label_16 = new QLabel(settingsForm);
+        label_16->setObjectName(QStringLiteral("label_16"));
+        label_16->setGeometry(QRect(510, 173, 161, 16));
+        label_16->setFont(font1);
+        editBypassLocalValue = new QLineEdit(settingsForm);
+        editBypassLocalValue->setObjectName(QStringLiteral("editBypassLocalValue"));
+        editBypassLocalValue->setGeometry(QRect(690, 170, 51, 20));
 
         retranslateUi(settingsForm);
         QObject::connect(setupButton, SIGNAL(clicked()), settingsForm, SLOT(showSetupForm()));
@@ -619,6 +637,18 @@ public:
         algoAutoFocusLocal->setText(QApplication::translate("settingsForm", "Oto Fokus Lokal", 0));
         algoAutoFocus2Step->setText(QApplication::translate("settingsForm", "Oto Fokus 2Step", 0));
         autoFocusAfterCheck->setText(QApplication::translate("settingsForm", "Oto Fokus", 0));
+#ifndef QT_NO_TOOLTIP
+        label_15->setToolTip(QApplication::translate("settingsForm", "<html><head/><body><p>0-255i</p></body></html>", 0));
+#endif // QT_NO_TOOLTIP
+        label_15->setText(QApplication::translate("settingsForm", "Kabul S\304\261n\304\261r\304\261 >", 0));
+        editGoodValue->setInputMask(QApplication::translate("settingsForm", "999", 0));
+        editGoodValue->setText(QApplication::translate("settingsForm", "200", 0));
+#ifndef QT_NO_TOOLTIP
+        label_16->setToolTip(QApplication::translate("settingsForm", "<html><head/><body><p>0-255i</p></body></html>", 0));
+#endif // QT_NO_TOOLTIP
+        label_16->setText(QApplication::translate("settingsForm", "Bypass Lokal S\304\261n\304\261r\304\261 <", 0));
+        editBypassLocalValue->setInputMask(QApplication::translate("settingsForm", "999", 0));
+        editBypassLocalValue->setText(QApplication::translate("settingsForm", "100", 0));
     } // retranslateUi
 
 };

@@ -86,6 +86,8 @@ private slots:
     void on_algoCheckFocus_clicked();
     void on_algoAutoFocusLocal_clicked();
     void on_algoAutoFocus2Step_clicked();
+    void on_editGoodValue_returnPressed();
+    void on_editBypassLocalValue_returnPressed();
 };
 
 #endif // SETTINGSFORM_H
