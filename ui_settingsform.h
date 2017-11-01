@@ -90,8 +90,8 @@ public:
     QPushButton *algoAutoFocusLocal;
     QPushButton *algoAutoFocus2Step;
     QCheckBox *autoFocusAfterCheck;
-    QButtonGroup *camStreamGroup;
     QButtonGroup *radioGroup;
+    QButtonGroup *camStreamGroup;
 
     void setupUi(QWidget *settingsForm)
     {

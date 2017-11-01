@@ -1769,7 +1769,7 @@ p, li { white-space: pre-wrap; }
   <slot>changeCamStreamType()</slot>
  </slots>
  <buttongroups>
-  <buttongroup name="camStreamGroup"/>
   <buttongroup name="radioGroup"/>
+  <buttongroup name="camStreamGroup"/>
  </buttongroups>
 </ui>

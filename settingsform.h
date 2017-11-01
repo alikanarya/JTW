@@ -55,7 +55,7 @@ public slots:
     void saveExit();            // commit changes & restart app.
     void targetSlider();        // target area horizontal size adjustment
     void targetVertSlider();    // target area vertical size adjustment
-    void getFFT();
+    void calFocusValue();
     void focusValueCalculated(double val);
 
 private:

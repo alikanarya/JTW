@@ -2947,11 +2947,9 @@ void MainWindow::focusValueCalculatedSlot(double val){
         if (autoFocusAlgoLocal && autoFocusAlgoLocal_Start) {
             focusVal0 = val;
             autoFocusAlgoLocal_Start = false;
-            doAutoFocusAlgo_Local_Start(0.05);
+            doAutoFocusAlgo_Local_Start(localFocusHalfDist);
         }
     }
-
-
 }
 
 double MainWindow::calcFocusValueLaplacian(int roi){
@@ -3178,7 +3176,7 @@ void MainWindow::iterationFinished(){
         delete AF;
 
         if ( extraIterationForce || (autoFocusPassNo == 2 && extraIteration &&
-             ( bestFocusPos < (sampleStartPrev + sigma) || bestFocusPos > (sampleEndPrev - sigma) ||
+             ( bestFocusPos < (sampleStartPrev + sigma/2) || bestFocusPos > (sampleEndPrev - sigma/2) ||
                bestFocusPos > 1 || bestFocusPos < 0 || sigma == -12345) )){
             autoFocusPassLimit = 3;
         }
@@ -3187,8 +3185,8 @@ void MainWindow::iterationFinished(){
             autoFocusPassNo++;
 
             if (bestFocusPos < 1 && bestFocusPos > 0 && autoFocusPassNo == 3) {
-                start = bestFocusPos - 0.05;
-                end = bestFocusPos + 0.05;
+                start = pos - localFocusHalfDist;
+                end = pos + localFocusHalfDist;
             }
             if ( autoFocusAlgo2Step_Auto ) {
                 AF = new autoFocusThread( start, end, sampleNo, 1 );

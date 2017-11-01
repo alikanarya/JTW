@@ -203,6 +203,7 @@ public:
     int focusValueAlgo = 0; //0:fft 1:fuzzy entropy 2:laplacian
     int laplacianGoodValue = 200;
     int laplacianBypassLocalAlgoValue = 100;
+    double localFocusHalfDist = 0.1;
 
     cv::Mat imgDataCV;
 

@@ -378,7 +378,7 @@ void settingsForm::focusState(bool state){
     else
         ui->plainTextEdit->appendPlainText("Odak Bozuk");
 
-    QTimer::singleShot(1000, this, SLOT(getFFT()));
+    QTimer::singleShot(1000, this, SLOT(calFocusValue()));
 }
 
 void settingsForm::on_apiFocusStatus_clicked(){
@@ -398,12 +398,12 @@ void settingsForm::focusingActionState(bool state){
         ui->manFocusSlider->setEnabled(true);
         ui->manFocusSlider->setValue(100*camApi->focusPos);
         ui->manFocusLabel->setText(QString::number(camApi->focusPos,'f',3));
-        QTimer::singleShot(1000, this, SLOT(getFFT()));
+        QTimer::singleShot(1000, this, SLOT(calFocusValue()));
     } else {    // AUTO FOCUS PROCESS CHECK
         if (!camFocusingActionState) {
             timerAutoFocus->stop();
             ui->plainTextEdit->appendPlainText("Oto fokus işlemi tamamlandı...");
-            QTimer::singleShot(1000, this, SLOT(getFFT()));
+            QTimer::singleShot(1000, this, SLOT(calFocusValue()));
         }
     }
 }
@@ -432,13 +432,14 @@ void settingsForm::on_manFocusSlider_sliderMoved(int position){
 
 void settingsForm::requestCompleted(){
     ui->plainTextEdit->appendPlainText("islem tamam...");
-    QTimer::singleShot(3000, this, SLOT(getFFT()));
+    QTimer::singleShot(3000, this, SLOT(calFocusValue()));
 }
 
-void settingsForm::getFFT(){
+void settingsForm::calFocusValue(){
     if (!w->cameraDownStatus){
-        double mean = w->fourierTransform(w->lastData->image, false)[2];
-        ui->plainTextEdit->appendPlainText("Fokus Değeri: " + QString::number(mean,'f',2));
+        on_calcFocusValueButton_clicked();
+        //double mean = w->fourierTransform(w->lastData->image, false)[2];
+        //ui->plainTextEdit->appendPlainText("Fokus Değeri: " + QString::number(mean,'f',2));
     }
 }
 
