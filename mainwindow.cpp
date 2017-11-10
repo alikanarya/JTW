@@ -461,7 +461,7 @@ void MainWindow::playButton(){
             if (!playStream->isRunning()){
                 cameraDownStatus = false;
                 playStream->start();
-                //playStream->measureFpsFn(3000);
+                playStream->measureFpsFn(3000);
             }
             break;
     }
@@ -506,7 +506,14 @@ void MainWindow::makeNetworkRequest(){
 void MainWindow::getImageFromStream(int captureTime){
 
     firstTimeTick = captureTime;
-    QImage img = QImage( (const uchar*) playStream->dest.data, playStream->dest.cols, playStream->dest.rows, playStream->dest.step, QImage::Format_RGB888 );
+
+//    cv::cvtColor(playStream->frame, playStream->dest, CV_BGR2RGB);
+    cv::Mat dest;
+    cv::cvtColor(playStream->frameBuffer.first(), dest, CV_BGR2RGB);
+
+
+
+    QImage img = QImage( (const uchar*) dest.data, dest.cols, dest.rows, dest.step, QImage::Format_RGB888 );
     if (img.format() != QImage::Format_Invalid) {
         //qDebug() << playStream->iter;
         lastData->image = new QImage(img);
