@@ -510,11 +510,10 @@ void MainWindow::getImageFromStream(int captureTime){
 //    cv::cvtColor(playStream->frame, playStream->dest, CV_BGR2RGB);
     cv::Mat dest;
     if (!playStream->frameBuffer.isEmpty()) {
-
         cv::cvtColor(playStream->frameBuffer.first(), dest, CV_BGR2RGB);
-        if (playStream->frameBufferIter == playStream->frameBufferSize)
-            playStream->frameBuffer.removeFirst();
     }
+
+    playStream->frameBuffer.removeFirst();
 
 
 
