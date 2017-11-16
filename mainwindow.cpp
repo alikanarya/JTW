@@ -443,6 +443,7 @@ void MainWindow::playButton(){
     timeDelayAvg = 0;
     msecCount = 0;
     alarmCameraDownLock = false;
+    alarmCameraOnlineLock = false;
     getCamImageProperties = true;
     play = true;
 
@@ -507,15 +508,15 @@ void MainWindow::getImageFromStream(int captureTime){
 
     firstTimeTick = captureTime;
 
-//    cv::cvtColor(playStream->frame, playStream->dest, CV_BGR2RGB);
     cv::Mat dest;
+    cv::cvtColor(playStream->frame, dest, CV_BGR2RGB);
+
+    /* delay buffer code
     if (!playStream->frameBuffer.isEmpty()) {
         cv::cvtColor(playStream->frameBuffer.first(), dest, CV_BGR2RGB);
     }
-
     playStream->frameBuffer.removeFirst();
-
-
+    */
 
     QImage img = QImage( (const uchar*) dest.data, dest.cols, dest.rows, dest.step, QImage::Format_RGB888 );
     if (img.format() != QImage::Format_Invalid) {
@@ -536,17 +537,19 @@ void MainWindow::getImageFromStream(int captureTime){
 
 void MainWindow::camConnected(){
 
-    //qDebug()<<Q_FUNC_INFO;
     cameraDownStatus = false;
-    alarmCameraDownLock = false;
 
-    if (play && camStreamType == 0) {
-        playStream->setFps(fpsTarget);
-        playStream->startCapture();
+    if( !alarmCameraOnlineLock ) {
+        qDebug()<<Q_FUNC_INFO;
+        if (play && camStreamType == 0) {
+            playStream->setFps(fpsTarget);
+            //playStream->startCapture();
+        }
+
         ui->plainTextEdit->appendPlainText(timeString() + alarm11);
+        ui->cameraStatus->setIcon(cameraOnlineIcon);
+        alarmCameraOnlineLock = true;
     }
-
-    ui->cameraStatus->setIcon(cameraOnlineIcon);
 }
 
 void MainWindow::camNotConnected(){
@@ -555,6 +558,7 @@ void MainWindow::camNotConnected(){
     cameraDownStatus = true;
     camReconnectLock = false;
     getCamImageProperties = true;
+    alarmCameraOnlineLock = false;
 
     ui->cameraStatus->setIcon(cameraOfflineIcon);
     ui->imageFrame->clear();
@@ -569,7 +573,7 @@ void MainWindow::killCamStreamThread(){
             playStream->wait();
         }
         camReconnectLock = false;
-        qDebug()<<Q_FUNC_INFO;
+        //qDebug()<<Q_FUNC_INFO;
     }
 }
 
@@ -835,9 +839,9 @@ void MainWindow::updateSn(){
                     }
                 } else {
                     camReconnectLock = true;
-                    QTimer::singleShot(3000, this, SLOT(killCamStreamThread()));
+                    //QTimer::singleShot(3000, this, SLOT(killCamStreamThread()));
                     playStream->start();
-                    qDebug()<<Q_FUNC_INFO;
+                    //qDebug()<<Q_FUNC_INFO;
                 }
                 break;
         }

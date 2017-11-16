@@ -456,6 +456,7 @@ public:
     bool permPLC;                       // permision to access plc; given by plcCheck()
     bool permOperator;                  // op. permision about analyzed image; given by analyzeDialog();
     bool alarmCameraDownLock;
+    bool alarmCameraOnlineLock;
     bool emergencyStop, emergencyBlink;
     bool permWeld;
     bool detectionError;
