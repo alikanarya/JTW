@@ -113,7 +113,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     timeDelayTotal = 0;
     timeDelayAvg = 0;
     alarmCameraDownLock = false;
-    connect(this, SIGNAL(cameraDown()), this, SLOT(cameraDownAction()));
     captureVideo = false;
 
 
@@ -454,6 +453,7 @@ void MainWindow::playButton(){
     ui->controlButton->setEnabled(false);
     ui->videoButton->setIcon(videoSaveEnabled);
 
+    camReconnectLock = true;
     switch ( camStreamType ) {
         case 1: // JPEG
             makeNetworkRequest();
@@ -538,6 +538,7 @@ void MainWindow::getImageFromStream(int captureTime){
 void MainWindow::camConnected(){
 
     cameraDownStatus = false;
+    alarmCameraDownLock  = false;
 
     if( !alarmCameraOnlineLock ) {
         qDebug()<<Q_FUNC_INFO;
@@ -554,14 +555,21 @@ void MainWindow::camConnected(){
 
 void MainWindow::camNotConnected(){
 
-    qDebug()<<Q_FUNC_INFO;
     cameraDownStatus = true;
     camReconnectLock = false;
-    getCamImageProperties = true;
     alarmCameraOnlineLock = false;
 
-    ui->cameraStatus->setIcon(cameraOfflineIcon);
-    ui->imageFrame->clear();
+    if( !alarmCameraDownLock ) {
+        qDebug()<<Q_FUNC_INFO;
+
+        ui->plainTextEdit->appendPlainText(timeString() + alarm7);
+        ui->statusBar->showMessage("Kameraya bağlanılamıyor !");
+        ui->cameraStatus->setIcon(cameraOfflineIcon);
+        ui->imageFrame->clear();
+        alarmCameraDownLock = true;
+        getCamImageProperties = true;
+    }
+
 }
 
 void MainWindow::killCamStreamThread(){
@@ -845,8 +853,6 @@ void MainWindow::updateSn(){
                 }
                 break;
         }
-        //**if (cameraChecker->cameraDown && !alarmCameraDownLock) emit cameraDown();
-        if (!alarmCameraDownLock) emit cameraDown();
     }
 
     /*
@@ -978,15 +984,6 @@ void MainWindow::initPlcTimer(){
     controlPause = false;
     timerControl->start(timerControlInterval);
 
-}
-
-void  MainWindow::cameraDownAction(){
-
-    ui->plainTextEdit->appendPlainText(timeString() + alarm7);
-    ui->statusBar->showMessage("Kameraya bağlanılamıyor !");
-
-    alarmCameraDownLock = true;
-    getCamImageProperties = true;
 }
 
 void MainWindow::analyzeButton(){

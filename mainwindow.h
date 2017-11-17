@@ -580,7 +580,6 @@ private slots:
     void update();                                  // 1msec timer actions
     void updateSn();                                // 1sn timer actions
     void startTimer();                              // 2sn bood delay timer
-    void cameraDownAction();                        // actions handled when camera is not accesible
 
     void testEdit();
     void timeEdit();
