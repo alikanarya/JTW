@@ -508,9 +508,6 @@ void MainWindow::getImageFromStream(int captureTime){
 
     firstTimeTick = captureTime;
 
-    cv::Mat dest;
-    cv::cvtColor(playStream->frame, dest, CV_BGR2RGB);
-
     /* delay buffer code
     if (!playStream->frameBuffer.isEmpty()) {
         cv::cvtColor(playStream->frameBuffer.first(), dest, CV_BGR2RGB);
@@ -518,7 +515,7 @@ void MainWindow::getImageFromStream(int captureTime){
     playStream->frameBuffer.removeFirst();
     */
 
-    QImage img = QImage( (const uchar*) dest.data, dest.cols, dest.rows, dest.step, QImage::Format_RGB888 );
+    QImage img = QImage( (const uchar*) playStream->dest.data, playStream->dest.cols, playStream->dest.rows, playStream->dest.step, QImage::Format_RGB888 );
     if (img.format() != QImage::Format_Invalid) {
         //qDebug() << playStream->iter;
         lastData->image = new QImage(img);
@@ -528,7 +525,6 @@ void MainWindow::getImageFromStream(int captureTime){
             fourierTransform(lastData->image, false);
             testFlag = false;
         }
-
 
         playCam();
         //ui->imageFrame->setPixmap( QPixmap::fromImage( img.scaled(imageWidth, imageHeight, Qt::KeepAspectRatio) ));
