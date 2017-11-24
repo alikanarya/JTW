@@ -516,6 +516,8 @@ void MainWindow::getImageFromStream(int captureTime){
     */
 
     QImage img = QImage( (const uchar*) playStream->dest.data, playStream->dest.cols, playStream->dest.rows, playStream->dest.step, QImage::Format_RGB888 );
+    playStream->condition.wakeAll();
+
     if (img.format() != QImage::Format_Invalid) {
         //qDebug() << playStream->iter;
         lastData->image = new QImage(img);
