@@ -156,6 +156,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     connect(this, SIGNAL(focusValueCalculated(double)), this, SLOT(focusValueCalculatedSlot(double)));
 
+    iProcessThread = new imgProcessThread();
+
+    connect(iProcessThread, SIGNAL(imageProcessingCompleted()), this, SLOT(imageProcessingCompleted()));
+
     threadVideoSave = new videoSaveThread();
     connect(threadVideoSave, SIGNAL(saveFinished()), this, SLOT(saveFinished()));
 
@@ -1340,6 +1344,12 @@ void MainWindow::processImage(bool deleteObject){
             targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
         }
 
+        if (!iProcessThread->isRunning() && iProcessThread->ready){
+            iProcessThread->targetArea = targetArea.copy(0,0,targetArea.width(), targetArea.height());
+            iProcessThread->start();
+
+        }
+/*
         iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
         iprocessInitSwitch = true;
 
@@ -1393,13 +1403,11 @@ void MainWindow::processImage(bool deleteObject){
                     break;
             }
         }
-
+*/
+/*
         if ( lineDetection ) {
-
             //....
-
         } else {
-
 
             // if center of track is not an error, append dev. to trend data list OR append error code to list
             if (iprocess->detected){
@@ -1500,9 +1508,110 @@ void MainWindow::processImage(bool deleteObject){
             iprocessInitSwitch = false;
             delete iprocess;
         }
-
+*/
     }
 
+
+}
+
+void MainWindow::imageProcessingCompleted(){
+
+    // if center of track is not an error, append dev. to trend data list OR append error code to list
+    if (iProcessThread->iprocess->detected){
+
+//                error = iprocess->trackCenterX - (frameWidth/2);
+        error = iProcessThread->iprocess->trackCenterX - (frameWidthCam/2);
+        deviationData.append(error);
+
+        //if (controlInitiated) {                }
+
+        jointWidth = abs(iProcessThread->iprocess->rightCornerX - iProcessThread->iprocess->leftCornerX) + 1;
+
+
+
+        if (trackOn){
+            errorTotal += abs(error);
+            processCount++;
+            if (abs(error) > errorMax) errorMax = abs(error);
+        }
+    } else {
+        deviationData.append(eCodeDev);     // eCodeDev: error code
+    }
+
+
+    // assign plc commands using dev. data findings
+    if (iProcessThread->iprocess->detected){
+
+        detectionError = false;
+
+        if (jointWidthControlActive && (jointWidth > maxJointWidth || jointWidth < minJointWidth || jointWidth == 1) ) {
+
+            cmdState = _CMD_CENTER;
+                //ui->plainTextEdit->appendPlainText("error");
+
+        } else {
+            int index = deviationData.size() - 1;
+
+            if (deviationData[index] >= errorLimitCam ){
+                cmdState = _CMD_RIGHT;
+            } else
+            if (deviationData[index] <= errorLimitNegCam){
+                cmdState = _CMD_LEFT;
+            } else
+            if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNegCam)){
+                cmdState = _CMD_CENTER;
+            } else
+            if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimitCam)){
+                cmdState = _CMD_CENTER;
+            } else
+            if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
+                cmdState = _CMD_CENTER;
+            }
+
+            if (controlOn)
+                plcCommands();
+        }
+
+        cmdStatePrev = cmdState;
+        cmdStatePrev2 = cmdState;
+
+    } else {
+        //if (deviationData[index] != eCodeDev){
+        cmdState = cmdStatePrev2;
+        detectionError = true;
+    }
+
+
+    if (iProcessThread->iprocess->detected && controlInitiated){
+        goX = false;    //dont send command to plc when control is initiated firstly
+
+        initialJointWidth = abs(iProcessThread->iprocess->rightCornerX - iProcessThread->iprocess->leftCornerX) + 1;
+        maxJointWidth = initialJointWidth * 1.2;
+        minJointWidth = initialJointWidth * 0.8;
+        //ui->plainTextEdit->appendPlainText( QString::number(minJointWidth)+ ", " + QString::number(initialJointWidth) + ", " + QString::number(maxJointWidth) );
+
+        if (alignGuide2TrackCenter) {
+
+            int _offsetX = offsetX + error * mapFactorX;
+
+            if ( _offsetX >= (offsetXmin+10) && ((_offsetX + frameWidth) <= (offsetXmax - 10)) ){
+                offsetXpos += error * mapFactorX;
+                offsetXCam += error;
+                //qDebug() << "aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
+            } else {
+                controlButton();
+                showSetupError();
+                //qDebug() << "not aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
+            }
+
+            repaintGuide();
+            //alignGuide2TrackCenter = false;
+        }
+        controlInitiated = false;
+    }
+
+    delete iProcessThread->iprocess;
+    iProcessThread->ready = true;
 
 }
 

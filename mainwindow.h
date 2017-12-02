@@ -128,6 +128,7 @@ namespace Ui {
 #include "../_Modules/Protect/protect.h"
 #include "videosavethread.h"
 #include "autofocusthread.h"
+#include "imgprocessthread.h"
 
 #include <plcqtlib.h>
 #include "opencv2/core.hpp"
@@ -319,6 +320,8 @@ public:
     int mainEdgesNumber = 1;
     bool matrixFlag = false;
     bool averaging = false;
+
+    imgProcessThread *iProcessThread;
 
     // Z-Control
     bool zControlActive;
@@ -549,6 +552,8 @@ public slots:
     void getFuzzyEntropy();
     void iterationFinished();
     double findCurveFitting(QList<double> x1, QList<double> y1, int iterNo);
+
+    void imageProcessingCompleted();
 
 signals:
     void cameraDown();
