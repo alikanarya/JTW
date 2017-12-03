@@ -85,6 +85,12 @@ analyzeDialog::analyzeDialog(imgProcess *iprocess, int processElapsed, QWidget *
 
     ui->cancelButton_2->setEnabled(false);
     ui->cancelButton_2->hide();
+
+    delete w->iProcessThread->iprocess;
+    w->iProcessThread->ready = true;
+
+    w->analyzeAction = false;
+
 }
 
 void analyzeDialog::acceptButton(){

@@ -74,6 +74,7 @@ void imgProcessThread::run(){
 }
 
 void imgProcessThread::edgeDetection(){
+    //qDebug()<<Q_FUNC_INFO;
 
     switch ( w->edgeDetectionState ) {
         case 0: // NONE
@@ -138,6 +139,7 @@ void imgProcessThread::edgeDetection(){
 
 void imgProcessThread::Algo1(){
 // LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines
+    //qDebug()<<Q_FUNC_INFO;
 
     if (w->edgeDetectionState == 0){
         iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
@@ -151,6 +153,7 @@ void imgProcessThread::Algo1(){
 
 void imgProcessThread::Algo2(){
 // LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid
+    //qDebug()<<Q_FUNC_INFO;
 
     if (w->edgeDetectionState == 0){
         iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
@@ -172,6 +175,7 @@ void imgProcessThread::Algo2(){
 
 void imgProcessThread::Algo3(){
 // woLASER: edge > houghTr > detectMainEdges
+    //qDebug()<<Q_FUNC_INFO;
 
     if (w->edgeDetectionState != 0) {
         iprocess->calculateHoughMaxs( w->houghLineNo );            // get max voted line(s)
@@ -185,6 +189,7 @@ void imgProcessThread::Algo3(){
 
 void imgProcessThread::Algo4(){
 // woLASER: value > detectThinJointCenter
+    //qDebug()<<Q_FUNC_INFO;
 
     iprocess->constructValueMatrix( iprocess->imgOrginal );
     iprocess->detectThinJointCenter(3, 31);
@@ -192,6 +197,7 @@ void imgProcessThread::Algo4(){
 
 void imgProcessThread::Algo5(){
 // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
+    //qDebug()<<Q_FUNC_INFO;
 
     iprocess->constructValueMatrix( iprocess->imgOrginal );
     iprocess->constructContrastMatix(3);
@@ -203,6 +209,7 @@ void imgProcessThread::Algo5(){
 
 void imgProcessThread::Algo6(){
 // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
+    //qDebug()<<Q_FUNC_INFO;
 
     if (w->edgeDetectionState == 3) {
         iprocess->calculateHoughMaxs( w->houghLineNo );            // get max voted line(s)

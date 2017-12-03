@@ -993,24 +993,23 @@ void MainWindow::analyzeButton(){
     //if ( !imageGetter->imageList.isEmpty() ) {  // if any image is get
     if (lastData->image->format() != QImage::Format_Invalid) {
 
-        int startTime = timeSystem.getSystemTimeMsec();
+        analyzeAction = true;
+
+        analyzeStartTime = timeSystem.getSystemTimeMsec();
 
         processImage(false);
 
-        int endTime = timeSystem.getSystemTimeMsec();
 
-        int processElapsed = endTime - startTime;
+        //if ( iprocessInitSwitch ) {
 
-        if ( iprocessInitSwitch ) {
+            //iprocess->cornerImage(false);   // false for solid canny                                                                    // produce corner image
 
-            iprocess->cornerImage(false);   // false for solid canny                                                                    // produce corner image
+            //analyzeDialog *_analyzeDialog = new analyzeDialog(iProcessThread->iprocess, processElapsed, this);
+            //_analyzeDialog->show();
 
-            analyzeDialog *_analyzeDialog = new analyzeDialog(iprocess, processElapsed, this);
-            _analyzeDialog->show();
-
-            iprocessInitSwitch = false;
-            delete iprocess;
-        }
+            //iprocessInitSwitch = false;
+            //delete iprocess;
+        //}
 
 
     } else {
@@ -1610,8 +1609,21 @@ void MainWindow::imageProcessingCompleted(){
         controlInitiated = false;
     }
 
-    delete iProcessThread->iprocess;
-    iProcessThread->ready = true;
+    //qDebug() << "+";
+
+    if (!analyzeAction) {
+        delete iProcessThread->iprocess;
+        iProcessThread->ready = true;
+    } else {
+        analyzeEndTime = timeSystem.getSystemTimeMsec();
+
+        int processElapsed = analyzeEndTime - analyzeStartTime;
+        analyzeDialog *_analyzeDialog = new analyzeDialog(iProcessThread->iprocess, processElapsed, this);
+        _analyzeDialog->show();
+
+    }
+
+
 
 }
 

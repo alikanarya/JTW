@@ -216,6 +216,9 @@ public:
     bool cameraDownStatus = true;
     bool camReconnectLock = false;
 
+    bool analyzeAction = false;
+    int analyzeStartTime, analyzeEndTime;
+
     videoSaveThread *threadVideoSave;
     QImage imageFile;
     QImage imageFileChanged;
