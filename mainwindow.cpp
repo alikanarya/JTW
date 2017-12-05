@@ -1069,6 +1069,8 @@ void MainWindow::controlButton(){
 
     if (controlOn){
 
+        cmdStatePrev = _CMD_CENTER;
+
         if (focusCheckBeforeControl){
             camDoAutoFocus = autoFocusBeforeControl;
             autoFocusPassNo = 0;
@@ -1087,7 +1089,8 @@ void MainWindow::controlButton(){
         offsetXpos = 0;
         repaintGuide();
 
-        cmdState = _CMD_STOP;
+        cmdState = _CMD_CENTER;
+        plcCommands();
 
         ui->controlButton->setIcon(controlOffIcon);
         ui->controlButton->setEnabled(false);
@@ -1348,169 +1351,7 @@ void MainWindow::processImage(bool deleteObject){
             iProcessThread->start();
 
         }
-/*
-        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
-        iprocessInitSwitch = true;
-
-        iprocess->thetaMin = thetaMin;
-        iprocess->thetaMax = thetaMax;
-        iprocess->thetaStep = thetaStep;
-
-        if (thinJointAlgoActive){    // without laser
-            iprocess->centerX = 0;
-            iprocess->centerY = 0;
-        } else {                     // with laser
-            iprocess->centerX = iprocess->edgeWidth / 2;
-            iprocess->centerY = 0;
-        }
-
-        iprocess->toMono();                                     // convert target to mono
-
-        edgeDetection(iprocess);
-
-        if (thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
-
-            switch ( algorithmType ) {
-                case 0: // NONE
-                    break;
-                case 1: // MAIN EDGES
-                    Algo3(iprocess);
-                    break;
-                case 2: // THIN JOINT - DARK AREA
-                    Algo4(iprocess);
-                    break;
-                case 3: // CONTRAST
-                    Algo5(iprocess);
-                    break;
-                case 4: // LINE DETECTION WITH MAIN EDGES
-                    Algo6(iprocess);
-                    break;
-                case 5: // EXPERIMENTAL
-                    break;
-            }
-        } else {    // with laser - HORIZONTAL SEARCH
-            switch ( algorithmType ) {
-                case 0: // NONE
-                    break;
-                case 1: // LONGEST SOLID LINES
-                    Algo1(iprocess);
-                    break;
-                case 2: // PRIMARY VOID
-                    Algo2(iprocess);
-                    break;
-                case 3: // EXPERIMENTAL
-                    break;
-            }
-        }
-*/
-/*
-        if ( lineDetection ) {
-            //....
-        } else {
-
-            // if center of track is not an error, append dev. to trend data list OR append error code to list
-            if (iprocess->detected){
-
-//                error = iprocess->trackCenterX - (frameWidth/2);
-                error = iprocess->trackCenterX - (frameWidthCam/2);
-                deviationData.append(error);
-
-                //if (controlInitiated) {                }
-
-                jointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
-
-
-
-                if (trackOn){
-                    errorTotal += abs(error);
-                    processCount++;
-                    if (abs(error) > errorMax) errorMax = abs(error);
-                }
-            } else {
-                deviationData.append(eCodeDev);     // eCodeDev: error code
-            }
-
-
-            // assign plc commands using dev. data findings
-            if (iprocess->detected){
-
-                detectionError = false;
-
-                if (jointWidthControlActive && (jointWidth > maxJointWidth || jointWidth < minJointWidth || jointWidth == 1) ) {
-
-                    cmdState = _CMD_CENTER;
-                        //ui->plainTextEdit->appendPlainText("error");
-
-                } else {
-                    int index = deviationData.size() - 1;
-
-                    if (deviationData[index] >= errorLimitCam ){
-                        cmdState = _CMD_RIGHT;
-                    } else
-                    if (deviationData[index] <= errorLimitNegCam){
-                        cmdState = _CMD_LEFT;
-                    } else
-                    if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNegCam)){
-                        cmdState = _CMD_CENTER;
-                    } else
-                    if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimitCam)){
-                        cmdState = _CMD_CENTER;
-                    } else
-                    if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
-                        cmdState = _CMD_CENTER;
-                    }
-
-                    if (controlOn)
-                        plcCommands();
-                }
-
-                cmdStatePrev = cmdState;
-                cmdStatePrev2 = cmdState;
-
-            } else {
-                //if (deviationData[index] != eCodeDev){
-                cmdState = cmdStatePrev2;
-                detectionError = true;
-            }
-
-
-            if (iprocess->detected && controlInitiated){
-                goX = false;    //dont send command to plc when control is initiated firstly
-
-                initialJointWidth = abs(iprocess->rightCornerX - iprocess->leftCornerX) + 1;
-                maxJointWidth = initialJointWidth * 1.2;
-                minJointWidth = initialJointWidth * 0.8;
-                //ui->plainTextEdit->appendPlainText( QString::number(minJointWidth)+ ", " + QString::number(initialJointWidth) + ", " + QString::number(maxJointWidth) );
-
-                if (alignGuide2TrackCenter) {
-
-                    int _offsetX = offsetX + error * mapFactorX;
-
-                    if ( _offsetX >= (offsetXmin+10) && ((_offsetX + frameWidth) <= (offsetXmax - 10)) ){
-                        offsetXpos += error * mapFactorX;
-                        offsetXCam += error;
-                        //qDebug() << "aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
-                    } else {
-                        controlButton();
-                        showSetupError();
-                        //qDebug() << "not aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
-                    }
-
-                    repaintGuide();
-                    //alignGuide2TrackCenter = false;
-                }
-                controlInitiated = false;
-            }
-        }
-
-        if ( deleteObject && iprocessInitSwitch ) {
-            iprocessInitSwitch = false;
-            delete iprocess;
-        }
-*/
     }
-
-
 }
 
 void MainWindow::imageProcessingCompleted(){
@@ -1525,8 +1366,6 @@ void MainWindow::imageProcessingCompleted(){
         //if (controlInitiated) {                }
 
         jointWidth = abs(iProcessThread->iprocess->rightCornerX - iProcessThread->iprocess->leftCornerX) + 1;
-
-
 
         if (trackOn){
             errorTotal += abs(error);
@@ -1544,10 +1383,7 @@ void MainWindow::imageProcessingCompleted(){
         detectionError = false;
 
         if (jointWidthControlActive && (jointWidth > maxJointWidth || jointWidth < minJointWidth || jointWidth == 1) ) {
-
-            cmdState = _CMD_CENTER;
-                //ui->plainTextEdit->appendPlainText("error");
-
+            cmdState = _CMD_CENTER;     //ui->plainTextEdit->appendPlainText("error");
         } else {
             int index = deviationData.size() - 1;
 
@@ -1567,8 +1403,14 @@ void MainWindow::imageProcessingCompleted(){
                 cmdState = _CMD_CENTER;
             }
 
-            if (controlOn)
-                plcCommands();
+            if (controlOn) {
+                if (!focusCheckBeforeControl) {
+                    plcCommands();
+                } else if (focusCheckBeforeControl && camFocusState) {
+                    plcCommands();
+                }
+
+            }
         }
 
         cmdStatePrev = cmdState;
@@ -1620,9 +1462,7 @@ void MainWindow::imageProcessingCompleted(){
         int processElapsed = analyzeEndTime - analyzeStartTime;
         analyzeDialog *_analyzeDialog = new analyzeDialog(iProcessThread->iprocess, processElapsed, this);
         _analyzeDialog->show();
-
     }
-
 
 
 }
@@ -2648,7 +2488,7 @@ void MainWindow::plcReadings(){
 
 void MainWindow::plcCommands(){
 
-    if (controlOn){
+    //if (controlOn){
 
         if (cmdState != cmdStatePrev) {
 
@@ -2669,9 +2509,7 @@ void MainWindow::plcCommands(){
             plc->writeByte(0,commandByte);
 
         }
-
-    }
-
+    //}
 }
 
 void MainWindow::doAutoFocus(){
