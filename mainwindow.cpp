@@ -1072,9 +1072,12 @@ void MainWindow::controlButton(){
         cmdStatePrev = _CMD_CENTER;
 
         if (focusCheckBeforeControl){
+            /*
             camDoAutoFocus = autoFocusBeforeControl;
             autoFocusPassNo = 0;
             checkFocusState();
+            */
+            calcFocusValue(2,1,5);  //laplacian,target area,5 frame
         } else {
             startControl();
         }
@@ -2893,6 +2896,17 @@ void MainWindow::calcFocusValue(int algo, int roi, int number){
 }
 
 void MainWindow::focusValueCalculatedSlot(double val){
+
+    if (controlOn && focusCheckBeforeControl) {
+        if (val > laplacianGoodValue) {
+            ui->plainTextEdit->appendPlainText(timeString() + alarm12);
+            startControl();
+        } else {
+            ui->plainTextEdit->appendPlainText(timeString() + alarm13);
+            ui->plainTextEdit->appendPlainText(timeString() + alarm14);
+            controlButton();
+        }
+    }
 
     if (autoFocusAfterFocusCheck){
         autoFocusAfterFocusCheck = false;
