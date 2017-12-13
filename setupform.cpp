@@ -349,12 +349,13 @@ void setupForm::Algo6(imgProcess *iprocess){
         iprocess->scoreLineCrossing(true);
             //ui->plainTextEdit->appendPlainText("skor, yüzde: " + QString::number(iprocess->mainEdgeScore) + ", " + QString::number(iprocess->mainEdgeScorePercent, 'f', 1));
         */
+        /*
         for (int i=0; i<iprocess->mainEdgesList.size();i++) {
-            int length = iprocess->detectLongestSolidLineVert(iprocess->mainEdgesList[i].distance,iprocess->mainEdgesList[i].angle,0,iprocess->edgeHeight).length;
+            int length = iprocess->detectLongestSolidLineVert(iprocess->mainEdgesList[i].distance,iprocess->mainEdgesList[i].angle,0,iprocess->edgeHeight-1).length;
             ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote/length: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue) + ", " + QString::number(length));
 
         }
-
+        */
         algoPrerequestsOk = true;
         captured = true;
     } else {
@@ -674,6 +675,12 @@ void setupForm::captureButton(){
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(1) ) );
                             /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"05-mainEdges image.jpg");
                             /**/if (saveAnalysis) iprocess->cornerImage().save(path+"06-corners image.jpg");
+
+                        ui->plainTextEdit->appendPlainText("-2nd hough vals max solid lines---");
+                        for (int i=0; i<iprocess->listHoughData2ndSize;i++) {
+                            int length = iprocess->detectLongestSolidLineVert(iprocess->listHoughData2ndArray[i][0], iprocess->listHoughData2ndArray[i][1], 0, iprocess->edgeHeight-1).length;
+                            ui->plainTextEdit->appendPlainText("dist/ang/vote/length: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 0) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 0) + ", " + QString::number(length));
+                        }
 
                         if ( iprocess->mainEdgeScorePercent > w->lineScoreLimit){
                             ui->plainTextEdit->appendPlainText( "Ana çizgi bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
