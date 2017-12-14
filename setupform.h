@@ -88,6 +88,7 @@ public:
     void getParameters();       // get parameters from mainwindow
     void clearGraph(QGraphicsView *graph);
     void drawGraph(QGraphicsView *graph,int *array, int size);
+    void drawGraphXY(QGraphicsView *graph,int *xAarray,int *yAarray, int size);
 
     ~setupForm();               // destructor
 

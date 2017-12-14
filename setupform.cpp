@@ -654,6 +654,7 @@ void setupForm::captureButton(){
                         ui->plainTextEdit->appendPlainText("avg dist, angle: " + QString::number(iprocess->distanceAvg) + ", " + QString::number(iprocess->thetaAvg));
                         break;
                     case 4: // LINE DETECTION WITH MAIN EDGES
+                        {
                             /**/if (DEBUG) {
                                 ui->plainTextEdit->appendPlainText("-1st-maximas---");
                                 for (int i=0; i<iprocess->localMaximaSize;i++)
@@ -677,13 +678,32 @@ void setupForm::captureButton(){
                             /**/if (saveAnalysis) iprocess->cornerImage().save(path+"06-corners image.jpg");
 
                         ui->plainTextEdit->appendPlainText("-2nd hough vals max solid lines---");
+
+                        int *graphArray = new int[iprocess->listHoughData2ndSize];
+                        int *xArray = new int[iprocess->listHoughData2ndSize];
+                        for (int i=0; i<iprocess->listHoughData2ndSize; i++){
+                            xArray[i] = iprocess->listHoughData2ndArray[i][0];
+                            graphArray[i] = iprocess->listHoughData2ndArray[i][2];
+                        }
+
+                        int *graphArray2 = new int[iprocess->listHoughData2ndSize];
                         for (int i=0; i<iprocess->listHoughData2ndSize;i++) {
                             int length = iprocess->detectLongestSolidLineVert(iprocess->listHoughData2ndArray[i][0], iprocess->listHoughData2ndArray[i][1], 0, iprocess->edgeHeight-1).length;
+                            graphArray2[i] = length;
                             ui->plainTextEdit->appendPlainText("dist/ang/vote/length: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 0) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 0) + ", " + QString::number(length));
                         }
 
+                        // vote graph
+                        drawGraphXY(ui->graphicsView, xArray, graphArray, iprocess->listHoughData2ndSize);
+                        // max solid line graph
+                        drawGraphXY(ui->graphicsView2, xArray, graphArray2, iprocess->listHoughData2ndSize);
+
+                        ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
+
                         if ( iprocess->mainEdgeScorePercent > w->lineScoreLimit){
                             ui->plainTextEdit->appendPlainText( "Ana çizgi bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
+                        }
+
                         }
                         break;
 
@@ -1554,7 +1574,38 @@ void setupForm::drawGraph(QGraphicsView *graph, int *array, int size){
                 i*xScale, sceneHeight-(array[i]-min)*yScale, penGraph);
     }
 
-    ui->graphicsView->show();
+    graph->show();
+}
+
+void setupForm::drawGraphXY(QGraphicsView *graph,int *xAarray,int *yAarray, int size){
+
+    clearGraph(graph);
+
+    int min=2000, max=-1;
+    for (int i=0; i<size; i++){
+        if (yAarray[i] > max) max = yAarray[i];
+        if (yAarray[i] < min) min = yAarray[i];
+    }
+    int sceneHeight = graph->geometry().height();
+    float yScale = sceneHeight*1.0 / (max - min);
+    qDebug() << max << "-" << min << "-" << yScale;
+
+    min=2000;   max=-1;
+    for (int i=0; i<size; i++){
+        if (xAarray[i] > max) max = xAarray[i];
+        if (xAarray[i] < min) min = xAarray[i];
+    }
+    int sceneWidth = graph->geometry().width();
+    float xScale = sceneWidth*1.0 / iprocess->edgeWidth;
+    qDebug() << max << "-" << min << "-" << xScale;
+
+    //qDebug() << min << ":" << max << ":" << QString::number(xScale,'f',2) << ":" << QString::number(yScale,'f',2) << ":" << sceneRect.height() << ":" << sceneRect.width();
+    for (int i=1; i<size; i++){
+        graph->scene()->addLine(xAarray[i-1]*xScale, sceneHeight-(yAarray[i-1]-min)*yScale,
+                xAarray[i]*xScale, sceneHeight-(yAarray[i]-min)*yScale, penGraph);
+    }
+
+    graph->show();
 }
 
 void setupForm::on_imgParametersButton_clicked(){
