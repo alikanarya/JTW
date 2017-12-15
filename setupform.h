@@ -70,6 +70,7 @@ public:
     bool algoPrerequestsOk = false;
     bool DEBUG = false;
     bool saveAnalysis = false;
+    int hdDistance, hdAngle, hdVoteValue, solidLineLength;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;

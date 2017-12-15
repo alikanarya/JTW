@@ -338,11 +338,16 @@ void setupForm::Algo6(imgProcess *iprocess){
     if (edgeDetectionState == 3) {
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
-        iprocess->thinCornerNum = mainEdgesNumber;
-        iprocess->detectMainEdges(thinJointAlgoActive, DEBUG);
+        //iprocess->thinCornerNum = mainEdgesNumber;
+        houghData hd = iprocess->detectMainEdgesSolidLine(0.9, solidLineLength, thinJointAlgoActive, DEBUG);
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
             /**/if (DEBUG) for (int i=0; i<iprocess->mainEdgesList.size();i++)
                     ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
+
+        hdDistance = hd.distance;
+        hdAngle = hd.angle;
+        hdVoteValue = hd.voteValue;
+
         /*
         iprocess->thickenEdgeMap(3);
             //if (saveAnalysis) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"14-canny thickened image.jpg");
@@ -673,11 +678,12 @@ void setupForm::captureButton(){
                                     ui->plainTextEdit->appendPlainText("dist/ang/vote: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
                             }
 
-                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(1) ) );
+                    //if (solidLineLength != -1)
+                        //ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(0) ) );
                             /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"05-mainEdges image.jpg");
                             /**/if (saveAnalysis) iprocess->cornerImage().save(path+"06-corners image.jpg");
 
-                        ui->plainTextEdit->appendPlainText("-2nd hough vals max solid lines---");
+                        if (DEBUG) ui->plainTextEdit->appendPlainText("-2nd hough vals max solid lines---");
 
                         int *graphArray = new int[iprocess->listHoughData2ndSize];
                         int *xArray = new int[iprocess->listHoughData2ndSize];
@@ -690,19 +696,22 @@ void setupForm::captureButton(){
                         for (int i=0; i<iprocess->listHoughData2ndSize;i++) {
                             int length = iprocess->detectLongestSolidLineVert(iprocess->listHoughData2ndArray[i][0], iprocess->listHoughData2ndArray[i][1], 0, iprocess->edgeHeight-1).length;
                             graphArray2[i] = length;
-                            ui->plainTextEdit->appendPlainText("dist/ang/vote/length: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 0) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 0) + ", " + QString::number(length));
+                            if (DEBUG) ui->plainTextEdit->appendPlainText("dist/ang/vote/length: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 0) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 0) + ", " + QString::number(length));
                         }
+
+                        ui->plainTextEdit->appendPlainText("dist/ang/vote/length: "+QString::number(hdDistance) +", "+QString::number(hdAngle, 'f', 2)+", "+ QString::number(hdVoteValue) + ", " + QString::number(solidLineLength));
 
                         // vote graph
                         drawGraphXY(ui->graphicsView, xArray, graphArray, iprocess->listHoughData2ndSize);
                         // max solid line graph
                         drawGraphXY(ui->graphicsView2, xArray, graphArray2, iprocess->listHoughData2ndSize);
 
-                        ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
+//                        ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
+                        ui->labelTarget2->setPixmap( QPixmap::fromImage( *iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight ) ) );
 
-                        if ( iprocess->mainEdgeScorePercent > w->lineScoreLimit){
+                        /*if ( iprocess->mainEdgeScorePercent > w->lineScoreLimit){
                             ui->plainTextEdit->appendPlainText( "Ana çizgi bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
-                        }
+                        }*/
 
                         }
                         break;
@@ -1579,7 +1588,8 @@ void setupForm::drawGraph(QGraphicsView *graph, int *array, int size){
 
 void setupForm::drawGraphXY(QGraphicsView *graph,int *xAarray,int *yAarray, int size){
 
-    clearGraph(graph);
+    //clearGraph(graph);
+    graph->setScene( new  QGraphicsScene() );
 
     int min=2000, max=-1;
     for (int i=0; i<size; i++){
@@ -1588,7 +1598,7 @@ void setupForm::drawGraphXY(QGraphicsView *graph,int *xAarray,int *yAarray, int 
     }
     int sceneHeight = graph->geometry().height();
     float yScale = sceneHeight*1.0 / (max - min);
-    qDebug() << max << "-" << min << "-" << yScale;
+    //qDebug() << max << "-" << min << "-" << yScale;
 
     min=2000;   max=-1;
     for (int i=0; i<size; i++){
@@ -1597,7 +1607,7 @@ void setupForm::drawGraphXY(QGraphicsView *graph,int *xAarray,int *yAarray, int 
     }
     int sceneWidth = graph->geometry().width();
     float xScale = sceneWidth*1.0 / iprocess->edgeWidth;
-    qDebug() << max << "-" << min << "-" << xScale;
+    //qDebug() << max << "-" << min << "-" << xScale;
 
     //qDebug() << min << ":" << max << ":" << QString::number(xScale,'f',2) << ":" << QString::number(yScale,'f',2) << ":" << sceneRect.height() << ":" << sceneRect.width();
     for (int i=1; i<size; i++){
@@ -1605,6 +1615,7 @@ void setupForm::drawGraphXY(QGraphicsView *graph,int *xAarray,int *yAarray, int 
                 xAarray[i]*xScale, sceneHeight-(yAarray[i]-min)*yScale, penGraph);
     }
 
+    graph->update(graph->geometry());
     graph->show();
 }
 
