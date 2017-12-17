@@ -213,11 +213,12 @@ void imgProcessThread::Algo6(){
 
     if (w->edgeDetectionState == 3) {
         iprocess->calculateHoughMaxs( w->houghLineNo );            // get max voted line(s)
-        iprocess->thinCornerNum = 1;//mainEdgesNumber;
-        iprocess->detectMainEdges(w->thinJointAlgoActive, false);
-        iprocess->thickenEdgeMap(3);
-        iprocess->scoreLineCrossing(true);
-
+        iprocess->thinCornerNum = w->mainEdgesNumber;
+        houghData hd = iprocess->detectMainEdgesSolidLine(1, w->thinJointAlgoActive, false);
+        w->mainLineDistance = hd.distance;
+        w->mainLineAngle = hd.angle;
+        w->mainLineVoteValue = hd.voteValue;
+        w->solidLineLength = iprocess->solidLineLength;
     } else {
         //ui->plainTextEdit->appendPlainText("Canny1 kenar tespiti algoritmasý seçilmelidir");
     }

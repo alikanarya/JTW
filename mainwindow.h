@@ -326,6 +326,8 @@ public:
 
     imgProcessThread *iProcessThread;
 
+    int mainLineDistance, mainLineAngle, mainLineVoteValue, solidLineLength = 0;
+
     // Z-Control
     bool zControlActive;
     float distanceUpTol;

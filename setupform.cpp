@@ -333,16 +333,19 @@ void setupForm::Algo5(imgProcess *iprocess){
 }
 
 void setupForm::Algo6(imgProcess *iprocess){
-// woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
+// woLASER: canny1 > houghTr > detectMainEdges > detectMainEdgesSolidLine
 
     if (edgeDetectionState == 3) {
+
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
-        //iprocess->thinCornerNum = mainEdgesNumber;
-        houghData hd = iprocess->detectMainEdgesSolidLine(0.9, solidLineLength, thinJointAlgoActive, DEBUG);
+
+        iprocess->thinCornerNum = mainEdgesNumber;
+        houghData hd = iprocess->detectMainEdgesSolidLine(1, thinJointAlgoActive, DEBUG);
+        solidLineLength = iprocess->solidLineLength;
+
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
-            /**/if (DEBUG) for (int i=0; i<iprocess->mainEdgesList.size();i++)
-                    ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
+            /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->listHoughData2ndArray, 3, iprocess->listHoughData2ndSize, path+"05-listHoughData2ndArray.csv");
 
         hdDistance = hd.distance;
         hdAngle = hd.angle;
@@ -353,8 +356,6 @@ void setupForm::Algo6(imgProcess *iprocess){
             //if (saveAnalysis) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"14-canny thickened image.jpg");
         iprocess->scoreLineCrossing(true);
             //ui->plainTextEdit->appendPlainText("skor, yüzde: " + QString::number(iprocess->mainEdgeScore) + ", " + QString::number(iprocess->mainEdgeScorePercent, 'f', 1));
-        */
-        /*
         for (int i=0; i<iprocess->mainEdgesList.size();i++) {
             int length = iprocess->detectLongestSolidLineVert(iprocess->mainEdgesList[i].distance,iprocess->mainEdgesList[i].angle,0,iprocess->edgeHeight-1).length;
             ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote/length: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue) + ", " + QString::number(length));
@@ -678,10 +679,10 @@ void setupForm::captureButton(){
                                     ui->plainTextEdit->appendPlainText("dist/ang/vote: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 2) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 2));
                             }
 
-                    //if (solidLineLength != -1)
-                        //ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(0) ) );
-                            /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"05-mainEdges image.jpg");
-                            /**/if (saveAnalysis) iprocess->cornerImage().save(path+"06-corners image.jpg");
+                        if (solidLineLength != -1) {
+                            ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(0) ) );
+                            /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"06-mainEdge image.jpg");
+                        }
 
                         if (DEBUG) ui->plainTextEdit->appendPlainText("-2nd hough vals max solid lines---");
 
@@ -689,17 +690,19 @@ void setupForm::captureButton(){
                         int *xArray = new int[iprocess->listHoughData2ndSize];
                         for (int i=0; i<iprocess->listHoughData2ndSize; i++){
                             xArray[i] = iprocess->listHoughData2ndArray[i][0];
-                            graphArray[i] = iprocess->listHoughData2ndArray[i][2];
+                            graphArray[i] = iprocess->listHoughData2ndArray[i][2];  // vote values
                         }
 
                         int *graphArray2 = new int[iprocess->listHoughData2ndSize];
                         for (int i=0; i<iprocess->listHoughData2ndSize;i++) {
                             int length = iprocess->detectLongestSolidLineVert(iprocess->listHoughData2ndArray[i][0], iprocess->listHoughData2ndArray[i][1], 0, iprocess->edgeHeight-1).length;
-                            graphArray2[i] = length;
+                            graphArray2[i] = length;    // max length of solid lines for each hough data
                             if (DEBUG) ui->plainTextEdit->appendPlainText("dist/ang/vote/length: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 0) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 0) + ", " + QString::number(length));
                         }
 
-                        ui->plainTextEdit->appendPlainText("dist/ang/vote/length: "+QString::number(hdDistance) +", "+QString::number(hdAngle, 'f', 2)+", "+ QString::number(hdVoteValue) + ", " + QString::number(solidLineLength));
+                        ui->plainTextEdit->appendPlainText( "dist/ang/vote: " + QString::number(hdDistance) + " / " + QString::number(hdAngle, 'f', 2) + " / "+ QString::number(hdVoteValue) );
+                        ui->plainTextEdit->appendPlainText( "trackCenterX: " + QString::number(iprocess->trackCenterX) );
+                        ui->plainTextEdit->appendPlainText( "length/score(%): " + QString::number(solidLineLength) + " / " + QString::number(iprocess->mainEdgeScorePercent, 'f', 2) );
 
                         // vote graph
                         drawGraphXY(ui->graphicsView, xArray, graphArray, iprocess->listHoughData2ndSize);
@@ -1311,7 +1314,7 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
                     ui->label_8->setEnabled(true);
                     ui->editHoughThetaStep->setEnabled(true);
                     break;  // CONTRAST
-            case 4: algoName = "Algo6: woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing";
+            case 4: algoName = "Algo6: woLASER: canny1 > houghTr > detectMainEdges > detectMainEdgesSolidLine";
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(true);

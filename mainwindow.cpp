@@ -1322,14 +1322,14 @@ void MainWindow::Algo5(imgProcess *iprocess){
 }
 
 void MainWindow::Algo6(imgProcess *iprocess){
-// woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
+// woLASER: canny1 > houghTr > detectMainEdges > detectMainEdgesSolidLine
 
     if (edgeDetectionState == 3) {
+
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
-        iprocess->thinCornerNum = 1;//mainEdgesNumber;
-        iprocess->detectMainEdges(thinJointAlgoActive, false);
-        iprocess->thickenEdgeMap(3);
-        iprocess->scoreLineCrossing(true);
+        iprocess->thinCornerNum = mainEdgesNumber;
+        iprocess->detectMainEdgesSolidLine(1, thinJointAlgoActive, false);
+        solidLineLength = iprocess->solidLineLength;
 
     } else {
         ui->plainTextEdit->appendPlainText("Canny1 kenar tespiti algoritması seçilmelidir");

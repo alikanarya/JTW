@@ -22,7 +22,7 @@ exitDialog::exitDialog(QWidget *parent) :
 
 void exitDialog::acceptButton(){
     if (w->timerControlEnabled) {
-        w->timerControl->stop();
+        //w->timerControl->stop();
 
         if (!w->PLCSIM) {
             if (w->threadPLCControl->isRunning()){
