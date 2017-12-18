@@ -1387,7 +1387,8 @@ void MainWindow::imageProcessingCompleted(){
 
         if (jointWidthControlActive && (jointWidth > maxJointWidth || jointWidth < minJointWidth || jointWidth == 1) ) {
             cmdState = _CMD_CENTER;     //ui->plainTextEdit->appendPlainText("error");
-        } else {
+        } else
+        if (!controlInitiated) {
             int index = deviationData.size() - 1;
 
             if (deviationData[index] >= errorLimitCam ){
