@@ -804,7 +804,7 @@ public:
         QObject::connect(lineDetectionBox, SIGNAL(stateChanged(int)), setupForm, SLOT(lineDetectionBox()));
         QObject::connect(editLineScore, SIGNAL(returnPressed()), setupForm, SLOT(editLineScore()));
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(setupForm);

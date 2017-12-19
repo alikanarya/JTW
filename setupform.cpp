@@ -712,6 +712,8 @@ void setupForm::captureButton(){
 //                        ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
                         ui->labelTarget2->setPixmap( QPixmap::fromImage( *iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight ) ) );
 
+                        drawGraph(ui->graphicsView3, iprocess->histogram, iprocess->imageWidth);
+
                         /*if ( iprocess->mainEdgeScorePercent > w->lineScoreLimit){
                             ui->plainTextEdit->appendPlainText( "Ana çizgi bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
                         }*/
@@ -1567,7 +1569,8 @@ void setupForm::clearGraph(QGraphicsView *graph){
 
 void setupForm::drawGraph(QGraphicsView *graph, int *array, int size){
 
-    clearGraph(graph);
+    //clearGraph(graph);
+    graph->setScene( new  QGraphicsScene() );
 
     int min=2000, max=-1;
     for (int i=0; i<size; i++){
@@ -1586,6 +1589,7 @@ void setupForm::drawGraph(QGraphicsView *graph, int *array, int size){
                 i*xScale, sceneHeight-(array[i]-min)*yScale, penGraph);
     }
 
+    graph->update(graph->geometry());
     graph->show();
 }
 
