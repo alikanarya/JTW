@@ -712,8 +712,16 @@ void setupForm::captureButton(){
 //                        ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
                         ui->labelTarget2->setPixmap( QPixmap::fromImage( *iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight ) ) );
 
-                        drawGraph(ui->graphicsView3, iprocess->histogram, iprocess->imageWidth);
+//                        drawGraph(ui->graphicsView3, iprocess->histogram, iprocess->imageWidth);
+                        int *test = new int[iprocess->histogramPeaks.size()];
+                        for (int j=0;j<iprocess->histogramPeaks.size();j++)
+                            test[j] = iprocess->histogram[ iprocess->histogramPeaks[j].start ];
+                        drawGraph(ui->graphicsView3, test, iprocess->histogramPeaks.size());
 
+                        if (DEBUG) {
+                            for (int i=0; i<iprocess->histogramPeaks.size(); i++)
+                                ui->plainTextEdit->appendPlainText("hist peaks i/start/end/vote: " +QString::number(i) +", "+QString::number(iprocess->histogramPeaks[i].start) +", "+QString::number(iprocess->histogramPeaks[i].end) +", " + QString::number(iprocess->histogram[ iprocess->histogramPeaks[i].start ]) );
+                        }
                         /*if ( iprocess->mainEdgeScorePercent > w->lineScoreLimit){
                             ui->plainTextEdit->appendPlainText( "Ana çizgi bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
                         }*/
