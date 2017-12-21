@@ -721,7 +721,13 @@ void setupForm::captureButton(){
                         if (DEBUG) {
                             for (int i=0; i<iprocess->histogramPeaks.size(); i++)
                                 ui->plainTextEdit->appendPlainText("hist peaks i/start/end/vote: " +QString::number(i) +", "+QString::number(iprocess->histogramPeaks[i].start) +", "+QString::number(iprocess->histogramPeaks[i].end) +", " + QString::number(iprocess->histogram[ iprocess->histogramPeaks[i].start ]) );
+                            for (int i=0; i<iprocess->histogramDerivative.size(); i++)
+                                ui->plainTextEdit->appendPlainText("hist dervs i/d: " +QString::number(i) +", "+QString::number(iprocess->histogramDerivative[i]) );
                         }
+
+                        for (int i=0; i<iprocess->histogramMaxPeaksList.size(); i++)
+                            ui->plainTextEdit->appendPlainText("peak points: " + QString::number(iprocess->histogram[ iprocess->histogramPeaks[iprocess->histogramMaxPeaksList[i]].start ]) );
+
                         /*if ( iprocess->mainEdgeScorePercent > w->lineScoreLimit){
                             ui->plainTextEdit->appendPlainText( "Ana çizgi bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
                         }*/
