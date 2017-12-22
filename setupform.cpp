@@ -707,10 +707,13 @@ void setupForm::captureButton(){
                         // vote graph
                         drawGraphXY(ui->graphicsView, xArray, graphArray, iprocess->listHoughData2ndSize);
                         // max solid line graph
-                        drawGraphXY(ui->graphicsView2, xArray, graphArray2, iprocess->listHoughData2ndSize);
+                        //drawGraphXY(ui->graphicsView2, xArray, graphArray2, iprocess->listHoughData2ndSize);
+
+                        drawGraph(ui->graphicsView2, iprocess->histogram, iprocess->histogramSize, false);
 
 //                        ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
-                        ui->labelTarget2->setPixmap( QPixmap::fromImage( *iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight ) ) );
+//                        ui->labelTarget2->setPixmap( QPixmap::fromImage( *iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight ) ) );
+                        ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
 
 //                        drawGraph(ui->graphicsView3, iprocess->histogram, iprocess->imageWidth);
                         int *test = new int[iprocess->histogramPeaks.size()];
@@ -1581,15 +1584,19 @@ void setupForm::clearGraph(QGraphicsView *graph){
     graph->show();
 }
 
-void setupForm::drawGraph(QGraphicsView *graph, int *array, int size){
+void setupForm::drawGraph(QGraphicsView *graph, int *array, int size, bool scaleMin) {
 
     //clearGraph(graph);
     graph->setScene( new  QGraphicsScene() );
 
-    int min=2000, max=-1;
+    int min=0, max=-1;
+    if ( scaleMin ) {
+        min = 2000;
+    }
+
     for (int i=0; i<size; i++){
         if (array[i] > max) max = array[i];
-        if (array[i] < min) min = array[i];
+        if (scaleMin) if (array[i] < min) min = array[i];
     }
     int sceneHeight = graph->geometry().height();
     int sceneWidth = graph->geometry().width();
@@ -1597,13 +1604,13 @@ void setupForm::drawGraph(QGraphicsView *graph, int *array, int size){
     float yScale = sceneHeight*1.0 / (max - min);
     float xScale = sceneWidth*1.0 / size;
 
-    //qDebug() << min << ":" << max << ":" << QString::number(xScale,'f',2) << ":" << QString::number(yScale,'f',2) << ":" << sceneRect.height() << ":" << sceneRect.width();
+    //qDebug() << min << ":" << max << ":" << QString::number(xScale,'f',2) << ":" << QString::number(yScale,'f',2) << ":" << graph->geometry().height() << ":" << graph->geometry().width();
+    graph->update(graph->geometry());
     for (int i=1; i<size; i++){
-        graph->scene()->addLine((i-1)*xScale, sceneHeight-(array[i-1]-min)*yScale,
-                i*xScale, sceneHeight-(array[i]-min)*yScale, penGraph);
+        //if (array[i] == max) qDebug() << max << " - " << (int)(sceneHeight-(array[i]-min)*yScale);
+        graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-(array[i]-min)*yScale), penGraph);
     }
 
-    graph->update(graph->geometry());
     graph->show();
 }
 

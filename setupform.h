@@ -88,7 +88,7 @@ public:
     explicit setupForm(QWidget *parent = 0);    // constructor
     void getParameters();       // get parameters from mainwindow
     void clearGraph(QGraphicsView *graph);
-    void drawGraph(QGraphicsView *graph,int *array, int size);
+    void drawGraph(QGraphicsView *graph, int *array, int size, bool scaleMin = true);
     void drawGraphXY(QGraphicsView *graph,int *xAarray,int *yAarray, int size);
 
     ~setupForm();               // destructor
