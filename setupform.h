@@ -81,6 +81,7 @@ public:
     QRect sceneRect1;
     QPen penAxis;
     QPen penGraph;
+    QPen penX;
     QGraphicsScene *scene2;      // to show graph
     QRect sceneRect2;
 
@@ -157,6 +158,7 @@ private slots:
     void on_alignGuideBox_clicked();
     void on_debugModeBox_clicked();
     void on_imgParametersButton_clicked();
+    void on_testButton_clicked();
 };
 
 #endif // SETUPFORM_H

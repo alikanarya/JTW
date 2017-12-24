@@ -128,6 +128,7 @@ public:
     QLabel *labelTarget2;
     QLabel *label_23;
     QPushButton *imgParametersButton;
+    QPushButton *testButton;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -745,6 +746,10 @@ public:
         imgParametersButton->setObjectName(QStringLiteral("imgParametersButton"));
         imgParametersButton->setGeometry(QRect(10, 493, 211, 25));
         imgParametersButton->setFont(font4);
+        testButton = new QPushButton(setupForm);
+        testButton->setObjectName(QStringLiteral("testButton"));
+        testButton->setGeometry(QRect(10, 530, 91, 25));
+        testButton->setFont(font);
         tabWidget->raise();
         labelTarget->raise();
         labelMono->raise();
@@ -785,6 +790,7 @@ public:
         labelPicNo->raise();
         label_23->raise();
         imgParametersButton->raise();
+        testButton->raise();
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -957,6 +963,7 @@ public:
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("setupForm", "Grafik", 0));
         label_23->setText(QApplication::translate("setupForm", "KENAR TESP\304\260T", 0));
         imgParametersButton->setText(QApplication::translate("setupForm", "\304\260maj Parametrelerini Hesapla", 0));
+        testButton->setText(QApplication::translate("setupForm", "Test Buton", 0));
     } // retranslateUi
 
 };

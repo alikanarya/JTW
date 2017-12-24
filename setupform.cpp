@@ -468,7 +468,7 @@ void setupForm::processImage(){
         /*D*/if (saveAnalysis) iprocess->imgMono.save(path+"02-mono image.jpg");
 
         edgeDetection(iprocess);
-
+on_testButton_clicked();
         algoPrerequestsOk = false;
 
         if (thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
@@ -716,10 +716,15 @@ void setupForm::captureButton(){
                         ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
 
 //                        drawGraph(ui->graphicsView3, iprocess->histogram, iprocess->imageWidth);
-                        int *test = new int[iprocess->histogramPeaks.size()];
+/*                        int *test = new int[iprocess->histogramPeaks.size()];
                         for (int j=0;j<iprocess->histogramPeaks.size();j++)
                             test[j] = iprocess->histogram[ iprocess->histogramPeaks[j].start ];
-                        drawGraph(ui->graphicsView3, test, iprocess->histogramPeaks.size());
+                        drawGraph(ui->graphicsView3, test, iprocess->histogramPeaks.size(), false);
+*/
+                        int *test = new int[iprocess->histogramDerivative.size()];
+                        for (int j=0;j<iprocess->histogramDerivative.size();j++)
+                            test[j] = iprocess->histogramDerivative[j];
+                        drawGraph(ui->graphicsView3, test, iprocess->histogramDerivative.size(), false);
 
                         if (DEBUG) {
                             for (int i=0; i<iprocess->histogramPeaks.size(); i++)
@@ -1606,6 +1611,11 @@ void setupForm::drawGraph(QGraphicsView *graph, int *array, int size, bool scale
 
     //qDebug() << min << ":" << max << ":" << QString::number(xScale,'f',2) << ":" << QString::number(yScale,'f',2) << ":" << graph->geometry().height() << ":" << graph->geometry().width();
     graph->update(graph->geometry());
+
+    // to fix graphic scaling issue
+    penX.setColor(Qt::white);penAxis.setWidth(1);
+    graph->scene()->addLine(0, 0, sceneWidth, sceneHeight, penX);
+
     for (int i=1; i<size; i++){
         //if (array[i] == max) qDebug() << max << " - " << (int)(sceneHeight-(array[i]-min)*yScale);
         graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-(array[i]-min)*yScale), penGraph);
@@ -1658,4 +1668,68 @@ void setupForm::on_imgParametersButton_clicked(){
         message = w->calcImageParametes(w->imageFile, true);
     }
     ui->plainTextEdit->appendPlainText(message);
+}
+
+void setupForm::on_testButton_clicked(){
+
+    //if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ) {   // if any image is get
+        /*
+        edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
+        edge->save("edge0.jpg");
+        cv::Mat image(edge->height(), edge->width(), CV_8UC3, (uchar*)edge->bits(), edge->bytesPerLine());
+        imwrite("edge.jpg", image);
+        */
+        //cv::Mat image(iprocess->edgeHeight, iprocess->edgeWidth, CV_32S, *iprocess->edgeMatrix);
+        //std::memcpy(image.data, iprocess->edgeMatrix, iprocess->edgeHeight*iprocess->edgeWidth*sizeof(int));
+        cv::Mat image(iprocess->edgeHeight, iprocess->edgeWidth, CV_32S);
+        for (int y=0; y<iprocess->edgeHeight; y++)
+            for (int x=0; x<iprocess->edgeWidth; x++)
+                image.at<int>(y,x) = iprocess->edgeMatrix[y][x];
+
+        //cv::Mat image(w->lastData->image->height(), w->lastData->image->width(), CV_8UC3, (uchar*)w->lastData->image->bits(), w->lastData->image->bytesPerLine());
+        /*
+        cv::Mat ret;
+        cv::Mat thresh;
+        cv::Mat imgray;
+        //QImage _targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
+
+        cvtColor(imgData, imgray, CV_RGB2GRAY);
+        cv::threshold(imgray, thresh, 127, 255, 0);
+        cv::Mat im2, hierarchy;
+        std::vector<std::vector<cv::Point> > contours;
+        //cv::findContours(thresh, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+        cv::findContours(thresh, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
+        */
+
+        //Prepare the image for findContours
+        //cv::cvtColor(image, image, CV_BGR2GRAY);
+        cv::Mat imaged;
+        cv::threshold(image, imaged, 128, 255, CV_THRESH_BINARY);
+
+        //Find the contours. Use the contourOutput Mat so the original image doesn't get overwritten
+        std::vector<std::vector<cv::Point> > contours;
+        cv::Mat contourOutput = imaged.clone();
+        cv::findContours( contourOutput, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
+
+        //Draw the contours
+        cv::Mat contourImage(imaged.size(), CV_8UC3, cv::Scalar(0,0,0));
+        cv::Scalar colors[3];
+        colors[0] = cv::Scalar(255, 0, 0);
+        colors[1] = cv::Scalar(0, 255, 0);
+        colors[2] = cv::Scalar(0, 0, 255);
+        for (size_t idx = 0; idx < contours.size(); idx++) {
+            cv::drawContours(contourImage, contours, idx, colors[idx % 3]);
+        }
+
+        QImage img = QImage( (const uchar*) contourImage.data, contourImage.cols, contourImage.rows, contourImage.step, QImage::Format_RGB888 );
+        ui->labelMono->setPixmap( QPixmap::fromImage( img ) );
+
+//        cv::imshow("Input Image", image);
+//        cvMoveWindow("Input Image", 0, 0);
+//        cv::imshow("Contours", contourImage);
+//        cv::waitKey(0);
+
+
+    //}
+
 }
