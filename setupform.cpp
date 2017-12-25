@@ -468,7 +468,7 @@ void setupForm::processImage(){
         /*D*/if (saveAnalysis) iprocess->imgMono.save(path+"02-mono image.jpg");
 
         edgeDetection(iprocess);
-on_testButton_clicked();
+//on_testButton_clicked();
         algoPrerequestsOk = false;
 
         if (thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
@@ -1703,16 +1703,16 @@ void setupForm::on_testButton_clicked(){
 
         //Prepare the image for findContours
         //cv::cvtColor(image, image, CV_BGR2GRAY);
-        cv::Mat imaged;
-        cv::threshold(image, imaged, 128, 255, CV_THRESH_BINARY);
-
+        //cv::Mat imaged;
+        cv::threshold(image, image, 128, 255, CV_THRESH_BINARY);
+/*
         //Find the contours. Use the contourOutput Mat so the original image doesn't get overwritten
         std::vector<std::vector<cv::Point> > contours;
-        cv::Mat contourOutput = imaged.clone();
+        cv::Mat contourOutput = image.clone();
         cv::findContours( contourOutput, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
 
         //Draw the contours
-        cv::Mat contourImage(imaged.size(), CV_8UC3, cv::Scalar(0,0,0));
+        cv::Mat contourImage(image.size(), CV_8UC3, cv::Scalar(0,0,0));
         cv::Scalar colors[3];
         colors[0] = cv::Scalar(255, 0, 0);
         colors[1] = cv::Scalar(0, 255, 0);
@@ -1723,7 +1723,7 @@ void setupForm::on_testButton_clicked(){
 
         QImage img = QImage( (const uchar*) contourImage.data, contourImage.cols, contourImage.rows, contourImage.step, QImage::Format_RGB888 );
         ui->labelMono->setPixmap( QPixmap::fromImage( img ) );
-
+*/
 //        cv::imshow("Input Image", image);
 //        cvMoveWindow("Input Image", 0, 0);
 //        cv::imshow("Contours", contourImage);
