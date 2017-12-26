@@ -710,22 +710,24 @@ void setupForm::captureButton(){
                         //drawGraphXY(ui->graphicsView2, xArray, graphArray2, iprocess->listHoughData2ndSize);
 
                         drawGraph(ui->graphicsView2, iprocess->histogram, iprocess->histogramSize, false);
+                        iprocess->saveArray(iprocess->histogram, iprocess->histogramSize, "histogram.csv");
 
 //                        ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
 //                        ui->labelTarget2->setPixmap( QPixmap::fromImage( *iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight ) ) );
                         ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
 
 //                        drawGraph(ui->graphicsView3, iprocess->histogram, iprocess->imageWidth);
-/*                        int *test = new int[iprocess->histogramPeaks.size()];
+                        int *test = new int[iprocess->histogramPeaks.size()];
                         for (int j=0;j<iprocess->histogramPeaks.size();j++)
                             test[j] = iprocess->histogram[ iprocess->histogramPeaks[j].start ];
                         drawGraph(ui->graphicsView3, test, iprocess->histogramPeaks.size(), false);
-*/
+
+                        /*
                         int *test = new int[iprocess->histogramDerivative.size()];
                         for (int j=0;j<iprocess->histogramDerivative.size();j++)
                             test[j] = iprocess->histogramDerivative[j];
                         drawGraph(ui->graphicsView3, test, iprocess->histogramDerivative.size(), false);
-
+                        */
                         if (DEBUG) {
                             for (int i=0; i<iprocess->histogramPeaks.size(); i++)
                                 ui->plainTextEdit->appendPlainText("hist peaks i/start/end/vote: " +QString::number(i) +", "+QString::number(iprocess->histogramPeaks[i].start) +", "+QString::number(iprocess->histogramPeaks[i].end) +", " + QString::number(iprocess->histogram[ iprocess->histogramPeaks[i].start ]) );
