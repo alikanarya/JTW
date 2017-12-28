@@ -129,6 +129,9 @@ public:
     QLabel *label_23;
     QPushButton *imgParametersButton;
     QPushButton *testButton;
+    QLabel *label_24;
+    QSlider *maFilterSizeSlider;
+    QLabel *labelMAFilterSize;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -750,6 +753,33 @@ public:
         testButton->setObjectName(QStringLiteral("testButton"));
         testButton->setGeometry(QRect(10, 530, 91, 25));
         testButton->setFont(font);
+        label_24 = new QLabel(setupForm);
+        label_24->setObjectName(QStringLiteral("label_24"));
+        label_24->setGeometry(QRect(9, 580, 91, 20));
+        label_24->setFont(font1);
+        label_24->setFrameShape(QFrame::NoFrame);
+        label_24->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
+        maFilterSizeSlider = new QSlider(setupForm);
+        maFilterSizeSlider->setObjectName(QStringLiteral("maFilterSizeSlider"));
+        maFilterSizeSlider->setGeometry(QRect(110, 580, 160, 22));
+        maFilterSizeSlider->setAutoFillBackground(false);
+        maFilterSizeSlider->setMinimum(1);
+        maFilterSizeSlider->setMaximum(50);
+        maFilterSizeSlider->setSingleStep(5);
+        maFilterSizeSlider->setValue(1);
+        maFilterSizeSlider->setSliderPosition(1);
+        maFilterSizeSlider->setTracking(true);
+        maFilterSizeSlider->setOrientation(Qt::Horizontal);
+        maFilterSizeSlider->setInvertedAppearance(false);
+        maFilterSizeSlider->setInvertedControls(false);
+        maFilterSizeSlider->setTickPosition(QSlider::TicksBothSides);
+        maFilterSizeSlider->setTickInterval(5);
+        labelMAFilterSize = new QLabel(setupForm);
+        labelMAFilterSize->setObjectName(QStringLiteral("labelMAFilterSize"));
+        labelMAFilterSize->setGeometry(QRect(290, 580, 42, 20));
+        labelMAFilterSize->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
+        labelMAFilterSize->setFrameShape(QFrame::Box);
+        labelMAFilterSize->setAlignment(Qt::AlignCenter);
         tabWidget->raise();
         labelTarget->raise();
         labelMono->raise();
@@ -791,6 +821,9 @@ public:
         label_23->raise();
         imgParametersButton->raise();
         testButton->raise();
+        label_24->raise();
+        maFilterSizeSlider->raise();
+        labelMAFilterSize->raise();
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -810,7 +843,7 @@ public:
         QObject::connect(lineDetectionBox, SIGNAL(stateChanged(int)), setupForm, SLOT(lineDetectionBox()));
         QObject::connect(editLineScore, SIGNAL(returnPressed()), setupForm, SLOT(editLineScore()));
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(setupForm);
@@ -964,6 +997,8 @@ public:
         label_23->setText(QApplication::translate("setupForm", "KENAR TESP\304\260T", 0));
         imgParametersButton->setText(QApplication::translate("setupForm", "\304\260maj Parametrelerini Hesapla", 0));
         testButton->setText(QApplication::translate("setupForm", "Test Buton", 0));
+        label_24->setText(QApplication::translate("setupForm", "MAF Genlik", 0));
+        labelMAFilterSize->setText(QApplication::translate("setupForm", "0", 0));
     } // retranslateUi
 
 };

@@ -109,6 +109,9 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
 
     ui->cameraEnhancementsBox->setChecked(w->applyCameraEnhancements);
 
+    ui->labelMAFilterSize->setText(QString::number(maFilterKernelSize));
+    ui->maFilterSizeSlider->setValue((maFilterKernelSize-1)/2);
+
     // graphs
     scene1 = new QGraphicsScene();
     sceneRect1 = ui->graphicsView->geometry();
@@ -455,6 +458,7 @@ void setupForm::processImage(){
         iprocess->thetaMin = thetaMin;
         iprocess->thetaMax = thetaMax;
         iprocess->thetaStep = thetaStep;
+        iprocess->maFilterKernelSize = maFilterKernelSize;
 
         if (thinJointAlgoActive){    // without laser
             iprocess->centerX = 0;
@@ -716,11 +720,13 @@ void setupForm::captureButton(){
 //                        ui->labelTarget2->setPixmap( QPixmap::fromImage( *iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight ) ) );
                         ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
 
-//                        drawGraph(ui->graphicsView3, iprocess->histogram, iprocess->imageWidth);
+                        drawGraph(ui->graphicsView3, iprocess->histogramFiltered, iprocess->histogramSize, false);
+                        /*
                         int *test = new int[iprocess->histogramPeaks.size()];
                         for (int j=0;j<iprocess->histogramPeaks.size();j++)
                             test[j] = iprocess->histogram[ iprocess->histogramPeaks[j].start ];
                         drawGraph(ui->graphicsView3, test, iprocess->histogramPeaks.size(), false);
+                        */
 
                         /*
                         int *test = new int[iprocess->histogramDerivative.size()];
@@ -1262,7 +1268,6 @@ void setupForm::on_gaussSDevSlider_sliderMoved(int position){
 }
 
 void setupForm::on_cannyThinningBox_clicked(){
-
     w->cannyThinning = ui->cannyThinningBox->isChecked();
 }
 
@@ -1734,4 +1739,13 @@ void setupForm::on_testButton_clicked(){
 
     //}
 
+}
+
+void setupForm::on_maFilterSizeSlider_sliderMoved(int position){
+    maFilterKernelSize = 2*position+1;
+    ui->labelMAFilterSize->setText(QString::number(maFilterKernelSize));
+}
+
+void setupForm::on_maFilterSizeSlider_sliderReleased(){
+    update();
 }

@@ -71,6 +71,7 @@ public:
     bool DEBUG = false;
     bool saveAnalysis = false;
     int hdDistance, hdAngle, hdVoteValue, solidLineLength;
+    int maFilterKernelSize = 11;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -159,6 +160,8 @@ private slots:
     void on_debugModeBox_clicked();
     void on_imgParametersButton_clicked();
     void on_testButton_clicked();
+    void on_maFilterSizeSlider_sliderMoved(int position);
+    void on_maFilterSizeSlider_sliderReleased();
 };
 
 #endif // SETUPFORM_H
