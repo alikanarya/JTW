@@ -121,8 +121,16 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     sceneRect2 = ui->graphicsView2->geometry();
     ui->graphicsView2->setScene(scene2);
 
+    scene3 = new QGraphicsScene();
+    ui->graphicsView3->setScene(scene3);
+
     penAxis.setColor(Qt::black);    penAxis.setWidth(2);
-    penGraph.setColor(Qt::red);     penGraph.setWidth(1);
+    penRed = new QPen(Qt::red);
+    penRed->setWidth(1);
+    penBlue = new QPen(Qt::blue);
+    penBlue->setWidth(1);
+    penGreen = new QPen(Qt::green);
+    penGreen->setWidth(1);
 
     //---------------------------------------------------
     ui->checkSubImage->hide();
@@ -708,19 +716,31 @@ void setupForm::captureButton(){
                         ui->plainTextEdit->appendPlainText( "trackCenterX: " + QString::number(iprocess->trackCenterX) );
                         ui->plainTextEdit->appendPlainText( "length/score(%): " + QString::number(solidLineLength) + " / " + QString::number(iprocess->mainEdgeScorePercent, 'f', 2) );
 
+                        clearGraph(ui->graphicsView);
+                        clearGraph(ui->graphicsView2);
+                        clearGraph(ui->graphicsView3);
+
                         // vote graph
                         drawGraphXY(ui->graphicsView, xArray, graphArray, iprocess->listHoughData2ndSize);
                         // max solid line graph
                         //drawGraphXY(ui->graphicsView2, xArray, graphArray2, iprocess->listHoughData2ndSize);
 
-                        drawGraph(ui->graphicsView2, iprocess->histogram, iprocess->histogramSize, false);
-                        iprocess->saveArray(iprocess->histogram, iprocess->histogramSize, "histogram.csv");
+                        drawGraph(ui->graphicsView2, penRed, iprocess->histogram, iprocess->histogramSize, QPoint(-1,-1), true);
+                        drawGraph(ui->graphicsView2, penBlue, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+                        drawGraph(ui->graphicsView2, penGreen, iprocess->histogramFilteredX, iprocess->histogramSize, QPoint(-1,-1), true); // MA filter
+                        //iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogram.csv");
 
 //                        ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
 //                        ui->labelTarget2->setPixmap( QPixmap::fromImage( *iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight ) ) );
                         ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
 
-                        drawGraph(ui->graphicsView3, iprocess->histogramFiltered, iprocess->histogramSize, false);
+                        /*
+                        drawGraph(ui->graphicsView2, penBlue, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-100,400), true); // recursive MA filter
+                        //iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogramFiltered.csv");
+                        drawGraph(ui->graphicsView3, penGreen, iprocess->histogramFilteredX, iprocess->histogramSize, QPoint(-50,100), true); // MA filter
+                        drawGraph(ui->graphicsView3, penRed, iprocess->histogram, iprocess->histogramSize, QPoint(-50,100), true); // histogram
+                        //iprocess->saveArray(iprocess->histogramFilteredX, iprocess->histogramSize, "histogramFilteredX.csv");
+                        */
                         /*
                         int *test = new int[iprocess->histogramPeaks.size()];
                         for (int j=0;j<iprocess->histogramPeaks.size();j++)
@@ -757,7 +777,7 @@ void setupForm::captureButton(){
                         for (int i=0; i<iprocess->edgeWidth; i++){
                             graphArray[i] = iprocess->horLineVotes[i][2];
                         }
-                        drawGraph(ui->graphicsView, graphArray, iprocess->edgeWidth);
+                        drawGraph(ui->graphicsView, penRed, graphArray, iprocess->edgeWidth, QPoint(-1,-1));
 
                         int *valArray = new int[iprocess->imageWidth];
                         float sum = 0;
@@ -767,7 +787,7 @@ void setupForm::captureButton(){
                                 sum += iprocess->valueMatrix[y][x];
                             valArray[x] = sum / iprocess->imageHeight;
                         }
-                        drawGraph(ui->graphicsView2, valArray, iprocess->imageWidth);
+                        drawGraph(ui->graphicsView2, penRed, valArray, iprocess->imageWidth, QPoint(-1,-1));
 
                         ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
 
@@ -1596,20 +1616,27 @@ void setupForm::clearGraph(QGraphicsView *graph){
     graph->show();
 }
 
-void setupForm::drawGraph(QGraphicsView *graph, int *array, int size, bool scaleMin) {
+void setupForm::drawGraph(QGraphicsView *graph, QPen *pen, int *array, int size, QPoint yRange, bool scaleMin) {
 
     //clearGraph(graph);
-    graph->setScene( new  QGraphicsScene() );
+    //graph->setScene( new  QGraphicsScene() );
 
     int min=0, max=-1;
-    if ( scaleMin ) {
-        min = 2000;
+
+    if (yRange.x() == -1 && yRange.y() == -1) {
+        if ( scaleMin ) {
+            min = 2000;
+        }
+
+        for (int i=0; i<size; i++){
+            if (array[i] > max) max = array[i];
+            if (scaleMin) if (array[i] < min) min = array[i];
+        }
+    } else {
+        min = yRange.x();
+        max = yRange.y();
     }
 
-    for (int i=0; i<size; i++){
-        if (array[i] > max) max = array[i];
-        if (scaleMin) if (array[i] < min) min = array[i];
-    }
     int sceneHeight = graph->geometry().height();
     int sceneWidth = graph->geometry().width();
 
@@ -1625,7 +1652,7 @@ void setupForm::drawGraph(QGraphicsView *graph, int *array, int size, bool scale
 
     for (int i=1; i<size; i++){
         //if (array[i] == max) qDebug() << max << " - " << (int)(sceneHeight-(array[i]-min)*yScale);
-        graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-(array[i]-min)*yScale), penGraph);
+        graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-(array[i]-min)*yScale), *pen);
     }
 
     graph->show();
@@ -1657,7 +1684,7 @@ void setupForm::drawGraphXY(QGraphicsView *graph,int *xAarray,int *yAarray, int 
     //qDebug() << min << ":" << max << ":" << QString::number(xScale,'f',2) << ":" << QString::number(yScale,'f',2) << ":" << sceneRect.height() << ":" << sceneRect.width();
     for (int i=1; i<size; i++){
         graph->scene()->addLine(xAarray[i-1]*xScale, sceneHeight-(yAarray[i-1]-min)*yScale,
-                xAarray[i]*xScale, sceneHeight-(yAarray[i]-min)*yScale, penGraph);
+                xAarray[i]*xScale, sceneHeight-(yAarray[i]-min)*yScale, *penRed);
     }
 
     graph->update(graph->geometry());

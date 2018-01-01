@@ -81,16 +81,19 @@ public:
     QGraphicsScene *scene1;      // to show graph
     QRect sceneRect1;
     QPen penAxis;
-    QPen penGraph;
+    QPen *penRed;
+    QPen *penBlue;
+    QPen *penGreen;
     QPen penX;
     QGraphicsScene *scene2;      // to show graph
     QRect sceneRect2;
+    QGraphicsScene *scene3;      // to show graph
 
 
     explicit setupForm(QWidget *parent = 0);    // constructor
     void getParameters();       // get parameters from mainwindow
     void clearGraph(QGraphicsView *graph);
-    void drawGraph(QGraphicsView *graph, int *array, int size, bool scaleMin = true);
+    void drawGraph(QGraphicsView *graph, QPen *pen, int *array, int size, QPoint yRange, bool scaleMin = true);
     void drawGraphXY(QGraphicsView *graph,int *xAarray,int *yAarray, int size);
 
     ~setupForm();               // destructor
