@@ -764,27 +764,10 @@ void setupForm::captureButton(){
                               //  ui->plainTextEdit->appendPlainText("hist dervs i/d: " +QString::number(i) +", "+QString::number(iprocess->histogramDerivative[i]) );
                         }
 
-                        int peaksIdx = 0;
-                        int minsIdx = 0;
-                        int x = 0;
-                        do {
-                            if (peaksIdx < iprocess->histogramPeaks.size()){
-                                if ( iprocess->histogramPeaks[peaksIdx].start <= x && x <= iprocess->histogramPeaks[peaksIdx].end ){
-                                    ui->plainTextEdit->appendPlainText("hist list start/end/vote: " +QString::number(iprocess->histogramPeaks[peaksIdx].start) +", "+QString::number(iprocess->histogramPeaks[peaksIdx].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramPeaks[peaksIdx].start ]) );
-                                    x = iprocess->histogramPeaks[peaksIdx].end;
-                                    peaksIdx++;
-                                }
-                            }
+                        //for (int i=0; i<iprocess->histogramExtremes.size(); i++)
+                            //ui->plainTextEdit->appendPlainText("hist list start/end/vote: " +QString::number(iprocess->histogramExtremes[i].start) +", "+QString::number(iprocess->histogramExtremes[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]) );
+                            //qDebug() << QString::number(iprocess->histogramExtremes[i].start) << ", " << QString::number(iprocess->histogramExtremes[i].end) << ", " << QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]);
 
-                            if (minsIdx < iprocess->histogramMins.size()){
-                                if ( iprocess->histogramMins[minsIdx].start <= x && x <= iprocess->histogramMins[minsIdx].end ){
-                                    ui->plainTextEdit->appendPlainText("hist list start/end/vote: " +QString::number(iprocess->histogramMins[minsIdx].start) +", "+QString::number(iprocess->histogramMins[minsIdx].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramMins[minsIdx].start ]) );
-                                    x = iprocess->histogramMins[minsIdx].end;
-                                    minsIdx++;
-                                }
-                            }
-                            x++;
-                        } while (x < iprocess->histogramSize);
 
                         for (int i=0; i<iprocess->histogramMaxPeaksList.size(); i++)
                             ui->plainTextEdit->appendPlainText("peak points: " + QString::number(iprocess->histogram[ iprocess->histogramPeaks[iprocess->histogramMaxPeaksList[i]].start ]) );
