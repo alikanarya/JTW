@@ -727,8 +727,8 @@ void setupForm::captureButton(){
 
                         drawGraph(ui->graphicsView2, penRed, iprocess->histogram, iprocess->histogramSize, QPoint(-1,-1), true);
                         drawGraph(ui->graphicsView2, penBlue, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
-                        drawGraph(ui->graphicsView2, penGreen, iprocess->histogramFilteredX, iprocess->histogramSize, QPoint(-1,-1), true); // MA filter
-                        iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogram.csv");
+                        //drawGraph(ui->graphicsView2, penGreen, iprocess->histogramFilteredX, iprocess->histogramSize, QPoint(-1,-1), true); // MA filter
+                        //iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogram.csv");
 
 //                        ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
 //                        ui->labelTarget2->setPixmap( QPixmap::fromImage( *iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight ) ) );
@@ -764,10 +764,17 @@ void setupForm::captureButton(){
                               //  ui->plainTextEdit->appendPlainText("hist dervs i/d: " +QString::number(i) +", "+QString::number(iprocess->histogramDerivative[i]) );
                         }
 
-                        //for (int i=0; i<iprocess->histogramExtremes.size(); i++)
+                        for (int i=0; i<iprocess->histogramExtremes.size(); i++) {
+                            if (iprocess->histogramExtremes[i].start == iprocess->histogramExtremes[i].end)
+                                ui->plainTextEdit->appendPlainText("hist list x/y: " +QString::number(iprocess->histogramExtremes[i].start) +", "+ QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]) );
+                            else {
+                                ui->plainTextEdit->appendPlainText("hist list x/y: " +QString::number(iprocess->histogramExtremes[i].start) +", "+ QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]) );
+                                ui->plainTextEdit->appendPlainText("hist list x/y: " +QString::number(iprocess->histogramExtremes[i].end) +", "+ QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]) );
+                            }
                             //ui->plainTextEdit->appendPlainText("hist list start/end/vote: " +QString::number(iprocess->histogramExtremes[i].start) +", "+QString::number(iprocess->histogramExtremes[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]) );
-                            //qDebug() << QString::number(iprocess->histogramExtremes[i].start) << ", " << QString::number(iprocess->histogramExtremes[i].end) << ", " << QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]);
+                        }
 
+                        drawGraphList(ui->graphicsView3, penRed, iprocess->histogramExtremes, iprocess->histogramFiltered, QPoint(0,iprocess->histogramSize), QPoint(-1,-1));
 
                         for (int i=0; i<iprocess->histogramMaxPeaksList.size(); i++)
                             ui->plainTextEdit->appendPlainText("peak points: " + QString::number(iprocess->histogram[ iprocess->histogramPeaks[iprocess->histogramMaxPeaksList[i]].start ]) );
@@ -1662,6 +1669,51 @@ void setupForm::drawGraph(QGraphicsView *graph, QPen *pen, int *array, int size,
         //if (array[i] == max) qDebug() << max << " - " << (int)(sceneHeight-(array[i]-min)*yScale);
         graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-(array[i]-min)*yScale), *pen);
     }
+
+    graph->show();
+}
+
+void setupForm::drawGraphList(QGraphicsView *graph, QPen *pen, QList<range> list, int *yVals, QPoint xRange, QPoint yRange) {
+
+    //clearGraph(graph);
+    //graph->setScene( new  QGraphicsScene() );
+
+    int min=0, max=-1;
+
+    if (yRange.x() == -1 && yRange.y() == -1) {
+        min = 2000;
+        for (int i=0; i<list.size(); i++){
+            if (yVals[ list[i].start ] > max) max = yVals[ list[i].start ];
+            if (yVals[ list[i].start ] < min) min = yVals[ list[i].start ];
+        }
+    } else {
+        min = yRange.x();
+        max = yRange.y();
+    }
+
+    int sceneHeight = graph->geometry().height();
+    int sceneWidth = graph->geometry().width();
+
+    float yScale = sceneHeight*1.0 / (max - min);
+    float xScale = sceneWidth*1.0 / (xRange.y()-xRange.x());
+
+    //qDebug() << min << ":" << max << ":" << QString::number(xScale,'f',2) << ":" << QString::number(yScale,'f',2) << ":" << graph->geometry().height() << ":" << graph->geometry().width();
+    graph->update(graph->geometry());
+
+    // to fix graphic scaling issue
+    penX.setColor(Qt::white);penAxis.setWidth(1);
+    graph->scene()->addLine(0, 0, sceneWidth, sceneHeight, penX);
+
+    pen->setWidth(2);
+    graph->scene()->addLine(xRange.x()*xScale, (int)(sceneHeight-(yVals[ list[0].start ]-min)*yScale), list[0].start*xScale, (int)(sceneHeight-(yVals[ list[0].start ]-min)*yScale), *pen);
+
+    for (int i=1; i<list.size(); i++){
+        //if (array[i] == max) qDebug() << max << " - " << (int)(sceneHeight-(array[i]-min)*yScale);
+        graph->scene()->addLine(list[i-1].end*xScale, (int)(sceneHeight-(yVals[ list[i-1].end ]-min)*yScale), list[i].start*xScale, (int)(sceneHeight-(yVals[ list[i].start ]-min)*yScale), *pen);
+    }
+
+    graph->scene()->addLine(list[list.size()-1].end*xScale, (int)(sceneHeight-(yVals[ list[list.size()-1].end ]-min)*yScale), xRange.y()*xScale, (int)(sceneHeight-(yVals[ list[list.size()-1].end ]-min)*yScale), *pen);
+    pen->setWidth(1);
 
     graph->show();
 }
