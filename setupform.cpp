@@ -765,19 +765,21 @@ void setupForm::captureButton(){
                         }
 
                         for (int i=0; i<iprocess->histogramExtremes.size(); i++) {
-                            if (iprocess->histogramExtremes[i].start == iprocess->histogramExtremes[i].end)
+                            /*if (iprocess->histogramExtremes[i].start == iprocess->histogramExtremes[i].end)
                                 ui->plainTextEdit->appendPlainText("hist list x/y: " +QString::number(iprocess->histogramExtremes[i].start) +", "+ QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]) );
                             else {
                                 ui->plainTextEdit->appendPlainText("hist list x/y: " +QString::number(iprocess->histogramExtremes[i].start) +", "+ QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]) );
                                 ui->plainTextEdit->appendPlainText("hist list x/y: " +QString::number(iprocess->histogramExtremes[i].end) +", "+ QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]) );
-                            }
-                            //ui->plainTextEdit->appendPlainText("hist list start/end/vote: " +QString::number(iprocess->histogramExtremes[i].start) +", "+QString::number(iprocess->histogramExtremes[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]) );
+                            }*/
+                            ui->plainTextEdit->appendPlainText("hist list start/end/vote: " +QString::number(iprocess->histogramExtremes[i].start) +", "+QString::number(iprocess->histogramExtremes[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]) );
                         }
 
                         drawGraphList(ui->graphicsView3, penRed, iprocess->histogramExtremes, iprocess->histogramFiltered, QPoint(0,iprocess->histogramSize), QPoint(-1,-1));
 
-                        for (int i=0; i<iprocess->histogramMaxPeaksList.size(); i++)
-                            ui->plainTextEdit->appendPlainText("peak points: " + QString::number(iprocess->histogram[ iprocess->histogramPeaks[iprocess->histogramMaxPeaksList[i]].start ]) );
+                        for (int i=0; i<iprocess->histogramMaxPeaksList.size(); i++){
+                            ui->plainTextEdit->appendPlainText("peak points: " + QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[iprocess->histogramMaxPeaksList[i]].start ]) );
+                            ui->plainTextEdit->appendPlainText("len/angle : " + QString::number(iprocess->histogramMaxPointLen[i],'f',0) + " / " + QString::number(iprocess->histogramMaxPointAng[i],'f',2));
+                        }
 
                         /*if ( iprocess->mainEdgeScorePercent > w->lineScoreLimit){
                             ui->plainTextEdit->appendPlainText( "Ana çizgi bulundu, %" + QString::number(iprocess->mainEdgeScorePercent, 'f', 1) );
