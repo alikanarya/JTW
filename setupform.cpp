@@ -776,9 +776,8 @@ void setupForm::captureButton(){
 
                         drawGraphList(ui->graphicsView3, penRed, iprocess->histogramExtremes, iprocess->histogramFiltered, QPoint(0,iprocess->histogramSize), QPoint(-1,-1));
 
-                        for (int i=0; i<iprocess->histogramMaxPeaksList.size(); i++){
-                            ui->plainTextEdit->appendPlainText("peak points: " + QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[iprocess->histogramMaxPeaksList[i]].start ]) );
-                            ui->plainTextEdit->appendPlainText("len/angle : " + QString::number(iprocess->histogramMaxPointLen[i],'f',0) + " / " + QString::number(iprocess->histogramMaxPointAng[i],'f',2));
+                        for (int i=0; i<iprocess->histogramMaxPoint.size(); i++){
+                            ui->plainTextEdit->appendPlainText("peaks x/y/len/tang pair x/y: " + QString::number(iprocess->histogramMaxPoint[i].x()) + " / " + QString::number(iprocess->histogramMaxPoint[i].y()) + " / " + QString::number(iprocess->histogramMaxPointLen[i],'f',0) + " / " + QString::number(iprocess->histogramMaxPointAng[i],'f',2) + " pair x/y " + QString::number(iprocess->histogramMaxPointPair[i].x()) + " / " + QString::number(iprocess->histogramMaxPointPair[i].y()));
                         }
 
                         /*if ( iprocess->mainEdgeScorePercent > w->lineScoreLimit){
