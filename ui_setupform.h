@@ -132,6 +132,7 @@ public:
     QLabel *label_24;
     QSlider *maFilterSizeSlider;
     QLabel *labelMAFilterSize;
+    QPushButton *histogramAnalysisButton;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -235,7 +236,7 @@ public:
         captureButton_2->setFont(font);
         brightnessSlider = new QSlider(setupForm);
         brightnessSlider->setObjectName(QStringLiteral("brightnessSlider"));
-        brightnessSlider->setGeometry(QRect(67, 419, 160, 22));
+        brightnessSlider->setGeometry(QRect(67, 489, 160, 22));
         brightnessSlider->setAutoFillBackground(false);
         brightnessSlider->setMinimum(-30);
         brightnessSlider->setMaximum(30);
@@ -248,13 +249,13 @@ public:
         brightnessSlider->setTickInterval(10);
         labelBrightness = new QLabel(setupForm);
         labelBrightness->setObjectName(QStringLiteral("labelBrightness"));
-        labelBrightness->setGeometry(QRect(236, 419, 42, 20));
+        labelBrightness->setGeometry(QRect(236, 489, 42, 20));
         labelBrightness->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelBrightness->setFrameShape(QFrame::Box);
         labelBrightness->setAlignment(Qt::AlignCenter);
         contrastSlider = new QSlider(setupForm);
         contrastSlider->setObjectName(QStringLiteral("contrastSlider"));
-        contrastSlider->setGeometry(QRect(67, 444, 160, 22));
+        contrastSlider->setGeometry(QRect(67, 514, 160, 22));
         contrastSlider->setMinimum(0);
         contrastSlider->setMaximum(200);
         contrastSlider->setSingleStep(10);
@@ -265,13 +266,13 @@ public:
         contrastSlider->setTickInterval(50);
         labelContrast = new QLabel(setupForm);
         labelContrast->setObjectName(QStringLiteral("labelContrast"));
-        labelContrast->setGeometry(QRect(236, 444, 42, 20));
+        labelContrast->setGeometry(QRect(236, 514, 42, 20));
         labelContrast->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelContrast->setFrameShape(QFrame::Box);
         labelContrast->setAlignment(Qt::AlignCenter);
         gammaSlider = new QSlider(setupForm);
         gammaSlider->setObjectName(QStringLiteral("gammaSlider"));
-        gammaSlider->setGeometry(QRect(67, 469, 160, 22));
+        gammaSlider->setGeometry(QRect(67, 539, 160, 22));
         gammaSlider->setMinimum(0);
         gammaSlider->setMaximum(200);
         gammaSlider->setSingleStep(10);
@@ -282,21 +283,21 @@ public:
         gammaSlider->setTickInterval(50);
         labelGamma = new QLabel(setupForm);
         labelGamma->setObjectName(QStringLiteral("labelGamma"));
-        labelGamma->setGeometry(QRect(236, 469, 42, 20));
+        labelGamma->setGeometry(QRect(236, 539, 42, 20));
         labelGamma->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelGamma->setFrameShape(QFrame::Box);
         labelGamma->setAlignment(Qt::AlignCenter);
         brightnessReset = new QPushButton(setupForm);
         brightnessReset->setObjectName(QStringLiteral("brightnessReset"));
-        brightnessReset->setGeometry(QRect(286, 419, 42, 22));
+        brightnessReset->setGeometry(QRect(286, 489, 42, 22));
         brightnessReset->setFont(font);
         contrastReset = new QPushButton(setupForm);
         contrastReset->setObjectName(QStringLiteral("contrastReset"));
-        contrastReset->setGeometry(QRect(286, 444, 42, 22));
+        contrastReset->setGeometry(QRect(286, 514, 42, 22));
         contrastReset->setFont(font);
         gammaReset = new QPushButton(setupForm);
         gammaReset->setObjectName(QStringLiteral("gammaReset"));
-        gammaReset->setGeometry(QRect(286, 469, 42, 22));
+        gammaReset->setGeometry(QRect(286, 539, 42, 22));
         gammaReset->setFont(font);
         fileSlider = new QSlider(setupForm);
         fileSlider->setObjectName(QStringLiteral("fileSlider"));
@@ -312,7 +313,7 @@ public:
         edgeDetectionBox->setGeometry(QRect(855, 375, 121, 22));
         label_11 = new QLabel(setupForm);
         label_11->setObjectName(QStringLiteral("label_11"));
-        label_11->setGeometry(QRect(6, 419, 51, 20));
+        label_11->setGeometry(QRect(6, 489, 51, 20));
         QFont font1;
         font1.setFamily(QStringLiteral("MS Shell Dlg 2"));
         font1.setPointSize(8);
@@ -323,19 +324,19 @@ public:
         label_11->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
         label_17 = new QLabel(setupForm);
         label_17->setObjectName(QStringLiteral("label_17"));
-        label_17->setGeometry(QRect(6, 444, 51, 20));
+        label_17->setGeometry(QRect(6, 514, 51, 20));
         label_17->setFont(font1);
         label_17->setFrameShape(QFrame::NoFrame);
         label_17->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
         label_18 = new QLabel(setupForm);
         label_18->setObjectName(QStringLiteral("label_18"));
-        label_18->setGeometry(QRect(6, 469, 51, 20));
+        label_18->setGeometry(QRect(6, 539, 51, 20));
         label_18->setFont(font1);
         label_18->setFrameShape(QFrame::NoFrame);
         label_18->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
         cameraEnhancementsBox = new QCheckBox(setupForm);
         cameraEnhancementsBox->setObjectName(QStringLiteral("cameraEnhancementsBox"));
-        cameraEnhancementsBox->setGeometry(QRect(141, 399, 71, 17));
+        cameraEnhancementsBox->setGeometry(QRect(141, 469, 71, 17));
         QFont font2;
         font2.setPointSize(8);
         font2.setBold(false);
@@ -747,21 +748,21 @@ public:
         label_23->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
         imgParametersButton = new QPushButton(setupForm);
         imgParametersButton->setObjectName(QStringLiteral("imgParametersButton"));
-        imgParametersButton->setGeometry(QRect(10, 493, 211, 25));
+        imgParametersButton->setGeometry(QRect(10, 563, 211, 25));
         imgParametersButton->setFont(font4);
         testButton = new QPushButton(setupForm);
         testButton->setObjectName(QStringLiteral("testButton"));
-        testButton->setGeometry(QRect(10, 530, 91, 25));
+        testButton->setGeometry(QRect(10, 600, 91, 25));
         testButton->setFont(font);
         label_24 = new QLabel(setupForm);
         label_24->setObjectName(QStringLiteral("label_24"));
-        label_24->setGeometry(QRect(9, 580, 91, 20));
+        label_24->setGeometry(QRect(9, 650, 91, 20));
         label_24->setFont(font1);
         label_24->setFrameShape(QFrame::NoFrame);
         label_24->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
         maFilterSizeSlider = new QSlider(setupForm);
         maFilterSizeSlider->setObjectName(QStringLiteral("maFilterSizeSlider"));
-        maFilterSizeSlider->setGeometry(QRect(110, 580, 160, 22));
+        maFilterSizeSlider->setGeometry(QRect(110, 650, 160, 22));
         maFilterSizeSlider->setAutoFillBackground(false);
         maFilterSizeSlider->setMinimum(1);
         maFilterSizeSlider->setMaximum(50);
@@ -776,10 +777,14 @@ public:
         maFilterSizeSlider->setTickInterval(5);
         labelMAFilterSize = new QLabel(setupForm);
         labelMAFilterSize->setObjectName(QStringLiteral("labelMAFilterSize"));
-        labelMAFilterSize->setGeometry(QRect(290, 580, 42, 20));
+        labelMAFilterSize->setGeometry(QRect(290, 650, 42, 20));
         labelMAFilterSize->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelMAFilterSize->setFrameShape(QFrame::Box);
         labelMAFilterSize->setAlignment(Qt::AlignCenter);
+        histogramAnalysisButton = new QPushButton(setupForm);
+        histogramAnalysisButton->setObjectName(QStringLiteral("histogramAnalysisButton"));
+        histogramAnalysisButton->setGeometry(QRect(10, 410, 91, 25));
+        histogramAnalysisButton->setFont(font);
         tabWidget->raise();
         labelTarget->raise();
         labelMono->raise();
@@ -824,6 +829,7 @@ public:
         label_24->raise();
         maFilterSizeSlider->raise();
         labelMAFilterSize->raise();
+        histogramAnalysisButton->raise();
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -999,6 +1005,7 @@ public:
         testButton->setText(QApplication::translate("setupForm", "Test Buton", 0));
         label_24->setText(QApplication::translate("setupForm", "MAF Genlik", 0));
         labelMAFilterSize->setText(QApplication::translate("setupForm", "0", 0));
+        histogramAnalysisButton->setText(QApplication::translate("setupForm", "Hist Analizi", 0));
     } // retranslateUi
 
 };

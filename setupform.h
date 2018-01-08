@@ -166,6 +166,7 @@ private slots:
     void on_testButton_clicked();
     void on_maFilterSizeSlider_sliderMoved(int position);
     void on_maFilterSizeSlider_sliderReleased();
+    void on_histogramAnalysisButton_clicked();
 };
 
 #endif // SETUPFORM_H
