@@ -112,6 +112,9 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     ui->labelMAFilterSize->setText(QString::number(maFilterKernelSize));
     ui->maFilterSizeSlider->setValue((maFilterKernelSize-1)/2);
 
+    ui->labelHistAngle->setText(QString::number(histogramAngleThreshold));
+    ui->histAngleSlider->setValue(histogramAngleThreshold);
+
     // graphs
     scene1 = new QGraphicsScene();
     sceneRect1 = ui->graphicsView->geometry();
@@ -1667,6 +1670,15 @@ void setupForm::drawGraphList(QGraphicsView *graph, QPen *pen, QList<range> list
     graph->scene()->addLine(list[list.size()-1].end*xScale, (int)(sceneHeight-(yVals[ list[list.size()-1].end ]-min)*yScale), xRange.y()*xScale, (int)(sceneHeight-(yVals[ list[list.size()-1].end ]-min)*yScale), *pen);
     pen->setWidth(1);
 
+    penBlue->setWidth(2);
+    for (int i=0; i<iprocess->histogramMaxPoint.size(); i++){
+        graph->scene()->addLine(iprocess->histogramMaxPoint[i].x()*xScale, (int)(sceneHeight-(iprocess->histogramMaxPoint[i].y()-min)*yScale), iprocess->histogramMaxPointPair[i].x()*xScale, (int)(sceneHeight-(iprocess->histogramMaxPointPair[i].y()-min)*yScale), *penBlue);
+    }
+    penBlue->setWidth(2);
+
+    int avgVal = (int)(sceneHeight-(iprocess->histogramAvg-min)*yScale);
+    graph->scene()->addLine(0, avgVal, sceneWidth, avgVal, *penGreen);
+
     graph->show();
 }
 
@@ -1824,8 +1836,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
 
         iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
 
-        bool colored = true; // true=colored, false=gray
-        iprocess->histogramAnalysis(colored);
+        iprocess->histogramAnalysis(colorMatrix);
 
         endTime = w->timeSystem.getSystemTimeMsec();
         processElapsed = endTime - startTime;
@@ -1890,7 +1901,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
         ui->labelAnalyze->clear();
         ui->labelTarget->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
 
-        if (colored)
+        if (colorMatrix)
             ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
         else
             ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
@@ -1904,6 +1915,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
                                                QString::number(iprocess->histogramMaxPointLen[i],'f',0) + "," + QString::number(iprocess->histogramMaxPointAng[i],'f',2) + ")");
         }
 
+
     }
 
 }
@@ -1914,4 +1926,12 @@ void setupForm::on_histAngleSlider_sliderMoved(int position){
 
 void setupForm::on_histAngleSlider_sliderReleased(){
     histogramAngleThreshold = ui->histAngleSlider->value();
+}
+
+void setupForm::on_radioColored_clicked(){
+    colorMatrix = true;
+}
+
+void setupForm::on_radioGray_clicked(){
+    colorMatrix = false;
 }

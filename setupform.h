@@ -72,7 +72,8 @@ public:
     bool saveAnalysis = false;
     int hdDistance, hdAngle, hdVoteValue, solidLineLength;
     int maFilterKernelSize = 11;
-    int histogramAngleThreshold;
+    int histogramAngleThreshold = 10;
+    bool colorMatrix = true; // true=colored, false=gray
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -170,6 +171,8 @@ private slots:
     void on_histogramAnalysisButton_clicked();
     void on_histAngleSlider_sliderMoved(int position);
     void on_histAngleSlider_sliderReleased();
+    void on_radioColored_clicked();
+    void on_radioGray_clicked();
 };
 
 #endif // SETUPFORM_H
