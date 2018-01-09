@@ -72,6 +72,7 @@ public:
     bool saveAnalysis = false;
     int hdDistance, hdAngle, hdVoteValue, solidLineLength;
     int maFilterKernelSize = 11;
+    int histogramAngleThreshold;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -167,6 +168,8 @@ private slots:
     void on_maFilterSizeSlider_sliderMoved(int position);
     void on_maFilterSizeSlider_sliderReleased();
     void on_histogramAnalysisButton_clicked();
+    void on_histAngleSlider_sliderMoved(int position);
+    void on_histAngleSlider_sliderReleased();
 };
 
 #endif // SETUPFORM_H

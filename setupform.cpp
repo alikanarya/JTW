@@ -1820,6 +1820,8 @@ void setupForm::on_histogramAnalysisButton_clicked() {
         iprocessInitSwitch = true;
 
         iprocess->maFilterKernelSize = maFilterKernelSize;
+        iprocess->histogramAngleThreshold = histogramAngleThreshold;
+
         iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
 
         bool colored = true; // true=colored, false=gray
@@ -1896,9 +1898,20 @@ void setupForm::on_histogramAnalysisButton_clicked() {
         drawGraphList(ui->graphicsView3, penRed, iprocess->histogramExtremes, iprocess->histogramFiltered, QPoint(0,iprocess->histogramSize), QPoint(-1,-1));
 
         for (int i=0; i<iprocess->histogramMaxPoint.size(); i++){
-            ui->plainTextEdit->appendPlainText("peaks x/y/len/tang pair x/y: " + QString::number(iprocess->histogramMaxPoint[i].x()) + " / " + QString::number(iprocess->histogramMaxPoint[i].y()) + " / " + QString::number(iprocess->histogramMaxPointLen[i],'f',0) + " / " + QString::number(iprocess->histogramMaxPointAng[i],'f',2) + " pair x/y " + QString::number(iprocess->histogramMaxPointPair[i].x()) + " / " + QString::number(iprocess->histogramMaxPointPair[i].y()));
+            ui->plainTextEdit->appendPlainText("peak/pair/dist-tan (x0,y0) (xp,yp) (len,tan): (" +
+                                               QString::number(iprocess->histogramMaxPoint[i].x()) + "," + QString::number(iprocess->histogramMaxPoint[i].y()) + ") (" +
+                                               QString::number(iprocess->histogramMaxPointPair[i].x()) + "," + QString::number(iprocess->histogramMaxPointPair[i].y()) + ") (" +
+                                               QString::number(iprocess->histogramMaxPointLen[i],'f',0) + "," + QString::number(iprocess->histogramMaxPointAng[i],'f',2) + ")");
         }
 
     }
 
+}
+
+void setupForm::on_histAngleSlider_sliderMoved(int position){
+    ui->labelHistAngle->setText(QString::number(position));
+}
+
+void setupForm::on_histAngleSlider_sliderReleased(){
+    histogramAngleThreshold = ui->histAngleSlider->value();
 }

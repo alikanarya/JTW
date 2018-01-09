@@ -133,6 +133,9 @@ public:
     QSlider *maFilterSizeSlider;
     QLabel *labelMAFilterSize;
     QPushButton *histogramAnalysisButton;
+    QLabel *label_25;
+    QSlider *histAngleSlider;
+    QLabel *labelHistAngle;
     QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
@@ -785,6 +788,33 @@ public:
         histogramAnalysisButton->setObjectName(QStringLiteral("histogramAnalysisButton"));
         histogramAnalysisButton->setGeometry(QRect(10, 410, 91, 25));
         histogramAnalysisButton->setFont(font);
+        label_25 = new QLabel(setupForm);
+        label_25->setObjectName(QStringLiteral("label_25"));
+        label_25->setGeometry(QRect(6, 440, 51, 20));
+        label_25->setFont(font1);
+        label_25->setFrameShape(QFrame::NoFrame);
+        label_25->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
+        histAngleSlider = new QSlider(setupForm);
+        histAngleSlider->setObjectName(QStringLiteral("histAngleSlider"));
+        histAngleSlider->setGeometry(QRect(67, 440, 160, 22));
+        histAngleSlider->setAutoFillBackground(false);
+        histAngleSlider->setMinimum(1);
+        histAngleSlider->setMaximum(30);
+        histAngleSlider->setSingleStep(5);
+        histAngleSlider->setValue(1);
+        histAngleSlider->setSliderPosition(1);
+        histAngleSlider->setTracking(true);
+        histAngleSlider->setOrientation(Qt::Horizontal);
+        histAngleSlider->setInvertedAppearance(false);
+        histAngleSlider->setInvertedControls(false);
+        histAngleSlider->setTickPosition(QSlider::TicksBothSides);
+        histAngleSlider->setTickInterval(5);
+        labelHistAngle = new QLabel(setupForm);
+        labelHistAngle->setObjectName(QStringLiteral("labelHistAngle"));
+        labelHistAngle->setGeometry(QRect(236, 440, 42, 20));
+        labelHistAngle->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
+        labelHistAngle->setFrameShape(QFrame::Box);
+        labelHistAngle->setAlignment(Qt::AlignCenter);
         tabWidget->raise();
         labelTarget->raise();
         labelMono->raise();
@@ -830,6 +860,9 @@ public:
         maFilterSizeSlider->raise();
         labelMAFilterSize->raise();
         histogramAnalysisButton->raise();
+        label_25->raise();
+        histAngleSlider->raise();
+        labelHistAngle->raise();
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -1006,6 +1039,8 @@ public:
         label_24->setText(QApplication::translate("setupForm", "MAF Genlik", 0));
         labelMAFilterSize->setText(QApplication::translate("setupForm", "0", 0));
         histogramAnalysisButton->setText(QApplication::translate("setupForm", "Hist Analizi", 0));
+        label_25->setText(QApplication::translate("setupForm", "\303\207izgi A\303\247\304\261s\304\261", 0));
+        labelHistAngle->setText(QApplication::translate("setupForm", "0", 0));
     } // retranslateUi
 
 };
