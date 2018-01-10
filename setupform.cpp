@@ -1628,6 +1628,63 @@ void setupForm::drawGraph(QGraphicsView *graph, QPen *pen, int *array, int size,
     graph->show();
 }
 
+void setupForm::drawGraphHist(QGraphicsView *graph, QPen *pen, int *array, int size, QPoint yRange, bool scaleMin) {
+
+    //clearGraph(graph);
+    //graph->setScene( new  QGraphicsScene() );
+
+    int min=0, max=-1;
+
+    if (yRange.x() == -1 && yRange.y() == -1) {
+        if ( scaleMin ) {
+            min = 2000;
+        }
+
+        for (int i=0; i<size; i++){
+            if (array[i] > max) max = array[i];
+            if (scaleMin) if (array[i] < min) min = array[i];
+        }
+    } else {
+        min = yRange.x();
+        max = yRange.y();
+    }
+
+    int sceneHeight = graph->geometry().height();
+    int sceneWidth = graph->geometry().width();
+
+    float yScale = sceneHeight*1.0 / (max - min);
+    float xScale = sceneWidth*1.0 / size;
+
+    //qDebug() << min << ":" << max << ":" << QString::number(xScale,'f',2) << ":" << QString::number(yScale,'f',2) << ":" << graph->geometry().height() << ":" << graph->geometry().width();
+    graph->update(graph->geometry());
+
+    // to fix graphic scaling issue
+    penX.setColor(Qt::white);penAxis.setWidth(1);
+    graph->scene()->addLine(0, 0, sceneWidth, sceneHeight, penX);
+
+    for (int i=1; i<size; i++){
+        //if (array[i] == max) qDebug() << max << " - " << (int)(sceneHeight-(array[i]-min)*yScale);
+        graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-(array[i]-min)*yScale), *pen);
+    }
+
+    int avgVal = (int)(sceneHeight-(iprocess->histogramAvg-min)*yScale);
+    graph->scene()->addLine(0, avgVal, sceneWidth, avgVal, *penGreen);
+
+//    for (int i=1; i<iprocess->histogramExtremes.size(); i++)
+//        graph->scene()->addLine(iprocess->histogramExtremes[i-1].end*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i-1].end ]-min)*yScale), iprocess->histogramExtremes[i].start*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]-min)*yScale), *penBlue);
+
+    for (int i=0; i<iprocess->histogramExtremes.size(); i++)
+        graph->scene()->addEllipse(iprocess->histogramExtremes[i].end*xScale - 2, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]-min)*yScale) - 2, 4, 4, *penBlue, QBrush(Qt::blue));
+
+    penBlue->setWidth(2);
+    for (int i=0; i<iprocess->histogramMaxPoint.size(); i++){
+        graph->scene()->addLine(iprocess->histogramMaxPoint[i].x()*xScale, (int)(sceneHeight-(iprocess->histogramMaxPoint[i].y()-min)*yScale), iprocess->histogramMaxPointPair[i].x()*xScale, (int)(sceneHeight-(iprocess->histogramMaxPointPair[i].y()-min)*yScale), *penBlue);
+    }
+    penBlue->setWidth(2);
+
+    graph->show();
+}
+
 void setupForm::drawGraphList(QGraphicsView *graph, QPen *pen, QList<range> list, int *yVals, QPoint xRange, QPoint yRange) {
 
     //clearGraph(graph);
@@ -1850,7 +1907,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
         clearGraph(ui->graphicsView3);
 
         drawGraph(ui->graphicsView2, penRed, iprocess->histogram, iprocess->histogramSize, QPoint(-1,-1), true);
-        drawGraph(ui->graphicsView2, penBlue, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+        //drawGraphHist(ui->graphicsView2, penBlue, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
         //drawGraph(ui->graphicsView2, penGreen, iprocess->histogramFilteredX, iprocess->histogramSize, QPoint(-1,-1), true); // MA filter
         //iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogram.csv");
 
@@ -1906,7 +1963,8 @@ void setupForm::on_histogramAnalysisButton_clicked() {
         else
             ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
 
-        drawGraphList(ui->graphicsView3, penRed, iprocess->histogramExtremes, iprocess->histogramFiltered, QPoint(0,iprocess->histogramSize), QPoint(-1,-1));
+        //drawGraphList(ui->graphicsView3, penRed, iprocess->histogramExtremes, iprocess->histogramFiltered, QPoint(0,iprocess->histogramSize), QPoint(-1,-1));
+        drawGraphHist(ui->graphicsView3, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
 
         for (int i=0; i<iprocess->histogramMaxPoint.size(); i++){
             ui->plainTextEdit->appendPlainText("peak/pair/dist-tan (x0,y0) (xp,yp) (len,tan): (" +
