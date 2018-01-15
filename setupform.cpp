@@ -1906,7 +1906,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
         clearGraph(ui->graphicsView2);
         clearGraph(ui->graphicsView3);
 
-        drawGraph(ui->graphicsView2, penRed, iprocess->histogram, iprocess->histogramSize, QPoint(-1,-1), true);
+        drawGraph(ui->graphicsView2, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true);
         //drawGraphHist(ui->graphicsView2, penBlue, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
         //drawGraph(ui->graphicsView2, penGreen, iprocess->histogramFilteredX, iprocess->histogramSize, QPoint(-1,-1), true); // MA filter
         //iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogram.csv");
