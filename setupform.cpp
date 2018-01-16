@@ -1625,6 +1625,9 @@ void setupForm::drawGraph(QGraphicsView *graph, QPen *pen, int *array, int size,
         graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-(array[i]-min)*yScale), *pen);
     }
 
+    int y0 = (int)(sceneHeight-(0-min)*yScale);
+    graph->scene()->addLine(0, y0, sceneWidth, y0, QPen(Qt::black));
+
     graph->show();
 }
 
@@ -1906,11 +1909,18 @@ void setupForm::on_histogramAnalysisButton_clicked() {
         clearGraph(ui->graphicsView2);
         clearGraph(ui->graphicsView3);
 
-        drawGraph(ui->graphicsView2, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true);
+        drawGraph(ui->graphicsView, penRed, iprocess->histogramD, iprocess->histogramSize, QPoint(-1,-1), true);
+
+        drawGraph(ui->graphicsView2, penRed, iprocess->histogramFilteredX, iprocess->histogramSize, QPoint(-1,-1), true);
+
+        //drawGraph(ui->graphicsView, penRed, iprocess->histogram, iprocess->histogramSize, QPoint(-1,-1), true);
+        //drawGraph(ui->graphicsView2, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true);
+
         //drawGraphHist(ui->graphicsView2, penBlue, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
         //drawGraph(ui->graphicsView2, penGreen, iprocess->histogramFilteredX, iprocess->histogramSize, QPoint(-1,-1), true); // MA filter
         //iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogram.csv");
 
+        //iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogramFiltered.csv");
         /*
         drawGraph(ui->graphicsView2, penBlue, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-100,400), true); // recursive MA filter
         //iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogramFiltered.csv");
