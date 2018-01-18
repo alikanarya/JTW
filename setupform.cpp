@@ -1676,8 +1676,19 @@ void setupForm::drawGraphHist(QGraphicsView *graph, QPen *pen, int *array, int s
 //    for (int i=1; i<iprocess->histogramExtremes.size(); i++)
 //        graph->scene()->addLine(iprocess->histogramExtremes[i-1].end*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i-1].end ]-min)*yScale), iprocess->histogramExtremes[i].start*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]-min)*yScale), *penBlue);
 
-    for (int i=0; i<iprocess->histogramExtremes.size(); i++)
-        graph->scene()->addEllipse(iprocess->histogramExtremes[i].end*xScale - 2, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]-min)*yScale) - 2, 4, 4, *penBlue, QBrush(Qt::blue));
+    for (int i=0; i<iprocess->histogramExtremes.size(); i++) {
+        //graph->scene()->addEllipse(iprocess->histogramExtremes[i].end*xScale - 1, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]-min)*yScale) - 1, 2, 2, *penBlue, QBrush(Qt::blue));
+        QPen pS, pE;
+        if (iprocess->histogramExtremes[i].start == iprocess->histogramExtremes[i].end){
+            pS.setColor(Qt::green); pE.setColor(Qt::green);
+        } else {
+            pS.setColor(Qt::blue); pE.setColor(Qt::black);
+        }
+        graph->scene()->addLine(iprocess->histogramExtremes[i].start*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]-min)*yScale -10),
+                                iprocess->histogramExtremes[i].start*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]-min)*yScale +10), pS);
+        graph->scene()->addLine(iprocess->histogramExtremes[i].end*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]-min)*yScale -10),
+                                iprocess->histogramExtremes[i].end*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]-min)*yScale +10), pE);
+    }
 
     penBlue->setWidth(2);
     for (int i=0; i<iprocess->histogramMaxPoint.size(); i++){
@@ -1725,8 +1736,20 @@ void setupForm::drawGraphHist2(QGraphicsView *graph, QPen *pen, int *array, int 
     int avgVal = (int)(sceneHeight-(iprocess->histogramAvg-min)*yScale);
     graph->scene()->addLine(0, avgVal, sceneWidth, avgVal, *penGreen);
 
-    for (int i=0; i<iprocess->histogramExtremesFiltered.size(); i++)
-        graph->scene()->addEllipse(iprocess->histogramExtremesFiltered[i].end*xScale - 2, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremesFiltered[i].end ]-min)*yScale) - 2, 4, 4, *penBlue, QBrush(Qt::blue));
+    for (int i=0; i<iprocess->histogramExtremesFiltered.size(); i++){
+        //graph->scene()->addEllipse(iprocess->histogramExtremesFiltered[i].end*xScale - 1, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremesFiltered[i].end ]-min)*yScale) - 1, 2, 2, *penBlue, QBrush(Qt::blue));
+        QPen pS, pE;
+        if (iprocess->histogramExtremesFiltered[i].start == iprocess->histogramExtremesFiltered[i].end){
+            pS.setColor(Qt::green); pE.setColor(Qt::green);
+        } else {
+            pS.setColor(Qt::blue); pE.setColor(Qt::black);
+        }
+
+        graph->scene()->addLine(iprocess->histogramExtremesFiltered[i].start*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremesFiltered[i].start ]-min)*yScale -10),
+                                iprocess->histogramExtremesFiltered[i].start*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremesFiltered[i].start ]-min)*yScale +10), pS);
+        graph->scene()->addLine(iprocess->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremesFiltered[i].end ]-min)*yScale -10),
+                                iprocess->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremesFiltered[i].end ]-min)*yScale +10), pE);
+    }
 
     penBlue->setWidth(2);
     for (int i=0; i<iprocess->histogramMaxPoint.size(); i++){
