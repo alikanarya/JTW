@@ -74,6 +74,7 @@ public:
     int maFilterKernelSize = 11;
     int histogramAngleThreshold = 10;
     bool colorMatrix = true; // true=colored, false=gray
+    double lenRateThr = 0.50;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -175,6 +176,8 @@ private slots:
     void on_histAngleSlider_sliderReleased();
     void on_radioColored_clicked();
     void on_radioGray_clicked();
+    void on_lenRateThrSlider_sliderMoved(int position);
+    void on_lenRateThrSlider_sliderReleased();
 };
 
 #endif // SETUPFORM_H

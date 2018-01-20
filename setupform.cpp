@@ -1965,6 +1965,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
 
         iprocess->maFilterKernelSize = maFilterKernelSize;
         iprocess->histogramAngleThreshold = histogramAngleThreshold;
+        iprocess->lenRateThr = lenRateThr;
 
         iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
 
@@ -2082,4 +2083,12 @@ void setupForm::on_radioColored_clicked(){
 
 void setupForm::on_radioGray_clicked(){
     colorMatrix = false;
+}
+
+void setupForm::on_lenRateThrSlider_sliderMoved(int position){
+    ui->labellenRateThr->setText(QString::number(position));
+}
+
+void setupForm::on_lenRateThrSlider_sliderReleased(){
+    lenRateThr = ui->lenRateThrSlider->value()/100.0;
 }

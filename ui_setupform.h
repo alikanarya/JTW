@@ -138,8 +138,11 @@ public:
     QLabel *labelHistAngle;
     QRadioButton *radioGray;
     QRadioButton *radioColored;
-    QButtonGroup *laserGroup;
+    QLabel *label_26;
+    QSlider *lenRateThrSlider;
+    QLabel *labellenRateThr;
     QButtonGroup *colorGrayGroup;
+    QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
     {
@@ -823,14 +826,41 @@ public:
         colorGrayGroup->setObjectName(QStringLiteral("colorGrayGroup"));
         colorGrayGroup->addButton(radioGray);
         radioGray->setObjectName(QStringLiteral("radioGray"));
-        radioGray->setGeometry(QRect(170, 590, 61, 21));
+        radioGray->setGeometry(QRect(200, 530, 61, 21));
         radioGray->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         radioColored = new QRadioButton(setupForm);
         colorGrayGroup->addButton(radioColored);
         radioColored->setObjectName(QStringLiteral("radioColored"));
-        radioColored->setGeometry(QRect(90, 590, 71, 21));
+        radioColored->setGeometry(QRect(120, 530, 71, 21));
         radioColored->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         radioColored->setChecked(true);
+        label_26 = new QLabel(setupForm);
+        label_26->setObjectName(QStringLiteral("label_26"));
+        label_26->setGeometry(QRect(9, 591, 101, 20));
+        label_26->setFont(font1);
+        label_26->setFrameShape(QFrame::NoFrame);
+        label_26->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
+        lenRateThrSlider = new QSlider(setupForm);
+        lenRateThrSlider->setObjectName(QStringLiteral("lenRateThrSlider"));
+        lenRateThrSlider->setGeometry(QRect(130, 591, 100, 22));
+        lenRateThrSlider->setAutoFillBackground(false);
+        lenRateThrSlider->setMinimum(20);
+        lenRateThrSlider->setMaximum(100);
+        lenRateThrSlider->setSingleStep(25);
+        lenRateThrSlider->setValue(25);
+        lenRateThrSlider->setSliderPosition(25);
+        lenRateThrSlider->setTracking(true);
+        lenRateThrSlider->setOrientation(Qt::Horizontal);
+        lenRateThrSlider->setInvertedAppearance(false);
+        lenRateThrSlider->setInvertedControls(false);
+        lenRateThrSlider->setTickPosition(QSlider::TicksBothSides);
+        lenRateThrSlider->setTickInterval(20);
+        labellenRateThr = new QLabel(setupForm);
+        labellenRateThr->setObjectName(QStringLiteral("labellenRateThr"));
+        labellenRateThr->setGeometry(QRect(238, 591, 42, 20));
+        labellenRateThr->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
+        labellenRateThr->setFrameShape(QFrame::Box);
+        labellenRateThr->setAlignment(Qt::AlignCenter);
         tabWidget->raise();
         labelTarget->raise();
         labelMono->raise();
@@ -881,6 +911,9 @@ public:
         labelHistAngle->raise();
         radioGray->raise();
         radioColored->raise();
+        label_26->raise();
+        lenRateThrSlider->raise();
+        labellenRateThr->raise();
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -1061,6 +1094,8 @@ public:
         labelHistAngle->setText(QApplication::translate("setupForm", "0", 0));
         radioGray->setText(QApplication::translate("setupForm", "Gri", 0));
         radioColored->setText(QApplication::translate("setupForm", "Renkli", 0));
+        label_26->setText(QApplication::translate("setupForm", "\303\207izgi Oran\304\261 E\305\237i\304\237i", 0));
+        labellenRateThr->setText(QApplication::translate("setupForm", "0", 0));
     } // retranslateUi
 
 };
