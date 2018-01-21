@@ -921,6 +921,23 @@ void setupForm::getParameters(){
 
     applyCameraEnhancements = w->applyCameraEnhancements;
 
+    maFilterKernelSize = w->maFilterKernelSize;
+    histogramAngleThreshold = w->histogramAngleThreshold;
+    colorMatrix = w->colorMatrix;
+    lenRateThr = w->lenRateThr;
+    bandWidthMin = w->bandWidthMin;
+
+    ui->labelMAFilterSize->setText( QString::number(maFilterKernelSize) );
+    ui->maFilterSizeSlider->setValue( (int)(maFilterKernelSize/2-1) );
+    ui->labelHistAngle->setText( QString::number(histogramAngleThreshold) );
+    ui->histAngleSlider->setValue( histogramAngleThreshold );
+    ui->radioColored->setChecked( colorMatrix );
+    ui->radioGray->setChecked( !colorMatrix );
+    ui->labellenRateThr->setText( QString::number(lenRateThr) );
+    ui->lenRateThrSlider->setValue( lenRateThr*100 );
+    ui->labelBandWidthMin->setText( QString::number(bandWidthMin) );
+    ui->bandWidthMinSlider->setValue( bandWidthMin*100 );
+
 }
 
 void setupForm::clearButton(){
@@ -969,6 +986,12 @@ void setupForm::saveExitButton(){
     w->frameInterval = 1000 / w->fpsTarget;
     w->iprocessInterval = ui->editIPI->text().toInt();
     w->videoDuration = ui->editVideoDuration->text().toInt();
+
+    w->maFilterKernelSize = maFilterKernelSize;
+    w->histogramAngleThreshold = histogramAngleThreshold;
+    w->colorMatrix = colorMatrix;
+    w->lenRateThr = lenRateThr;
+    w->bandWidthMin = bandWidthMin;
 
     w->writeSettings();
 
@@ -1966,6 +1989,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
         iprocess->maFilterKernelSize = maFilterKernelSize;
         iprocess->histogramAngleThreshold = histogramAngleThreshold;
         iprocess->lenRateThr = lenRateThr;
+        iprocess->bandWidthMin = bandWidthMin;
 
         iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
 
@@ -2064,6 +2088,15 @@ void setupForm::on_histogramAnalysisButton_clicked() {
                                                ")");
         }
 
+        switch ( iprocess->bandCheck_errorState ) {
+            case 0: ui->plainTextEdit->appendPlainText(alarm20); break;
+            case 1: ui->plainTextEdit->appendPlainText(alarm21); break;
+            case 2: ui->plainTextEdit->appendPlainText(alarm21); break;
+            case 3: ui->plainTextEdit->appendPlainText(alarm23); break;
+            case 4: ui->plainTextEdit->appendPlainText(alarm24); break;
+            case 5: ui->plainTextEdit->appendPlainText(alarm25); break;
+            case 6: ui->plainTextEdit->appendPlainText(alarm26); break;
+        }
 
     }
 
@@ -2086,9 +2119,17 @@ void setupForm::on_radioGray_clicked(){
 }
 
 void setupForm::on_lenRateThrSlider_sliderMoved(int position){
-    ui->labellenRateThr->setText(QString::number(position));
+    ui->labellenRateThr->setText(QString::number(position/100.0));
 }
 
 void setupForm::on_lenRateThrSlider_sliderReleased(){
     lenRateThr = ui->lenRateThrSlider->value()/100.0;
+}
+
+void setupForm::on_bandWidthMinSlider_sliderMoved(int position){
+    ui->labelBandWidthMin->setText(QString::number(position/100.0));
+}
+
+void setupForm::on_bandWidthMinSlider_sliderReleased(){
+    bandWidthMin = ui->bandWidthMinSlider->value()/100.0;
 }

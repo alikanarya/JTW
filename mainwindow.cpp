@@ -1792,6 +1792,12 @@ void MainWindow::readSettings(){
             mainEdgesNumber = settings->value("medgeno", _MAIN_EDGE_NO).toInt();
             alignGuide2TrackCenter = settings->value("align", _ALIGN).toBool();
 
+            maFilterKernelSize = settings->value("mafs", _MAF_KERNEL).toInt();
+            histogramAngleThreshold = settings->value("hang", _HIST_ANGLE).toInt();
+            colorMatrix = settings->value("colormat", _COLOR_MATRIX).toBool();
+            lenRateThr = settings->value("lrate", _LEN_RATIO).toFloat();
+            bandWidthMin = settings->value("bwidm", _BAND_WIDTH_MIN).toFloat();
+
         settings->endGroup();
 
         settings->beginGroup("oth");
@@ -1878,6 +1884,12 @@ void MainWindow::readSettings(){
         algorithmType = _ALGO_TYPE;
         mainEdgesNumber = _MAIN_EDGE_NO;
         alignGuide2TrackCenter = _ALIGN;
+
+        maFilterKernelSize = _MAF_KERNEL;
+        histogramAngleThreshold = _HIST_ANGLE;
+        colorMatrix = _COLOR_MATRIX;
+        lenRateThr = _LEN_RATIO;
+        bandWidthMin = _BAND_WIDTH_MIN;
 
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
@@ -1981,6 +1993,13 @@ void MainWindow::writeSettings(){
 
         QVariant alignsw(alignGuide2TrackCenter);
             settings->setValue("align", alignsw.toString());
+
+       settings->setValue("mafs", QString::number(maFilterKernelSize));
+       settings->setValue("hang", QString::number(histogramAngleThreshold));
+       QVariant colormatsw(colorMatrix);
+           settings->setValue("colormat", colormatsw.toString());
+       settings->setValue("lrate", QString::number(lenRateThr));
+       settings->setValue("bwidm", QString::number(bandWidthMin));
 
     settings->endGroup();
 

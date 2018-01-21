@@ -61,6 +61,12 @@
 #define _ALIGN              false
 #define _FOCUS_CHECK        false
 #define _AUTO_FOCUS         false
+#define _MAF_KERNEL         11
+#define _HIST_ANGLE         10
+#define _COLOR_MATRIX       true    // true=colored, false=gray
+#define _LEN_RATIO          0.5
+#define _BAND_WIDTH_MIN     0.2
+
 
 #define _PWD_SETTINGS       "nokts"
 #define _PWD_SETUP          "ryhn"
@@ -327,6 +333,13 @@ public:
     imgProcessThread *iProcessThread;
 
     int mainLineDistance, mainLineAngle, mainLineVoteValue, solidLineLength = 0;
+
+    // histogram vars
+    int maFilterKernelSize = 11;
+    int histogramAngleThreshold = 10;
+    bool colorMatrix = true; // true=colored, false=gray
+    double lenRateThr = 0.50;
+    double bandWidthMin = 0.20;
 
     // Z-Control
     bool zControlActive;

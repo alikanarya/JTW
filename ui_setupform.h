@@ -141,6 +141,9 @@ public:
     QLabel *label_26;
     QSlider *lenRateThrSlider;
     QLabel *labellenRateThr;
+    QSlider *bandWidthMinSlider;
+    QLabel *label_27;
+    QLabel *labelBandWidthMin;
     QButtonGroup *colorGrayGroup;
     QButtonGroup *laserGroup;
 
@@ -836,7 +839,7 @@ public:
         radioColored->setChecked(true);
         label_26 = new QLabel(setupForm);
         label_26->setObjectName(QStringLiteral("label_26"));
-        label_26->setGeometry(QRect(9, 591, 101, 20));
+        label_26->setGeometry(QRect(9, 591, 121, 20));
         label_26->setFont(font1);
         label_26->setFrameShape(QFrame::NoFrame);
         label_26->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
@@ -861,6 +864,33 @@ public:
         labellenRateThr->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labellenRateThr->setFrameShape(QFrame::Box);
         labellenRateThr->setAlignment(Qt::AlignCenter);
+        bandWidthMinSlider = new QSlider(setupForm);
+        bandWidthMinSlider->setObjectName(QStringLiteral("bandWidthMinSlider"));
+        bandWidthMinSlider->setGeometry(QRect(132, 620, 100, 22));
+        bandWidthMinSlider->setAutoFillBackground(false);
+        bandWidthMinSlider->setMinimum(10);
+        bandWidthMinSlider->setMaximum(100);
+        bandWidthMinSlider->setSingleStep(25);
+        bandWidthMinSlider->setValue(25);
+        bandWidthMinSlider->setSliderPosition(25);
+        bandWidthMinSlider->setTracking(true);
+        bandWidthMinSlider->setOrientation(Qt::Horizontal);
+        bandWidthMinSlider->setInvertedAppearance(false);
+        bandWidthMinSlider->setInvertedControls(false);
+        bandWidthMinSlider->setTickPosition(QSlider::TicksBothSides);
+        bandWidthMinSlider->setTickInterval(20);
+        label_27 = new QLabel(setupForm);
+        label_27->setObjectName(QStringLiteral("label_27"));
+        label_27->setGeometry(QRect(11, 620, 121, 20));
+        label_27->setFont(font1);
+        label_27->setFrameShape(QFrame::NoFrame);
+        label_27->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
+        labelBandWidthMin = new QLabel(setupForm);
+        labelBandWidthMin->setObjectName(QStringLiteral("labelBandWidthMin"));
+        labelBandWidthMin->setGeometry(QRect(240, 620, 42, 20));
+        labelBandWidthMin->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
+        labelBandWidthMin->setFrameShape(QFrame::Box);
+        labelBandWidthMin->setAlignment(Qt::AlignCenter);
         tabWidget->raise();
         labelTarget->raise();
         labelMono->raise();
@@ -914,6 +944,9 @@ public:
         label_26->raise();
         lenRateThrSlider->raise();
         labellenRateThr->raise();
+        bandWidthMinSlider->raise();
+        label_27->raise();
+        labelBandWidthMin->raise();
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -1096,6 +1129,8 @@ public:
         radioColored->setText(QApplication::translate("setupForm", "Renkli", 0));
         label_26->setText(QApplication::translate("setupForm", "\303\207izgi Oran\304\261 E\305\237i\304\237i", 0));
         labellenRateThr->setText(QApplication::translate("setupForm", "0", 0));
+        label_27->setText(QApplication::translate("setupForm", "Band Gen Min (%)", 0));
+        labelBandWidthMin->setText(QApplication::translate("setupForm", "0", 0));
     } // retranslateUi
 
 };

@@ -18,6 +18,14 @@
 #define alarm13     "Kamera Odak Ayarı BOZUK !"
 #define alarm14     "KAYNAK BAŞLATILAMADI !"
 
+#define alarm20     "BAND DOĞRU"
+#define alarm21     "Maksimum nokta sayısı 2'den az"
+#define alarm22     "Dikey düşüm (çizgi) oranı az"
+#define alarm23     "Sol ve sağ nokta açıları yanlış"
+#define alarm24     "Band genişliği düşük"
+#define alarm25     "Band merkezden çok uzak"
+#define alarm26     "Band şekli bozuk"
+
 #define help10      "Kamera Butonu: Kamera görüntüsünü gösterir"
 
 #define help20      "Kamera Durdur Butonu: Kamera görüntüsünü durdurur"

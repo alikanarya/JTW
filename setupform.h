@@ -75,6 +75,7 @@ public:
     int histogramAngleThreshold = 10;
     bool colorMatrix = true; // true=colored, false=gray
     double lenRateThr = 0.50;
+    double bandWidthMin = 0.20;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -178,6 +179,8 @@ private slots:
     void on_radioGray_clicked();
     void on_lenRateThrSlider_sliderMoved(int position);
     void on_lenRateThrSlider_sliderReleased();
+    void on_bandWidthMinSlider_sliderMoved(int position);
+    void on_bandWidthMinSlider_sliderReleased();
 };
 
 #endif // SETUPFORM_H

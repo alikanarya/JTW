@@ -2531,7 +2531,7 @@
     <rect>
      <x>9</x>
      <y>591</y>
-     <width>101</width>
+     <width>121</width>
      <height>20</height>
     </rect>
    </property>
@@ -2621,6 +2621,101 @@
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
+  <widget class="QSlider" name="bandWidthMinSlider">
+   <property name="geometry">
+    <rect>
+     <x>132</x>
+     <y>620</y>
+     <width>100</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="minimum">
+    <number>10</number>
+   </property>
+   <property name="maximum">
+    <number>100</number>
+   </property>
+   <property name="singleStep">
+    <number>25</number>
+   </property>
+   <property name="value">
+    <number>25</number>
+   </property>
+   <property name="sliderPosition">
+    <number>25</number>
+   </property>
+   <property name="tracking">
+    <bool>true</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="invertedAppearance">
+    <bool>false</bool>
+   </property>
+   <property name="invertedControls">
+    <bool>false</bool>
+   </property>
+   <property name="tickPosition">
+    <enum>QSlider::TicksBothSides</enum>
+   </property>
+   <property name="tickInterval">
+    <number>20</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_27">
+   <property name="geometry">
+    <rect>
+     <x>11</x>
+     <y>620</y>
+     <width>121</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="text">
+    <string>Band Gen Min (%)</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelBandWidthMin">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>620</y>
+     <width>42</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string>0</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
   <zorder>tabWidget</zorder>
   <zorder>labelTarget</zorder>
   <zorder>labelMono</zorder>
@@ -2674,6 +2769,9 @@
   <zorder>label_26</zorder>
   <zorder>lenRateThrSlider</zorder>
   <zorder>labellenRateThr</zorder>
+  <zorder>bandWidthMinSlider</zorder>
+  <zorder>label_27</zorder>
+  <zorder>labelBandWidthMin</zorder>
  </widget>
  <resources>
   <include location="icons.qrc"/>
