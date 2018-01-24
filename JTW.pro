@@ -82,7 +82,8 @@ HEADERS  += mainwindow.h \
     plcqtlib.h \
     ../_Modules/PlayStream/threadplaystream.h \
     autofocusthread.h \
-    imgprocessthread.h
+    imgprocessthread.h \
+    ../_Modules/Algo/natural_breaks.h
 
 FORMS    += mainwindow.ui \
     setupform.ui \
