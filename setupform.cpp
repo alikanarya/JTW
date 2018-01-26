@@ -614,7 +614,7 @@ void setupForm::captureButton(){
 //                        ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
 
                         /**/if (DEBUG) {
-                                ui->plainTextEdit->appendPlainText("-1st-maximas---");
+                                /*ui->plainTextEdit->appendPlainText("-1st-maximas---");
                                 for (int i=0; i<iprocess->localMaximaSize;i++)
                                     ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray[i][0]) +" stop: "+QString::number(iprocess->rangeArray[i][1]));
 
@@ -625,7 +625,7 @@ void setupForm::captureButton(){
                                 ui->plainTextEdit->appendPlainText("-2nd-maximas---");
                                 for (int i=0; i<iprocess->localMaxima2ndSize;i++)
                                     ui->plainTextEdit->appendPlainText("start: "+QString::number(iprocess->rangeArray2nd[i][0]) +" stop: "+QString::number(iprocess->rangeArray2nd[i][1]));
-
+                                */
                                 ui->plainTextEdit->appendPlainText("-2nd hough vals---");
                                 for (int i=0; i<iprocess->listHoughData2ndSize;i++)
                                     ui->plainTextEdit->appendPlainText("dist/ang/vote: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 1) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 1)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 0));
