@@ -635,13 +635,13 @@ void setupForm::captureButton(){
                         ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges_2ndList(true) ) );
                             /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"05-mainEdges image.jpg");
 
-                        //iprocess->cornerImage();
-                            //*D*/if (saveAnalysis) iprocess->imgCorner.save(path+"06-corner image.jpg");
+                        iprocess->cornerImage();
+                            /*D*/if (saveAnalysis) iprocess->imgCorner.save(path+"06-corner image.jpg");
                         ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
-                        //ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
+                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
 
-                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(0) ) );
-                            /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"06-mainEdges centerline image.jpg");
+                        //ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(0) ) );
+                            //**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"06-mainEdges centerline image.jpg");
 
                         break;
                     case 2: // THIN JOINT
