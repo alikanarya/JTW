@@ -303,12 +303,9 @@ void setupForm::Algo3(imgProcess *iprocess){
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
         iprocess->thinCornerNum = mainEdgesNumber;
-        //iprocess->wideJoint = true;
-        //iprocess->naturalBreaks = true;
         iprocess->detectMainEdges(0, DEBUG);
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
-            /**/if (DEBUG) for (int i=0; i<iprocess->mainEdgesList.size();i++)
-                    ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
+
         algoPrerequestsOk = true;
         captured = true;
     } else {
@@ -357,8 +354,6 @@ void setupForm::Algo6(imgProcess *iprocess){
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
 
         iprocess->thinCornerNum = mainEdgesNumber;
-        //iprocess->wideJoint = false;
-        //iprocess->naturalBreaks = false;
         houghData hd = iprocess->detectMainEdgesSolidLine(1, DEBUG);
         solidLineLength = iprocess->solidLineLength;
 
@@ -633,19 +628,33 @@ void setupForm::captureButton(){
                                 ui->plainTextEdit->appendPlainText("-2nd hough vals---");
                                 for (int i=0; i<iprocess->listHoughData2ndSize;i++)
                                     ui->plainTextEdit->appendPlainText("dist/ang/vote: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 1) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 1)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 0));
+
+                                if ( iprocess->naturalBreaksNumber != 0 ){
+                                    ui->plainTextEdit->appendPlainText("-pointListSorted---");
+                                    for (int i=0; i<iprocess->pointListSorted.size();i++)
+                                        ui->plainTextEdit->appendPlainText("x/vote: "+QString::number(iprocess->pointListSorted[i].x())+", "+QString::number(iprocess->pointListSorted[i].y()));
+                                    ui->plainTextEdit->appendPlainText("-mainPointsList---");
+                                    for (int i=0; i<iprocess->mainPointsList.size();i++)
+                                        ui->plainTextEdit->appendPlainText("x/vote: "+QString::number(iprocess->mainPointsList[i].x())+", "+QString::number(iprocess->mainPointsList[i].y()));
+                                }
                             }
+
+
+                        for (int i=0; i<iprocess->mainEdgesList.size();i++)
+                            ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
 
                         //ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(mainEdgesNumber) ) );
                         ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges_2ndList(true) ) );
                             /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"05-mainEdges image.jpg");
 
-                        iprocess->cornerImage();
-                            /*D*/if (saveAnalysis) iprocess->imgCorner.save(path+"06-corner image.jpg");
                         ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
-                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
 
-                        //ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges(0) ) );
-                            //**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"06-mainEdges centerline image.jpg");
+                        //iprocess->cornerImage();
+                            //*D*/if (saveAnalysis) iprocess->imgCorner.save(path+"06-corner image.jpg");
+                        //ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
+
+                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges( iprocess->naturalBreaksNumber ) ) );
+                            /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"06-mainEdges centerline image.jpg");
 
                         break;
                     case 2: // THIN JOINT

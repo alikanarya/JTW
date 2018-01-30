@@ -1,8 +1,9 @@
-* detectMainEdges algo parameters control; thinjointactive, mainedges number etc
-* detectMainEdges; mainedgeslist for natural breaks
-* natural breaks main edge list and centerline image to setup form
 * detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
 * 2nd pass detection algo
 * 2nd pass settings in setupform, mainwindows and timing
 * 1st and 2nd pass selection and user settings in mainwindow
 * setupform algo edits will be reflected to mainwindow algo functions
+* natural breaks debug info in setupForm						...done 
+* natural breaks main edge list and centerline image to setup form			...done
+* detectMainEdges; mainedgeslist for natural breaks					...done
+* detectMainEdges algo parameters control; thinjointactive, mainedges number etc	...done
