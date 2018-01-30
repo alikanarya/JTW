@@ -1296,7 +1296,7 @@ void MainWindow::Algo3(imgProcess *iprocess){
     if (edgeDetectionState != 0) {
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
         iprocess->thinCornerNum = mainEdgesNumber;
-        iprocess->detectMainEdges(thinJointAlgoActive, false);
+        iprocess->detectMainEdges(0, false);
         /**/iprocess->angleAvg = iprocess->centerLine.angle;
     } else {
         ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
@@ -1328,7 +1328,7 @@ void MainWindow::Algo6(imgProcess *iprocess){
 
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
         iprocess->thinCornerNum = mainEdgesNumber;
-        iprocess->detectMainEdgesSolidLine(1, thinJointAlgoActive, false);
+        iprocess->detectMainEdgesSolidLine(1, false);
         solidLineLength = iprocess->solidLineLength;
 
     } else {

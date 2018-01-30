@@ -303,9 +303,9 @@ void setupForm::Algo3(imgProcess *iprocess){
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
         iprocess->thinCornerNum = mainEdgesNumber;
-        iprocess->wideJoint = true;
-        iprocess->naturalBreaks = true;
-        iprocess->detectMainEdges(thinJointAlgoActive, DEBUG);
+        //iprocess->wideJoint = true;
+        //iprocess->naturalBreaks = true;
+        iprocess->detectMainEdges(0, DEBUG);
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
             /**/if (DEBUG) for (int i=0; i<iprocess->mainEdgesList.size();i++)
                     ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
@@ -357,9 +357,9 @@ void setupForm::Algo6(imgProcess *iprocess){
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
 
         iprocess->thinCornerNum = mainEdgesNumber;
-        iprocess->wideJoint = false;
-        iprocess->naturalBreaks = false;
-        houghData hd = iprocess->detectMainEdgesSolidLine(1, thinJointAlgoActive, DEBUG);
+        //iprocess->wideJoint = false;
+        //iprocess->naturalBreaks = false;
+        houghData hd = iprocess->detectMainEdgesSolidLine(1, DEBUG);
         solidLineLength = iprocess->solidLineLength;
 
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
