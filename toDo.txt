@@ -3,6 +3,8 @@
 * 2nd pass settings in setupform, mainwindows and timing
 * 1st and 2nd pass selection and user settings in mainwindow
 * setupform algo edits will be reflected to mainwindow algo functions
+* histogramAnalysis; bandCenterMax implemented on setupForm				...done
+* histogramAnalysis; bandCenterMax and bandWidthMax are shown on image with lines in setupForm	...done
 * natural breaks debug info in setupForm						...done 
 * natural breaks main edge list and centerline image to setup form			...done
 * detectMainEdges; mainedgeslist for natural breaks					...done

@@ -66,6 +66,7 @@
 #define _COLOR_MATRIX       true    // true=colored, false=gray
 #define _LEN_RATIO          0.5
 #define _BAND_WIDTH_MIN     0.2
+#define _BAND_CENTER_MAX    0.1
 
 
 #define _PWD_SETTINGS       "nokts"
@@ -340,6 +341,7 @@ public:
     bool colorMatrix = true; // true=colored, false=gray
     double lenRateThr = 0.50;
     double bandWidthMin = 0.20;
+    double bandCenterMax = 0.1;
 
     // Z-Control
     bool zControlActive;

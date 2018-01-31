@@ -76,6 +76,7 @@ public:
     bool colorMatrix = true; // true=colored, false=gray
     double lenRateThr = 0.50;
     double bandWidthMin = 0.20;
+    double bandCenterMax = 0.10;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -181,6 +182,9 @@ private slots:
     void on_lenRateThrSlider_sliderReleased();
     void on_bandWidthMinSlider_sliderMoved(int position);
     void on_bandWidthMinSlider_sliderReleased();
+    void on_bandCenterMaxSlider_sliderMoved(int position);
+    void on_bandCenterMaxSlider_sliderPressed();
+    void on_bandCenterMaxSlider_sliderReleased();
 };
 
 #endif // SETUPFORM_H

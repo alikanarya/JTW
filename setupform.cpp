@@ -71,7 +71,7 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     ui->labelGaussSize->setText( QString::number(gaussianSize) );
     ui->gaussSizeSlider->setValue( (gaussianSize-1)/2 );
 
-    ui->labelGaussSDev->setText( QString::number(stdDev) );
+    ui->labelGaussSDev->setText( QString::number(stdDev,'f',2) );
     ui->gaussSDevSlider->setValue( (int)(stdDev*10) );
 
     ui->cannyThinningBox->setChecked( w->cannyThinning );
@@ -135,6 +135,7 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     penGreen = new QPen(Qt::green);
     penGreen->setWidth(1);
 
+    ui->tabWidget->setCurrentIndex(0);
     //---------------------------------------------------
     ui->checkSubImage->hide();
     ui->editHoughThetaMaxSub->hide();
@@ -939,6 +940,7 @@ void setupForm::getParameters(){
     colorMatrix = w->colorMatrix;
     lenRateThr = w->lenRateThr;
     bandWidthMin = w->bandWidthMin;
+    bandCenterMax = w->bandCenterMax;
 
     ui->labelMAFilterSize->setText( QString::number(maFilterKernelSize) );
     ui->maFilterSizeSlider->setValue( (int)(maFilterKernelSize/2-1) );
@@ -950,6 +952,8 @@ void setupForm::getParameters(){
     ui->lenRateThrSlider->setValue( lenRateThr*100 );
     ui->labelBandWidthMin->setText( QString::number(bandWidthMin) );
     ui->bandWidthMinSlider->setValue( bandWidthMin*100 );
+    ui->labelBandCenterMax->setText( QString::number(bandCenterMax) );
+    ui->bandCenterMaxSlider->setValue( bandCenterMax*100 );
 
 }
 
@@ -1005,6 +1009,7 @@ void setupForm::saveExitButton(){
     w->colorMatrix = colorMatrix;
     w->lenRateThr = lenRateThr;
     w->bandWidthMin = bandWidthMin;
+    w->bandCenterMax = bandCenterMax;
 
     w->writeSettings();
 
@@ -1289,7 +1294,7 @@ void setupForm::on_gaussSizeSlider_sliderMoved(int position){
 void setupForm::on_gaussSDevSlider_sliderMoved(int position){
 
     stdDev = position / 10.0;
-    ui->labelGaussSDev->setText(QString::number(stdDev));
+    ui->labelGaussSDev->setText(QString::number(stdDev,'f',2));
     update();
 }
 
@@ -2003,6 +2008,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
         iprocess->histogramAngleThreshold = histogramAngleThreshold;
         iprocess->lenRateThr = lenRateThr;
         iprocess->bandWidthMin = bandWidthMin;
+        iprocess->bandCenterMax = bandCenterMax;
 
         iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
 
@@ -2100,6 +2106,9 @@ void setupForm::on_histogramAnalysisButton_clicked() {
                                                QString::number(iprocess->histogramMaxPointLen[i],'f',0) + "," + QString::number(iprocess->histogramMaxPointAng[i],'f',2) + "," + QString::number(iprocess->histogramMaxPointLen[i]/histRange,'f',2) +
                                                ")");
         }
+        ui->plainTextEdit->appendPlainText("bandWidth: " + QString::number(iprocess->bandWidth) + " / " + QString::number((1.0*iprocess->bandWidth)/iprocess->imageWidth, 'f', 2));
+        ui->plainTextEdit->appendPlainText("bandCenter: " + QString::number(iprocess->bandCenter) + " / " + QString::number((1.0*iprocess->bandCenter)/iprocess->imageWidth, 'f', 3));
+        ui->plainTextEdit->appendPlainText("bandShape: " + QString::number(iprocess->bandShape, 'f', 2));
 
         switch ( iprocess->bandCheck_errorState ) {
             case 0: ui->plainTextEdit->appendPlainText(alarm20); break;
@@ -2140,9 +2149,85 @@ void setupForm::on_lenRateThrSlider_sliderReleased(){
 }
 
 void setupForm::on_bandWidthMinSlider_sliderMoved(int position){
+
     ui->labelBandWidthMin->setText(QString::number(position/100.0));
+
+    if ( w->play && (w->lastData->image->format() != QImage::Format_Invalid) ){
+        if (w->applyCameraEnhancements) {
+            target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+        } else {
+            target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+        }
+    }
+
+    if ( !w->play &&  imageLoadedFromFile){
+        target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+    }
+
+    if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ){
+
+        int width = target.width() * (position/100.0);
+        int x0 = ( target.width() - width ) / 2;
+        int x1 = x0 + width;
+
+        QPixmap px = QPixmap::fromImage(target);
+        QPainter p(&px);
+        p.setPen (QPen(Qt::red, 3));
+        p.drawLine (x0, 0, x0, target.height());
+        p.drawLine (x1, 0, x1, target.height());
+        p.setPen(QPen(Qt::green, 3));
+        p.drawLine (target.width()/2, 0, target.width()/2, target.height());
+        p.end ();
+
+        ui->labelTarget->setPixmap( px );
+        //ui->labelMono->setPixmap( QPixmap::fromImage( target ) );
+    }
 }
 
 void setupForm::on_bandWidthMinSlider_sliderReleased(){
+
     bandWidthMin = ui->bandWidthMinSlider->value()/100.0;
+}
+
+void setupForm::on_bandCenterMaxSlider_sliderMoved(int position){
+
+    ui->labelBandCenterMax->setText(QString::number(position/100.0));
+
+    if ( w->play && (w->lastData->image->format() != QImage::Format_Invalid) ){
+        if (w->applyCameraEnhancements) {
+            target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+        } else {
+            target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+        }
+    }
+
+    if ( !w->play &&  imageLoadedFromFile){
+        target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+    }
+
+    if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ){
+
+        int width = target.width() * (position/100.0);
+        int x0 = ( target.width() - width ) / 2;
+        int x1 = x0 + width;
+
+        QPixmap px = QPixmap::fromImage(target);
+        QPainter p(&px);
+        p.setPen(QPen(Qt::blue, 3));
+        p.drawLine (x0, 0, x0, target.height());
+        p.drawLine (x1, 0, x1, target.height());
+        p.setPen(QPen(Qt::green, 3));
+        p.drawLine (target.width()/2, 0, target.width()/2, target.height());
+        p.end ();
+
+        ui->labelTarget->setPixmap( px );
+        //ui->labelMono->setPixmap( QPixmap::fromImage( target ) );
+    }
+}
+
+void setupForm::on_bandCenterMaxSlider_sliderPressed(){}
+
+void setupForm::on_bandCenterMaxSlider_sliderReleased(){
+
+    bandCenterMax = ui->bandCenterMaxSlider->value()/100.0;
 }

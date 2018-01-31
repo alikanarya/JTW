@@ -1797,6 +1797,7 @@ void MainWindow::readSettings(){
             colorMatrix = settings->value("colormat", _COLOR_MATRIX).toBool();
             lenRateThr = settings->value("lrate", _LEN_RATIO).toFloat();
             bandWidthMin = settings->value("bwidm", _BAND_WIDTH_MIN).toFloat();
+            bandCenterMax = settings->value("bcenm", _BAND_CENTER_MAX).toFloat();
 
         settings->endGroup();
 
@@ -1890,6 +1891,7 @@ void MainWindow::readSettings(){
         colorMatrix = _COLOR_MATRIX;
         lenRateThr = _LEN_RATIO;
         bandWidthMin = _BAND_WIDTH_MIN;
+        bandCenterMax = _BAND_CENTER_MAX;
 
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
@@ -2000,6 +2002,7 @@ void MainWindow::writeSettings(){
            settings->setValue("colormat", colormatsw.toString());
        settings->setValue("lrate", QString::number(lenRateThr));
        settings->setValue("bwidm", QString::number(bandWidthMin));
+       settings->setValue("bcenm", QString::number(bandCenterMax));
 
     settings->endGroup();
 

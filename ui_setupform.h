@@ -144,8 +144,13 @@ public:
     QSlider *bandWidthMinSlider;
     QLabel *label_27;
     QLabel *labelBandWidthMin;
-    QButtonGroup *colorGrayGroup;
+    QLabel *label_28;
+    QSlider *bandCenterMaxSlider;
+    QLabel *label_29;
+    QLabel *label_30;
+    QLabel *labelBandCenterMax;
     QButtonGroup *laserGroup;
+    QButtonGroup *colorGrayGroup;
 
     void setupUi(QWidget *setupForm)
     {
@@ -604,7 +609,7 @@ public:
         label_15->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
         alignGuideBox = new QCheckBox(tab);
         alignGuideBox->setObjectName(QStringLiteral("alignGuideBox"));
-        alignGuideBox->setGeometry(QRect(370, 460, 181, 17));
+        alignGuideBox->setGeometry(QRect(370, 460, 211, 17));
         alignGuideBox->setFont(font2);
         zctrlBox = new QCheckBox(tab);
         zctrlBox->setObjectName(QStringLiteral("zctrlBox"));
@@ -768,13 +773,13 @@ public:
         testButton->setFont(font);
         label_24 = new QLabel(setupForm);
         label_24->setObjectName(QStringLiteral("label_24"));
-        label_24->setGeometry(QRect(-1, 700, 91, 20));
+        label_24->setGeometry(QRect(-7, 560, 81, 20));
         label_24->setFont(font1);
         label_24->setFrameShape(QFrame::NoFrame);
         label_24->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
         maFilterSizeSlider = new QSlider(setupForm);
         maFilterSizeSlider->setObjectName(QStringLiteral("maFilterSizeSlider"));
-        maFilterSizeSlider->setGeometry(QRect(100, 700, 160, 22));
+        maFilterSizeSlider->setGeometry(QRect(83, 560, 160, 22));
         maFilterSizeSlider->setAutoFillBackground(false);
         maFilterSizeSlider->setMinimum(1);
         maFilterSizeSlider->setMaximum(50);
@@ -789,7 +794,7 @@ public:
         maFilterSizeSlider->setTickInterval(5);
         labelMAFilterSize = new QLabel(setupForm);
         labelMAFilterSize->setObjectName(QStringLiteral("labelMAFilterSize"));
-        labelMAFilterSize->setGeometry(QRect(280, 700, 42, 20));
+        labelMAFilterSize->setGeometry(QRect(252, 560, 42, 20));
         labelMAFilterSize->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelMAFilterSize->setFrameShape(QFrame::Box);
         labelMAFilterSize->setAlignment(Qt::AlignCenter);
@@ -799,13 +804,13 @@ public:
         histogramAnalysisButton->setFont(font);
         label_25 = new QLabel(setupForm);
         label_25->setObjectName(QStringLiteral("label_25"));
-        label_25->setGeometry(QRect(9, 560, 51, 20));
+        label_25->setGeometry(QRect(23, 590, 51, 20));
         label_25->setFont(font1);
         label_25->setFrameShape(QFrame::NoFrame);
         label_25->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
         histAngleSlider = new QSlider(setupForm);
         histAngleSlider->setObjectName(QStringLiteral("histAngleSlider"));
-        histAngleSlider->setGeometry(QRect(69, 560, 160, 22));
+        histAngleSlider->setGeometry(QRect(83, 590, 160, 22));
         histAngleSlider->setAutoFillBackground(false);
         histAngleSlider->setMinimum(1);
         histAngleSlider->setMaximum(30);
@@ -820,7 +825,7 @@ public:
         histAngleSlider->setTickInterval(5);
         labelHistAngle = new QLabel(setupForm);
         labelHistAngle->setObjectName(QStringLiteral("labelHistAngle"));
-        labelHistAngle->setGeometry(QRect(238, 560, 42, 20));
+        labelHistAngle->setGeometry(QRect(252, 590, 42, 20));
         labelHistAngle->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelHistAngle->setFrameShape(QFrame::Box);
         labelHistAngle->setAlignment(Qt::AlignCenter);
@@ -839,13 +844,13 @@ public:
         radioColored->setChecked(true);
         label_26 = new QLabel(setupForm);
         label_26->setObjectName(QStringLiteral("label_26"));
-        label_26->setGeometry(QRect(9, 591, 121, 20));
+        label_26->setGeometry(QRect(24, 621, 111, 20));
         label_26->setFont(font1);
         label_26->setFrameShape(QFrame::NoFrame);
         label_26->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
         lenRateThrSlider = new QSlider(setupForm);
         lenRateThrSlider->setObjectName(QStringLiteral("lenRateThrSlider"));
-        lenRateThrSlider->setGeometry(QRect(130, 591, 100, 22));
+        lenRateThrSlider->setGeometry(QRect(144, 621, 100, 22));
         lenRateThrSlider->setAutoFillBackground(false);
         lenRateThrSlider->setMinimum(20);
         lenRateThrSlider->setMaximum(100);
@@ -860,13 +865,13 @@ public:
         lenRateThrSlider->setTickInterval(20);
         labellenRateThr = new QLabel(setupForm);
         labellenRateThr->setObjectName(QStringLiteral("labellenRateThr"));
-        labellenRateThr->setGeometry(QRect(238, 591, 42, 20));
+        labellenRateThr->setGeometry(QRect(252, 621, 42, 20));
         labellenRateThr->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labellenRateThr->setFrameShape(QFrame::Box);
         labellenRateThr->setAlignment(Qt::AlignCenter);
         bandWidthMinSlider = new QSlider(setupForm);
         bandWidthMinSlider->setObjectName(QStringLiteral("bandWidthMinSlider"));
-        bandWidthMinSlider->setGeometry(QRect(132, 620, 100, 22));
+        bandWidthMinSlider->setGeometry(QRect(144, 650, 100, 22));
         bandWidthMinSlider->setAutoFillBackground(false);
         bandWidthMinSlider->setMinimum(10);
         bandWidthMinSlider->setMaximum(100);
@@ -881,16 +886,55 @@ public:
         bandWidthMinSlider->setTickInterval(20);
         label_27 = new QLabel(setupForm);
         label_27->setObjectName(QStringLiteral("label_27"));
-        label_27->setGeometry(QRect(11, 620, 121, 20));
+        label_27->setGeometry(QRect(34, 650, 101, 20));
         label_27->setFont(font1);
         label_27->setFrameShape(QFrame::NoFrame);
         label_27->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
         labelBandWidthMin = new QLabel(setupForm);
         labelBandWidthMin->setObjectName(QStringLiteral("labelBandWidthMin"));
-        labelBandWidthMin->setGeometry(QRect(240, 620, 42, 20));
+        labelBandWidthMin->setGeometry(QRect(252, 650, 42, 20));
         labelBandWidthMin->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         labelBandWidthMin->setFrameShape(QFrame::Box);
         labelBandWidthMin->setAlignment(Qt::AlignCenter);
+        label_28 = new QLabel(setupForm);
+        label_28->setObjectName(QStringLiteral("label_28"));
+        label_28->setGeometry(QRect(294, 651, 31, 20));
+        label_28->setFont(font1);
+        label_28->setFrameShape(QFrame::NoFrame);
+        label_28->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+        bandCenterMaxSlider = new QSlider(setupForm);
+        bandCenterMaxSlider->setObjectName(QStringLiteral("bandCenterMaxSlider"));
+        bandCenterMaxSlider->setGeometry(QRect(144, 680, 100, 22));
+        bandCenterMaxSlider->setAutoFillBackground(false);
+        bandCenterMaxSlider->setMinimum(1);
+        bandCenterMaxSlider->setMaximum(10);
+        bandCenterMaxSlider->setSingleStep(25);
+        bandCenterMaxSlider->setValue(10);
+        bandCenterMaxSlider->setSliderPosition(10);
+        bandCenterMaxSlider->setTracking(true);
+        bandCenterMaxSlider->setOrientation(Qt::Horizontal);
+        bandCenterMaxSlider->setInvertedAppearance(false);
+        bandCenterMaxSlider->setInvertedControls(false);
+        bandCenterMaxSlider->setTickPosition(QSlider::TicksBothSides);
+        bandCenterMaxSlider->setTickInterval(20);
+        label_29 = new QLabel(setupForm);
+        label_29->setObjectName(QStringLiteral("label_29"));
+        label_29->setGeometry(QRect(14, 680, 121, 20));
+        label_29->setFont(font1);
+        label_29->setFrameShape(QFrame::NoFrame);
+        label_29->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
+        label_30 = new QLabel(setupForm);
+        label_30->setObjectName(QStringLiteral("label_30"));
+        label_30->setGeometry(QRect(294, 681, 31, 20));
+        label_30->setFont(font1);
+        label_30->setFrameShape(QFrame::NoFrame);
+        label_30->setAlignment(Qt::AlignHCenter|Qt::AlignTop);
+        labelBandCenterMax = new QLabel(setupForm);
+        labelBandCenterMax->setObjectName(QStringLiteral("labelBandCenterMax"));
+        labelBandCenterMax->setGeometry(QRect(252, 680, 42, 20));
+        labelBandCenterMax->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
+        labelBandCenterMax->setFrameShape(QFrame::Box);
+        labelBandCenterMax->setAlignment(Qt::AlignCenter);
         tabWidget->raise();
         labelTarget->raise();
         labelMono->raise();
@@ -947,6 +991,11 @@ public:
         bandWidthMinSlider->raise();
         label_27->raise();
         labelBandWidthMin->raise();
+        label_28->raise();
+        bandCenterMaxSlider->raise();
+        label_29->raise();
+        label_30->raise();
+        labelBandCenterMax->raise();
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -966,7 +1015,7 @@ public:
         QObject::connect(lineDetectionBox, SIGNAL(stateChanged(int)), setupForm, SLOT(lineDetectionBox()));
         QObject::connect(editLineScore, SIGNAL(returnPressed()), setupForm, SLOT(editLineScore()));
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(setupForm);
@@ -1129,8 +1178,12 @@ public:
         radioColored->setText(QApplication::translate("setupForm", "Renkli", 0));
         label_26->setText(QApplication::translate("setupForm", "\303\207izgi Oran\304\261 E\305\237i\304\237i", 0));
         labellenRateThr->setText(QApplication::translate("setupForm", "0", 0));
-        label_27->setText(QApplication::translate("setupForm", "Band Gen Min (%)", 0));
+        label_27->setText(QApplication::translate("setupForm", "Band Gen Min", 0));
         labelBandWidthMin->setText(QApplication::translate("setupForm", "0", 0));
+        label_28->setText(QApplication::translate("setupForm", "%", 0));
+        label_29->setText(QApplication::translate("setupForm", "Band Merkezi Max", 0));
+        label_30->setText(QApplication::translate("setupForm", "%", 0));
+        labelBandCenterMax->setText(QApplication::translate("setupForm", "0", 0));
     } // retranslateUi
 
 };
