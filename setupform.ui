@@ -854,7 +854,7 @@
     <enum>QTabWidget::West</enum>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <property name="usesScrollButtons">
     <bool>false</bool>
@@ -1905,7 +1905,7 @@
      <property name="geometry">
       <rect>
        <x>420</x>
-       <y>550</y>
+       <y>630</y>
        <width>111</width>
        <height>20</height>
       </rect>
@@ -1930,7 +1930,7 @@
      <property name="geometry">
       <rect>
        <x>420</x>
-       <y>490</y>
+       <y>570</y>
        <width>111</width>
        <height>20</height>
       </rect>
@@ -1955,7 +1955,7 @@
      <property name="geometry">
       <rect>
        <x>370</x>
-       <y>518</y>
+       <y>598</y>
        <width>42</width>
        <height>20</height>
       </rect>
@@ -1977,7 +1977,7 @@
      <property name="geometry">
       <rect>
        <x>370</x>
-       <y>548</y>
+       <y>628</y>
        <width>42</width>
        <height>20</height>
       </rect>
@@ -1996,7 +1996,7 @@
      <property name="geometry">
       <rect>
        <x>420</x>
-       <y>520</y>
+       <y>600</y>
        <width>131</width>
        <height>20</height>
       </rect>
@@ -2021,7 +2021,7 @@
      <property name="geometry">
       <rect>
        <x>370</x>
-       <y>488</y>
+       <y>568</y>
        <width>42</width>
        <height>20</height>
       </rect>
@@ -2064,6 +2064,52 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="twoPassWeldingBox">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>480</y>
+       <width>211</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Makineden Kaynak Başlangıcı</string>
+     </property>
+     <property name="text">
+      <string>2 Paso Uygulaması</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="autoDetect2ndPassBox">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>500</y>
+       <width>211</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Makineden Kaynak Başlangıcı</string>
+     </property>
+     <property name="text">
+      <string>2.Pasoya Oto Geçiş</string>
      </property>
     </widget>
     <zorder>label_15</zorder>
@@ -2116,6 +2162,8 @@
     <zorder>label_14</zorder>
     <zorder>editFPS</zorder>
     <zorder>label_22</zorder>
+    <zorder>twoPassWeldingBox</zorder>
+    <zorder>autoDetect2ndPassBox</zorder>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">

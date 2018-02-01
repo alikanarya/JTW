@@ -71,6 +71,8 @@ public:
     QPushButton *videoButton;
     QPushButton *setupButton;
     QPushButton *guideAlignButton;
+    QPushButton *passOneButton;
+    QPushButton *passTwoButton;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -442,6 +444,16 @@ public:
         guideAlignButton->setIcon(icon21);
         guideAlignButton->setIconSize(QSize(32, 32));
         guideAlignButton->setFlat(true);
+        passOneButton = new QPushButton(centralWidget);
+        passOneButton->setObjectName(QStringLiteral("passOneButton"));
+        passOneButton->setGeometry(QRect(727, 220, 60, 60));
+        passOneButton->setFont(font);
+        passOneButton->setCheckable(false);
+        passTwoButton = new QPushButton(centralWidget);
+        passTwoButton->setObjectName(QStringLiteral("passTwoButton"));
+        passTwoButton->setGeometry(QRect(727, 284, 60, 60));
+        passTwoButton->setFont(font);
+        passTwoButton->setCheckable(false);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -574,6 +586,10 @@ public:
         guideAlignButton->setToolTip(QApplication::translate("MainWindow", "Rehber Hizala", 0));
 #endif // QT_NO_TOOLTIP
         guideAlignButton->setText(QString());
+        passOneButton->setText(QApplication::translate("MainWindow", "1.\n"
+"PASO", 0));
+        passTwoButton->setText(QApplication::translate("MainWindow", "2.\n"
+"PASO", 0));
     } // retranslateUi
 
 };

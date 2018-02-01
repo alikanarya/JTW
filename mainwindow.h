@@ -67,6 +67,8 @@
 #define _LEN_RATIO          0.5
 #define _BAND_WIDTH_MIN     0.2
 #define _BAND_CENTER_MAX    0.1
+#define _2_PASS_WELD        false
+#define _DETECT_2ND_PASS    false
 
 
 #define _PWD_SETTINGS       "nokts"
@@ -356,6 +358,8 @@ public:
           distanceDownStop;     // stop action
     float zStartStopRate;
 
+    bool twoPassWelding;
+    bool autoDetect2ndPass;
 
     // plc vars
     struct{

@@ -121,6 +121,8 @@ public:
     QLabel *label_14;
     QLineEdit *editFPS;
     QLabel *label_22;
+    QCheckBox *twoPassWeldingBox;
+    QCheckBox *autoDetect2ndPassBox;
     QWidget *tab_2;
     QGraphicsView *graphicsView;
     QGraphicsView *graphicsView2;
@@ -635,34 +637,34 @@ public:
         timeControlBox->setFont(font2);
         label_16 = new QLabel(tab);
         label_16->setObjectName(QStringLiteral("label_16"));
-        label_16->setGeometry(QRect(420, 550, 111, 20));
+        label_16->setGeometry(QRect(420, 630, 111, 20));
         label_16->setFont(font4);
         label_16->setFrameShape(QFrame::NoFrame);
         label_16->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
         label_13 = new QLabel(tab);
         label_13->setObjectName(QStringLiteral("label_13"));
-        label_13->setGeometry(QRect(420, 490, 111, 20));
+        label_13->setGeometry(QRect(420, 570, 111, 20));
         label_13->setFont(font4);
         label_13->setFrameShape(QFrame::NoFrame);
         label_13->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
         editIPI = new QLineEdit(tab);
         editIPI->setObjectName(QStringLiteral("editIPI"));
-        editIPI->setGeometry(QRect(370, 518, 42, 20));
+        editIPI->setGeometry(QRect(370, 598, 42, 20));
         editIPI->setMaxLength(2);
         editIPI->setAlignment(Qt::AlignCenter);
         editVideoDuration = new QLineEdit(tab);
         editVideoDuration->setObjectName(QStringLiteral("editVideoDuration"));
-        editVideoDuration->setGeometry(QRect(370, 548, 42, 20));
+        editVideoDuration->setGeometry(QRect(370, 628, 42, 20));
         editVideoDuration->setAlignment(Qt::AlignCenter);
         label_14 = new QLabel(tab);
         label_14->setObjectName(QStringLiteral("label_14"));
-        label_14->setGeometry(QRect(420, 520, 131, 20));
+        label_14->setGeometry(QRect(420, 600, 131, 20));
         label_14->setFont(font4);
         label_14->setFrameShape(QFrame::NoFrame);
         label_14->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
         editFPS = new QLineEdit(tab);
         editFPS->setObjectName(QStringLiteral("editFPS"));
-        editFPS->setGeometry(QRect(370, 488, 42, 20));
+        editFPS->setGeometry(QRect(370, 568, 42, 20));
         editFPS->setAlignment(Qt::AlignCenter);
         label_22 = new QLabel(tab);
         label_22->setObjectName(QStringLiteral("label_22"));
@@ -676,6 +678,14 @@ public:
         label_22->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         label_22->setFrameShape(QFrame::NoFrame);
         label_22->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
+        twoPassWeldingBox = new QCheckBox(tab);
+        twoPassWeldingBox->setObjectName(QStringLiteral("twoPassWeldingBox"));
+        twoPassWeldingBox->setGeometry(QRect(370, 480, 211, 17));
+        twoPassWeldingBox->setFont(font2);
+        autoDetect2ndPassBox = new QCheckBox(tab);
+        autoDetect2ndPassBox->setObjectName(QStringLiteral("autoDetect2ndPassBox"));
+        autoDetect2ndPassBox->setGeometry(QRect(370, 500, 211, 17));
+        autoDetect2ndPassBox->setFont(font2);
         tabWidget->addTab(tab, QString());
         label_15->raise();
         plainTextEdit->raise();
@@ -727,6 +737,8 @@ public:
         label_14->raise();
         editFPS->raise();
         label_22->raise();
+        twoPassWeldingBox->raise();
+        autoDetect2ndPassBox->raise();
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
         graphicsView = new QGraphicsView(tab_2);
@@ -1015,7 +1027,7 @@ public:
         QObject::connect(lineDetectionBox, SIGNAL(stateChanged(int)), setupForm, SLOT(lineDetectionBox()));
         QObject::connect(editLineScore, SIGNAL(returnPressed()), setupForm, SLOT(editLineScore()));
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(setupForm);
@@ -1163,6 +1175,14 @@ public:
         editFPS->setInputMask(QApplication::translate("setupForm", "999", 0));
         editFPS->setText(QApplication::translate("setupForm", "10", 0));
         label_22->setText(QApplication::translate("setupForm", "ALGOR\304\260TMA", 0));
+#ifndef QT_NO_TOOLTIP
+        twoPassWeldingBox->setToolTip(QApplication::translate("setupForm", "Makineden Kaynak Ba\305\237lang\304\261c\304\261", 0));
+#endif // QT_NO_TOOLTIP
+        twoPassWeldingBox->setText(QApplication::translate("setupForm", "2 Paso Uygulamas\304\261", 0));
+#ifndef QT_NO_TOOLTIP
+        autoDetect2ndPassBox->setToolTip(QApplication::translate("setupForm", "Makineden Kaynak Ba\305\237lang\304\261c\304\261", 0));
+#endif // QT_NO_TOOLTIP
+        autoDetect2ndPassBox->setText(QApplication::translate("setupForm", "2.Pasoya Oto Ge\303\247i\305\237", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("setupForm", "Ayarlar", 0));
         labelTarget2->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("setupForm", "Grafik", 0));

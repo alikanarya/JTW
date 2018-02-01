@@ -941,6 +941,8 @@ void setupForm::getParameters(){
     lenRateThr = w->lenRateThr;
     bandWidthMin = w->bandWidthMin;
     bandCenterMax = w->bandCenterMax;
+    twoPassWelding = w->twoPassWelding;
+    autoDetect2ndPass = w->autoDetect2ndPass;
 
     ui->labelMAFilterSize->setText( QString::number(maFilterKernelSize) );
     ui->maFilterSizeSlider->setValue( (int)(maFilterKernelSize/2-1) );
@@ -954,6 +956,9 @@ void setupForm::getParameters(){
     ui->bandWidthMinSlider->setValue( bandWidthMin*100 );
     ui->labelBandCenterMax->setText( QString::number(bandCenterMax) );
     ui->bandCenterMaxSlider->setValue( bandCenterMax*100 );
+    ui->twoPassWeldingBox->setChecked( twoPassWelding );
+    ui->autoDetect2ndPassBox->setChecked( autoDetect2ndPass );
+    ui->autoDetect2ndPassBox->setEnabled(twoPassWelding);
 
 }
 
@@ -1010,6 +1015,19 @@ void setupForm::saveExitButton(){
     w->lenRateThr = lenRateThr;
     w->bandWidthMin = bandWidthMin;
     w->bandCenterMax = bandCenterMax;
+
+    w->twoPassWelding = ui->twoPassWeldingBox->isChecked();
+    w->autoDetect2ndPass = ui->autoDetect2ndPassBox->isChecked();
+
+    w->ui->passOneButton->setEnabled( twoPassWelding );
+    w->ui->passTwoButton->setEnabled( twoPassWelding );
+    if (!twoPassWelding){
+        w->ui->passOneButton->hide();
+        w->ui->passTwoButton->hide();
+    } else {
+        w->ui->passOneButton->show();
+        w->ui->passTwoButton->show();
+    }
 
     w->writeSettings();
 
@@ -2230,4 +2248,18 @@ void setupForm::on_bandCenterMaxSlider_sliderPressed(){}
 void setupForm::on_bandCenterMaxSlider_sliderReleased(){
 
     bandCenterMax = ui->bandCenterMaxSlider->value()/100.0;
+}
+
+void setupForm::on_twoPassWeldingBox_clicked(bool checked){
+    twoPassWelding = checked;
+    if( !twoPassWelding ){
+        autoDetect2ndPass = false;
+        ui->autoDetect2ndPassBox->setChecked(false);
+    }
+
+    ui->autoDetect2ndPassBox->setEnabled(twoPassWelding);
+}
+
+void setupForm::on_autoDetect2ndPassBox_clicked(){
+    autoDetect2ndPass = ui->autoDetect2ndPassBox->isChecked();
 }

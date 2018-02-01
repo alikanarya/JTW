@@ -78,6 +78,9 @@ public:
     double bandWidthMin = 0.20;
     double bandCenterMax = 0.10;
 
+    bool twoPassWelding;
+    bool autoDetect2ndPass;
+
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
     bool iprocessInitSwitch, iprocessLeftInitSwitch, iprocessRightInitSwitch;
@@ -185,6 +188,8 @@ private slots:
     void on_bandCenterMaxSlider_sliderMoved(int position);
     void on_bandCenterMaxSlider_sliderPressed();
     void on_bandCenterMaxSlider_sliderReleased();
+    void on_twoPassWeldingBox_clicked(bool checked);
+    void on_autoDetect2ndPassBox_clicked();
 };
 
 #endif // SETUPFORM_H

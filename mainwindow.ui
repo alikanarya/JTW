@@ -1213,6 +1213,54 @@ background-color: rgb(236, 233, 216);</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="passOneButton">
+    <property name="geometry">
+     <rect>
+      <x>727</x>
+      <y>220</y>
+      <width>60</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>1.
+PASO</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="passTwoButton">
+    <property name="geometry">
+     <rect>
+      <x>727</x>
+      <y>284</y>
+      <width>60</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>2.
+PASO</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

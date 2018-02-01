@@ -320,6 +320,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->rightButton->setEnabled( false );
     ui->rightButton->hide();
 
+    if (!twoPassWelding) autoDetect2ndPass = false;
+    ui->passOneButton->setEnabled( twoPassWelding );
+    ui->passTwoButton->setEnabled( twoPassWelding );
+    if (!twoPassWelding){
+        ui->passOneButton->hide();
+        ui->passTwoButton->hide();
+    }
+
     //**cameraChecker->cameraDown = false;
     if (play) playButton();
 
@@ -1799,6 +1807,9 @@ void MainWindow::readSettings(){
             bandWidthMin = settings->value("bwidm", _BAND_WIDTH_MIN).toFloat();
             bandCenterMax = settings->value("bcenm", _BAND_CENTER_MAX).toFloat();
 
+            twoPassWelding = settings->value("twopass", _2_PASS_WELD).toBool();
+            autoDetect2ndPass = settings->value("detpass", _DETECT_2ND_PASS).toBool();
+
         settings->endGroup();
 
         settings->beginGroup("oth");
@@ -1892,6 +1903,9 @@ void MainWindow::readSettings(){
         lenRateThr = _LEN_RATIO;
         bandWidthMin = _BAND_WIDTH_MIN;
         bandCenterMax = _BAND_CENTER_MAX;
+
+        twoPassWelding = _2_PASS_WELD;
+        autoDetect2ndPass = _DETECT_2ND_PASS;
 
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
@@ -2003,6 +2017,10 @@ void MainWindow::writeSettings(){
        settings->setValue("lrate", QString::number(lenRateThr));
        settings->setValue("bwidm", QString::number(bandWidthMin));
        settings->setValue("bcenm", QString::number(bandCenterMax));
+       QVariant twopasssw(twoPassWelding);
+           settings->setValue("twopass", twopasssw.toString());
+       QVariant detpasssw(autoDetect2ndPass);
+           settings->setValue("detpass", detpasssw.toString());
 
     settings->endGroup();
 
