@@ -358,8 +358,10 @@ public:
           distanceDownStop;     // stop action
     float zStartStopRate;
 
+    // 2 PASS WELDING
     bool twoPassWelding;
     bool autoDetect2ndPass;
+    bool firstPass = true;  // false: 2nd pass
 
     // plc vars
     struct{
@@ -616,6 +618,10 @@ private slots:
     void on_setupButton_clicked();
 
     void on_guideAlignButton_clicked();
+
+    void on_passOneButton_clicked();
+
+    void on_passTwoButton_clicked();
 
 private:
     protect lic;

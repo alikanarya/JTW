@@ -328,6 +328,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->passTwoButton->hide();
     }
 
+    firstPass = twoPassWelding;
+
     //**cameraChecker->cameraDown = false;
     if (play) playButton();
 
@@ -1141,6 +1143,12 @@ void MainWindow::startControl(){
 
     ui->controlButton->setIcon(controlOnIcon);
     ui->plainTextEdit->appendPlainText(timeString() + message1);
+
+    if (twoPassWelding){
+        firstPass = true;
+        ui->passOneButton->setStyleSheet("background-color: lime");
+        ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
+    }
 
     // for report
     errorTotal = 0;
@@ -3380,3 +3388,15 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
     return ( focusValX_offset + u );
 }
 
+
+void MainWindow::on_passOneButton_clicked(){
+    firstPass = true;
+    ui->passOneButton->setStyleSheet("background-color: lime");
+    ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
+}
+
+void MainWindow::on_passTwoButton_clicked(){
+    firstPass = false;
+    ui->passOneButton->setStyleSheet("background-color: #F0F0F0");
+    ui->passTwoButton->setStyleSheet("background-color: lime");
+}

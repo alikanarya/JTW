@@ -448,7 +448,10 @@ public:
         passOneButton->setObjectName(QStringLiteral("passOneButton"));
         passOneButton->setGeometry(QRect(727, 220, 60, 60));
         passOneButton->setFont(font);
+        passOneButton->setAutoFillBackground(false);
         passOneButton->setCheckable(false);
+        passOneButton->setChecked(false);
+        passOneButton->setFlat(false);
         passTwoButton = new QPushButton(centralWidget);
         passTwoButton->setObjectName(QStringLiteral("passTwoButton"));
         passTwoButton->setGeometry(QRect(727, 284, 60, 60));
