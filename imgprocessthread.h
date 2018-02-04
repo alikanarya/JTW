@@ -29,6 +29,7 @@ public:
     void Algo4();   // woLASER: value > detectThinJointCenter
     void Algo5();   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6();   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
+    void Algo7();   // woLASER: edge > houghTr > detectScanHorizontal
 
 signals:
 

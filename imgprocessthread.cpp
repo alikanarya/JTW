@@ -52,7 +52,10 @@ void imgProcessThread::run(){
             case 4: // LINE DETECTION WITH MAIN EDGES
                 Algo6();
                 break;
-            case 5: // EXPERIMENTAL
+            case 5: // SCAN HORIZONTAL
+                Algo7();
+                break;
+            case 6: // EXPERIMENTAL
                 break;
         }
     } else {    // with laser - HORIZONTAL SEARCH
@@ -134,7 +137,6 @@ void imgProcessThread::edgeDetection(){
             w->matrixFlag = false;
             break;
     }
-
 }
 
 void imgProcessThread::Algo1(){
@@ -221,5 +223,15 @@ void imgProcessThread::Algo6(){
         w->solidLineLength = iprocess->solidLineLength;
     } else {
         //ui->plainTextEdit->appendPlainText("Canny1 kenar tespiti algoritmasý seçilmelidir");
+    }
+}
+
+void imgProcessThread::Algo7(){
+// woLASER: edge > houghTr > detectScanHorizontal
+
+    if (w->edgeDetectionState != 0) {
+        iprocess->detectScanHorizontal( iprocess->edgeHeight/2 );            // get max voted line(s)
+    } else {
+        //ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritmasý seçilmelidir");
     }
 }

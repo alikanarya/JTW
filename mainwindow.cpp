@@ -553,7 +553,7 @@ void MainWindow::camConnected(){
     alarmCameraDownLock  = false;
 
     if( !alarmCameraOnlineLock ) {
-        qDebug()<<Q_FUNC_INFO;
+        //qDebug()<<Q_FUNC_INFO;
         if (play && camStreamType == 0) {
             playStream->setFps(fpsTarget);
             //playStream->startCapture();
@@ -572,7 +572,7 @@ void MainWindow::camNotConnected(){
     alarmCameraOnlineLock = false;
 
     if( !alarmCameraDownLock ) {
-        qDebug()<<Q_FUNC_INFO;
+        //qDebug()<<Q_FUNC_INFO;
 
         ui->plainTextEdit->appendPlainText(timeString() + alarm7);
         ui->statusBar->showMessage("Kameraya bağlanılamıyor !");
@@ -1059,8 +1059,21 @@ void MainWindow::trackButton(){
 
     if (trackOn){
         ui->trackButton->setIcon(trackOnIcon);
+        if (twoPassWelding){
+            firstPass = true;
+            ui->passOneButton->setStyleSheet("background-color: lime");
+            ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
+        }
+
     } else {
         ui->trackButton->setIcon(trackOffIcon);
+
+        if (twoPassWelding){
+            firstPass = true;
+            ui->passOneButton->setStyleSheet("background-color: #F0F0F0");
+            ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
+        }
+
         if (controlOn) {
             controlButton();
             ui->controlButton->setEnabled(false);
@@ -1143,12 +1156,6 @@ void MainWindow::startControl(){
 
     ui->controlButton->setIcon(controlOnIcon);
     ui->plainTextEdit->appendPlainText(timeString() + message1);
-
-    if (twoPassWelding){
-        firstPass = true;
-        ui->passOneButton->setStyleSheet("background-color: lime");
-        ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
-    }
 
     // for report
     errorTotal = 0;
@@ -1367,8 +1374,16 @@ void MainWindow::processImage(bool deleteObject){
 
         if (!iProcessThread->isRunning() && iProcessThread->ready){
             iProcessThread->targetArea = targetArea.copy(0,0,targetArea.width(), targetArea.height());
-            iProcessThread->start();
 
+            if (twoPassWelding) {
+                thinJointAlgoActive = true;     // without laser - VERTICAL SEARCH
+                if (firstPass)
+                    algorithmType = 4;          // Algo6() LINE DETECTION WITH MAIN EDGES
+                else
+                    algorithmType = 1;          // Algo3() MAIN EDGES
+            }
+
+            iProcessThread->start();
         }
     }
 }

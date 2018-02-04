@@ -1021,10 +1021,27 @@ void setupForm::saveExitButton(){
 
     w->ui->passOneButton->setEnabled( twoPassWelding );
     w->ui->passTwoButton->setEnabled( twoPassWelding );
+
     if (!twoPassWelding){
+        w->firstPass = true;
         w->ui->passOneButton->hide();
         w->ui->passTwoButton->hide();
+        w->ui->passOneButton->setStyleSheet("background-color: #F0F0F0");
+        w->ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
     } else {
+        if (w->trackOn) {
+            if (w->firstPass){
+                w->ui->passOneButton->setStyleSheet("background-color: lime");
+                w->ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
+            } else {
+                w->ui->passOneButton->setStyleSheet("background-color: #F0F0F0");
+                w->ui->passTwoButton->setStyleSheet("background-color: lime");
+            }
+        } else {
+            w->firstPass = true;
+            w->ui->passOneButton->setStyleSheet("background-color: #F0F0F0");
+            w->ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
+        }
         w->ui->passOneButton->show();
         w->ui->passTwoButton->show();
     }

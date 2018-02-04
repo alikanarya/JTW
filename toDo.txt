@@ -1,9 +1,15 @@
-* detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
-* 2nd pass detection algo
-* 2nd pass settings in setupform, mainwindows and timing
-* 1st and 2nd pass selection and user settings in mainwindow
-* setupform algo edits will be reflected to mainwindow algo functions			
-* pushbottons for double pass on mainW, selection boxes on setupForm			...done
+
+* 2 pass user settings in mainwindow
+* 2nd pass detection algo; timing
+* 2nd pass detection algo; detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
+
+* manual pass selection disabled, only auto pass detection ?
+* histogram analysis from 1st pass to 2nd pass transition
+
+* 2 pass selection in manwindow processImage fn		...done
+* setupform algo edits reflected to iprocessthread mainwindow algo functions	...done			
+* pushbottons for double pass on mainW, selection boxes on setupForm	...done
+
 * 2nd pass selection and auto pass detection variables definitions			...done
 * histogramAnalysis; bandCenterMax implemented on setupForm				...done
 * histogramAnalysis; bandCenterMax and bandWidthMax are shown on image with lines in setupForm	...done
