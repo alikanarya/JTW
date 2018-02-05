@@ -6,10 +6,11 @@
 * manual pass selection disabled, only auto pass detection ?
 * histogram analysis from 1st pass to 2nd pass transition
 
+* setupForm, histogram area number implemented to divide in regions	
+in order to detect 1st pass to 2nd pass transition	...done
 * 2 pass selection in manwindow processImage fn		...done
 * setupform algo edits reflected to iprocessthread mainwindow algo functions	...done			
 * pushbottons for double pass on mainW, selection boxes on setupForm	...done
-
 * 2nd pass selection and auto pass detection variables definitions			...done
 * histogramAnalysis; bandCenterMax implemented on setupForm				...done
 * histogramAnalysis; bandCenterMax and bandWidthMax are shown on image with lines in setupForm	...done

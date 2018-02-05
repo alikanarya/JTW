@@ -2328,7 +2328,7 @@
    <property name="geometry">
     <rect>
      <x>-7</x>
-     <y>560</y>
+     <y>590</y>
      <width>81</width>
      <height>20</height>
     </rect>
@@ -2355,7 +2355,7 @@
    <property name="geometry">
     <rect>
      <x>83</x>
-     <y>560</y>
+     <y>590</y>
      <width>160</width>
      <height>22</height>
     </rect>
@@ -2401,7 +2401,7 @@
    <property name="geometry">
     <rect>
      <x>252</x>
-     <y>560</y>
+     <y>590</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -2442,7 +2442,7 @@
    <property name="geometry">
     <rect>
      <x>23</x>
-     <y>590</y>
+     <y>620</y>
      <width>51</width>
      <height>20</height>
     </rect>
@@ -2469,7 +2469,7 @@
    <property name="geometry">
     <rect>
      <x>83</x>
-     <y>590</y>
+     <y>620</y>
      <width>160</width>
      <height>22</height>
     </rect>
@@ -2515,7 +2515,7 @@
    <property name="geometry">
     <rect>
      <x>252</x>
-     <y>590</y>
+     <y>620</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -2578,7 +2578,7 @@
    <property name="geometry">
     <rect>
      <x>24</x>
-     <y>621</y>
+     <y>651</y>
      <width>111</width>
      <height>20</height>
     </rect>
@@ -2605,7 +2605,7 @@
    <property name="geometry">
     <rect>
      <x>144</x>
-     <y>621</y>
+     <y>651</y>
      <width>100</width>
      <height>22</height>
     </rect>
@@ -2651,7 +2651,7 @@
    <property name="geometry">
     <rect>
      <x>252</x>
-     <y>621</y>
+     <y>651</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -2673,7 +2673,7 @@
    <property name="geometry">
     <rect>
      <x>144</x>
-     <y>650</y>
+     <y>680</y>
      <width>100</width>
      <height>22</height>
     </rect>
@@ -2719,7 +2719,7 @@
    <property name="geometry">
     <rect>
      <x>34</x>
-     <y>650</y>
+     <y>680</y>
      <width>101</width>
      <height>20</height>
     </rect>
@@ -2746,7 +2746,7 @@
    <property name="geometry">
     <rect>
      <x>252</x>
-     <y>650</y>
+     <y>680</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -2768,7 +2768,7 @@
    <property name="geometry">
     <rect>
      <x>294</x>
-     <y>651</y>
+     <y>681</y>
      <width>31</width>
      <height>20</height>
     </rect>
@@ -2795,7 +2795,7 @@
    <property name="geometry">
     <rect>
      <x>144</x>
-     <y>680</y>
+     <y>710</y>
      <width>100</width>
      <height>22</height>
     </rect>
@@ -2841,7 +2841,7 @@
    <property name="geometry">
     <rect>
      <x>14</x>
-     <y>680</y>
+     <y>710</y>
      <width>121</width>
      <height>20</height>
     </rect>
@@ -2868,7 +2868,7 @@
    <property name="geometry">
     <rect>
      <x>294</x>
-     <y>681</y>
+     <y>711</y>
      <width>31</width>
      <height>20</height>
     </rect>
@@ -2895,7 +2895,7 @@
    <property name="geometry">
     <rect>
      <x>252</x>
-     <y>680</y>
+     <y>710</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -2911,6 +2911,101 @@
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QSlider" name="histAreaNoSlider">
+   <property name="geometry">
+    <rect>
+     <x>144</x>
+     <y>560</y>
+     <width>100</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="maximum">
+    <number>5</number>
+   </property>
+   <property name="singleStep">
+    <number>25</number>
+   </property>
+   <property name="value">
+    <number>1</number>
+   </property>
+   <property name="sliderPosition">
+    <number>1</number>
+   </property>
+   <property name="tracking">
+    <bool>true</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="invertedAppearance">
+    <bool>false</bool>
+   </property>
+   <property name="invertedControls">
+    <bool>false</bool>
+   </property>
+   <property name="tickPosition">
+    <enum>QSlider::TicksBothSides</enum>
+   </property>
+   <property name="tickInterval">
+    <number>20</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="labelHistAreaNo">
+   <property name="geometry">
+    <rect>
+     <x>252</x>
+     <y>560</y>
+     <width>42</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::Box</enum>
+   </property>
+   <property name="text">
+    <string>1</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_31">
+   <property name="geometry">
+    <rect>
+     <x>24</x>
+     <y>560</y>
+     <width>111</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>MS Shell Dlg 2</family>
+     <pointsize>8</pointsize>
+     <weight>50</weight>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="text">
+    <string>Bölge Sayısı</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
    </property>
   </widget>
   <zorder>tabWidget</zorder>
@@ -2974,6 +3069,9 @@
   <zorder>label_29</zorder>
   <zorder>label_30</zorder>
   <zorder>labelBandCenterMax</zorder>
+  <zorder>histAreaNoSlider</zorder>
+  <zorder>labelHistAreaNo</zorder>
+  <zorder>label_31</zorder>
  </widget>
  <resources>
   <include location="icons.qrc"/>

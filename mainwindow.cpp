@@ -1829,6 +1829,7 @@ void MainWindow::readSettings(){
             lenRateThr = settings->value("lrate", _LEN_RATIO).toFloat();
             bandWidthMin = settings->value("bwidm", _BAND_WIDTH_MIN).toFloat();
             bandCenterMax = settings->value("bcenm", _BAND_CENTER_MAX).toFloat();
+            histAreaNo = settings->value("harno", _HIST_AREA_NO).toInt();
 
             twoPassWelding = settings->value("twopass", _2_PASS_WELD).toBool();
             autoDetect2ndPass = settings->value("detpass", _DETECT_2ND_PASS).toBool();
@@ -1926,6 +1927,7 @@ void MainWindow::readSettings(){
         lenRateThr = _LEN_RATIO;
         bandWidthMin = _BAND_WIDTH_MIN;
         bandCenterMax = _BAND_CENTER_MAX;
+        histAreaNo = _HIST_AREA_NO;
 
         twoPassWelding = _2_PASS_WELD;
         autoDetect2ndPass = _DETECT_2ND_PASS;
@@ -2040,6 +2042,8 @@ void MainWindow::writeSettings(){
        settings->setValue("lrate", QString::number(lenRateThr));
        settings->setValue("bwidm", QString::number(bandWidthMin));
        settings->setValue("bcenm", QString::number(bandCenterMax));
+       settings->setValue("harno", QString::number(histAreaNo));
+
        QVariant twopasssw(twoPassWelding);
            settings->setValue("twopass", twopasssw.toString());
        QVariant detpasssw(autoDetect2ndPass);

@@ -71,12 +71,14 @@ public:
     bool DEBUG = false;
     bool saveAnalysis = false;
     int hdDistance, hdAngle, hdVoteValue, solidLineLength;
+
     int maFilterKernelSize = 11;
     int histogramAngleThreshold = 10;
     bool colorMatrix = true; // true=colored, false=gray
     double lenRateThr = 0.50;
     double bandWidthMin = 0.20;
     double bandCenterMax = 0.10;
+    int histAreaNo = 1;
 
     bool twoPassWelding;
     bool autoDetect2ndPass;
@@ -127,6 +129,7 @@ public slots:
     void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
     void Algo7(imgProcess *iprocess);   // woLASER: edge > houghTr > detectScanHorizontal
+    void histMultAreas();
 
     void update();
 
@@ -190,6 +193,8 @@ private slots:
     void on_bandCenterMaxSlider_sliderReleased();
     void on_twoPassWeldingBox_clicked(bool checked);
     void on_autoDetect2ndPassBox_clicked();
+    void on_histAreaNoSlider_sliderMoved(int position);
+    void on_histAreaNoSlider_sliderReleased();
 };
 
 #endif // SETUPFORM_H

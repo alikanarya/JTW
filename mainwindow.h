@@ -67,6 +67,7 @@
 #define _LEN_RATIO          0.5
 #define _BAND_WIDTH_MIN     0.2
 #define _BAND_CENTER_MAX    0.1
+#define _HIST_AREA_NO       1
 #define _2_PASS_WELD        false
 #define _DETECT_2ND_PASS    false
 
@@ -344,6 +345,7 @@ public:
     double lenRateThr = 0.50;
     double bandWidthMin = 0.20;
     double bandCenterMax = 0.1;
+    int histAreaNo = 1;
 
     // Z-Control
     bool zControlActive;
