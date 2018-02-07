@@ -4,8 +4,11 @@
 * 2nd pass detection algo; detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
 
 * manual pass selection disabled, only auto pass detection ?
+* histAreaNo slider lines showed on image while changing the value 
 * histogram analysis from 1st pass to 2nd pass transition
 
+* histAreaNo slider modified for odd values by signals	...done
+* histogram multi region data are saved in data folder at debug	...done
 * setupForm, histogram area number implemented to divide in regions	
 in order to detect 1st pass to 2nd pass transition	...done
 * 2 pass selection in manwindow processImage fn		...done

@@ -136,6 +136,8 @@ setupForm::setupForm(QWidget *parent) : QDialog(parent), ui(new Ui::setupForm){
     penGreen->setWidth(1);
 
     ui->tabWidget->setCurrentIndex(0);
+
+    connect(ui->histAreaNoSlider,SIGNAL(valueChanged(int)),this,SLOT(restrictMove_histAreaNoSlider(int)));
     //---------------------------------------------------
     ui->checkSubImage->hide();
     ui->editHoughThetaMaxSub->hide();
@@ -2205,17 +2207,18 @@ void setupForm::histMultAreas() {
 
         ui->plainTextEdit->appendPlainText("hist max/min: " + QString::number(ipro->histogramMax) +" / "+ QString::number(ipro->histogramMin) );
         double histRange = ipro->histogramMax - ipro->histogramMin;
+
         for (int i=0; i<ipro->histogramMaxPoint.size(); i++){
-            ui->plainTextEdit->appendPlainText("peak/pair/dist-tan (x0,y0) (xp,yp) (len,tan,len%): (" +
+            ui->plainTextEdit->appendPlainText("peak/pair/dist-tan (x0,y0) (xp,yp) (len,degree,len%): (" +
                                                QString::number(ipro->histogramMaxPoint[i].x()) + "," + QString::number(ipro->histogramMaxPoint[i].y()) + ") (" +
                                                QString::number(ipro->histogramMaxPointPair[i].x()) + "," + QString::number(ipro->histogramMaxPointPair[i].y()) + ") (" +
-                                               QString::number(ipro->histogramMaxPointLen[i],'f',0) + "," + QString::number(ipro->histogramMaxPointAng[i],'f',2) + "," + QString::number(ipro->histogramMaxPointLen[i]/histRange,'f',2) +
+                                               QString::number(ipro->histogramMaxPointLen[i],'f',0) + " : " + QString::number(qRadiansToDegrees(qAtan(ipro->histogramMaxPointAng[i])),'f',0) + " : " + QString::number(ipro->histogramMaxPointLen[i]/histRange,'f',2) +
                                                ")");
-        }
+        }/*
         ui->plainTextEdit->appendPlainText("bandWidth: " + QString::number(ipro->bandWidth) + " / " + QString::number((1.0*ipro->bandWidth)/ipro->imageWidth, 'f', 2) +
                                            "  bandCenter: " + QString::number(ipro->bandCenter) + " / " + QString::number((1.0*ipro->bandCenter)/ipro->imageWidth, 'f', 3) +
                                            "  bandShape: " + QString::number(ipro->bandShape, 'f', 2) );
-
+        */
         switch ( ipro->bandCheck_errorState ) {
             case 0: ui->plainTextEdit->appendPlainText("*** " + QString(alarm20)); found2ndPass++; break;
             case 1: ui->plainTextEdit->appendPlainText("*** " + QString(alarm21)); break;
@@ -2232,15 +2235,18 @@ void setupForm::histMultAreas() {
             status.append(0);
 
         if (DEBUG) {
+            QString path = savePath + "histogram/";
+            QDir().mkdir(path);
             drawGraphHist2(ipro, ui->graphicsView3, penRed, ipro->histogramFiltered, ipro->histogramSize, QPoint(-1,-1), true); // recursive MA filter
             QPixmap pixMap = ui->graphicsView3->grab();
-            pixMap.save("_graph"+QString::number(area)+".jpg");
+            pixMap.save(path+"_graph"+QString::number(area)+".jpg");
             //ui->graphicsView3->show();
             //QThread::msleep(3000);
+            ipro->saveArray(ipro->histogramFiltered, ipro->histogramSize, path+"_histogramFiltered"+QString::number(area)+".csv");
+            ipro->saveList(ipro->histogramDIdx,path+"_histogramDIdx"+QString::number(area)+".csv");
+            ipro->saveList(ipro->histogramDSum,path+"_histogramDSum"+QString::number(area)+".csv");
         }
         drawGraphHist2(ipro, ui->graphicsView3, penRed, ipro->histogramFiltered, ipro->histogramSize, QPoint(-1,-1), true); // recursive MA filter
-        iprocess->saveArray(ipro->histogramFiltered, ipro->histogramSize, "_histogramFiltered"+QString::number(area)+".csv");
-
         delete ipro;
     }
 
@@ -2384,4 +2390,9 @@ void setupForm::on_histAreaNoSlider_sliderMoved(int position){
 
 void setupForm::on_histAreaNoSlider_sliderReleased(){
     histAreaNo = ui->histAreaNoSlider->value();
+}
+
+void setupForm::restrictMove_histAreaNoSlider(int position){
+    if (position % 2 == 0)
+        ui->histAreaNoSlider->setValue(position+1);
 }

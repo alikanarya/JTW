@@ -195,6 +195,7 @@ private slots:
     void on_autoDetect2ndPassBox_clicked();
     void on_histAreaNoSlider_sliderMoved(int position);
     void on_histAreaNoSlider_sliderReleased();
+    void restrictMove_histAreaNoSlider(int position);
 };
 
 #endif // SETUPFORM_H

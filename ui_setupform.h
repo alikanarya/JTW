@@ -955,8 +955,9 @@ public:
         histAreaNoSlider->setGeometry(QRect(144, 560, 100, 22));
         histAreaNoSlider->setAutoFillBackground(false);
         histAreaNoSlider->setMinimum(1);
-        histAreaNoSlider->setMaximum(5);
-        histAreaNoSlider->setSingleStep(25);
+        histAreaNoSlider->setMaximum(9);
+        histAreaNoSlider->setSingleStep(2);
+        histAreaNoSlider->setPageStep(4);
         histAreaNoSlider->setValue(1);
         histAreaNoSlider->setSliderPosition(1);
         histAreaNoSlider->setTracking(true);
@@ -964,7 +965,7 @@ public:
         histAreaNoSlider->setInvertedAppearance(false);
         histAreaNoSlider->setInvertedControls(false);
         histAreaNoSlider->setTickPosition(QSlider::TicksBothSides);
-        histAreaNoSlider->setTickInterval(20);
+        histAreaNoSlider->setTickInterval(2);
         labelHistAreaNo = new QLabel(setupForm);
         labelHistAreaNo->setObjectName(QStringLiteral("labelHistAreaNo"));
         labelHistAreaNo->setGeometry(QRect(252, 560, 42, 20));
