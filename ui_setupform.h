@@ -154,8 +154,9 @@ public:
     QSlider *histAreaNoSlider;
     QLabel *labelHistAreaNo;
     QLabel *label_31;
-    QButtonGroup *laserGroup;
+    QComboBox *regionBox;
     QButtonGroup *colorGrayGroup;
+    QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
     {
@@ -978,6 +979,9 @@ public:
         label_31->setFont(font1);
         label_31->setFrameShape(QFrame::NoFrame);
         label_31->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
+        regionBox = new QComboBox(setupForm);
+        regionBox->setObjectName(QStringLiteral("regionBox"));
+        regionBox->setGeometry(QRect(10, 560, 41, 23));
         tabWidget->raise();
         labelTarget->raise();
         labelMono->raise();
@@ -1042,6 +1046,7 @@ public:
         histAreaNoSlider->raise();
         labelHistAreaNo->raise();
         label_31->raise();
+        regionBox->raise();
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));

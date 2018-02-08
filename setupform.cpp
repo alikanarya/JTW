@@ -583,7 +583,7 @@ void setupForm::captureButton(){
 
         // UPDATE GUI
 
-        QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
+        QString message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
         //goto labelx;
         ui->plainTextEdit->appendPlainText(message);
 
@@ -961,6 +961,7 @@ void setupForm::getParameters(){
     ui->bandCenterMaxSlider->setValue( bandCenterMax*100 );
     ui->labelHistAreaNo->setText( QString::number(histAreaNo) );
     ui->histAreaNoSlider->setValue( histAreaNo );
+        on_histAreaNoSlider_sliderReleased();
     ui->twoPassWeldingBox->setChecked( twoPassWelding );
     ui->autoDetect2ndPassBox->setChecked( autoDetect2ndPass );
     ui->autoDetect2ndPassBox->setEnabled(twoPassWelding);
@@ -2038,11 +2039,11 @@ void setupForm::on_histogramAnalysisButton_clicked() {
             iprocessInitSwitch = false;
         }
 
-        ui->labelMono->clear();
+        ui->labelTarget->setPixmap( QPixmap::fromImage( target ) );
+        //ui->labelMono->clear();
         ui->labelEdge->clear();
         ui->labelHough->clear();
         ui->labelAnalyze->clear();
-        ui->labelTarget->setPixmap( QPixmap::fromImage( target ) );
 
         clearGraph(ui->graphicsView);
         clearGraph(ui->graphicsView2);
@@ -2069,7 +2070,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
             processElapsed = endTime - startTime;
             // -------END PROCESSING-------
 
-            QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
+            QString message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
             ui->plainTextEdit->appendPlainText(message);
 
 
@@ -2174,13 +2175,15 @@ void setupForm::histMultAreas() {
 
     int step = (target.height()*1.0) / histAreaNo;
 
+    if (!iproList.empty()){
+        qDeleteAll(iproList);
+        iproList.clear();
+    }
+
     int found2ndPass = 0;
     QList<int> status;
-    QList<imgProcess*> iproList;
 
     for (int area=0; area<histAreaNo; area++) {
-
-        clearGraph(ui->graphicsView3);
 
         QImage pic = target.copy( 0, step*area, target.width(), step );    // take target image
         //pic.save("_area"+QString::number(area)+".jpg");
@@ -2203,27 +2206,27 @@ void setupForm::histMultAreas() {
         processElapsed = endTime - startTime;
         // -------END PROCESSING-------
 
-        QString message = "Analiz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
+        QString message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
         ui->plainTextEdit->appendPlainText(message);
 
         ui->plainTextEdit->appendPlainText("hist max/min: " + QString::number(ipro->histogramMax) +" / "+ QString::number(ipro->histogramMin) );
         double histRange = ipro->histogramMax - ipro->histogramMin;
 
         for (int i=0; i<ipro->histogramMaxPoint.size(); i++){
-            ui->plainTextEdit->appendPlainText("peak/pair/dist-tan (x0,y0) (xp,yp) (len,degree,len%): (" +
+            ui->plainTextEdit->appendPlainText("peak/pair 0(x,y) P(x,y) (len,deg,len%): (" +
                                                QString::number(ipro->histogramMaxPoint[i].x()) + "," + QString::number(ipro->histogramMaxPoint[i].y()) + ") (" +
                                                QString::number(ipro->histogramMaxPointPair[i].x()) + "," + QString::number(ipro->histogramMaxPointPair[i].y()) + ") (" +
                                                QString::number(ipro->histogramMaxPointLen[i],'f',0) + " : " + QString::number(qRadiansToDegrees(qAtan(ipro->histogramMaxPointAng[i])),'f',0) + " : " + QString::number(ipro->histogramMaxPointLen[i]/histRange,'f',2) +
                                                ")");
-        }/*
+        }
         ui->plainTextEdit->appendPlainText("bandWidth: " + QString::number(ipro->bandWidth) + " / " + QString::number((1.0*ipro->bandWidth)/ipro->imageWidth, 'f', 2) +
                                            "  bandCenter: " + QString::number(ipro->bandCenter) + " / " + QString::number((1.0*ipro->bandCenter)/ipro->imageWidth, 'f', 3) +
                                            "  bandShape: " + QString::number(ipro->bandShape, 'f', 2) );
-        */
+
         switch ( ipro->bandCheck_errorState ) {
             case 0: ui->plainTextEdit->appendPlainText("*** " + QString(alarm20)); found2ndPass++; break;
             case 1: ui->plainTextEdit->appendPlainText("*** " + QString(alarm21)); break;
-            case 2: ui->plainTextEdit->appendPlainText("*** " + QString(alarm21)); break;
+            case 2: ui->plainTextEdit->appendPlainText("*** " + QString(alarm22)); break;
             case 3: ui->plainTextEdit->appendPlainText("*** " + QString(alarm23)); break;
             case 4: ui->plainTextEdit->appendPlainText("*** " + QString(alarm24)); break;
             case 5: ui->plainTextEdit->appendPlainText("*** " + QString(alarm25)); break;
@@ -2249,28 +2252,42 @@ void setupForm::histMultAreas() {
         //drawGraphHist2(ipro, ui->graphicsView3, penRed, ipro->histogramFiltered, ipro->histogramSize, QPoint(-1,-1), true); // recursive MA filter
         //delete ipro;
     }
-    for (int area=1; area<2; area++) {
-        clearGraph(ui->graphicsView3);
-        drawGraphHist2(iproList[area], ui->graphicsView3, penRed, iproList[area]->histogramFiltered, iproList[area]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
-        //ui->graphicsView3->show();
-        //QThread::msleep(1000);
-    }
 
-    if (!iproList.empty()){
-        qDeleteAll(iproList);
-        iproList.clear();
-    }
 
     if (found2ndPass == 0)
-        ui->plainTextEdit->appendPlainText("...BAND YOK");
+        ui->plainTextEdit->appendPlainText("\n...BAND YOK");
     if (found2ndPass > 0 && found2ndPass < histAreaNo)
-        ui->plainTextEdit->appendPlainText("...BAND GEÇİŞİ");
+        ui->plainTextEdit->appendPlainText("\n...BAND GEÇİŞİ");
     if (found2ndPass == histAreaNo)
-        ui->plainTextEdit->appendPlainText("...BAND BULUNDU");
+        ui->plainTextEdit->appendPlainText("\n...BAND BULUNDU");
     QString stat = "Doğru bölge #: " + QString::number(found2ndPass) + " >> ";
     for (int i=0; i<status.size(); i++)
         stat += QString::number(status[i]);
     ui->plainTextEdit->appendPlainText(stat);
+
+    QString msg;
+    for (int i=0; i<iproList.size(); i++) {
+        msg = "#" + QString::number(i) + " ";
+        if (iproList[i]->bandCheck_errorState != 0){
+            switch ( iproList[i]->bandCheck_errorState ) {
+                case 1: msg += QString(alarm21); break;
+                case 2: msg += QString(alarm22); break;
+                case 3: msg += QString(alarm23); break;
+                case 4: msg += QString(alarm24); break;
+                case 5: msg += QString(alarm25); break;
+                case 6: msg += QString(alarm26); break;
+            }
+            ui->plainTextEdit->appendPlainText(msg);
+        }
+    }
+
+    if (!iproList.isEmpty()) {
+        clearGraph(ui->graphicsView3);
+        drawGraphHist2(iproList[0], ui->graphicsView3, penRed, iproList[0]->histogramFiltered, iproList[0]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+    }
+
+    graphLock = false;
+    ui->regionBox->setEnabled(true);
 }
 
 void setupForm::on_histAngleSlider_sliderMoved(int position){
@@ -2397,13 +2414,56 @@ void setupForm::on_autoDetect2ndPassBox_clicked(){
 
 void setupForm::on_histAreaNoSlider_sliderMoved(int position){
     ui->labelHistAreaNo->setText(QString::number(position));
+
+    if ( w->play && (w->lastData->image->format() != QImage::Format_Invalid) ){
+        if (w->applyCameraEnhancements) {
+            target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+        } else {
+            target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+        }
+    }
+
+    if ( !w->play &&  imageLoadedFromFile){
+        target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+    }
+
+    if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ){
+
+        QPixmap px = QPixmap::fromImage(target);
+        QPainter p(&px);
+        if (position>1) {
+            p.setPen(QPen(Qt::green, 3));
+            int step = (target.height()*1.0) / position;
+            for (int i=1; i<position; i++) {
+                p.drawLine (0, step*i, target.width(), step*i);
+            }
+            p.end ();
+        }
+        ui->labelMono->setPixmap( px );
+    }
 }
 
 void setupForm::on_histAreaNoSlider_sliderReleased(){
     histAreaNo = ui->histAreaNoSlider->value();
+
+    graphLock = true;
+    ui->regionBox->setEnabled(false);
+
+    ui->regionBox->clear();
+    for (int i=0; i<histAreaNo; i++)
+        ui->regionBox->addItem(QString::number(i+1));
+    ui->regionBox->setCurrentIndex(0);
 }
 
 void setupForm::restrictMove_histAreaNoSlider(int position){
     if (position % 2 == 0)
         ui->histAreaNoSlider->setValue(position+1);
+}
+
+void setupForm::on_regionBox_currentIndexChanged(int index){
+
+    if (!iproList.isEmpty() && !graphLock) {
+        clearGraph(ui->graphicsView3);
+        drawGraphHist2(iproList[index], ui->graphicsView3, penRed, iproList[index]->histogramFiltered, iproList[index]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+    }
 }

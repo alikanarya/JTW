@@ -79,6 +79,8 @@ public:
     double bandWidthMin = 0.20;
     double bandCenterMax = 0.10;
     int histAreaNo = 1;
+    QList<imgProcess*> iproList;
+    bool graphLock = true;
 
     bool twoPassWelding;
     bool autoDetect2ndPass;
@@ -196,6 +198,7 @@ private slots:
     void on_histAreaNoSlider_sliderMoved(int position);
     void on_histAreaNoSlider_sliderReleased();
     void restrictMove_histAreaNoSlider(int position);
+    void on_regionBox_currentIndexChanged(int index);
 };
 
 #endif // SETUPFORM_H

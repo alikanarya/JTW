@@ -3011,6 +3011,16 @@
     <set>Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing</set>
    </property>
   </widget>
+  <widget class="QComboBox" name="regionBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>560</y>
+     <width>41</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
   <zorder>tabWidget</zorder>
   <zorder>labelTarget</zorder>
   <zorder>labelMono</zorder>
@@ -3075,6 +3085,7 @@
   <zorder>histAreaNoSlider</zorder>
   <zorder>labelHistAreaNo</zorder>
   <zorder>label_31</zorder>
+  <zorder>regionBox</zorder>
  </widget>
  <resources>
   <include location="icons.qrc"/>
@@ -3358,7 +3369,7 @@
   <slot>editLineScore()</slot>
  </slots>
  <buttongroups>
-  <buttongroup name="laserGroup"/>
   <buttongroup name="colorGrayGroup"/>
+  <buttongroup name="laserGroup"/>
  </buttongroups>
 </ui>
