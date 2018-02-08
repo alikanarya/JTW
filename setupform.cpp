@@ -2176,6 +2176,7 @@ void setupForm::histMultAreas() {
 
     int found2ndPass = 0;
     QList<int> status;
+    QList<imgProcess*> iproList;
 
     for (int area=0; area<histAreaNo; area++) {
 
@@ -2187,7 +2188,7 @@ void setupForm::histMultAreas() {
         startTime = w->timeSystem.getSystemTimeMsec();
 
         imgProcess *ipro = new imgProcess( pic, pic.width(), pic.height() );   // new imgProcess object
-
+        iproList.append(ipro);
         ipro->maFilterKernelSize = maFilterKernelSize;
         ipro->histogramAngleThreshold = histogramAngleThreshold;
         ipro->lenRateThr = lenRateThr;
@@ -2240,14 +2241,24 @@ void setupForm::histMultAreas() {
             drawGraphHist2(ipro, ui->graphicsView3, penRed, ipro->histogramFiltered, ipro->histogramSize, QPoint(-1,-1), true); // recursive MA filter
             QPixmap pixMap = ui->graphicsView3->grab();
             pixMap.save(path+"_graph"+QString::number(area)+".jpg");
-            //ui->graphicsView3->show();
-            //QThread::msleep(3000);
             ipro->saveArray(ipro->histogramFiltered, ipro->histogramSize, path+"_histogramFiltered"+QString::number(area)+".csv");
             ipro->saveList(ipro->histogramDIdx,path+"_histogramDIdx"+QString::number(area)+".csv");
-            ipro->saveList(ipro->histogramDSum,path+"_histogramDSum"+QString::number(area)+".csv");
+            //ipro->saveList(ipro->histogramDSum,path+"_histogramDSum"+QString::number(area)+".csv");
         }
-        drawGraphHist2(ipro, ui->graphicsView3, penRed, ipro->histogramFiltered, ipro->histogramSize, QPoint(-1,-1), true); // recursive MA filter
-        delete ipro;
+        //if (area==1)
+        //drawGraphHist2(ipro, ui->graphicsView3, penRed, ipro->histogramFiltered, ipro->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+        //delete ipro;
+    }
+    for (int area=1; area<2; area++) {
+        clearGraph(ui->graphicsView3);
+        drawGraphHist2(iproList[area], ui->graphicsView3, penRed, iproList[area]->histogramFiltered, iproList[area]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+        //ui->graphicsView3->show();
+        //QThread::msleep(1000);
+    }
+
+    if (!iproList.empty()){
+        qDeleteAll(iproList);
+        iproList.clear();
     }
 
     if (found2ndPass == 0)
