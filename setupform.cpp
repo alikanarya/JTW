@@ -1821,8 +1821,9 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
     for (int i=0; i<ipro->histogramExtremesFiltered.size(); i++){
         //graph->scene()->addEllipse(iprocess->histogramExtremesFiltered[i].end*xScale - 1, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremesFiltered[i].end ]-min)*yScale) - 1, 2, 2, *penBlue, QBrush(Qt::blue));
         QPen pS, pE;
+        pS.setWidth(2); pE.setWidth(2);
         if (ipro->histogramExtremesFiltered[i].start == ipro->histogramExtremesFiltered[i].end){
-            pS.setColor(Qt::green); pE.setColor(Qt::green);
+            pS.setColor(Qt::gray); pE.setColor(Qt::gray);
         } else {
             pS.setColor(Qt::blue); pE.setColor(Qt::black);
         }
@@ -1833,11 +1834,13 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
                                 ipro->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].end ]-min)*yScale +10), pE);
     }
 
-    penBlue->setWidth(2);
-    for (int i=0; i<ipro->histogramMaxPoint.size(); i++){
-        graph->scene()->addLine(ipro->histogramMaxPoint[i].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPoint[i].y()-min)*yScale), ipro->histogramMaxPointPair[i].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPointPair[i].y()-min)*yScale), *penBlue);
+    if (drawEdges) {
+        penBlue->setWidth(2);
+        for (int i=0; i<ipro->histogramMaxPoint.size(); i++){
+            graph->scene()->addLine(ipro->histogramMaxPoint[i].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPoint[i].y()-min)*yScale), ipro->histogramMaxPointPair[i].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPointPair[i].y()-min)*yScale), *penBlue);
+        }
+        penBlue->setWidth(2);
     }
-    penBlue->setWidth(2);
 
     graph->show();
 }
@@ -2062,6 +2065,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
             iprocess->lenRateThr = lenRateThr;
             iprocess->bandWidthMin = bandWidthMin;
             iprocess->bandCenterMax = bandCenterMax;
+            iprocess->histDDLimit = histDDLimit;
 
             iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
 
@@ -2198,6 +2202,7 @@ void setupForm::histMultAreas() {
         ipro->lenRateThr = lenRateThr;
         ipro->bandWidthMin = bandWidthMin;
         ipro->bandCenterMax = bandCenterMax;
+        ipro->histDDLimit = histDDLimit;
 
         ipro->constructValueMatrix( ipro->imgOrginal, 0 );
 
@@ -2210,7 +2215,11 @@ void setupForm::histMultAreas() {
         QString message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
         ui->plainTextEdit->appendPlainText(message);
 
-        ui->plainTextEdit->appendPlainText("hist max/min: " + QString::number(ipro->histogramMax) +" / "+ QString::number(ipro->histogramMin) );
+        ui->plainTextEdit->appendPlainText("hist/D/DD max/min: " +
+                                           QString::number(ipro->histogramMax) +" / "+ QString::number(ipro->histogramMin)  + "," +
+                                           QString::number(ipro->histogramDMax) +" / "+ QString::number(ipro->histogramDMin)  + "," +
+                                           QString::number(ipro->histogramDDMax) +" / "+ QString::number(ipro->histogramDDMin) );
+
         double histRange = ipro->histogramMax - ipro->histogramMin;
 
         for (int i=0; i<ipro->histogramMaxPoint.size(); i++){
@@ -2283,12 +2292,27 @@ void setupForm::histMultAreas() {
     }
 
     if (!iproList.isEmpty()) {
+        drawEdges = false;
+        clearGraph(ui->graphicsView2);
+        drawGraphHist2(iproList[0], ui->graphicsView2, penRed, iproList[0]->histogramFiltered, iproList[0]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+        drawEdges = true;
         clearGraph(ui->graphicsView3);
         drawGraphHist2(iproList[0], ui->graphicsView3, penRed, iproList[0]->histogramFiltered, iproList[0]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
     }
 
     graphLock = false;
     ui->regionBox->setEnabled(true);
+
+    /*
+    ui->plainTextEdit->appendPlainText("hist list start/end/vote: ");
+    for (int i=0; i<iproList[0]->histogramExtremes.size(); i++) {
+        ui->plainTextEdit->appendPlainText(QString::number(iproList[0]->histogramExtremes[i].start) +", "+QString::number(iproList[0]->histogramExtremes[i].end) +", " + QString::number(iproList[0]->histogramFiltered[ iproList[0]->histogramExtremes[i].start ]) );
+    }
+    ui->plainTextEdit->appendPlainText("histF list start/end/vote: ");
+    for (int i=0; i<iproList[0]->histogramExtremesFiltered.size(); i++) {
+        ui->plainTextEdit->appendPlainText(QString::number(iproList[0]->histogramExtremesFiltered[i].start) +", "+QString::number(iproList[0]->histogramExtremesFiltered[i].end) +", " + QString::number(iproList[0]->histogramFiltered[ iproList[0]->histogramExtremesFiltered[i].start ]) );
+    }
+    */
 }
 
 void setupForm::on_histAngleSlider_sliderMoved(int position){
@@ -2395,7 +2419,6 @@ void setupForm::on_bandCenterMaxSlider_sliderMoved(int position){
 void setupForm::on_bandCenterMaxSlider_sliderPressed(){}
 
 void setupForm::on_bandCenterMaxSlider_sliderReleased(){
-
     bandCenterMax = ui->bandCenterMaxSlider->value()/100.0;
 }
 
@@ -2464,7 +2487,20 @@ void setupForm::restrictMove_histAreaNoSlider(int position){
 void setupForm::on_regionBox_currentIndexChanged(int index){
 
     if (!iproList.isEmpty() && !graphLock) {
+        drawEdges = false;
+        clearGraph(ui->graphicsView2);
+        drawGraphHist2(iproList[index], ui->graphicsView2, penRed, iproList[index]->histogramFiltered, iproList[index]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+        drawEdges = true;
         clearGraph(ui->graphicsView3);
         drawGraphHist2(iproList[index], ui->graphicsView3, penRed, iproList[index]->histogramFiltered, iproList[index]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
     }
+}
+
+void setupForm::on_histCornerPrecSlider_sliderMoved(int position){
+    ui->labelhistCornerPrec->setText(QString::number(position));
+}
+
+void setupForm::on_histCornerPrecSlider_sliderReleased(){
+    histDDLimit = ui->histCornerPrecSlider->value();
+    on_histogramAnalysisButton_clicked();
 }
