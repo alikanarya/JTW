@@ -7,6 +7,11 @@
 * histAreaNo slider lines showed on image while changing the value 
 * histogram analysis from 1st pass to 2nd pass transition
 
+* 1st derv and 2nd derv merging ?
+
+* 2nd derivative threshold on settingsform to observe the effect
+
+* histogram find corners with 2nd derivative	...done
 * histAreaNo slider modified for odd values by signals	...done
 * histogram multi region data are saved in data folder at debug	...done
 * setupForm, histogram area number implemented to divide in regions	

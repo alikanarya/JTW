@@ -1801,7 +1801,8 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
     int sceneHeight = graph->geometry().height();
     int sceneWidth = graph->geometry().width();
 
-    float yScale = sceneHeight*1.0 / (max - min);
+    float yScale = sceneHeight*0.9 / (max - min);
+    int yOffset = sceneHeight*0.05;
     float xScale = sceneWidth*1.0 / size;
 
     graph->update(graph->geometry());
@@ -1811,10 +1812,10 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
     graph->scene()->addLine(0, 0, sceneWidth, sceneHeight, penX);
 
     for (int i=1; i<size; i++){
-        graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-(array[i]-min)*yScale), *pen);
+        graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-yOffset-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-yOffset-(array[i]-min)*yScale), *pen);
     }
 
-    int avgVal = (int)(sceneHeight-(ipro->histogramAvg-min)*yScale);
+    int avgVal = (int)(sceneHeight-yOffset-(ipro->histogramAvg-min)*yScale);
     graph->scene()->addLine(0, avgVal, sceneWidth, avgVal, *penGreen);
 
     for (int i=0; i<ipro->histogramExtremesFiltered.size(); i++){
@@ -1826,15 +1827,15 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
             pS.setColor(Qt::blue); pE.setColor(Qt::black);
         }
 
-        graph->scene()->addLine(ipro->histogramExtremesFiltered[i].start*xScale, (int)(sceneHeight-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].start ]-min)*yScale -10),
-                                ipro->histogramExtremesFiltered[i].start*xScale, (int)(sceneHeight-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].start ]-min)*yScale +10), pS);
-        graph->scene()->addLine(ipro->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].end ]-min)*yScale -10),
-                                ipro->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].end ]-min)*yScale +10), pE);
+        graph->scene()->addLine(ipro->histogramExtremesFiltered[i].start*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].start ]-min)*yScale -10),
+                                ipro->histogramExtremesFiltered[i].start*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].start ]-min)*yScale +10), pS);
+        graph->scene()->addLine(ipro->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].end ]-min)*yScale -10),
+                                ipro->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].end ]-min)*yScale +10), pE);
     }
 
     penBlue->setWidth(2);
     for (int i=0; i<ipro->histogramMaxPoint.size(); i++){
-        graph->scene()->addLine(ipro->histogramMaxPoint[i].x()*xScale, (int)(sceneHeight-(ipro->histogramMaxPoint[i].y()-min)*yScale), ipro->histogramMaxPointPair[i].x()*xScale, (int)(sceneHeight-(ipro->histogramMaxPointPair[i].y()-min)*yScale), *penBlue);
+        graph->scene()->addLine(ipro->histogramMaxPoint[i].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPoint[i].y()-min)*yScale), ipro->histogramMaxPointPair[i].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPointPair[i].y()-min)*yScale), *penBlue);
     }
     penBlue->setWidth(2);
 
@@ -2267,7 +2268,7 @@ void setupForm::histMultAreas() {
 
     QString msg;
     for (int i=0; i<iproList.size(); i++) {
-        msg = "#" + QString::number(i) + " ";
+        msg = "#" + QString::number(i+1) + " ";
         if (iproList[i]->bandCheck_errorState != 0){
             switch ( iproList[i]->bandCheck_errorState ) {
                 case 1: msg += QString(alarm21); break;
