@@ -2291,14 +2291,29 @@ void setupForm::histMultAreas() {
         }
     }
 
-    if (!iproList.isEmpty()) {
+    if (!iproList.isEmpty() && iproList[0]->bandCheck_errorState!=10) {
         drawEdges = false;
         clearGraph(ui->graphicsView2);
         drawGraphHist2(iproList[0], ui->graphicsView2, penRed, iproList[0]->histogramFiltered, iproList[0]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
         drawEdges = true;
         clearGraph(ui->graphicsView3);
         drawGraphHist2(iproList[0], ui->graphicsView3, penRed, iproList[0]->histogramFiltered, iproList[0]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
-    }
+        /*
+        QString path = savePath + "histogram/";
+        iproList[0]->saveArray(iproList[0]->histogramFiltered, iproList[0]->histogramSize, path+"_histogramFiltered"+QString::number(histDDLimit*10)+".csv");
+        iproList[0]->saveArray(iproList[0]->histogramD, iproList[0]->histogramSize, path+"_histogramD"+QString::number(histDDLimit*10)+".csv");
+        iproList[0]->saveArray(iproList[0]->histogramDD, iproList[0]->histogramSize, path+"_histogramDD"+QString::number(histDDLimit*10)+".csv");
+        */
+        if ( iproList[0]->naturalBreaksNumber != 0 ){
+            ui->plainTextEdit->appendPlainText("-histogramMaxPoint---");
+            for (int i=0; i<iproList[0]->histogramMaxPoint.size();i++)
+                ui->plainTextEdit->appendPlainText("x/vote: "+QString::number(iproList[0]->histogramMaxPoint[i].x())+", "+QString::number(iproList[0]->histogramMaxPoint[i].y()));
+            ui->plainTextEdit->appendPlainText("-mainPointsList---");
+            for (int i=0; i<iproList[0]->mainPointsList.size();i++)
+                ui->plainTextEdit->appendPlainText("x/vote: "+QString::number(iproList[0]->mainPointsList[i].x())+", "+QString::number(iproList[0]->mainPointsList[i].y()));
+        }
+
+  }
 
     graphLock = false;
     ui->regionBox->setEnabled(true);

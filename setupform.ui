@@ -2442,7 +2442,7 @@
    <property name="geometry">
     <rect>
      <x>23</x>
-     <y>612</y>
+     <y>636</y>
      <width>51</width>
      <height>20</height>
     </rect>
@@ -2454,6 +2454,9 @@
      <weight>50</weight>
      <bold>false</bold>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::NoFrame</enum>
@@ -2469,7 +2472,7 @@
    <property name="geometry">
     <rect>
      <x>83</x>
-     <y>612</y>
+     <y>636</y>
      <width>160</width>
      <height>22</height>
     </rect>
@@ -2515,7 +2518,7 @@
    <property name="geometry">
     <rect>
      <x>252</x>
-     <y>612</y>
+     <y>636</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -2578,7 +2581,7 @@
    <property name="geometry">
     <rect>
      <x>24</x>
-     <y>638</y>
+     <y>662</y>
      <width>111</width>
      <height>20</height>
     </rect>
@@ -2590,6 +2593,9 @@
      <weight>50</weight>
      <bold>false</bold>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::NoFrame</enum>
@@ -2605,7 +2611,7 @@
    <property name="geometry">
     <rect>
      <x>144</x>
-     <y>638</y>
+     <y>662</y>
      <width>100</width>
      <height>22</height>
     </rect>
@@ -2651,7 +2657,7 @@
    <property name="geometry">
     <rect>
      <x>252</x>
-     <y>638</y>
+     <y>662</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -2673,7 +2679,7 @@
    <property name="geometry">
     <rect>
      <x>144</x>
-     <y>664</y>
+     <y>688</y>
      <width>100</width>
      <height>22</height>
     </rect>
@@ -2719,7 +2725,7 @@
    <property name="geometry">
     <rect>
      <x>34</x>
-     <y>664</y>
+     <y>688</y>
      <width>101</width>
      <height>20</height>
     </rect>
@@ -2731,6 +2737,9 @@
      <weight>50</weight>
      <bold>false</bold>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::NoFrame</enum>
@@ -2746,7 +2755,7 @@
    <property name="geometry">
     <rect>
      <x>252</x>
-     <y>664</y>
+     <y>688</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -2768,7 +2777,7 @@
    <property name="geometry">
     <rect>
      <x>294</x>
-     <y>665</y>
+     <y>689</y>
      <width>31</width>
      <height>20</height>
     </rect>
@@ -2795,7 +2804,7 @@
    <property name="geometry">
     <rect>
      <x>144</x>
-     <y>690</y>
+     <y>714</y>
      <width>100</width>
      <height>22</height>
     </rect>
@@ -2841,7 +2850,7 @@
    <property name="geometry">
     <rect>
      <x>14</x>
-     <y>690</y>
+     <y>714</y>
      <width>121</width>
      <height>20</height>
     </rect>
@@ -2853,6 +2862,9 @@
      <weight>50</weight>
      <bold>false</bold>
     </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 0, 255);</string>
    </property>
    <property name="frameShape">
     <enum>QFrame::NoFrame</enum>
@@ -2868,7 +2880,7 @@
    <property name="geometry">
     <rect>
      <x>294</x>
-     <y>691</y>
+     <y>715</y>
      <width>31</width>
      <height>20</height>
     </rect>
@@ -2895,7 +2907,7 @@
    <property name="geometry">
     <rect>
      <x>252</x>
-     <y>690</y>
+     <y>714</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -3025,7 +3037,7 @@
    <property name="geometry">
     <rect>
      <x>252</x>
-     <y>716</y>
+     <y>611</y>
      <width>42</width>
      <height>20</height>
     </rect>
@@ -3037,7 +3049,7 @@
     <enum>QFrame::Box</enum>
    </property>
    <property name="text">
-    <string>1</string>
+    <string>0</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -3047,7 +3059,7 @@
    <property name="geometry">
     <rect>
      <x>14</x>
-     <y>716</y>
+     <y>611</y>
      <width>121</width>
      <height>20</height>
     </rect>
@@ -3074,7 +3086,7 @@
    <property name="geometry">
     <rect>
      <x>144</x>
-     <y>716</y>
+     <y>611</y>
      <width>100</width>
      <height>22</height>
     </rect>
@@ -3083,7 +3095,7 @@
     <bool>false</bool>
    </property>
    <property name="minimum">
-    <number>1</number>
+    <number>0</number>
    </property>
    <property name="maximum">
     <number>20</number>
@@ -3092,10 +3104,10 @@
     <number>25</number>
    </property>
    <property name="value">
-    <number>1</number>
+    <number>0</number>
    </property>
    <property name="sliderPosition">
-    <number>1</number>
+    <number>0</number>
    </property>
    <property name="tracking">
     <bool>true</bool>
@@ -3467,7 +3479,7 @@
   <slot>editLineScore()</slot>
  </slots>
  <buttongroups>
-  <buttongroup name="laserGroup"/>
   <buttongroup name="colorGrayGroup"/>
+  <buttongroup name="laserGroup"/>
  </buttongroups>
 </ui>

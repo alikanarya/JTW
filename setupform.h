@@ -81,7 +81,7 @@ public:
     int histAreaNo = 1;
     QList<imgProcess*> iproList;
     bool graphLock = true;
-    int histDDLimit = 1;
+    double histDDLimit = 0;
 
     bool twoPassWelding;
     bool autoDetect2ndPass;
