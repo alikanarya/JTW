@@ -1818,7 +1818,7 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
     int avgVal = (int)(sceneHeight-yOffset-(ipro->histogramAvg-min)*yScale);
     graph->scene()->addLine(0, avgVal, sceneWidth, avgVal, *penGreen);
 
-    for (int i=0; i<ipro->histogramExtremesFiltered.size(); i++){
+    /*for (int i=0; i<ipro->histogramExtremesFiltered.size(); i++){
         //graph->scene()->addEllipse(iprocess->histogramExtremesFiltered[i].end*xScale - 1, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremesFiltered[i].end ]-min)*yScale) - 1, 2, 2, *penBlue, QBrush(Qt::blue));
         QPen pS, pE;
         pS.setWidth(2); pE.setWidth(2);
@@ -1832,14 +1832,23 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
                                 ipro->histogramExtremesFiltered[i].start*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].start ]-min)*yScale +10), pS);
         graph->scene()->addLine(ipro->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].end ]-min)*yScale -10),
                                 ipro->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].end ]-min)*yScale +10), pE);
-    }
+    }*/
 
     if (drawEdges) {
         penBlue->setWidth(2);
-        for (int i=0; i<ipro->histogramMaxPoint.size(); i++){
-            graph->scene()->addLine(ipro->histogramMaxPoint[i].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPoint[i].y()-min)*yScale), ipro->histogramMaxPointPair[i].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPointPair[i].y()-min)*yScale), *penBlue);
+        for (int i=0; i<ipro->mainPointsList.size(); i++){
+            int y=0, idx = 0;
+            for (int j=0; j<ipro->histogramMaxPoint.size(); j++){
+                if (ipro->mainPointsList[i].x() == ipro->histogramMaxPoint[j].x()){
+                    y = ipro->histogramMaxPoint[j].y();
+                    idx = j;
+                }
+            }
+            graph->scene()->addLine(ipro->mainPointsList[i].x()*xScale, (int)(sceneHeight-yOffset-(y-min)*yScale), ipro->histogramMaxPointPair[idx].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPointPair[idx].y()-min)*yScale), *penBlue);
         }
-        penBlue->setWidth(2);
+
+        //for (int i=0; i<ipro->histogramMaxPoint.size(); i++)
+          //  graph->scene()->addLine(ipro->histogramMaxPoint[i].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPoint[i].y()-min)*yScale), ipro->histogramMaxPointPair[i].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPointPair[i].y()-min)*yScale), *penBlue);
     }
 
     graph->show();
@@ -2216,17 +2225,24 @@ void setupForm::histMultAreas() {
         ui->plainTextEdit->appendPlainText(message);
 
         ui->plainTextEdit->appendPlainText("hist/D/DD max/min: " +
-                                           QString::number(ipro->histogramMax) +" / "+ QString::number(ipro->histogramMin)  + "," +
-                                           QString::number(ipro->histogramDMax) +" / "+ QString::number(ipro->histogramDMin)  + "," +
+                                           QString::number(ipro->histogramMax) +" / "+ QString::number(ipro->histogramMin)  + " , " +
+                                           QString::number(ipro->histogramDMax) +" / "+ QString::number(ipro->histogramDMin)  + " , " +
                                            QString::number(ipro->histogramDDMax) +" / "+ QString::number(ipro->histogramDDMin) );
 
         double histRange = ipro->histogramMax - ipro->histogramMin;
 
+        QString s;
         for (int i=0; i<ipro->histogramMaxPoint.size(); i++){
-            ui->plainTextEdit->appendPlainText("peak/pair 0(x,y) P(x,y) (len,deg,len%): (" +
+            s = "";
+            if (ipro->breakPointList.indexOf(ipro->histogramMaxPoint[i].x()) != -1)
+                s += "*"; // break point
+            if (ipro->mainPointsList.indexOf( QPoint(ipro->histogramMaxPoint[i].x(), ipro->histogramMaxPointLen[i])) != -1)
+                s += "+"; // chosen point
+
+            ui->plainTextEdit->appendPlainText(s+"peak/pair 0(x,y) P(x,y) (len,deg,len%): (" +
                                                QString::number(ipro->histogramMaxPoint[i].x()) + "," + QString::number(ipro->histogramMaxPoint[i].y()) + ") (" +
                                                QString::number(ipro->histogramMaxPointPair[i].x()) + "," + QString::number(ipro->histogramMaxPointPair[i].y()) + ") (" +
-                                               QString::number(ipro->histogramMaxPointLen[i],'f',0) + " : " + QString::number(qRadiansToDegrees(qAtan(ipro->histogramMaxPointAng[i])),'f',0) + " : " + QString::number(ipro->histogramMaxPointLen[i]/histRange,'f',2) +
+                                               QString::number(ipro->histogramMaxPointLen[i],'f',0) + " : " + QString::number(qRadiansToDegrees(qAtan(ipro->histogramMaxPointAng[i])),'f',2) + " : " + QString::number(ipro->histogramMaxPointLen[i]/histRange,'f',2) +
                                                ")");
         }
         ui->plainTextEdit->appendPlainText("bandWidth: " + QString::number(ipro->bandWidth) + " / " + QString::number((1.0*ipro->bandWidth)/ipro->imageWidth, 'f', 2) +
@@ -2304,14 +2320,19 @@ void setupForm::histMultAreas() {
         iproList[0]->saveArray(iproList[0]->histogramD, iproList[0]->histogramSize, path+"_histogramD"+QString::number(histDDLimit*10)+".csv");
         iproList[0]->saveArray(iproList[0]->histogramDD, iproList[0]->histogramSize, path+"_histogramDD"+QString::number(histDDLimit*10)+".csv");
         */
+        /*
         if ( iproList[0]->naturalBreaksNumber != 0 ){
             ui->plainTextEdit->appendPlainText("-histogramMaxPoint---");
             for (int i=0; i<iproList[0]->histogramMaxPoint.size();i++)
                 ui->plainTextEdit->appendPlainText("x/vote: "+QString::number(iproList[0]->histogramMaxPoint[i].x())+", "+QString::number(iproList[0]->histogramMaxPoint[i].y()));
             ui->plainTextEdit->appendPlainText("-mainPointsList---");
             for (int i=0; i<iproList[0]->mainPointsList.size();i++)
-                ui->plainTextEdit->appendPlainText("x/vote: "+QString::number(iproList[0]->mainPointsList[i].x())+", "+QString::number(iproList[0]->mainPointsList[i].y()));
+                ui->plainTextEdit->appendPlainText("x/lentgh: "+QString::number(iproList[0]->mainPointsList[i].x())+", "+QString::number(iproList[0]->mainPointsList[i].y()));
         }
+        */
+        //for (int i=0; i<iproList[0]->histogramExtremesFiltered.size();i++)
+        //    qDebug() << iproList[0]->histogramExtremesFiltered[i].start << "," << iproList[0]->histogramFiltered[ iproList[0]->histogramExtremesFiltered[i].start ];
+
 
   }
 
