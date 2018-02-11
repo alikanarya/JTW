@@ -2243,7 +2243,8 @@ void setupForm::histMultAreas() {
                                                QString::number(ipro->histogramMaxPoint[i].x()) + "," + QString::number(ipro->histogramMaxPoint[i].y()) + ") (" +
                                                QString::number(ipro->histogramMaxPointPair[i].x()) + "," + QString::number(ipro->histogramMaxPointPair[i].y()) + ") (" +
                                                QString::number(ipro->histogramMaxPointLen[i],'f',0) + " : " + QString::number(qRadiansToDegrees(qAtan(ipro->histogramMaxPointAng[i])),'f',2) + " : " + QString::number(ipro->histogramMaxPointLen[i]/histRange,'f',2) +
-                                               ")");
+                                               ")**" + QString::number(ipro->histogramMaxPoint[i].y()-ipro->histogramMaxPointPair[i].y())
+                                               );
         }
         ui->plainTextEdit->appendPlainText("bandWidth: " + QString::number(ipro->bandWidth) + " / " + QString::number((1.0*ipro->bandWidth)/ipro->imageWidth, 'f', 2) +
                                            "  bandCenter: " + QString::number(ipro->bandCenter) + " / " + QString::number((1.0*ipro->bandCenter)/ipro->imageWidth, 'f', 3) +
@@ -2267,6 +2268,7 @@ void setupForm::histMultAreas() {
         if (DEBUG) {
             QString path = savePath + "histogram/";
             QDir().mkdir(path);
+            clearGraph(ui->graphicsView3);
             drawGraphHist2(ipro, ui->graphicsView3, penRed, ipro->histogramFiltered, ipro->histogramSize, QPoint(-1,-1), true); // recursive MA filter
             QPixmap pixMap = ui->graphicsView3->grab();
             pixMap.save(path+"_graph"+QString::number(area)+".jpg");
@@ -2330,8 +2332,13 @@ void setupForm::histMultAreas() {
                 ui->plainTextEdit->appendPlainText("x/lentgh: "+QString::number(iproList[0]->mainPointsList[i].x())+", "+QString::number(iproList[0]->mainPointsList[i].y()));
         }
         */
-        //for (int i=0; i<iproList[0]->histogramExtremesFiltered.size();i++)
-        //    qDebug() << iproList[0]->histogramExtremesFiltered[i].start << "," << iproList[0]->histogramFiltered[ iproList[0]->histogramExtremesFiltered[i].start ];
+        for (int i=0; i<iproList[8]->histogramExtremesFiltered.size();i++)
+            qDebug() << iproList[8]->histogramExtremesFiltered[i].start << "," << iproList[8]->histogramFiltered[ iproList[8]->histogramExtremesFiltered[i].start ];
+        //for (int i=0; i<iproList[8]->histogramMaxPeaksList.size();i++)
+            qDebug() << "histogramMaxPeaksList " << iproList[8]->histogramMaxPeaksList;
+        for (int i=0; i<iproList[8]->histogramMaxPoint.size();i++)
+            qDebug() << iproList[8]->histogramMaxPoint[i].x() << "," << iproList[8]->histogramMaxPoint[i].y();
+         qDebug() << "avg: " << iproList[8]->histogramAvg;
 
 
   }
