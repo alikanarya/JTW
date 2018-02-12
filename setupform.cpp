@@ -1818,24 +1818,27 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
     int avgVal = (int)(sceneHeight-yOffset-(ipro->histogramAvg-min)*yScale);
     graph->scene()->addLine(0, avgVal, sceneWidth, avgVal, *penGreen);
 
-    /*for (int i=0; i<ipro->histogramExtremesFiltered.size(); i++){
-        //graph->scene()->addEllipse(iprocess->histogramExtremesFiltered[i].end*xScale - 1, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremesFiltered[i].end ]-min)*yScale) - 1, 2, 2, *penBlue, QBrush(Qt::blue));
-        QPen pS, pE;
-        pS.setWidth(2); pE.setWidth(2);
-        if (ipro->histogramExtremesFiltered[i].start == ipro->histogramExtremesFiltered[i].end){
-            pS.setColor(Qt::gray); pE.setColor(Qt::gray);
-        } else {
-            pS.setColor(Qt::blue); pE.setColor(Qt::black);
-        }
+    if (drawExtremes) {
+        for (int i=0; i<ipro->histogramExtremesFiltered.size(); i++){
+            //graph->scene()->addEllipse(iprocess->histogramExtremesFiltered[i].end*xScale - 1, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremesFiltered[i].end ]-min)*yScale) - 1, 2, 2, *penBlue, QBrush(Qt::blue));
+            QPen pS, pE;
+            pS.setWidth(2); pE.setWidth(2);
+            if (ipro->histogramExtremesFiltered[i].start == ipro->histogramExtremesFiltered[i].end){
+                pS.setColor(Qt::gray); pE.setColor(Qt::gray);
+            } else {
+                pS.setColor(Qt::blue); pE.setColor(Qt::black);
+            }
 
-        graph->scene()->addLine(ipro->histogramExtremesFiltered[i].start*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].start ]-min)*yScale -10),
-                                ipro->histogramExtremesFiltered[i].start*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].start ]-min)*yScale +10), pS);
-        graph->scene()->addLine(ipro->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].end ]-min)*yScale -10),
-                                ipro->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].end ]-min)*yScale +10), pE);
-    }*/
+            graph->scene()->addLine(ipro->histogramExtremesFiltered[i].start*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].start ]-min)*yScale -10),
+                                    ipro->histogramExtremesFiltered[i].start*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].start ]-min)*yScale +10), pS);
+            graph->scene()->addLine(ipro->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].end ]-min)*yScale -10),
+                                    ipro->histogramExtremesFiltered[i].end*xScale, (int)(sceneHeight-yOffset-(ipro->histogramFiltered[ ipro->histogramExtremesFiltered[i].end ]-min)*yScale +10), pE);
+        }
+    }
 
     if (drawEdges) {
-        penBlue->setWidth(2);
+        QPen pen;
+        pen.setWidth(2);
         for (int i=0; i<ipro->mainPointsList.size(); i++){
             int y=0, idx = 0;
             for (int j=0; j<ipro->histogramMaxPoint.size(); j++){
@@ -1844,7 +1847,12 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
                     idx = j;
                 }
             }
-            graph->scene()->addLine(ipro->mainPointsList[i].x()*xScale, (int)(sceneHeight-yOffset-(y-min)*yScale), ipro->histogramMaxPointPair[idx].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPointPair[idx].y()-min)*yScale), *penBlue);
+            if (ipro->mainPointsList[i].x() == ipro->natBreaksMax1.x() || ipro->mainPointsList[i].x() == ipro->natBreaksMax2.x())
+                pen.setColor(Qt::green);
+            else
+                pen.setColor(Qt::blue);
+
+            graph->scene()->addLine(ipro->mainPointsList[i].x()*xScale, (int)(sceneHeight-yOffset-(y-min)*yScale), ipro->histogramMaxPointPair[idx].x()*xScale, (int)(sceneHeight-yOffset-(ipro->histogramMaxPointPair[idx].y()-min)*yScale), pen);
         }
 
         //for (int i=0; i<ipro->histogramMaxPoint.size(); i++)
@@ -2061,6 +2069,8 @@ void setupForm::on_histogramAnalysisButton_clicked() {
         clearGraph(ui->graphicsView);
         clearGraph(ui->graphicsView2);
         clearGraph(ui->graphicsView3);
+
+        on_histAreaNoSlider_sliderMoved(histAreaNo);
 
         if (histAreaNo == 1) {
             // -------START PROCESSING-------
@@ -2332,6 +2342,7 @@ void setupForm::histMultAreas() {
                 ui->plainTextEdit->appendPlainText("x/lentgh: "+QString::number(iproList[0]->mainPointsList[i].x())+", "+QString::number(iproList[0]->mainPointsList[i].y()));
         }
         */
+        /*
         for (int i=0; i<iproList[8]->histogramExtremesFiltered.size();i++)
             qDebug() << iproList[8]->histogramExtremesFiltered[i].start << "," << iproList[8]->histogramFiltered[ iproList[8]->histogramExtremesFiltered[i].start ];
         //for (int i=0; i<iproList[8]->histogramMaxPeaksList.size();i++)
@@ -2339,6 +2350,7 @@ void setupForm::histMultAreas() {
         for (int i=0; i<iproList[8]->histogramMaxPoint.size();i++)
             qDebug() << iproList[8]->histogramMaxPoint[i].x() << "," << iproList[8]->histogramMaxPoint[i].y();
          qDebug() << "avg: " << iproList[8]->histogramAvg;
+         */
 
 
   }
@@ -2531,9 +2543,11 @@ void setupForm::on_regionBox_currentIndexChanged(int index){
 
     if (!iproList.isEmpty() && !graphLock) {
         drawEdges = false;
+        drawExtremes = true;
         clearGraph(ui->graphicsView2);
         drawGraphHist2(iproList[index], ui->graphicsView2, penRed, iproList[index]->histogramFiltered, iproList[index]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
         drawEdges = true;
+        drawExtremes = false;
         clearGraph(ui->graphicsView3);
         drawGraphHist2(iproList[index], ui->graphicsView3, penRed, iproList[index]->histogramFiltered, iproList[index]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
     }
