@@ -25,6 +25,7 @@
 #define alarm24     "Band genişliği düşük"
 #define alarm25     "Band merkezden çok uzak"
 #define alarm26     "Band şekli bozuk"
+#define alarm27     "Band rengi çok açık/ışık problemi"
 
 #define help10      "Kamera Butonu: Kamera görüntüsünü gösterir"
 

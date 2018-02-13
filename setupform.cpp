@@ -2187,6 +2187,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
                 case 4: ui->plainTextEdit->appendPlainText(alarm24); break;
                 case 5: ui->plainTextEdit->appendPlainText(alarm25); break;
                 case 6: ui->plainTextEdit->appendPlainText(alarm26); break;
+                case 7: ui->plainTextEdit->appendPlainText(alarm27); break;
             }
 
         } else {
@@ -2223,7 +2224,8 @@ void setupForm::histMultAreas() {
         ipro->bandCenterMax = bandCenterMax;
         ipro->histDDLimit = histDDLimit;
 
-        ipro->constructValueMatrix( ipro->imgOrginal, 0 );
+        //ipro->constructValueMatrix( ipro->imgOrginal, 0 );
+        ipro->constructValueBlackMatrix( ipro->imgOrginal );
 
         ipro->histogramAnalysis(colorMatrix);
 
@@ -2268,6 +2270,7 @@ void setupForm::histMultAreas() {
             case 4: ui->plainTextEdit->appendPlainText("*** " + QString(alarm24)); break;
             case 5: ui->plainTextEdit->appendPlainText("*** " + QString(alarm25)); break;
             case 6: ui->plainTextEdit->appendPlainText("*** " + QString(alarm26)); break;
+            case 7: ui->plainTextEdit->appendPlainText("*** " + QString(alarm27)); break;
         }
 
         if ( ipro->bandCheck_errorState == 0 )
@@ -2314,6 +2317,7 @@ void setupForm::histMultAreas() {
                 case 4: msg += QString(alarm24); break;
                 case 5: msg += QString(alarm25); break;
                 case 6: msg += QString(alarm26); break;
+                case 7: msg += QString(alarm27); break;
             }
             ui->plainTextEdit->appendPlainText(msg);
         }
