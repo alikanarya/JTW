@@ -2283,8 +2283,8 @@ void setupForm::histMultAreas() {
             QPixmap pixMap = ui->graphicsView3->grab();
             pixMap.save(path+"_graph"+QString::number(area)+".jpg");
             ipro->saveArray(ipro->histogramFiltered, ipro->histogramSize, path+"_histogramFiltered"+QString::number(area)+".csv");
-            ipro->saveList(ipro->histogramDIdx,path+"_histogramDIdx"+QString::number(area)+".csv");
-            //ipro->saveList(ipro->histogramDSum,path+"_histogramDSum"+QString::number(area)+".csv");
+            ipro->saveArray(ipro->histogramDD, ipro->histogramSize, path+"_histogramDD"+QString::number(area)+".csv");
+            //ipro->saveList(ipro->histogramDIdx,path+"_histogramDIdx"+QString::number(area)+".csv");
         }
         //if (area==1)
         //drawGraphHist2(ipro, ui->graphicsView3, penRed, ipro->histogramFiltered, ipro->histogramSize, QPoint(-1,-1), true); // recursive MA filter
@@ -2321,9 +2321,11 @@ void setupForm::histMultAreas() {
 
     if (!iproList.isEmpty() && iproList[0]->bandCheck_errorState!=10) {
         drawEdges = false;
+        drawExtremes = true;
         clearGraph(ui->graphicsView2);
         drawGraphHist2(iproList[0], ui->graphicsView2, penRed, iproList[0]->histogramFiltered, iproList[0]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
         drawEdges = true;
+        drawExtremes = false;
         clearGraph(ui->graphicsView3);
         drawGraphHist2(iproList[0], ui->graphicsView3, penRed, iproList[0]->histogramFiltered, iproList[0]->histogramSize, QPoint(-1,-1), true); // recursive MA filter
         /*
