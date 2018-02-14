@@ -4,13 +4,12 @@
 * 2nd pass detection algo; detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
 
 * manual pass selection disabled, only auto pass detection ?
-* histAreaNo slider lines showed on image while changing the value 
 * histogram analysis from 1st pass to 2nd pass transition
+* 1 and multi region hist anlys comparision in setupform
 
-* 1st derv and 2nd derv merging ?
 
-* 2nd derivative threshold on settingsform to observe the effect
-
+* 2nd derivative threshold disable in settingsform, auto calculation used ... done
+* histAreaNo slider lines showed on image while changing the value ...done
 * histogram find corners with 2nd derivative	...done
 * histAreaNo slider modified for odd values by signals	...done
 * histogram multi region data are saved in data folder at debug	...done

@@ -1838,7 +1838,7 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
 
     if (drawEdges) {
         QPen pen;
-        pen.setWidth(2);
+        pen.setWidth(1);
         for (int i=0; i<ipro->mainPointsList.size(); i++){
             int y=0, idx = 0;
             for (int j=0; j<ipro->histogramMaxPoint.size(); j++){
@@ -1848,7 +1848,7 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
                 }
             }
             if (ipro->mainPointsList[i].x() == ipro->natBreaksMax1.x() || ipro->mainPointsList[i].x() == ipro->natBreaksMax2.x())
-                pen.setColor(Qt::green);
+                pen.setColor(Qt::black);
             else
                 pen.setColor(Qt::blue);
 
@@ -2224,8 +2224,8 @@ void setupForm::histMultAreas() {
         ipro->bandCenterMax = bandCenterMax;
         ipro->histDDLimit = histDDLimit;
 
-        //ipro->constructValueMatrix( ipro->imgOrginal, 0 );
-        ipro->constructValueBlackMatrix( ipro->imgOrginal );
+        ipro->constructValueMatrix( ipro->imgOrginal, 0 );
+        //ipro->constructValueBlackMatrix( ipro->imgOrginal );
 
         ipro->histogramAnalysis(colorMatrix);
 
@@ -2285,12 +2285,10 @@ void setupForm::histMultAreas() {
             drawGraphHist2(ipro, ui->graphicsView3, penRed, ipro->histogramFiltered, ipro->histogramSize, QPoint(-1,-1), true); // recursive MA filter
             QPixmap pixMap = ui->graphicsView3->grab();
             pixMap.save(path+"_graph"+QString::number(area)+".jpg");
-            ipro->saveArray(ipro->histogramFiltered, ipro->histogramSize, path+"_histogramFiltered"+QString::number(area)+".csv");
+            //ipro->saveArray(ipro->histogramFiltered, ipro->histogramSize, path+"_histogramFiltered"+QString::number(area)+".csv");
             ipro->saveArray(ipro->histogramDD, ipro->histogramSize, path+"_histogramDD"+QString::number(area)+".csv");
             //ipro->saveList(ipro->histogramDIdx,path+"_histogramDIdx"+QString::number(area)+".csv");
         }
-        //if (area==1)
-        //drawGraphHist2(ipro, ui->graphicsView3, penRed, ipro->histogramFiltered, ipro->histogramSize, QPoint(-1,-1), true); // recursive MA filter
         //delete ipro;
     }
 
@@ -2347,10 +2345,14 @@ void setupForm::histMultAreas() {
             for (int i=0; i<iproList[0]->mainPointsList.size();i++)
                 ui->plainTextEdit->appendPlainText("x/lentgh: "+QString::number(iproList[0]->mainPointsList[i].x())+", "+QString::number(iproList[0]->mainPointsList[i].y()));
         }
-        */
-        /*
-        for (int i=0; i<iproList[8]->histogramExtremesFiltered.size();i++)
-            qDebug() << iproList[8]->histogramExtremesFiltered[i].start << "," << iproList[8]->histogramFiltered[ iproList[8]->histogramExtremesFiltered[i].start ];
+        */ /*
+        qDebug() << "--histogramExtremes-xS-xE-yS-yE---------";
+        for (int i=0; i<iproList[0]->histogramExtremes.size();i++)
+            qDebug() << iproList[0]->histogramExtremes[i].start << "," << iproList[0]->histogramExtremes[i].end << ","<< iproList[0]->histogramFiltered[ iproList[0]->histogramExtremes[i].start ] << ","<< iproList[0]->histogramFiltered[ iproList[0]->histogramExtremes[i].end ];
+        qDebug() << "--histogramExtremesFiltered-xS-xE-yS-yE---------";
+        for (int i=0; i<iproList[0]->histogramExtremesFiltered.size();i++)
+            qDebug() << iproList[0]->histogramExtremesFiltered[i].start << "," << iproList[0]->histogramExtremesFiltered[i].end << ","<< iproList[0]->histogramFiltered[ iproList[0]->histogramExtremesFiltered[i].start ] << ","<< iproList[0]->histogramFiltered[ iproList[0]->histogramExtremesFiltered[i].end ];
+        */ /*
         //for (int i=0; i<iproList[8]->histogramMaxPeaksList.size();i++)
             qDebug() << "histogramMaxPeaksList " << iproList[8]->histogramMaxPeaksList;
         for (int i=0; i<iproList[8]->histogramMaxPoint.size();i++)

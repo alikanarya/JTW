@@ -3034,6 +3034,9 @@
    </property>
   </widget>
   <widget class="QLabel" name="labelhistCornerPrec">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>252</x>
@@ -3056,6 +3059,9 @@
    </property>
   </widget>
   <widget class="QLabel" name="label_32">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>14</x>
@@ -3083,6 +3089,9 @@
    </property>
   </widget>
   <widget class="QSlider" name="histCornerPrecSlider">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>144</x>
