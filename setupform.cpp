@@ -2078,7 +2078,6 @@ void setupForm::on_histogramAnalysisButton_clicked() {
 
             iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
             iprocessInitSwitch = true;
-
             iprocess->maFilterKernelSize = maFilterKernelSize;
             iprocess->histogramAngleThreshold = histogramAngleThreshold;
             iprocess->lenRateThr = lenRateThr;
@@ -2097,98 +2096,67 @@ void setupForm::on_histogramAnalysisButton_clicked() {
             QString message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
             ui->plainTextEdit->appendPlainText(message);
 
-
-
-            //drawGraph(ui->graphicsView, penRed, iprocess->histogram, iprocess->histogramSize, QPoint(-1,-1), true);
-            drawGraph(ui->graphicsView, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true);
-
-            //drawGraphHist(ui->graphicsView2, penBlue, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
-            //drawGraph(ui->graphicsView2, penGreen, iprocess->histogramFilteredX, iprocess->histogramSize, QPoint(-1,-1), true); // MA filter
-            //iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogram.csv");
-
-            //iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogramFiltered.csv");
-            /*
-            drawGraph(ui->graphicsView2, penBlue, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-100,400), true); // recursive MA filter
-            //iprocess->saveArray(iprocess->histogramFiltered, iprocess->histogramSize, "histogramFiltered.csv");
-            drawGraph(ui->graphicsView3, penGreen, iprocess->histogramFilteredX, iprocess->histogramSize, QPoint(-50,100), true); // MA filter
-            drawGraph(ui->graphicsView3, penRed, iprocess->histogram, iprocess->histogramSize, QPoint(-50,100), true); // histogram
-            //iprocess->saveArray(iprocess->histogramFilteredX, iprocess->histogramSize, "histogramFilteredX.csv");
-            */
-            /*
-            int *test = new int[iprocess->histogramPeaks.size()];
-            for (int j=0;j<iprocess->histogramPeaks.size();j++)
-                test[j] = iprocess->histogram[ iprocess->histogramPeaks[j].start ];
-            drawGraph(ui->graphicsView3, test, iprocess->histogramPeaks.size(), false);
-            */
-
-            /*
-            int *test = new int[iprocess->histogramDerivative.size()];
-            for (int j=0;j<iprocess->histogramDerivative.size();j++)
-                test[j] = iprocess->histogramDerivative[j];
-            drawGraph(ui->graphicsView3, test, iprocess->histogramDerivative.size(), false);
-            */
-
             if (DEBUG) {
                 for (int i=0; i<iprocess->histogramPeaks.size(); i++)
                     ui->plainTextEdit->appendPlainText("hist peaks i/start/end/vote: " +QString::number(i) +", "+QString::number(iprocess->histogramPeaks[i].start) +", "+QString::number(iprocess->histogramPeaks[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramPeaks[i].start ]) );
                 for (int i=0; i<iprocess->histogramMins.size(); i++)
                     ui->plainTextEdit->appendPlainText("hist mins i/start/end/vote: " +QString::number(i) +", "+QString::number(iprocess->histogramMins[i].start) +", "+QString::number(iprocess->histogramMins[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramMins[i].start ]) );
-
-                //for (int i=0; i<iprocess->histogramDerivative.size(); i++)
-                  //  ui->plainTextEdit->appendPlainText("hist dervs i/d: " +QString::number(i) +", "+QString::number(iprocess->histogramDerivative[i]) );
             }
-
-            /*ui->plainTextEdit->appendPlainText("hist list start/end/vote: ");
-            for (int i=0; i<iprocess->histogramExtremes.size(); i++) {
-                / *if (iprocess->histogramExtremes[i].start == iprocess->histogramExtremes[i].end)
-                    ui->plainTextEdit->appendPlainText("hist list x/y: " +QString::number(iprocess->histogramExtremes[i].start) +", "+ QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]) );
-                else {
-                    ui->plainTextEdit->appendPlainText("hist list x/y: " +QString::number(iprocess->histogramExtremes[i].start) +", "+ QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]) );
-                    ui->plainTextEdit->appendPlainText("hist list x/y: " +QString::number(iprocess->histogramExtremes[i].end) +", "+ QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]) );
-                }* /
-                ui->plainTextEdit->appendPlainText(QString::number(iprocess->histogramExtremes[i].start) +", "+QString::number(iprocess->histogramExtremes[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]) );
-            }*/
-
-            /*
-            ui->plainTextEdit->appendPlainText("histF list start/end/vote: ");
-            for (int i=0; i<iprocess->histogramExtremesFiltered.size(); i++) {
-                ui->plainTextEdit->appendPlainText(QString::number(iprocess->histogramExtremesFiltered[i].start) +", "+QString::number(iprocess->histogramExtremesFiltered[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramExtremesFiltered[i].start ]) );
-            }*/
-
-            //ui->labelTarget->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
 
             if (colorMatrix)
                 ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
             else
                 ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
 
-            //drawGraphList(ui->graphicsView3, penRed, iprocess->histogramExtremes, iprocess->histogramFiltered, QPoint(0,iprocess->histogramSize), QPoint(-1,-1));
-            drawGraphHist(ui->graphicsView2, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
-            drawGraphHist2(iprocess, ui->graphicsView3, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+            if (iprocess->bandCheck_errorState!=10) {
+                drawEdges = false;
+                drawExtremes = true;
+                clearGraph(ui->graphicsView2);
+                drawGraphHist2(iprocess, ui->graphicsView2, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+                drawEdges = true;
+                drawExtremes = false;
+                clearGraph(ui->graphicsView3);
+                drawGraphHist2(iprocess, ui->graphicsView3, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+            }
 
-            ui->plainTextEdit->appendPlainText("hist max/min: " + QString::number(iprocess->histogramMax) +" / "+ QString::number(iprocess->histogramMin) );
+            ui->plainTextEdit->appendPlainText("hist/D/DD max/min: " +
+                                               QString::number(iprocess->histogramMax) +" / "+ QString::number(iprocess->histogramMin)  + " , " +
+                                               QString::number(iprocess->histogramDMax) +" / "+ QString::number(iprocess->histogramDMin)  + " , " +
+                                               QString::number(iprocess->histogramDDMax) +" / "+ QString::number(iprocess->histogramDDMin) );
+
             double histRange = iprocess->histogramMax - iprocess->histogramMin;
+
+            QString s;
             for (int i=0; i<iprocess->histogramMaxPoint.size(); i++){
-                ui->plainTextEdit->appendPlainText("peak/pair/dist-tan (x0,y0) (xp,yp) (len,tan,len%): (" +
+                s = "";
+                if (iprocess->breakPointList.indexOf(iprocess->histogramMaxPoint[i].x()) != -1)
+                    s += "*"; // break point
+                if (iprocess->mainPointsList.indexOf( QPoint(iprocess->histogramMaxPoint[i].x(), iprocess->histogramMaxPointLen[i])) != -1)
+                    s += "+"; // chosen point
+
+                ui->plainTextEdit->appendPlainText(s+"peak/pair 0(x,y) P(x,y) (len,deg,len%): (" +
                                                    QString::number(iprocess->histogramMaxPoint[i].x()) + "," + QString::number(iprocess->histogramMaxPoint[i].y()) + ") (" +
                                                    QString::number(iprocess->histogramMaxPointPair[i].x()) + "," + QString::number(iprocess->histogramMaxPointPair[i].y()) + ") (" +
-                                                   QString::number(iprocess->histogramMaxPointLen[i],'f',0) + "," + QString::number(iprocess->histogramMaxPointAng[i],'f',2) + "," + QString::number(iprocess->histogramMaxPointLen[i]/histRange,'f',2) +
-                                                   ")");
+                                                   QString::number(iprocess->histogramMaxPointLen[i],'f',0) + " : " + QString::number(qRadiansToDegrees(qAtan(iprocess->histogramMaxPointAng[i])),'f',2) + " : " + QString::number(iprocess->histogramMaxPointLen[i]/histRange,'f',2) +
+                                                   ")**" + QString::number(iprocess->histogramMaxPoint[i].y()-iprocess->histogramMaxPointPair[i].y())
+                                                   );
             }
-            ui->plainTextEdit->appendPlainText("bandWidth: " + QString::number(iprocess->bandWidth) + " / " + QString::number((1.0*iprocess->bandWidth)/iprocess->imageWidth, 'f', 2));
-            ui->plainTextEdit->appendPlainText("bandCenter: " + QString::number(iprocess->bandCenter) + " / " + QString::number((1.0*iprocess->bandCenter)/iprocess->imageWidth, 'f', 3));
-            ui->plainTextEdit->appendPlainText("bandShape: " + QString::number(iprocess->bandShape, 'f', 2));
+            ui->plainTextEdit->appendPlainText("bandWidth: " + QString::number(iprocess->bandWidth) + " / " + QString::number((1.0*iprocess->bandWidth)/iprocess->imageWidth, 'f', 2) +
+                                               "  bandCenter: " + QString::number(iprocess->bandCenter) + " / " + QString::number((1.0*iprocess->bandCenter)/iprocess->imageWidth, 'f', 3) +
+                                               "  bandShape: " + QString::number(iprocess->bandShape, 'f', 2) );
 
             switch ( iprocess->bandCheck_errorState ) {
-                case 0: ui->plainTextEdit->appendPlainText(alarm20); break;
-                case 1: ui->plainTextEdit->appendPlainText(alarm21); break;
-                case 2: ui->plainTextEdit->appendPlainText(alarm21); break;
-                case 3: ui->plainTextEdit->appendPlainText(alarm23); break;
-                case 4: ui->plainTextEdit->appendPlainText(alarm24); break;
-                case 5: ui->plainTextEdit->appendPlainText(alarm25); break;
-                case 6: ui->plainTextEdit->appendPlainText(alarm26); break;
-                case 7: ui->plainTextEdit->appendPlainText(alarm27); break;
+                case 0: ui->plainTextEdit->appendPlainText("*** " + QString(alarm20)); break;
+                case 1: ui->plainTextEdit->appendPlainText("*** " + QString(alarm21)); break;
+                case 2: ui->plainTextEdit->appendPlainText("*** " + QString(alarm22)); break;
+                case 3: ui->plainTextEdit->appendPlainText("*** " + QString(alarm23)); break;
+                case 4: ui->plainTextEdit->appendPlainText("*** " + QString(alarm24)); break;
+                case 5: ui->plainTextEdit->appendPlainText("*** " + QString(alarm25)); break;
+                case 6: ui->plainTextEdit->appendPlainText("*** " + QString(alarm26)); break;
+                case 7: ui->plainTextEdit->appendPlainText("*** " + QString(alarm27)); break;
             }
+
+
 
         } else {
             histMultAreas();
@@ -2207,6 +2175,7 @@ void setupForm::histMultAreas() {
 
     int found2ndPass = 0;
     QList<int> status;
+    int totalTime = 0;
 
     for (int area=0; area<histAreaNo; area++) {
 
@@ -2225,12 +2194,12 @@ void setupForm::histMultAreas() {
         ipro->histDDLimit = histDDLimit;
 
         ipro->constructValueMatrix( ipro->imgOrginal, 0 );
-        //ipro->constructValueBlackMatrix( ipro->imgOrginal );
 
         ipro->histogramAnalysis(colorMatrix);
 
         endTime = w->timeSystem.getSystemTimeMsec();
         processElapsed = endTime - startTime;
+        totalTime += processElapsed;
         // -------END PROCESSING-------
 
         QString message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
@@ -2292,6 +2261,8 @@ void setupForm::histMultAreas() {
         //delete ipro;
     }
 
+
+    ui->plainTextEdit->appendPlainText("\nToplam Süre " + QString::number(totalTime) + " ms");
 
     if (found2ndPass == 0)
         ui->plainTextEdit->appendPlainText("\n...BAND YOK");
@@ -2359,13 +2330,9 @@ void setupForm::histMultAreas() {
             qDebug() << iproList[8]->histogramMaxPoint[i].x() << "," << iproList[8]->histogramMaxPoint[i].y();
          qDebug() << "avg: " << iproList[8]->histogramAvg;
          */
-
-
-  }
-
+    }
     graphLock = false;
     ui->regionBox->setEnabled(true);
-
     /*
     ui->plainTextEdit->appendPlainText("hist list start/end/vote: ");
     for (int i=0; i<iproList[0]->histogramExtremes.size(); i++) {

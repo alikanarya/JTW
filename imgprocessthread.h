@@ -15,6 +15,10 @@ public:
     imgProcess *iprocess;
     bool iprocessInitSwitch;
     bool ready = true;
+    int startTime, endTime;     // start/end time of image processing
+    int processElapsed;         // elapsed time for image processing
+
+    QList<int> histAreaStat;
 
     explicit imgProcessThread();
      ~imgProcessThread();
@@ -31,9 +35,12 @@ public:
     void Algo6();   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
     void Algo7();   // woLASER: edge > houghTr > detectScanHorizontal
 
+    void histAnalysis();    // histogram analysis
+
 signals:
 
     void imageProcessingCompleted();
+    void histAnalysisCompleted();
 
 private:
 

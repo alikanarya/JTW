@@ -15,65 +15,74 @@ imgProcessThread::~imgProcessThread(){
 
 void imgProcessThread::run(){
 
-    iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
-    iprocessInitSwitch = true;
-
     ready = false;
 
-    iprocess->thetaMin = w->thetaMin;
-    iprocess->thetaMax = w->thetaMax;
-    iprocess->thetaStep = w->thetaStep;
+    if (w->autoDetect2ndPass) {
 
-    if (w->thinJointAlgoActive){    // without laser
-        iprocess->centerX = 0;
-        iprocess->centerY = 0;
-    } else {                     // with laser
-        iprocess->centerX = iprocess->edgeWidth / 2;
-        iprocess->centerY = 0;
+        histAnalysis();
+
+    } else {
+
+        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+        iprocessInitSwitch = true;
+
+        iprocess->thetaMin = w->thetaMin;
+        iprocess->thetaMax = w->thetaMax;
+        iprocess->thetaStep = w->thetaStep;
+
+        if (w->thinJointAlgoActive){    // without laser
+            iprocess->centerX = 0;
+            iprocess->centerY = 0;
+        } else {                     // with laser
+            iprocess->centerX = iprocess->edgeWidth / 2;
+            iprocess->centerY = 0;
+        }
+
+        iprocess->toMono();
+        edgeDetection();
+
+        if (w->thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
+
+            switch ( w->algorithmType ) {
+                case 0: // NONE
+                    break;
+                case 1: // MAIN EDGES
+                    Algo3();
+                    break;
+                case 2: // THIN JOINT - DARK AREA
+                    Algo4();
+                    break;
+                case 3: // CONTRAST
+                    Algo5();
+                    break;
+                case 4: // LINE DETECTION WITH MAIN EDGES
+                    Algo6();
+                    break;
+                case 5: // SCAN HORIZONTAL
+                    Algo7();
+                    break;
+                case 6: // EXPERIMENTAL
+                    break;
+            }
+        } else {    // with laser - HORIZONTAL SEARCH
+            switch ( w->algorithmType ) {
+                case 0: // NONE
+                    break;
+                case 1: // LONGEST SOLID LINES
+                    Algo1();
+                    break;
+                case 2: // PRIMARY VOID
+                    Algo2();
+                    break;
+                case 3: // EXPERIMENTAL
+                    break;
+            }
+        }
+
+        emit imageProcessingCompleted();
     }
 
-    iprocess->toMono();
-    edgeDetection();
 
-    if (w->thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
-
-        switch ( w->algorithmType ) {
-            case 0: // NONE
-                break;
-            case 1: // MAIN EDGES
-                Algo3();
-                break;
-            case 2: // THIN JOINT - DARK AREA
-                Algo4();
-                break;
-            case 3: // CONTRAST
-                Algo5();
-                break;
-            case 4: // LINE DETECTION WITH MAIN EDGES
-                Algo6();
-                break;
-            case 5: // SCAN HORIZONTAL
-                Algo7();
-                break;
-            case 6: // EXPERIMENTAL
-                break;
-        }
-    } else {    // with laser - HORIZONTAL SEARCH
-        switch ( w->algorithmType ) {
-            case 0: // NONE
-                break;
-            case 1: // LONGEST SOLID LINES
-                Algo1();
-                break;
-            case 2: // PRIMARY VOID
-                Algo2();
-                break;
-            case 3: // EXPERIMENTAL
-                break;
-        }
-    }
-
-    emit imageProcessingCompleted();
 }
 
 void imgProcessThread::edgeDetection(){
@@ -234,4 +243,51 @@ void imgProcessThread::Algo7(){
     } else {
         //ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritmasý seçilmelidir");
     }
+}
+
+void imgProcessThread::histAnalysis() {
+// histogram analysis
+
+    int step = (targetArea.height()*1.0) / w->histAreaNo;
+    int ptime;
+    histAreaStat.clear();
+
+    for (int area = 0; area < w->histAreaNo; area++) {
+
+        QImage pic = targetArea.copy( 0, step*area, targetArea.width(), step );    // take target image
+
+        startTime = w->timeSystem.getSystemTimeMsec();
+
+        imgProcess *ipro = new imgProcess( pic, pic.width(), pic.height() );   // new imgProcess object
+        ipro->maFilterKernelSize = w->maFilterKernelSize;
+        ipro->histogramAngleThreshold = w->histogramAngleThreshold;
+        ipro->lenRateThr = w->lenRateThr;
+        ipro->bandWidthMin = w->bandWidthMin;
+        ipro->bandCenterMax = w->bandCenterMax;
+
+        ipro->constructValueMatrix( ipro->imgOrginal, 0 );
+
+        ipro->histogramAnalysis(w->colorMatrix);
+
+        endTime = w->timeSystem.getSystemTimeMsec();
+        ptime = endTime - startTime;
+        processElapsed += ptime;
+        // -------END PROCESSING-------
+
+        if ( ipro->bandCheck_errorState == 0 )
+            histAreaStat.append(1);
+        else
+            histAreaStat.append(0);
+
+        delete ipro;
+    }
+
+    QString stat = "";
+    for (int i=0; i<histAreaStat.size(); i++)
+        stat += QString::number(histAreaStat[i]);
+
+    emit histAnalysisCompleted();
+
+    //qDebug() << stat;
+
 }

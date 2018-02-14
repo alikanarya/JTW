@@ -159,6 +159,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     iProcessThread = new imgProcessThread();
 
     connect(iProcessThread, SIGNAL(imageProcessingCompleted()), this, SLOT(imageProcessingCompleted()));
+    connect(iProcessThread, SIGNAL(histAnalysisCompleted()), this, SLOT(histAnalysisCompleted()));
 
     threadVideoSave = new videoSaveThread();
     connect(threadVideoSave, SIGNAL(saveFinished()), this, SLOT(saveFinished()));
@@ -1498,8 +1499,12 @@ void MainWindow::imageProcessingCompleted(){
         analyzeDialog *_analyzeDialog = new analyzeDialog(iProcessThread->iprocess, processElapsed, this);
         _analyzeDialog->show();
     }
+}
 
+void MainWindow::histAnalysisCompleted(){
 
+    qDebug() << iProcessThread->histAreaStat;
+    iProcessThread->ready = true;
 }
 
 int MainWindow::timeDifference(int first, int last){

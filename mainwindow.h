@@ -582,6 +582,7 @@ public slots:
     double findCurveFitting(QList<double> x1, QList<double> y1, int iterNo);
 
     void imageProcessingCompleted();
+    void histAnalysisCompleted();
 
 signals:
     void cameraDown();
