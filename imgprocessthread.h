@@ -17,6 +17,7 @@ public:
     bool ready = true;
     int startTime, endTime;     // start/end time of image processing
     int processElapsed;         // elapsed time for image processing
+    int imageCaptureTime = 0;
 
     QList<int> histAreaStat;
 
@@ -39,7 +40,7 @@ public:
 
 signals:
 
-    void imageProcessingCompleted();
+    void imageProcessingCompleted(int);
     void histAnalysisCompleted();
 
 private:

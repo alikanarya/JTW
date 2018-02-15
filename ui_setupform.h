@@ -640,7 +640,7 @@ public:
         widthControlBox->setFont(font2);
         timeControlBox = new QCheckBox(tab);
         timeControlBox->setObjectName(QStringLiteral("timeControlBox"));
-        timeControlBox->setGeometry(QRect(370, 440, 161, 17));
+        timeControlBox->setGeometry(QRect(370, 440, 181, 17));
         timeControlBox->setFont(font2);
         label_16 = new QLabel(tab);
         label_16->setObjectName(QStringLiteral("label_16"));
@@ -1243,7 +1243,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         timeControlBox->setToolTip(QApplication::translate("setupForm", "<html><head/><body><p>Belirli bir s\303\274re sonra kaynak komutlar\304\261n\304\261 kes</p></body></html>", 0));
 #endif // QT_NO_TOOLTIP
-        timeControlBox->setText(QApplication::translate("setupForm", "Zaman Kontrol\303\274", 0));
+        timeControlBox->setText(QApplication::translate("setupForm", "Kaynak Yapma S\303\274resi Kontrol\303\274", 0));
         label_16->setText(QApplication::translate("setupForm", "Kay\304\261t S\303\274resi (sn)", 0));
         label_13->setText(QApplication::translate("setupForm", "FPS", 0));
         editIPI->setInputMask(QApplication::translate("setupForm", "99", 0));

@@ -79,7 +79,7 @@ void imgProcessThread::run(){
             }
         }
 
-        emit imageProcessingCompleted();
+        emit imageProcessingCompleted(imageCaptureTime);
     }
 
 

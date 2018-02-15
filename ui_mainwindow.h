@@ -66,7 +66,6 @@ public:
     QLabel *labelDistanceTag2;
     QPushButton *testButton;
     QLineEdit *timeEdit;
-    QLabel *labelTimeTag2;
     QLabel *labelTimeTag;
     QPushButton *videoButton;
     QPushButton *setupButton;
@@ -382,7 +381,7 @@ public:
         testEdit = new QLineEdit(centralWidget);
         testEdit->setObjectName(QStringLiteral("testEdit"));
         testEdit->setEnabled(true);
-        testEdit->setGeometry(QRect(620, 588, 51, 20));
+        testEdit->setGeometry(QRect(570, 610, 51, 20));
         QFont font5;
         font5.setPointSize(9);
         font5.setBold(true);
@@ -402,19 +401,15 @@ public:
         testButton->setGeometry(QRect(570, 588, 41, 23));
         timeEdit = new QLineEdit(centralWidget);
         timeEdit->setObjectName(QStringLiteral("timeEdit"));
-        timeEdit->setGeometry(QRect(740, 558, 41, 20));
-        labelTimeTag2 = new QLabel(centralWidget);
-        labelTimeTag2->setObjectName(QStringLiteral("labelTimeTag2"));
-        labelTimeTag2->setGeometry(QRect(690, 558, 41, 23));
-        labelTimeTag2->setFont(font);
-        labelTimeTag2->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
-        labelTimeTag2->setFrameShape(QFrame::NoFrame);
-        labelTimeTag2->setLineWidth(2);
-        labelTimeTag2->setAlignment(Qt::AlignCenter);
+        timeEdit->setGeometry(QRect(740, 557, 41, 20));
         labelTimeTag = new QLabel(centralWidget);
         labelTimeTag->setObjectName(QStringLiteral("labelTimeTag"));
-        labelTimeTag->setGeometry(QRect(620, 558, 61, 23));
-        labelTimeTag->setFont(font);
+        labelTimeTag->setGeometry(QRect(620, 558, 121, 23));
+        QFont font6;
+        font6.setPointSize(8);
+        font6.setBold(true);
+        font6.setWeight(75);
+        labelTimeTag->setFont(font6);
         labelTimeTag->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
         labelTimeTag->setFrameShape(QFrame::NoFrame);
         labelTimeTag->setLineWidth(2);
@@ -460,7 +455,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 794, 27));
+        menuBar->setGeometry(QRect(0, 0, 794, 21));
         MainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
@@ -575,8 +570,7 @@ public:
         testEdit->setInputMask(QString());
         labelDistanceTag2->setText(QApplication::translate("MainWindow", "(mm)", 0));
         testButton->setText(QApplication::translate("MainWindow", "Test", 0));
-        labelTimeTag2->setText(QApplication::translate("MainWindow", "(sn)", 0));
-        labelTimeTag->setText(QApplication::translate("MainWindow", "Stop Zaman\304\261", 0));
+        labelTimeTag->setText(QApplication::translate("MainWindow", "Stop Zaman\304\261 (sn)", 0));
 #ifndef QT_NO_TOOLTIP
         videoButton->setToolTip(QApplication::translate("MainWindow", "Video Kaydet", 0));
 #endif // QT_NO_TOOLTIP

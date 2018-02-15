@@ -1153,12 +1153,10 @@ setupForm::~setupForm(){
 
     if (w->timeControl){
         w->ui->labelTimeTag->show();
-        w->ui->labelTimeTag2->show();
         w->ui->timeEdit->show();
         w->ui->timeEdit->setText(QString::number(w->timeLimit));
     } else {
         w->ui->labelTimeTag->hide();
-        w->ui->labelTimeTag2->hide();
         w->ui->timeEdit->hide();
     }
 

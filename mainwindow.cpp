@@ -128,7 +128,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             // image getter class & image data inits.
             imageGetter = new getImage(urlCam.toString(), 10);
             //imageGetter->url.setUserName("admin");imageGetter->url.setPassword("admin");
-            connect(imageGetter, SIGNAL(downloadCompleted()), this, SLOT(makeNetworkRequest()));
+            //connect(imageGetter, SIGNAL(downloadCompleted()), this, SLOT(makeNetworkRequest()));
+            connect(imageGetter, SIGNAL(downloadCompleted()), this, SLOT(imgGetterDelay()));
             connect(imageGetter, SIGNAL(lastDataTaken()), this, SLOT(playCam()));
             connect(imageGetter, SIGNAL(cameraOnlineSignal()), this, SLOT(camConnected()));
             connect(imageGetter, SIGNAL(cameraDownSignal()), this, SLOT(camNotConnected()));
@@ -158,7 +159,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     iProcessThread = new imgProcessThread();
 
-    connect(iProcessThread, SIGNAL(imageProcessingCompleted()), this, SLOT(imageProcessingCompleted()));
+    connect(iProcessThread, SIGNAL(imageProcessingCompleted(int)), this, SLOT(imageProcessingCompleted(int)));
     connect(iProcessThread, SIGNAL(histAnalysisCompleted()), this, SLOT(histAnalysisCompleted()));
 
     threadVideoSave = new videoSaveThread();
@@ -292,14 +293,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     if (timeControl){
         ui->labelTimeTag->show();
-        ui->labelTimeTag2->show();
         ui->timeEdit->show();
         ui->timeEdit->setText(QString::number(timeLimit));
         permTime = false;   // enabled when control begun
 
     } else {
         ui->labelTimeTag->hide();
-        ui->labelTimeTag2->hide();
         ui->timeEdit->hide();
         permTime = true;
 
@@ -491,6 +490,7 @@ void MainWindow::stopButton(){
     switch ( camStreamType ) {
         case 1: // JPEG
             imageGetter->reset();
+            imgGetDelay = 0;
             break;
         case 0: // STREAM
             if (playStream->isRunning())
@@ -509,6 +509,14 @@ void MainWindow::stopButton(){
     ui->trackButton->setEnabled(false);
     ui->controlButton->setEnabled(false);
 
+    ui->imageFrame->clear();
+}
+
+void MainWindow::imgGetterDelay(){
+    if (imgGetDelay == 0)
+        makeNetworkRequest();
+    else
+        QTimer::singleShot(imgGetDelay, this, SLOT(makeNetworkRequest()));
 }
 
 void MainWindow::makeNetworkRequest(){
@@ -909,6 +917,13 @@ void MainWindow::updateSn(){
                 ui->statusBar->showMessage(message);
                 //----------
 
+                imgGetDuration = 1000.0/fpsReal - imgGetDelay;
+                int _imgGetDelay = 1000.0/fpsTarget - imgGetDuration;
+                if (_imgGetDelay > 0)   // >5 ?
+                    imgGetDelay = _imgGetDelay;
+                else
+                    imgGetDelay = 0;
+
                 fpsRequest = imageGetter->fpsRequest = 0;
                 fpsReal = 0;
                 timeDelayAvg = 0;
@@ -1117,7 +1132,7 @@ void MainWindow::controlButton(){
         repaintGuide();
 
         cmdState = _CMD_CENTER;
-        plcCommands();
+        plcCommands(timeSystem.getSystemTimeMsec());
 
         ui->controlButton->setIcon(controlOffIcon);
         ui->controlButton->setEnabled(false);
@@ -1173,6 +1188,7 @@ void MainWindow::startControl(){
         calcZParameters();
     }
 
+    // time control: to stop the control after some amount of time after the beginning
     if (timeControl){
         timeControlCounter = 0;
         permTime = false;
@@ -1277,7 +1293,6 @@ void MainWindow::edgeDetection(imgProcess *iprocess){
             matrixFlag = false;
             break;
     }
-
 }
 
 void MainWindow::Algo1(imgProcess *iprocess){
@@ -1384,12 +1399,13 @@ void MainWindow::processImage(bool deleteObject){
                     algorithmType = 1;          // Algo3() MAIN EDGES
             }
 
+            iProcessThread->imageCaptureTime = imageCaptureTime;
             iProcessThread->start();
         }
     }
 }
 
-void MainWindow::imageProcessingCompleted(){
+void MainWindow::imageProcessingCompleted(int time){
 
     // if center of track is not an error, append dev. to trend data list OR append error code to list
     if (iProcessThread->iprocess->detected){
@@ -1440,10 +1456,11 @@ void MainWindow::imageProcessingCompleted(){
             }
 
             if (controlOn) {
+
                 if (!focusCheckBeforeControl) {
-                    plcCommands();
+                    plcCommands(time);
                 } else if (focusCheckBeforeControl && camFocusState) {
-                    plcCommands();
+                    plcCommands(time);
                 }
 
             }
@@ -2296,6 +2313,7 @@ void MainWindow::playCam(){
             ui->imageFrame->show();
             ui->guideFrame->raise();     // if guide is shown, suppress it
             lastData->shown = true;      // mark last data was SHOWN on display
+            imageCaptureTime = timeSystem.getSystemTimeMsec();
             fpsReal++;
 
             if ( camStreamType == 0 ) {
@@ -2304,9 +2322,8 @@ void MainWindow::playCam(){
 
             if ( camStreamType == 1 ) {
                 // calculate (display time - request time) delay in msec
-                int displayTime = timeSystem.getSystemTimeMsec();
                 int requestTime = calcTotalMsec(lastData->requestHour.toInt(), lastData->requestMinute.toInt(), lastData->requestSecond.toInt(), lastData->requestMSecond.toInt());
-                timeDelay = displayTime - requestTime;
+                timeDelay = imageCaptureTime - requestTime;
                 timeDelayTotal += timeDelay;  // overall delay
             }
 
@@ -2562,7 +2579,7 @@ void MainWindow::plcReadings(){
 
 }
 
-void MainWindow::plcCommands(){
+void MainWindow::plcCommands(int time){
 
     //if (controlOn){
 
@@ -2581,6 +2598,13 @@ void MainWindow::plcCommands(){
             else if (cmdState == _CMD_CENTER) {
                 ui->cmdStatus->setIcon(QIcon());
             }
+
+            weldData wd;
+            wd.state = cmdState;
+            wd.time = time;
+            weldCommands.append(wd);
+            qDebug() << "weld time: " << wd.time;
+            qDebug() << timeSystem.getSystemTimeMsec();
 
             plc->writeByte(0,commandByte);
 
@@ -3411,7 +3435,6 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
 
     return ( focusValX_offset + u );
 }
-
 
 void MainWindow::on_passOneButton_clicked(){
     firstPass = true;

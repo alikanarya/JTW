@@ -1883,7 +1883,7 @@
       <rect>
        <x>370</x>
        <y>440</y>
-       <width>161</width>
+       <width>181</width>
        <height>17</height>
       </rect>
      </property>
@@ -1898,7 +1898,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Belirli bir süre sonra kaynak komutlarını kes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>Zaman Kontrolü</string>
+      <string>Kaynak Yapma Süresi Kontrolü</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_16">

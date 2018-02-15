@@ -175,6 +175,7 @@ public:
     getImage *camApi;
     networkData *lastData, *prevData;   // current and prev image data vars
     threadPlayStream *playStream;
+    int imageCaptureTime = 0;
 
     bool camFocusState = false;         // true; in focus, false; out of focus
     bool camFocusingActionState = false;// true; focusing in action, false; stable
@@ -407,6 +408,7 @@ public:
 
     bool dynamicAlgo;
 
+    // time control: to stop the control after some amount of time after the beginning
     bool timeControl;
     int timeLimit;
     bool permTime;
@@ -460,6 +462,8 @@ public:
     unsigned int timeDelayTotal;        // total time delay of images in 1 sn
     int timeDelay;                      // current image time delay
     int timeDelayAvg;                   // average delay in 1 sn
+    int imgGetDelay = 0;
+    int imgGetDuration = 0;
 
     // file vars
     QString fileBase;
@@ -545,7 +549,7 @@ public slots:
     void plcConnection(bool stat);
     void plcCheck();
     void plcReadings();
-    void plcCommands();
+    void plcCommands(int time);
     void target2Left();
     void target2Right();
     void showInfo();
@@ -558,6 +562,7 @@ public slots:
     void testButton();
 
     void playCam();
+    void imgGetterDelay();
     void makeNetworkRequest();
     void camConnected();
     void camNotConnected();
@@ -581,7 +586,7 @@ public slots:
     void iterationFinished();
     double findCurveFitting(QList<double> x1, QList<double> y1, int iterNo);
 
-    void imageProcessingCompleted();
+    void imageProcessingCompleted(int time);
     void histAnalysisCompleted();
 
 signals:

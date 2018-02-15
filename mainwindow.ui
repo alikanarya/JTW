@@ -984,8 +984,8 @@ background-color: rgb(236, 233, 216);</string>
     </property>
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>588</y>
+      <x>570</x>
+      <y>610</y>
       <width>51</width>
       <height>20</height>
      </rect>
@@ -1053,42 +1053,10 @@ background-color: rgb(236, 233, 216);</string>
     <property name="geometry">
      <rect>
       <x>740</x>
-      <y>558</y>
+      <y>557</y>
       <width>41</width>
       <height>20</height>
      </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelTimeTag2">
-    <property name="geometry">
-     <rect>
-      <x>690</x>
-      <y>558</y>
-      <width>41</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::NoFrame</enum>
-    </property>
-    <property name="lineWidth">
-     <number>2</number>
-    </property>
-    <property name="text">
-     <string>(sn)</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="labelTimeTag">
@@ -1096,13 +1064,13 @@ background-color: rgb(236, 233, 216);</string>
      <rect>
       <x>620</x>
       <y>558</y>
-      <width>61</width>
+      <width>121</width>
       <height>23</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>10</pointsize>
+      <pointsize>8</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -1117,7 +1085,7 @@ background-color: rgb(236, 233, 216);</string>
      <number>2</number>
     </property>
     <property name="text">
-     <string>Stop Zamanı</string>
+     <string>Stop Zamanı (sn)</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -1277,7 +1245,7 @@ PASO</string>
      <x>0</x>
      <y>0</y>
      <width>794</width>
-     <height>27</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
