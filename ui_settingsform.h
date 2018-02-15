@@ -275,28 +275,23 @@ public:
         label_3->setFont(font);
         editDBNo = new QLineEdit(settingsForm);
         editDBNo->setObjectName(QStringLiteral("editDBNo"));
-        editDBNo->setGeometry(QRect(200, 367, 51, 20));
+        editDBNo->setGeometry(QRect(200, 368, 51, 20));
         editControlDelay = new QLineEdit(settingsForm);
         editControlDelay->setObjectName(QStringLiteral("editControlDelay"));
-        editControlDelay->setEnabled(false);
-        editControlDelay->setGeometry(QRect(420, 520, 80, 20));
-        editControlDelay->setFont(font3);
+        editControlDelay->setEnabled(true);
+        editControlDelay->setGeometry(QRect(230, 312, 80, 20));
+        editControlDelay->setFont(font2);
         editControlDelay->setFocusPolicy(Qt::StrongFocus);
-        editControlDelay->setStyleSheet(QLatin1String("color: rgb(0, 0, 255);\n"
-"background-color: rgb(255, 0, 0);"));
+        editControlDelay->setStyleSheet(QLatin1String("color: rgb(255, 0, 0);\n"
+""));
         editControlDelay->setMaxLength(5);
         editControlDelay->setAlignment(Qt::AlignCenter);
-        editControlDelay->setReadOnly(true);
+        editControlDelay->setReadOnly(false);
         label_4 = new QLabel(settingsForm);
         label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setEnabled(false);
-        label_4->setGeometry(QRect(320, 520, 91, 20));
-        QFont font6;
-        font6.setFamily(QStringLiteral("Arial"));
-        font6.setPointSize(8);
-        font6.setBold(false);
-        font6.setWeight(50);
-        label_4->setFont(font6);
+        label_4->setEnabled(true);
+        label_4->setGeometry(QRect(10, 311, 211, 20));
+        label_4->setFont(font);
         targetSlider = new QSlider(settingsForm);
         targetSlider->setObjectName(QStringLiteral("targetSlider"));
         targetSlider->setGeometry(QRect(170, 110, 240, 25));
@@ -363,7 +358,7 @@ public:
         editTitle->setMaxLength(20);
         checkPLCSIM = new QCheckBox(settingsForm);
         checkPLCSIM->setObjectName(QStringLiteral("checkPLCSIM"));
-        checkPLCSIM->setGeometry(QRect(270, 370, 171, 17));
+        checkPLCSIM->setGeometry(QRect(270, 369, 171, 17));
         checkPLCSIM->setFont(font1);
         checkTargetAlignButtons = new QCheckBox(settingsForm);
         checkTargetAlignButtons->setObjectName(QStringLiteral("checkTargetAlignButtons"));
@@ -390,9 +385,9 @@ public:
         plainTextEdit = new QPlainTextEdit(settingsForm);
         plainTextEdit->setObjectName(QStringLiteral("plainTextEdit"));
         plainTextEdit->setGeometry(QRect(510, 400, 380, 191));
-        QFont font7;
-        font7.setPointSize(7);
-        plainTextEdit->setFont(font7);
+        QFont font6;
+        font6.setPointSize(7);
+        plainTextEdit->setFont(font6);
         plainTextEdit->setStyleSheet(QStringLiteral("background-color: rgb(255, 255, 195);"));
         plainTextEdit->setFrameShape(QFrame::Box);
         plainTextEdit->setFrameShadow(QFrame::Sunken);
@@ -477,13 +472,13 @@ public:
         autoFocusAfterCheck = new QCheckBox(settingsForm);
         autoFocusAfterCheck->setObjectName(QStringLiteral("autoFocusAfterCheck"));
         autoFocusAfterCheck->setGeometry(QRect(520, 123, 91, 17));
-        QFont font8;
-        font8.setFamily(QStringLiteral("Arial"));
-        font8.setPointSize(8);
-        font8.setBold(false);
-        font8.setItalic(true);
-        font8.setWeight(50);
-        autoFocusAfterCheck->setFont(font8);
+        QFont font7;
+        font7.setFamily(QStringLiteral("Arial"));
+        font7.setPointSize(8);
+        font7.setBold(false);
+        font7.setItalic(true);
+        font7.setWeight(50);
+        autoFocusAfterCheck->setFont(font7);
         autoFocusAfterCheck->setLayoutDirection(Qt::LeftToRight);
         label_15 = new QLabel(settingsForm);
         label_15->setObjectName(QStringLiteral("label_15"));
@@ -570,18 +565,18 @@ public:
         editControlDelay->setToolTip(QApplication::translate("settingsForm", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Boru besleme h\304\261z\304\261d\304\261r.</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Kameran\304\261n g\303\266rd\303\274\304\237\303\274 alana</span></p>\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font"
-                        "-weight:600;\">kaynak ba\305\237l\304\261\304\237\304\261n\304\261n gelme zaman\304\261n\304\261 ifade eder.</span></p>\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Malzeme h\304\261z\304\261yla ilgilidir.</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Kameran\304\261n g\303\266rd\303\274\304\237\303\274 alan\304\261n</span></p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; f"
+                        "ont-weight:600;\">kaynak ba\305\237l\304\261\304\237\304\261na ula\305\237ma zaman\304\261n\304\261 ifade eder.</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Birimi mili saniyedir (1 sn = 1000 ms).</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Do\304\237ru zamanda komutun verilebilmesi i\303\247in \303\266nemlidir.</span></p>\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:10pt; font-weight:600;\">Hassas \303\266l\303\247\303\274m yap\304\261n\304\261z.</span></p></body></html>", 0));
 #endif // QT_NO_TOOLTIP
         editControlDelay->setInputMask(QString());
         editControlDelay->setText(QString());
-        label_4->setText(QApplication::translate("settingsForm", "Kontrol Gecikmesi", 0));
+        label_4->setText(QApplication::translate("settingsForm", "Kontrol Gecikmesi (ms)", 0));
         label_5->setText(QApplication::translate("settingsForm", "Hedef Yatay", 0));
         labelTarget->setText(QApplication::translate("settingsForm", "100", 0));
         label_6->setText(QApplication::translate("settingsForm", "Hedef Dikey", 0));

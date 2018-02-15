@@ -447,7 +447,8 @@ public:
     int tickDiff;                               // difference between 2 system times
     int frameInterval;                          // image play interval in msec
     QTimer *timer, *timerSn;                    // 1msec & 1sn timers
-    QTimer *timerControl;
+    QTimer *timerControl;                       // to check plc live state
+    QTimer *timerCommand;                       // to manage delayed weld commands
     bool timerControlEnabled;
     int timerControlInterval;
     int msecCount;                              // counter to calc. msec in 1sn
@@ -619,6 +620,7 @@ private slots:
     void update();                                  // 1msec timer actions
     void updateSn();                                // 1sn timer actions
     void startTimer();                              // 2sn bood delay timer
+    void processCommands();
 
     void testEdit();
     void timeEdit();

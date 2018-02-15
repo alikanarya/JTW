@@ -11,7 +11,7 @@
 #define alarm6      "Resim alınamadı !!! Kamera veya bağlantısında problem olabilir."
 #define alarm7      "KAMERA BAĞLANTISI YOK"
 #define alarm8      "Kaynak gecikmesi için girilen değer geçersiz !!! Tekrar deneyiniz."
-#define alarm9      "Kaynak gecikmesi için girilen değer 500ms'den az olamaz. (Demo için 0 giriniz)"
+#define alarm9      "Kaynak gecikmesi için girilen değer 1000 ms (1 sn)'den az olamaz. \nGecikme işlemini iptal etmek için 0 giriniz."
 #define alarm10     "Komutlar durduruldu !"
 #define alarm11     "KAMERA ONLINE"
 #define alarm12     "Kamera Odak Ayarı DOĞRU"

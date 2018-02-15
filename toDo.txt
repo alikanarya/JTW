@@ -1,7 +1,9 @@
-* stopButton disable?
+* popup windows if plc and cam connection failure
+* plc cmd check, live state-cmd status of the queue when plc off, begin/end cmds if autoalignment or not, plcsim stat?
+* stop/play Buttons disabled from user
 * track on at start up
 * mainEdges > mainEndegsSolidLine with regional analysis
-* 2nd pass control command stop, from plc-machine?
+* control command stop, from plc-machine-hardcontrol
 
 * 2 pass user settings in mainwindow
 * 2nd pass detection algo; timing

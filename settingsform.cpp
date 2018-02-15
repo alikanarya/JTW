@@ -46,8 +46,8 @@ settingsForm::settingsForm(QWidget *parent) : QDialog(parent), ui(new Ui::settin
 
     ui->table->verticalHeader()->setVisible(true);
 
-    ui->label_4->hide();
-    ui->editControlDelay->hide();
+    //ui->label_4->hide();
+    //ui->editControlDelay->hide();
     ui->checkPLCSIM->setChecked(w->PLCSIM);
 
     camApi = new getImage(w->urlCamStream.host(), false);
@@ -326,14 +326,14 @@ void settingsForm::getControlDelay(){
     w->controlDelay = ui->editControlDelay->text().toInt(&w->controlDelayValid, 10);
 
     if (!w->controlDelayValid)
-        w->ui->plainTextEdit->appendPlainText(alarm8);
+        ui->plainTextEdit->appendPlainText(alarm8);
     else {
-        if (w->controlDelay > 0 && w->controlDelay < 500){
+        if (w->controlDelay > 0 && w->controlDelay < 1000){
             w->controlDelay = 500;
-            ui->editControlDelay->setText("500");
-            w->ui->plainTextEdit->appendPlainText(alarm9);
+            ui->editControlDelay->setText("1000");
+            ui->plainTextEdit->appendPlainText(alarm9);
         } else
-            w->ui->plainTextEdit->appendPlainText(message4 + QString::number(w->controlDelay) + " mili saniye");
+            ui->plainTextEdit->appendPlainText(message4 + QString::number(w->controlDelay) + " mili saniye");
     }
 }
 

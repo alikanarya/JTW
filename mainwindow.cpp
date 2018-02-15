@@ -229,13 +229,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(timerSn, SIGNAL(timeout()), this, SLOT(updateSn()));
     timerSn->start(1000);
 
+    timerCommand = new QTimer(this);
+    connect(timerCommand, SIGNAL(timeout()), this, SLOT(processCommands()));
+    timerCommand->start(10);
+
     /* 1msec timer
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     msecCount = 0;
     firstTimeTick = timeSystem.getSystemTimeMsec();
-    timer->start(1);
-    */
+    timer->start(1); */
 
     settingsPWDOK = false;
     setupPWDOK = false;
@@ -1131,8 +1134,9 @@ void MainWindow::controlButton(){
         offsetXpos = 0;
         repaintGuide();
 
+        timerCommand->stop();
         cmdState = _CMD_CENTER;
-        plcCommands(timeSystem.getSystemTimeMsec());
+        plc->writeByte(0,_CMD_CENTER);
 
         ui->controlButton->setIcon(controlOffIcon);
         ui->controlButton->setEnabled(false);
@@ -1167,8 +1171,11 @@ void MainWindow::startControl(){
 
     controlInitiated = true;
 
+    if (alignGuide2TrackCenter) plc->writeByte(0,_CMD_CENTER);
+
     weldCommands.clear();
-    weldCommandsSize = controlDelay / timerControlInterval;
+    //weldCommandsSize = controlDelay / timerControlInterval;
+    if (controlDelay > 0)    timerCommand->start(10);
 
     ui->controlButton->setIcon(controlOnIcon);
     ui->plainTextEdit->appendPlainText(timeString() + message1);
@@ -1783,7 +1790,7 @@ void MainWindow::readSettings(){
             BYTE_NO = settings->value("byte", _BYTE_NO).toInt();
             connectRequestedonBoot = settings->value("pcon", _PLC_CONN_ONBOOT).toBool();
             //PLCSIM = settings->value("plcsim", _PLCSIM).toBool();
-            controlDelay = 0;   //settings->value("ctd", _CONTROL_DELAY).toInt();
+            controlDelay = settings->value("ctd", _CONTROL_DELAY).toInt();
             hardControlStart = settings->value("hard", _HARD_START).toBool();
             machineNo = settings->value("makine", _MACHINE_NO).toInt();
                 if (machineNo < 1 || machineNo > 8) machineNo = 1;
@@ -2576,18 +2583,18 @@ void MainWindow::plcReadings(){
         //else alignGuide2TrackCenter = false;
         mak_aktif_old = mak_aktif_now;
     }
-
 }
 
 void MainWindow::plcCommands(int time){
 
     //if (controlOn){
+    if (cmdState != cmdStatePrev) {
 
-        if (cmdState != cmdStatePrev) {
+        if (controlDelay == 0) {
 
             int commandByte = 0;
 
-            if (cmdState == _CMD_RIGHT){
+            if (cmdState == _CMD_RIGHT) {
                 commandByte +=1;
                 ui->cmdStatus->setIcon(cmd2LeftIcon);
             }
@@ -2598,18 +2605,46 @@ void MainWindow::plcCommands(int time){
             else if (cmdState == _CMD_CENTER) {
                 ui->cmdStatus->setIcon(QIcon());
             }
+            plc->writeByte(0,commandByte);
+
+        } else {
 
             weldData wd;
             wd.state = cmdState;
             wd.time = time;
             weldCommands.append(wd);
-            qDebug() << "weld time: " << wd.time;
-            qDebug() << timeSystem.getSystemTimeMsec();
+        }
+    }
+    //}
+}
 
+void MainWindow::processCommands() {
+
+    if (!weldCommands.isEmpty()) {
+
+        if ( (timeSystem.getSystemTimeMsec() - weldCommands.first().time - controlDelay) >= 0 ){
+
+            qDebug() << "weldList:" << weldCommands.size() << " time: " << weldCommands.first().time << "(+" <<  (timeSystem.getSystemTimeMsec()-weldCommands.first().time) << ") cmd: " << weldCommands.first().state;
+
+            int commandByte = 0;
+
+            if (weldCommands.first().state == _CMD_RIGHT) {
+                commandByte +=1;
+                ui->cmdStatus->setIcon(cmd2LeftIcon);
+            }
+            else if (weldCommands.first().state == _CMD_LEFT) {
+                ui->cmdStatus->setIcon(cmd2RightIcon);
+                commandByte +=2;
+            }
+            else if (weldCommands.first().state == _CMD_CENTER) {
+                ui->cmdStatus->setIcon(QIcon());
+            }
             plc->writeByte(0,commandByte);
 
+            weldCommands.removeFirst();
         }
-    //}
+    }
+
 }
 
 void MainWindow::doAutoFocus(){
