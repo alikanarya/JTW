@@ -1384,27 +1384,42 @@ void MainWindow::Algo6(imgProcess *iprocess){
 void MainWindow::processImage(bool deleteObject){
 
     //if ( !imageGetter->imageList.isEmpty() ){
-    if (lastData->image->format() != QImage::Format_Invalid) {
+    if (!iProcessThread->isRunning() && iProcessThread->ready) {
+        if (lastData->image->format() != QImage::Format_Invalid) {
 
-        if (applyCameraEnhancements) {
-//            targetArea = imageFileChanged.copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
-            targetArea = imageFileChanged.copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
-        } else {
-//            targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
-            targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
-        }
-
-        if (!iProcessThread->isRunning() && iProcessThread->ready){
-            iProcessThread->targetArea = targetArea.copy(0,0,targetArea.width(), targetArea.height());
+            int yOffset = offsetYCam;
+            int fHeight = frameHeightCam;
 
             if (twoPassWelding) {
-                thinJointAlgoActive = true;     // without laser - VERTICAL SEARCH
-                if (firstPass)
-                    algorithmType = 4;          // Algo6() LINE DETECTION WITH MAIN EDGES
-                else
-                    algorithmType = 1;          // Algo3() MAIN EDGES
+                switch(histState){
+                    case 0: iProcessThread->algoSwitch = !iProcessThread->algoSwitch;
+                            algorithmType = 4;   // Algo6() LINE DETECTION WITH MAIN EDGES
+                            break;
+                    case 1: iProcessThread->algoSwitch = false; break;
+                    case 2: iProcessThread->algoSwitch = !iProcessThread->algoSwitch;
+                            algorithmType = 1;  // Algo3() MAIN EDGES
+                            break;
+                }
+                if (!iProcessThread->algoSwitch) {  // for histogram
+                    yOffset = 0;
+                    fHeight = lastData->image->height();
+                }
+            } else {
+                iProcessThread->algoSwitch = true;
             }
 
+            if (applyCameraEnhancements) {
+                //targetArea = imageFileChanged.copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+                //targetArea = imageFileChanged.copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
+                targetArea = imageFileChanged.copy( offsetXCam, yOffset, frameWidthCam, fHeight );    // take target image
+            } else {
+                //targetArea = lastData->image->copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
+                //targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
+                targetArea = lastData->image->copy( offsetXCam, yOffset, frameWidthCam, fHeight );    // take target image
+            }
+
+            iProcessThread->targetArea = targetArea.copy(0,0,targetArea.width(), targetArea.height());
+            thinJointAlgoActive = true;     // without laser - VERTICAL SEARCH
             iProcessThread->imageCaptureTime = imageCaptureTime;
             iProcessThread->start();
         }
@@ -1543,8 +1558,8 @@ void MainWindow::histAnalysisCompleted(){
         else
             histState = 1;  // transition
 
+        qDebug() << iProcessThread->histAreaStat;
         if (histState != histStatePrev){
-            qDebug() << iProcessThread->histAreaStat;
             updatePassButtons();
         }
         histStatePrev = histState;

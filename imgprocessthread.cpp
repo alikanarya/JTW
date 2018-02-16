@@ -17,7 +17,7 @@ void imgProcessThread::run(){
 
     ready = false;
 
-    if (w->autoDetect2ndPass) {
+    if (!algoSwitch) {
 
         histAnalysis();
 

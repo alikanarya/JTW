@@ -348,7 +348,7 @@ public:
     double bandCenterMax = 0.1;
     int histAreaNo = 1;
     QList<int> histBuffer;
-    int histBufferSize = 5;
+    int histBufferSize = 3;
     double histLoRate = 0.22;
     double histHiRate = 0.78;
     int histLo = 1;

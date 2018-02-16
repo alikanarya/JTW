@@ -21,6 +21,7 @@ public:
 
     QList<int> histAreaStatList;
     int histAreaStat;
+    bool algoSwitch = true;
 
     explicit imgProcessThread();
      ~imgProcessThread();
