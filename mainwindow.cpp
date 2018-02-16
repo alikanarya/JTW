@@ -273,8 +273,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     timerControlInterval = 5000;
     controlThreadCountSize = 15000 / timerControlInterval;   // timer shot count for 15sec plc check
 
-    weldCommandsSize = controlDelay / timerControlInterval;
-
     // start message
     ui->plainTextEdit->appendPlainText(timeString() + "Sistem başlatılmıştır.");
     lic.checkLicence();
@@ -1080,6 +1078,7 @@ void MainWindow::trackButton(){
         ui->trackButton->setIcon(trackOnIcon);
         if (twoPassWelding){
             firstPass = true;
+            histState = histStatePrev = 0;
             ui->passOneButton->setStyleSheet("background-color: lime");
             ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
         }
@@ -1089,6 +1088,7 @@ void MainWindow::trackButton(){
 
         if (twoPassWelding){
             firstPass = true;
+            histState = histStatePrev = 0;
             ui->passOneButton->setStyleSheet("background-color: #F0F0F0");
             ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
         }
@@ -1174,7 +1174,6 @@ void MainWindow::startControl(){
     if (alignGuide2TrackCenter) plc->writeByte(0,_CMD_CENTER);
 
     weldCommands.clear();
-    //weldCommandsSize = controlDelay / timerControlInterval;
     if (controlDelay > 0)    timerCommand->start(10);
 
     ui->controlButton->setIcon(controlOnIcon);
@@ -1527,7 +1526,30 @@ void MainWindow::imageProcessingCompleted(int time){
 
 void MainWindow::histAnalysisCompleted(){
 
-    qDebug() << iProcessThread->histAreaStat;
+    histBuffer.append(iProcessThread->histAreaStat);
+
+    if (histBuffer.size() > histBufferSize) {
+        histBuffer.removeFirst();
+
+        double avg = 0;
+        for (int i=0; i<histBuffer.size(); i++)
+            avg += histBuffer[i];
+        avg /= histBuffer.size();
+
+        if (avg <= histLo)
+            histState = 0;  // no band
+        else if (avg >= histHi)
+            histState = 2;  // full band
+        else
+            histState = 1;  // transition
+
+        if (histState != histStatePrev){
+            qDebug() << iProcessThread->histAreaStat;
+            updatePassButtons();
+        }
+        histStatePrev = histState;
+    }
+
     iProcessThread->ready = true;
 }
 
@@ -1683,6 +1705,21 @@ void MainWindow::repaintDevTrend(){
     // updata dev. trend for error limit value changes
     if (!trackOn) clearTrack();
     if (deviationData.size() != 0) drawTrack();
+}
+
+void MainWindow::updatePassButtons() {
+
+    QString passOneButtonSS = SS_OFF;
+    QString passTwoButtonSS = SS_OFF;
+
+    switch (histState) {
+        case 0: passOneButtonSS = SS_ON; passTwoButtonSS = SS_OFF; break;
+        case 1: passOneButtonSS = SS_TR; passTwoButtonSS = SS_TR; break;
+        case 2: passOneButtonSS = SS_OFF; passTwoButtonSS = SS_ON; break;
+    }
+
+    ui->passOneButton->setStyleSheet(passOneButtonSS);
+    ui->passTwoButton->setStyleSheet(passTwoButtonSS);
 }
 
 void MainWindow::calcZParameters(){
@@ -1859,6 +1896,9 @@ void MainWindow::readSettings(){
             bandWidthMin = settings->value("bwidm", _BAND_WIDTH_MIN).toFloat();
             bandCenterMax = settings->value("bcenm", _BAND_CENTER_MAX).toFloat();
             histAreaNo = settings->value("harno", _HIST_AREA_NO).toInt();
+                histLo = round(histAreaNo * histLoRate);
+                histHi = round(histAreaNo * histHiRate);
+                //qDebug() << histAreaNo << " " << histLo << " " << histHi;
 
             twoPassWelding = settings->value("twopass", _2_PASS_WELD).toBool();
             autoDetect2ndPass = settings->value("detpass", _DETECT_2ND_PASS).toBool();

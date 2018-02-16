@@ -347,6 +347,17 @@ public:
     double bandWidthMin = 0.20;
     double bandCenterMax = 0.1;
     int histAreaNo = 1;
+    QList<int> histBuffer;
+    int histBufferSize = 5;
+    double histLoRate = 0.22;
+    double histHiRate = 0.78;
+    int histLo = 1;
+    int histHi = 4;
+    int histStatePrev = 0, histState = 0; // 0 no band, 1:transition, 2:full band
+    const QString SS_ON = "background-color: lime";
+    const QString SS_OFF = "background-color: #F0F0F0";
+    const QString SS_TR = "background-color: yellow"; // transition
+
 
     // Z-Control
     bool zControlActive;
@@ -511,6 +522,7 @@ public:
     void clearTrack();                              // clears dev. trend & re-paint the axis
     void drawTrack();                               // draws dev. trend
     QImage* takeTargetAreaImage();                  // get target image from current image as a new object
+    void updatePassButtons();
 
     void edgeDetection(imgProcess *iprocess);
     void processImage(bool deleteObject = true);                            // detect corners and plc command

@@ -250,7 +250,7 @@ void imgProcessThread::histAnalysis() {
 
     int step = (targetArea.height()*1.0) / w->histAreaNo;
     int ptime;
-    histAreaStat.clear();
+    histAreaStatList.clear();
 
     for (int area = 0; area < w->histAreaNo; area++) {
 
@@ -275,16 +275,18 @@ void imgProcessThread::histAnalysis() {
         // -------END PROCESSING-------
 
         if ( ipro->bandCheck_errorState == 0 )
-            histAreaStat.append(1);
+            histAreaStatList.append(1);
         else
-            histAreaStat.append(0);
+            histAreaStatList.append(0);
 
         delete ipro;
     }
 
-    QString stat = "";
-    for (int i=0; i<histAreaStat.size(); i++)
-        stat += QString::number(histAreaStat[i]);
+    //QString stat = "";
+    histAreaStat = 0;
+
+    for (int i=0; i<histAreaStatList.size(); i++)
+        histAreaStat += histAreaStatList[i];
 
     emit histAnalysisCompleted();
 

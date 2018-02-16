@@ -19,7 +19,8 @@ public:
     int processElapsed;         // elapsed time for image processing
     int imageCaptureTime = 0;
 
-    QList<int> histAreaStat;
+    QList<int> histAreaStatList;
+    int histAreaStat;
 
     explicit imgProcessThread();
      ~imgProcessThread();
