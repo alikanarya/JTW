@@ -231,7 +231,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     timerCommand = new QTimer(this);
     connect(timerCommand, SIGNAL(timeout()), this, SLOT(processCommands()));
-    timerCommand->start(10);
+    //timerCommand->start(10);
 
     /* 1msec timer
     timer = new QTimer(this);
@@ -1079,8 +1079,8 @@ void MainWindow::trackButton(){
         if (twoPassWelding){
             firstPass = true;
             histState = histStatePrev = 0;
-            ui->passOneButton->setStyleSheet("background-color: lime");
-            ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
+            ui->passOneButton->setStyleSheet(SS_ON);
+            ui->passTwoButton->setStyleSheet(SS_OFF);
         }
 
     } else {
@@ -1089,8 +1089,8 @@ void MainWindow::trackButton(){
         if (twoPassWelding){
             firstPass = true;
             histState = histStatePrev = 0;
-            ui->passOneButton->setStyleSheet("background-color: #F0F0F0");
-            ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
+            ui->passOneButton->setStyleSheet(SS_ON);
+            ui->passTwoButton->setStyleSheet(SS_OFF);
         }
 
         if (controlOn) {
@@ -1101,8 +1101,6 @@ void MainWindow::trackButton(){
 
     //ui->leftButton->setEnabled( showGuide && !trackOn );
     //ui->rightButton->setEnabled( showGuide && !trackOn );
-
-    //ui->thinJointButton->setEnabled(!trackOn);
 }
 
 void MainWindow::controlButton(){
@@ -1135,7 +1133,10 @@ void MainWindow::controlButton(){
         repaintGuide();
 
         timerCommand->stop();
+        cmdStatePrev = _CMD_CENTER;
+        cmdStatePrev2 = _CMD_CENTER;
         cmdState = _CMD_CENTER;
+        ui->cmdStatus->setIcon(QIcon());
         plc->writeByte(0,_CMD_CENTER);
 
         ui->controlButton->setIcon(controlOffIcon);
@@ -1492,7 +1493,7 @@ void MainWindow::imageProcessingCompleted(int time){
 
     } else {
         //if (deviationData[index] != eCodeDev){
-        cmdState = cmdStatePrev2;
+        cmdState = cmdStatePrev2;   // memorize last succesfull detection to compare next succesfull detection, bypass undetected state
         detectionError = true;
     }
 
@@ -1521,6 +1522,9 @@ void MainWindow::imageProcessingCompleted(int time){
 
             repaintGuide();
             //alignGuide2TrackCenter = false;
+        } else {
+            cmdStatePrev = _CMD_CENTER;
+            cmdStatePrev2 = _CMD_CENTER;
         }
         controlInitiated = false;
     }
@@ -1558,7 +1562,7 @@ void MainWindow::histAnalysisCompleted(){
         else
             histState = 1;  // transition
 
-        qDebug() << iProcessThread->histAreaStat;
+        //qDebug() << iProcessThread->histAreaStat;
         if (histState != histStatePrev){
             updatePassButtons();
         }
