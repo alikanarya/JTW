@@ -58,6 +58,7 @@ public:
     int contrastVal = 100;
     int gammaVal = 100;
     bool applyCameraEnhancements = false;
+    int areaNumber = 1; // region number to divide the image
 
     //bool cannyThinning;
     int gaussianSize = 5;
@@ -130,6 +131,7 @@ public slots:
     void Algo1(imgProcess *iprocess);   // LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines
     void Algo2(imgProcess *iprocess);   // LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid
     void Algo3(imgProcess *iprocess);   // woLASER: edge > houghTr > detectMainEdges
+    void Algo3MultiAreas(int areaNo);   // woLASER: edge > houghTr > detectMainEdges with multiple regions
     void Algo4(imgProcess *iprocess);   // woLASER: value > detectThinJointCenter
     void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing

@@ -317,6 +317,77 @@ void setupForm::Algo3(imgProcess *iprocess){
     }
 }
 
+void setupForm::Algo3MultiAreas(int areaNo){
+// woLASER: edge > houghTr > detectMainEdges with multiple regions
+
+    areaNumber = areaNo;
+    if (edgeDetectionState != 0) {
+    } else {
+        ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
+        algoPrerequestsOk = false;
+    }
+
+    int step = (target.height()*1.0) / areaNo;
+
+    if (!iproList.empty()){
+        qDeleteAll(iproList);
+        iproList.clear();
+    }
+
+    QList<int> status;
+    int totalTime = 0;
+
+    for (int area=0; area<areaNo; area++) {
+
+        QImage pic = target.copy( 0, step*area, target.width(), step );    // take target image
+        //pic.save("_area"+QString::number(area)+".jpg");
+
+        startTime = w->timeSystem.getSystemTimeMsec();
+
+        imgProcess *ipro = new imgProcess( pic, pic.width(), pic.height() );   // new imgProcess object
+        iproList.append(ipro);
+
+        ipro->thetaMin = thetaMin;
+        ipro->thetaMax = thetaMax;
+        ipro->thetaStep = thetaStep;
+        ipro->maFilterKernelSize = maFilterKernelSize;
+        ipro->centerX = 0;
+        ipro->centerY = 0;
+
+        ipro->toMono();                                     // convert target to mono
+        /*D*/if (saveAnalysis) iprocess->imgMono.save(path+"02-mono image.jpg");
+
+        edgeDetection(ipro);
+
+        ipro->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+            /**/if (saveAnalysis) ipro->saveMatrix(ipro->houghLines, 3, ipro->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
+        ipro->thinCornerNum = mainEdgesNumber;
+        ipro->detectMainEdges(0, DEBUG);
+            /**/if (saveAnalysis) ipro->saveMatrix(ipro->houghLinesSorted, 3, ipro->houghLineNo, path+"04-max hough lines distance sorted.csv");
+
+        algoPrerequestsOk = true;
+        captured = true;
+
+        endTime = w->timeSystem.getSystemTimeMsec();
+        processElapsed = endTime - startTime;
+        totalTime += processElapsed;
+        // -------END PROCESSING-------
+
+        QString message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
+        ui->plainTextEdit->appendPlainText(message);
+
+        for (int i=0; i<ipro->mainEdgesList.size();i++)
+            ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(ipro->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(ipro->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(ipro->mainEdgesList[i].voteValue));
+        ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(ipro->leftCornerX)+", "+QString::number(ipro->trackCenterX)+", "+QString::number(ipro->rightCornerX));
+
+    }
+
+    ui->plainTextEdit->appendPlainText("\nToplam Süre " + QString::number(totalTime) + " ms");
+
+
+
+}
+
 void setupForm::Algo4(imgProcess *iprocess){
 // woLASER: value > detectThinJointCenter
 
@@ -445,7 +516,9 @@ void setupForm::processImage(){
                         path += "-Algo6/"; break;
                     case 5: // SCAN HORIZONTAL
                         path += "-Algo7/"; break;
-                    case 6: // EXPERIMENTAL
+                    case 6: // MAIN EDGES MULTIPLE AREAS
+                        path += "-Algo3MA/"; break;
+                    case 7: // EXPERIMENTAL
                         path += "-AlgoY/"; break;
                 }
             } else {    // with laser - HORIZONTAL SEARCH
@@ -463,28 +536,30 @@ void setupForm::processImage(){
             QDir().mkdir(path);
         }
 
-        iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
-            /*D*/if (saveAnalysis) iprocess->imgOrginal.save(path+"01-orginal image.jpg");
-        iprocessInitSwitch = true;
-        //iprocess->_DEBUG = true;
+        if (thinJointAlgoActive && algorithmType!=6){
+            iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+                /*D*/if (saveAnalysis) iprocess->imgOrginal.save(path+"01-orginal image.jpg");
+            iprocessInitSwitch = true;
+            //iprocess->_DEBUG = true;
 
-        iprocess->thetaMin = thetaMin;
-        iprocess->thetaMax = thetaMax;
-        iprocess->thetaStep = thetaStep;
-        iprocess->maFilterKernelSize = maFilterKernelSize;
+            iprocess->thetaMin = thetaMin;
+            iprocess->thetaMax = thetaMax;
+            iprocess->thetaStep = thetaStep;
+            iprocess->maFilterKernelSize = maFilterKernelSize;
 
-        if (thinJointAlgoActive){    // without laser
-            iprocess->centerX = 0;
-            iprocess->centerY = 0;
-        } else {                     // with laser
-            iprocess->centerX = iprocess->edgeWidth / 2;
-            iprocess->centerY = 0;
+            if (thinJointAlgoActive){    // without laser
+                iprocess->centerX = 0;
+                iprocess->centerY = 0;
+            } else {                     // with laser
+                iprocess->centerX = iprocess->edgeWidth / 2;
+                iprocess->centerY = 0;
+            }
+
+            iprocess->toMono();                                     // convert target to mono
+            /*D*/if (saveAnalysis) iprocess->imgMono.save(path+"02-mono image.jpg");
+
+            edgeDetection(iprocess);
         }
-
-        iprocess->toMono();                                     // convert target to mono
-        /*D*/if (saveAnalysis) iprocess->imgMono.save(path+"02-mono image.jpg");
-
-        edgeDetection(iprocess);
 //on_testButton_clicked();
         algoPrerequestsOk = false;
 
@@ -508,7 +583,10 @@ void setupForm::processImage(){
                 case 5: // SCAN HORIZONTAL
                     Algo7(iprocess);
                     break;
-                case 6: // EXPERIMENTAL
+                case 6: // MAIN EDGES MULTIPLE AREAS
+                    Algo3MultiAreas(5);
+                    break;
+                case 7: // EXPERIMENTAL
                     break;
             }
         } else {    // with laser - HORIZONTAL SEARCH
@@ -527,7 +605,6 @@ void setupForm::processImage(){
         }
 
     }
-
 }
 
 void setupForm::captureButton(){
@@ -587,20 +664,24 @@ void setupForm::captureButton(){
         //goto labelx;
         ui->plainTextEdit->appendPlainText(message);
 
-        //ui->plainTextEdit->appendPlainText(iprocess->statusMessage);    // display message about detection process
-        ui->plainTextEdit->appendPlainText("Sol Köşe(x,y) - Merkez(x,y) - Sağ Köşe(x,y): ");
-        message = "( " + QString::number(iprocess->leftCornerX) + " , " + QString::number(iprocess->leftCornerY) + " )  -  ( " +
-                         QString::number(iprocess->trackCenterX) + " , " + QString::number(iprocess->trackCenterY) + " )  -  ( " +
-                         QString::number(iprocess->rightCornerX) + " , " + QString::number(iprocess->rightCornerY) + " )";
-        ui->plainTextEdit->appendPlainText(message);
+        ui->labelTarget->setPixmap( QPixmap::fromImage( target ) );
+
+        if (thinJointAlgoActive && algorithmType!=6){
+            //ui->plainTextEdit->appendPlainText(iprocess->statusMessage);    // display message about detection process
+            ui->plainTextEdit->appendPlainText("Sol Köşe(x,y) - Merkez(x,y) - Sağ Köşe(x,y): ");
+            message = "( " + QString::number(iprocess->leftCornerX) + " , " + QString::number(iprocess->leftCornerY) + " )  -  ( " +
+                             QString::number(iprocess->trackCenterX) + " , " + QString::number(iprocess->trackCenterY) + " )  -  ( " +
+                             QString::number(iprocess->rightCornerX) + " , " + QString::number(iprocess->rightCornerY) + " )";
+            ui->plainTextEdit->appendPlainText(message);
 
 
-        ui->labelTarget->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
-        //ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->imgMono ) );
+            ui->labelTarget->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
+            //ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->imgMono ) );
 
-        if ( edgeDetectionState != 0) {
-            edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
-            ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
+            if ( edgeDetectionState != 0) {
+                edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
+                ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
+            }
         }
 
         if (algoPrerequestsOk) {
@@ -778,7 +859,54 @@ void setupForm::captureButton(){
                         ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
 
                         }break;
-                    case 6: // EXPERIMENTAL
+                    case 6: // MAIN EDGES MULTIPLE AREAS
+                        {
+
+                        // draw gloabal mono & edge images
+                        iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+                        iprocess->centerX = 0; iprocess->centerY = 0;
+                        iprocess->toMono();                                     // convert target to mono
+                        edgeDetection(iprocess);
+                        if ( edgeDetectionState != 0) {
+                            edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
+                            ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
+                        }
+
+                        int imgWidth = iproList[0]->imageWidth;
+                        int imgHeight = 0;
+                        for (int i=0; i<areaNumber; i++)
+                            imgHeight += iproList[i]->imageHeight;
+
+                        // draw listHoughData2nd image
+                        QImage mainEdgesImage2ndList(imgWidth, imgHeight, QImage::Format_RGB16); // image to hold the join of image 1 & 2
+                        QPainter mainEdgesImagePainter2ndList(&mainEdgesImage2ndList);
+                        int y = 0;
+                        mainEdgesImagePainter2ndList.setPen(QPen(Qt::yellow));
+                        for (int i=0; i<areaNumber; i++){
+                            mainEdgesImagePainter2ndList.drawImage(0, y, iproList[i]->getImageMainEdges_2ndList(true));
+                            y += iproList[i]->imageHeight;
+                            mainEdgesImagePainter2ndList.drawLine(0, y-1, imgWidth, y-1);
+                        }
+                        ui->labelHough->setPixmap( QPixmap::fromImage(mainEdgesImage2ndList) );
+
+                        // draw main edges image
+                        QImage mainEdgesImage(imgWidth, imgHeight, QImage::Format_RGB16); // image to hold the join of image 1 & 2
+                        QPainter mainEdgesImagePainter(&mainEdgesImage);
+                        y = 0;
+                        mainEdgesImagePainter.setPen(QPen(Qt::yellow));
+                        for (int i=0; i<areaNumber; i++){
+                            mainEdgesImagePainter.drawImage(0, y, iproList[i]->getImageMainEdges( iproList[i]->naturalBreaksNumber ));
+                            y += iproList[i]->imageHeight;
+                            mainEdgesImagePainter.drawLine(0, y-1, imgWidth, y-1);
+                        }
+                        ui->labelAnalyze->setPixmap( QPixmap::fromImage(mainEdgesImage) );
+
+
+                        //ui->labelHough->setPixmap( QPixmap::fromImage( iproList[2]->getImageMainEdges_2ndList(true) ) );
+                        //ui->labelAnalyze->setPixmap( QPixmap::fromImage( iproList[2]->getImageMainEdges( iproList[2]->naturalBreaksNumber ) ) );
+                        }
+                        break;
+                    case 7: // EXPERIMENTAL
                         break;
                 }
 
@@ -840,25 +968,24 @@ void setupForm::captureButton(){
 
         }
 
-
-
-        if ( iprocess->major2Lines.size() > 0) {
-            ui->plainTextEdit->appendPlainText("Çizgi {Uzunluk-Mesafe-Açı-Başlagıç(x,y)-Bitiş(x,y)}");
-            for (int i=0;i<iprocess->major2Lines.size();i++){
-                message = QString::number(iprocess->major2Lines[i].length) + " - " +
-                          QString::number(iprocess->major2Lines[i].distance, 'f', 1) + " - " +
-                          QString::number(iprocess->major2Lines[i].angle, 'f', 1) + " -   ( " +
-                          QString::number(iprocess->major2Lines[i].start.x()) + ", " +
-                          QString::number(iprocess->major2Lines[i].start.y()) + " ) - ( " +
-                          QString::number(iprocess->major2Lines[i].end.x()) + " , " +
-                          QString::number(iprocess->major2Lines[i].end.y()) + " )";
-                ui->plainTextEdit->appendPlainText(message);
+        if (thinJointAlgoActive && algorithmType!=6){
+            if ( iprocess->major2Lines.size() > 0) {
+                ui->plainTextEdit->appendPlainText("Çizgi {Uzunluk-Mesafe-Açı-Başlagıç(x,y)-Bitiş(x,y)}");
+                for (int i=0;i<iprocess->major2Lines.size();i++){
+                    message = QString::number(iprocess->major2Lines[i].length) + " - " +
+                              QString::number(iprocess->major2Lines[i].distance, 'f', 1) + " - " +
+                              QString::number(iprocess->major2Lines[i].angle, 'f', 1) + " -   ( " +
+                              QString::number(iprocess->major2Lines[i].start.x()) + ", " +
+                              QString::number(iprocess->major2Lines[i].start.y()) + " ) - ( " +
+                              QString::number(iprocess->major2Lines[i].end.x()) + " , " +
+                              QString::number(iprocess->major2Lines[i].end.y()) + " )";
+                    ui->plainTextEdit->appendPlainText(message);
+                }
             }
         }
 
 
         ui->plainTextEdit->appendPlainText("-----------------");
-//labelx:
 
         captured = true;
         saveAnalysis = false;
@@ -866,7 +993,7 @@ void setupForm::captureButton(){
     } else {
 
         ui->plainTextEdit->appendPlainText(alarm6);
-   }
+    }
 
 }
 
