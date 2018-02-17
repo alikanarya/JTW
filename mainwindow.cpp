@@ -231,7 +231,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     timerCommand = new QTimer(this);
     connect(timerCommand, SIGNAL(timeout()), this, SLOT(processCommands()));
-    //timerCommand->start(10);
 
     /* 1msec timer
     timer = new QTimer(this);
@@ -321,15 +320,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->rightButton->setEnabled( false );
     ui->rightButton->hide();
 
-    if (!twoPassWelding) autoDetect2ndPass = false;
-    ui->passOneButton->setEnabled( twoPassWelding );
-    ui->passTwoButton->setEnabled( twoPassWelding );
-    if (!twoPassWelding){
+    ui->passOneButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
+    ui->passTwoButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
+
+    if (twoPassWelding){
+        on_passOneButton_clicked();
+        histState = histStatePrev = -1;
+    } else {
+        autoDetect2ndPass = false;
         ui->passOneButton->hide();
         ui->passTwoButton->hide();
     }
-
-    firstPass = twoPassWelding;
 
     //**cameraChecker->cameraDown = false;
     if (play) playButton();
@@ -1077,20 +1078,18 @@ void MainWindow::trackButton(){
     if (trackOn){
         ui->trackButton->setIcon(trackOnIcon);
         if (twoPassWelding){
-            firstPass = true;
-            histState = histStatePrev = 0;
-            ui->passOneButton->setStyleSheet(SS_ON);
-            ui->passTwoButton->setStyleSheet(SS_OFF);
+            histState = histStatePrev = -1;
         }
 
     } else {
         ui->trackButton->setIcon(trackOffIcon);
 
         if (twoPassWelding){
-            firstPass = true;
-            histState = histStatePrev = 0;
-            ui->passOneButton->setStyleSheet(SS_ON);
-            ui->passTwoButton->setStyleSheet(SS_OFF);
+            histState = histStatePrev = -1;
+            if(autoDetect2ndPass) {
+                ui->passOneButton->setStyleSheet(SS_OFF);
+                ui->passTwoButton->setStyleSheet(SS_OFF);
+            }
         }
 
         if (controlOn) {
@@ -1391,15 +1390,16 @@ void MainWindow::processImage(bool deleteObject){
             int yOffset = offsetYCam;
             int fHeight = frameHeightCam;
 
-            if (twoPassWelding) {
+            if (twoPassWelding && autoDetect2ndPass) {
                 switch(histState){
                     case 0: iProcessThread->algoSwitch = !iProcessThread->algoSwitch;
-                            algorithmType = 4;   // Algo6() LINE DETECTION WITH MAIN EDGES
+                            algorithmType = algorithmTypePass1;   // Algo6() LINE DETECTION WITH MAIN EDGES
                             break;
                     case 1: iProcessThread->algoSwitch = false; break;
                     case 2: iProcessThread->algoSwitch = !iProcessThread->algoSwitch;
-                            algorithmType = 1;  // Algo3() MAIN EDGES
+                            algorithmType = algorithmTypePass2;  // Algo3() MAIN EDGES
                             break;
+                    default: iProcessThread->algoSwitch = false; break;
                 }
                 if (!iProcessThread->algoSwitch) {  // for histogram
                     yOffset = 0;
@@ -3531,13 +3531,17 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
 }
 
 void MainWindow::on_passOneButton_clicked(){
-    firstPass = true;
-    ui->passOneButton->setStyleSheet("background-color: lime");
-    ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
+    if (twoPassWelding && !autoDetect2ndPass) {
+        algorithmType = algorithmTypePass1;   // Algo6() LINE DETECTION WITH MAIN EDGES
+        ui->passOneButton->setStyleSheet(SS_ON);
+        ui->passTwoButton->setStyleSheet(SS_OFF);
+    }
 }
 
 void MainWindow::on_passTwoButton_clicked(){
-    firstPass = false;
-    ui->passOneButton->setStyleSheet("background-color: #F0F0F0");
-    ui->passTwoButton->setStyleSheet("background-color: lime");
+    if (twoPassWelding && !autoDetect2ndPass) {
+        algorithmType = algorithmTypePass2;  // Algo3() MAIN EDGES
+        ui->passOneButton->setStyleSheet(SS_OFF);
+        ui->passTwoButton->setStyleSheet(SS_ON);
+    }
 }

@@ -375,7 +375,8 @@ public:
     // 2 PASS WELDING
     bool twoPassWelding;
     bool autoDetect2ndPass;
-    bool firstPass = true;  // false: 2nd pass
+    int algorithmTypePass1 = 4; // Algo6() LINE DETECTION WITH MAIN EDGES
+    int algorithmTypePass2 = 1; // Algo3() MAIN EDGES
 
     // plc vars
     struct{
@@ -602,6 +603,9 @@ public slots:
     void imageProcessingCompleted(int time);
     void histAnalysisCompleted();
 
+    void on_passOneButton_clicked();
+    void on_passTwoButton_clicked();
+
 signals:
     void cameraDown();
     void focusValueCalculated(double val);
@@ -641,9 +645,6 @@ private slots:
 
     void on_guideAlignButton_clicked();
 
-    void on_passOneButton_clicked();
-
-    void on_passTwoButton_clicked();
 
 private:
     protect lic;

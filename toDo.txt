@@ -2,18 +2,18 @@
 * plc cmd check, live state-cmd status of the queue when plc off, begin/end cmds if autoalignment or not, plcsim stat?
 * stop/play Buttons disabled from user
 * track on at start up
-* mainEdges > mainEndegsSolidLine with regional analysis
 * control command stop, from plc-machine-hardcontrol
-
-* 2 pass user settings in mainwindow
-* 2nd pass detection algo; timing
 * 2nd pass detection algo; detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
 
-* manual pass selection disabled, only auto pass detection ?
-* histogram analysis from 1st pas
+* 2 pass user settings in mainwindow
 
+** abnormal error handling, trendgraph-plc commands
+** mainEdges > mainEndegsSolidLine with regional analysis
+** pass1 to pass2 transtion detection speed test
+
+* 1st pass to 2nd pass transition analysis completed ...done
+* manual pass selection defined, both auto pass detection/manual pass selection can be used ...done
 * plc initial cmd fix if !alignGuide2TrackCenter ...done
-
 * delay introduced to control getImage rate ...done
 * 1 and multi region hist anlys comparision in setupform ...done
 * 2nd derivative threshold disable in settingsform, auto calculation used ...done

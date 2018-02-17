@@ -1028,31 +1028,25 @@ void setupForm::saveExitButton(){
     w->twoPassWelding = ui->twoPassWeldingBox->isChecked();
     w->autoDetect2ndPass = ui->autoDetect2ndPassBox->isChecked();
 
-    w->ui->passOneButton->setEnabled( twoPassWelding );
-    w->ui->passTwoButton->setEnabled( twoPassWelding );
+    w->ui->passOneButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
+    w->ui->passTwoButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
 
-    if (!twoPassWelding){
-        w->firstPass = true;
-        w->ui->passOneButton->hide();
-        w->ui->passTwoButton->hide();
-        w->ui->passOneButton->setStyleSheet("background-color: #F0F0F0");
-        w->ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
-    } else {
-        if (w->trackOn) {
-            if (w->firstPass){
-                w->ui->passOneButton->setStyleSheet("background-color: lime");
-                w->ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
-            } else {
-                w->ui->passOneButton->setStyleSheet("background-color: #F0F0F0");
-                w->ui->passTwoButton->setStyleSheet("background-color: lime");
+    if (w->twoPassWelding){
+        if(w->autoDetect2ndPass) {
+            if (!w->trackOn) {
+                w->ui->passOneButton->setStyleSheet(w->SS_OFF);
+                w->ui->passTwoButton->setStyleSheet(w->SS_OFF);
             }
         } else {
-            w->firstPass = true;
-            w->ui->passOneButton->setStyleSheet("background-color: #F0F0F0");
-            w->ui->passTwoButton->setStyleSheet("background-color: #F0F0F0");
+            w->on_passOneButton_clicked();
         }
         w->ui->passOneButton->show();
         w->ui->passTwoButton->show();
+    } else {
+        w->ui->passOneButton->hide();
+        w->ui->passTwoButton->hide();
+        w->ui->passOneButton->setStyleSheet(w->SS_OFF);
+        w->ui->passTwoButton->setStyleSheet(w->SS_OFF);
     }
 
     w->writeSettings();
