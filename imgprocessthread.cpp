@@ -6,11 +6,9 @@
 extern MainWindow *w;
 
 imgProcessThread::imgProcessThread(){
-
 }
 
 imgProcessThread::~imgProcessThread(){
-
 }
 
 void imgProcessThread::run(){
@@ -23,23 +21,25 @@ void imgProcessThread::run(){
 
     } else {
 
-        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
-        iprocessInitSwitch = true;
+        if (!(w->thinJointAlgoActive && w->algorithmType == 6)) {
+            iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+            iprocessInitSwitch = true;
 
-        iprocess->thetaMin = w->thetaMin;
-        iprocess->thetaMax = w->thetaMax;
-        iprocess->thetaStep = w->thetaStep;
+            iprocess->thetaMin = w->thetaMin;
+            iprocess->thetaMax = w->thetaMax;
+            iprocess->thetaStep = w->thetaStep;
 
-        if (w->thinJointAlgoActive){    // without laser
-            iprocess->centerX = 0;
-            iprocess->centerY = 0;
-        } else {                     // with laser
-            iprocess->centerX = iprocess->edgeWidth / 2;
-            iprocess->centerY = 0;
+            if (w->thinJointAlgoActive){    // without laser
+                iprocess->centerX = 0;
+                iprocess->centerY = 0;
+            } else {                     // with laser
+                iprocess->centerX = iprocess->edgeWidth / 2;
+                iprocess->centerY = 0;
+            }
+
+            iprocess->toMono();
+            edgeDetection(iprocess);
         }
-
-        iprocess->toMono();
-        edgeDetection();
 
         if (w->thinJointAlgoActive) {  // without laser - VERTICAL SEARCH
 
@@ -61,7 +61,10 @@ void imgProcessThread::run(){
                 case 5: // SCAN HORIZONTAL
                     Algo7();
                     break;
-                case 6: // EXPERIMENTAL
+                case 6: // MAIN EDGES WITH AREAS
+                    Algo8();
+                    break;
+                case 7: // EXPERIMENTAL
                     break;
             }
         } else {    // with laser - HORIZONTAL SEARCH
@@ -81,11 +84,9 @@ void imgProcessThread::run(){
 
         emit imageProcessingCompleted(imageCaptureTime);
     }
-
-
 }
 
-void imgProcessThread::edgeDetection(){
+void imgProcessThread::edgeDetection(imgProcess *ipro){
     //qDebug()<<Q_FUNC_INFO;
 
     switch ( w->edgeDetectionState ) {
@@ -94,55 +95,55 @@ void imgProcessThread::edgeDetection(){
             w->matrixFlag = true;
             break;
         case 1: // SOBEL
-            iprocess->constructValueMatrix( iprocess->imgMono );    // construct mono matrix
-            iprocess->detectEdgeSobel(); // detect edges of the mono image
-            iprocess->houghTransformFn(iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight);
+            ipro->constructValueMatrix( ipro->imgMono );    // construct mono matrix
+            ipro->detectEdgeSobel(); // detect edges of the mono image
+            ipro->houghTransformFn(ipro->edgeMatrix, ipro->edgeWidth, ipro->edgeHeight);
             w->averaging = false;
             w->matrixFlag = false;
             break;
         case 2: // CANNY 4
-            iprocess->prepareCannyArrays();
-            iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
+            ipro->prepareCannyArrays();
+            ipro->constructGaussianMatrix(w->gaussianSize, w->stdDev);
             for (int i = 0; i < 4 ; i++){
-                iprocess->constructValueMatrix( iprocess->imgOrginal, i );
-                iprocess->gaussianBlur();
-                iprocess->detectEdgeSobelwDirections();
-                iprocess->nonMaximumSuppression(w->cannyThinning);
-                iprocess->cannyThresholding(true);
-                iprocess->edgeTracing();
-                iprocess->assignEdgeMap();
+                ipro->constructValueMatrix( ipro->imgOrginal, i );
+                ipro->gaussianBlur();
+                ipro->detectEdgeSobelwDirections();
+                ipro->nonMaximumSuppression(w->cannyThinning);
+                ipro->cannyThresholding(true);
+                ipro->edgeTracing();
+                ipro->assignEdgeMap();
             }
-            iprocess->mergeEdgeMaps();
+            ipro->mergeEdgeMaps();
 
-            for (int y = 0; y < iprocess->edgeHeight; y++)
-                for (int x = 0; x < iprocess->edgeWidth; x++){
-                    if (iprocess->edgeMapMatrix[y][x])
-                        iprocess->edgeMatrix[y][x]=255;
+            for (int y = 0; y < ipro->edgeHeight; y++)
+                for (int x = 0; x < ipro->edgeWidth; x++){
+                    if (ipro->edgeMapMatrix[y][x])
+                        ipro->edgeMatrix[y][x]=255;
                     else
-                        iprocess->edgeMatrix[y][x]=0;
+                        ipro->edgeMatrix[y][x]=0;
                 }
-            iprocess->houghTransformEdgeMap();
+            ipro->houghTransformEdgeMap();
             w->averaging = false;
             w->matrixFlag = false;
             break;
         case 3: // CANNY 1
-            iprocess->prepareCannyArrays();
-            iprocess->constructGaussianMatrix(w->gaussianSize, w->stdDev);
-            iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
-            iprocess->gaussianBlur();
-            iprocess->detectEdgeSobelwDirections();
-            iprocess->nonMaximumSuppression(w->cannyThinning);
-            iprocess->cannyThresholding(true);
-            iprocess->edgeTracing();
+            ipro->prepareCannyArrays();
+            ipro->constructGaussianMatrix(w->gaussianSize, w->stdDev);
+            ipro->constructValueMatrix( ipro->imgOrginal, 0 );
+            ipro->gaussianBlur();
+            ipro->detectEdgeSobelwDirections();
+            ipro->nonMaximumSuppression(w->cannyThinning);
+            ipro->cannyThresholding(true);
+            ipro->edgeTracing();
 
-            for (int y = 0; y < iprocess->edgeHeight; y++)  // to display edge image
-                for (int x = 0; x < iprocess->edgeWidth; x++){
-                    if (iprocess->edgeMapMatrix[y][x])
-                        iprocess->edgeMatrix[y][x]=255;
+            for (int y = 0; y < ipro->edgeHeight; y++)  // to display edge image
+                for (int x = 0; x < ipro->edgeWidth; x++){
+                    if (ipro->edgeMapMatrix[y][x])
+                        ipro->edgeMatrix[y][x]=255;
                     else
-                        iprocess->edgeMatrix[y][x]=0;
+                        ipro->edgeMatrix[y][x]=0;
                 }
-            iprocess->houghTransformEdgeMap();
+            ipro->houghTransformEdgeMap();
             w->matrixFlag = false;
             break;
     }
@@ -242,6 +243,89 @@ void imgProcessThread::Algo7(){
         iprocess->detectScanHorizontal( iprocess->edgeHeight/2 );            // get max voted line(s)
     } else {
         //ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritmasý seçilmelidir");
+    }
+}
+
+void imgProcessThread::Algo8(){
+// woLASER: edge > houghTr > detectMainEdges with multiple regions
+    //qDebug()<<Q_FUNC_INFO;
+
+    if (w->edgeDetectionState != 0) {
+
+        int step = (targetArea.height()*1.0) / w->areaNumber;
+        processElapsed = 0;
+        QList<int> xList;
+
+        for (int area=0; area < w->areaNumber; area++) {
+
+            QImage pic = targetArea.copy( 0, step*area, targetArea.width(), step );    // take target image
+
+            startTime = w->timeSystem.getSystemTimeMsec();
+
+            imgProcess *ipro = new imgProcess( pic, pic.width(), pic.height() );   // new imgProcess object
+
+            ipro->thetaMin = w->thetaMin;
+            ipro->thetaMax = w->thetaMax;
+            ipro->thetaStep = w->thetaStep;
+            ipro->maFilterKernelSize = w->maFilterKernelSize;
+            ipro->centerX = 0;
+            ipro->centerY = 0;
+
+            ipro->toMono();                                     // convert target to mono
+
+            edgeDetection(ipro);
+
+            ipro->calculateHoughMaxs( w->houghLineNo );            // get max voted line(s)
+            ipro->thinCornerNum = w->mainEdgesNumber;
+            ipro->detectMainEdges(0, false);
+            xList.append(ipro->trackCenterX);
+
+            delete ipro;
+            endTime = w->timeSystem.getSystemTimeMsec();
+            processElapsed += (endTime - startTime);
+            // -------END PROCESSING-------
+        }
+
+
+        // -------HISTOGRAM PROCESSING-------
+        startTime = w->timeSystem.getSystemTimeMsec();
+
+        iprocess = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+        iprocess->maFilterKernelSize = w->maFilterKernelSize;
+        iprocess->histogramAngleThreshold = w->histogramAngleThreshold;
+        iprocess->lenRateThr = w->lenRateThr;
+        iprocess->bandWidthMin = w->bandWidthMin;
+        iprocess->bandCenterMax = w->bandCenterMax;
+
+        iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
+
+        iprocess->histogramAnalysis(w->colorMatrix);
+        int histogramCenterX = (iprocess->natBreaksMax1.x()+iprocess->natBreaksMax2.x())/2;
+
+        endTime = w->timeSystem.getSystemTimeMsec();
+        processElapsed += (endTime - startTime);
+        // -------END PROCESSING-------
+
+        double variance = targetArea.width() * 0.02;
+        /*
+        for (int c=0; c < xList.size(); c++)
+            variance += pow( histogramCenterX - xList[c], 2 );
+        if ( xList.size() != 0 ) variance /= xList.size();
+        variance = sqrt(variance);
+        */
+        int cnt = 0;
+        double sum = 0;
+        for (int c=0; c<xList.size(); c++)
+            if ( abs( histogramCenterX - xList[c] ) < variance ) {
+                cnt++;
+                sum += xList[c];
+            }
+        if (cnt != 0)
+            iprocess->trackCenterX = sum / cnt;
+        else
+            iprocess->trackCenterX = histogramCenterX;
+
+    } else {
     }
 }
 

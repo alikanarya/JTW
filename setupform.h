@@ -38,6 +38,7 @@ public:
     QImage *hough;              // hough transformed image (with red hough lines)
     QImage *leftImage;          // edge image with red primary line
     QImage *rightImage;         // edge image with red primary line
+    QImage targetCopy;          // original image
 
     // image processing vars
     int thetaMin, thetaMax;
@@ -83,6 +84,11 @@ public:
     QList<imgProcess*> iproList;
     bool graphLock = true;
     double histDDLimit = 0;
+
+    // for multi region main edge algorithm
+    int histogramCenterX = 0;
+    int mainEdgeCenterX = 0;
+    double variance;
 
     bool twoPassWelding;
     bool autoDetect2ndPass;
@@ -131,11 +137,11 @@ public slots:
     void Algo1(imgProcess *iprocess);   // LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines
     void Algo2(imgProcess *iprocess);   // LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid
     void Algo3(imgProcess *iprocess);   // woLASER: edge > houghTr > detectMainEdges
-    void Algo3MultiAreas(int areaNo);   // woLASER: edge > houghTr > detectMainEdges with multiple regions
     void Algo4(imgProcess *iprocess);   // woLASER: value > detectThinJointCenter
     void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
     void Algo7(imgProcess *iprocess);   // woLASER: edge > houghTr > detectScanHorizontal
+    void Algo8(int areaNo);             // woLASER: edge > houghTr > detectMainEdges with multiple regions
     void histMultAreas();
 
     void update();

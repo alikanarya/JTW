@@ -327,6 +327,7 @@ public:
     int jointWidth;
     int algorithmType = 0;
     int edgeDetectionState = 0; // 0:none, 1: sobel, 2: canny4, 3: canny1
+    int areaNumber = 5;
 
     bool cannyThinning;
     int gaussianSize = 5;
@@ -376,7 +377,7 @@ public:
     bool twoPassWelding;
     bool autoDetect2ndPass;
     int algorithmTypePass1 = 4; // Algo6() LINE DETECTION WITH MAIN EDGES
-    int algorithmTypePass2 = 1; // Algo3() MAIN EDGES
+    int algorithmTypePass2 = 6; // Algo8() MAIN EDGES WITH AREAS
 
     // plc vars
     struct{

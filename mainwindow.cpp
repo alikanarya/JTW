@@ -1532,6 +1532,7 @@ void MainWindow::imageProcessingCompleted(int time){
     //qDebug() << "+";
 
     if (!analyzeAction) {
+        //if ( !(thinJointAlgoActive && algorithmType == 6) )
         delete iProcessThread->iprocess;
         iProcessThread->ready = true;
     } else {

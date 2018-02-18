@@ -317,77 +317,6 @@ void setupForm::Algo3(imgProcess *iprocess){
     }
 }
 
-void setupForm::Algo3MultiAreas(int areaNo){
-// woLASER: edge > houghTr > detectMainEdges with multiple regions
-
-    areaNumber = areaNo;
-    if (edgeDetectionState != 0) {
-    } else {
-        ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
-        algoPrerequestsOk = false;
-    }
-
-    int step = (target.height()*1.0) / areaNo;
-
-    if (!iproList.empty()){
-        qDeleteAll(iproList);
-        iproList.clear();
-    }
-
-    QList<int> status;
-    int totalTime = 0;
-
-    for (int area=0; area<areaNo; area++) {
-
-        QImage pic = target.copy( 0, step*area, target.width(), step );    // take target image
-        //pic.save("_area"+QString::number(area)+".jpg");
-
-        startTime = w->timeSystem.getSystemTimeMsec();
-
-        imgProcess *ipro = new imgProcess( pic, pic.width(), pic.height() );   // new imgProcess object
-        iproList.append(ipro);
-
-        ipro->thetaMin = thetaMin;
-        ipro->thetaMax = thetaMax;
-        ipro->thetaStep = thetaStep;
-        ipro->maFilterKernelSize = maFilterKernelSize;
-        ipro->centerX = 0;
-        ipro->centerY = 0;
-
-        ipro->toMono();                                     // convert target to mono
-        /*D*/if (saveAnalysis) iprocess->imgMono.save(path+"02-mono image.jpg");
-
-        edgeDetection(ipro);
-
-        ipro->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
-            /**/if (saveAnalysis) ipro->saveMatrix(ipro->houghLines, 3, ipro->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
-        ipro->thinCornerNum = mainEdgesNumber;
-        ipro->detectMainEdges(0, DEBUG);
-            /**/if (saveAnalysis) ipro->saveMatrix(ipro->houghLinesSorted, 3, ipro->houghLineNo, path+"04-max hough lines distance sorted.csv");
-
-        algoPrerequestsOk = true;
-        captured = true;
-
-        endTime = w->timeSystem.getSystemTimeMsec();
-        processElapsed = endTime - startTime;
-        totalTime += processElapsed;
-        // -------END PROCESSING-------
-
-        QString message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
-        ui->plainTextEdit->appendPlainText(message);
-
-        for (int i=0; i<ipro->mainEdgesList.size();i++)
-            ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(ipro->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(ipro->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(ipro->mainEdgesList[i].voteValue));
-        ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(ipro->leftCornerX)+", "+QString::number(ipro->trackCenterX)+", "+QString::number(ipro->rightCornerX));
-
-    }
-
-    ui->plainTextEdit->appendPlainText("\nToplam Süre " + QString::number(totalTime) + " ms");
-
-
-
-}
-
 void setupForm::Algo4(imgProcess *iprocess){
 // woLASER: value > detectThinJointCenter
 
@@ -474,6 +403,117 @@ void setupForm::Algo7(imgProcess *iprocess){
     }
 }
 
+void setupForm::Algo8(int areaNo){
+// woLASER: edge > houghTr > detectMainEdges with multiple regions
+
+    areaNumber = areaNo;
+
+    if (edgeDetectionState != 0) {
+
+        int step = (target.height()*1.0) / areaNo;
+
+        if (!iproList.empty()){
+            qDeleteAll(iproList);
+            iproList.clear();
+        }
+
+        int totalTime = 0;
+
+        for (int area=0; area<areaNo; area++) {
+
+            QImage pic = target.copy( 0, step*area, target.width(), step );    // take target image
+            //pic.save("_area"+QString::number(area)+".jpg");
+
+            startTime = w->timeSystem.getSystemTimeMsec();
+
+            imgProcess *ipro = new imgProcess( pic, pic.width(), pic.height() );   // new imgProcess object
+            iproList.append(ipro);
+
+            ipro->thetaMin = thetaMin;
+            ipro->thetaMax = thetaMax;
+            ipro->thetaStep = thetaStep;
+            ipro->maFilterKernelSize = maFilterKernelSize;
+            ipro->centerX = 0;
+            ipro->centerY = 0;
+
+            ipro->toMono();                                     // convert target to mono
+            /*D*/if (saveAnalysis) iprocess->imgMono.save(path+"02-mono image.jpg");
+
+            edgeDetection(ipro);
+
+            ipro->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+                /**/if (saveAnalysis) ipro->saveMatrix(ipro->houghLines, 3, ipro->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
+            ipro->thinCornerNum = mainEdgesNumber;
+            ipro->detectMainEdges(0, DEBUG);
+                /**/if (saveAnalysis) ipro->saveMatrix(ipro->houghLinesSorted, 3, ipro->houghLineNo, path+"04-max hough lines distance sorted.csv");
+
+            algoPrerequestsOk = true;
+            captured = true;
+
+            endTime = w->timeSystem.getSystemTimeMsec();
+            processElapsed = endTime - startTime;
+            totalTime += processElapsed;
+            // -------END PROCESSING-------
+
+            QString message = "\nKenar Analizi " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
+            ui->plainTextEdit->appendPlainText(message);
+
+            for (int i=0; i<ipro->mainEdgesList.size();i++)
+                ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(ipro->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(ipro->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(ipro->mainEdgesList[i].voteValue));
+            ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(ipro->leftCornerX)+", "+QString::number(ipro->trackCenterX)+", "+QString::number(ipro->rightCornerX));
+        }
+
+
+        // -------HISTOGRAM PROCESSING-------
+        startTime = w->timeSystem.getSystemTimeMsec();
+
+        iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+        iprocess->maFilterKernelSize = maFilterKernelSize;
+        iprocess->histogramAngleThreshold = histogramAngleThreshold;
+        iprocess->lenRateThr = lenRateThr;
+        iprocess->bandWidthMin = bandWidthMin;
+        iprocess->bandCenterMax = bandCenterMax;
+        iprocess->histDDLimit = histDDLimit;
+
+        iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
+
+        iprocess->histogramAnalysis(colorMatrix);
+        histogramCenterX = (iprocess->natBreaksMax1.x()+iprocess->natBreaksMax2.x())/2;
+
+        endTime = w->timeSystem.getSystemTimeMsec();
+        processElapsed = endTime - startTime;
+        totalTime += processElapsed;
+        delete iprocess;
+
+        QString message = "\nHistogram Analizi " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
+        ui->plainTextEdit->appendPlainText(message);
+        // -------END PROCESSING-------
+
+        variance = target.width() * 0.02;
+        /*
+        variance = 0;
+        for (int c=0; c<iproList.size(); c++)
+            variance += pow( histogramCenterX - iproList[c]->trackCenterX, 2 );
+        if ( iproList.size() != 0 ) variance /= iproList.size();
+        variance = sqrt(variance);
+        */
+        int cnt = 0;
+        mainEdgeCenterX = 0;
+        for (int c=0; c<iproList.size(); c++)
+            if ( abs( histogramCenterX - iproList[c]->trackCenterX ) < variance ) {
+                cnt++;
+                mainEdgeCenterX += iproList[c]->trackCenterX;
+            }
+        if (cnt != 0) mainEdgeCenterX /= (cnt*1.0);
+        else mainEdgeCenterX = histogramCenterX;
+
+        ui->plainTextEdit->appendPlainText("\nToplam Süre: " + QString::number(totalTime) + " ms");
+    } else {
+        ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
+        algoPrerequestsOk = false;
+    }
+}
+
 void setupForm::processImage(){
 
 //    if ( w->play && !w->imageGetter->imageList.isEmpty() ){
@@ -481,15 +521,18 @@ void setupForm::processImage(){
         if (w->applyCameraEnhancements) {
 //            target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
             target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+            targetCopy = w->imageFileChanged.copy( 0, 0, w->imageFileChanged.width(), w->imageFileChanged.height() );
         } else {
             //target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
             target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+            targetCopy = w->lastData->image->copy( 0, 0, w->lastData->image->width(), w->lastData->image->height() );
         }
     }
 
     if ( !w->play &&  imageLoadedFromFile){
 //        target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
         target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+        targetCopy = w->imageFileChanged.copy( 0, 0, w->imageFileChanged.width(), w->imageFileChanged.height() );
     }
 
 //    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ){
@@ -536,7 +579,7 @@ void setupForm::processImage(){
             QDir().mkdir(path);
         }
 
-        if (thinJointAlgoActive && algorithmType!=6){
+        if (!(thinJointAlgoActive && algorithmType==6)){
             iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
                 /*D*/if (saveAnalysis) iprocess->imgOrginal.save(path+"01-orginal image.jpg");
             iprocessInitSwitch = true;
@@ -584,7 +627,7 @@ void setupForm::processImage(){
                     Algo7(iprocess);
                     break;
                 case 6: // MAIN EDGES MULTIPLE AREAS
-                    Algo3MultiAreas(5);
+                    Algo8(5);
                     break;
                 case 7: // EXPERIMENTAL
                     break;
@@ -657,16 +700,15 @@ void setupForm::captureButton(){
         processElapsed = endTime - startTime;
         // -------END IMAGE PROCESSING-------
 
-
         // UPDATE GUI
 
-        QString message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
-        //goto labelx;
-        ui->plainTextEdit->appendPlainText(message);
-
         ui->labelTarget->setPixmap( QPixmap::fromImage( target ) );
+        QString message = "";
 
-        if (thinJointAlgoActive && algorithmType!=6){
+        if (!(thinJointAlgoActive && algorithmType==6)){
+            message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
+            ui->plainTextEdit->appendPlainText(message);
+
             //ui->plainTextEdit->appendPlainText(iprocess->statusMessage);    // display message about detection process
             ui->plainTextEdit->appendPlainText("Sol Köşe(x,y) - Merkez(x,y) - Sağ Köşe(x,y): ");
             message = "( " + QString::number(iprocess->leftCornerX) + " , " + QString::number(iprocess->leftCornerY) + " )  -  ( " +
@@ -861,8 +903,15 @@ void setupForm::captureButton(){
                         }break;
                     case 6: // MAIN EDGES MULTIPLE AREAS
                         {
+                        ui->plainTextEdit->appendPlainText("---------------------");
+                        QString msg = "Area Centers: ";
+                        for (int i=0; i<areaNumber; i++)
+                            msg +=  QString::number(iproList[i]->trackCenterX) + ",";
+                        ui->plainTextEdit->appendPlainText(msg);
+                        ui->plainTextEdit->appendPlainText("Histogram Center: " + QString::number(histogramCenterX));
+                        ui->plainTextEdit->appendPlainText("Variance: " + QString::number(variance,'f',1) + " Ortalama Merkez: " + QString::number(mainEdgeCenterX));
 
-                        // draw gloabal mono & edge images
+                        // draw global mono & edge images
                         iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
                         iprocess->centerX = 0; iprocess->centerY = 0;
                         iprocess->toMono();                                     // convert target to mono
@@ -871,6 +920,8 @@ void setupForm::captureButton(){
                             edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
                             ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
                         }
+
+                        delete iprocess;
 
                         int imgWidth = iproList[0]->imageWidth;
                         int imgHeight = 0;
@@ -900,7 +951,6 @@ void setupForm::captureButton(){
                             mainEdgesImagePainter.drawLine(0, y-1, imgWidth, y-1);
                         }
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage(mainEdgesImage) );
-
 
                         //ui->labelHough->setPixmap( QPixmap::fromImage( iproList[2]->getImageMainEdges_2ndList(true) ) );
                         //ui->labelAnalyze->setPixmap( QPixmap::fromImage( iproList[2]->getImageMainEdges( iproList[2]->naturalBreaksNumber ) ) );
@@ -968,7 +1018,7 @@ void setupForm::captureButton(){
 
         }
 
-        if (thinJointAlgoActive && algorithmType!=6){
+        if (!(thinJointAlgoActive && algorithmType==6)){
             if ( iprocess->major2Lines.size() > 0) {
                 ui->plainTextEdit->appendPlainText("Çizgi {Uzunluk-Mesafe-Açı-Başlagıç(x,y)-Bitiş(x,y)}");
                 for (int i=0;i<iprocess->major2Lines.size();i++){
@@ -1573,8 +1623,8 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
                     ui->label_8->setEnabled(false);
                     ui->editHoughThetaStep->setEnabled(false);
                     break;  // PROJECTION OF FOUND LINES ON PARTICULAR HORIZONTAL LINE
-            case 6: algoName = "AlgoY";
-                    ui->label_21->setEnabled(false);
+            case 6: algoName = "Algo8: woLASER: edge > houghTr > detectMainEdges with multiple regions";
+                    ui->label_21->setEnabled(true);
                     ui->mainEdgesSlider->setEnabled(false);
                     ui->lineDetectionBox->setEnabled(false);
                     ui->editLineScore->setEnabled(false);
@@ -1582,13 +1632,13 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
                     ui->editVoidThreshold->setEnabled(false);
                     ui->label_7->setEnabled(false);
                     ui->editHoughThreshold->setEnabled(false);
-                    ui->label_6->setEnabled(false);
-                    ui->editHoughLineNo->setEnabled(false);
-                    ui->label_9->setEnabled(false);
-                    ui->editHoughThetaMax->setEnabled(false);
-                    ui->editHoughThetaMin->setEnabled(false);
-                    ui->label_8->setEnabled(false);
-                    ui->editHoughThetaStep->setEnabled(false);
+                    ui->label_6->setEnabled(true);
+                    ui->editHoughLineNo->setEnabled(true);
+                    ui->label_9->setEnabled(true);
+                    ui->editHoughThetaMax->setEnabled(true);
+                    ui->editHoughThetaMin->setEnabled(true);
+                    ui->label_8->setEnabled(true);
+                    ui->editHoughThetaStep->setEnabled(true);
                     break;  // EXPERIMENTAL
             default:
                     ui->label_21->setEnabled(false);
@@ -1735,8 +1785,9 @@ void setupForm::on_radioWoLaser_clicked() {
     ui->algorithmBox->addItem("Kontrast");
     ui->algorithmBox->addItem("Ana Kenarlar ile Çizgi");
     ui->algorithmBox->addItem("Yatay Tarama");
+    ui->algorithmBox->addItem("Ana Kenarlar: Bölgeli");
     ui->algorithmBox->addItem("Deneme");
-    if (algo > 6) algo = 6;
+    if (algo > 7) algo = 7;
     algorithmType = algo;
     ui->algorithmBox->setCurrentIndex( algorithmType );
 }
@@ -2084,67 +2135,7 @@ void setupForm::on_imgParametersButton_clicked(){
 }
 
 void setupForm::on_testButton_clicked(){
-
-    //if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ) {   // if any image is get
-        /*
-        edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
-        edge->save("edge0.jpg");
-        cv::Mat image(edge->height(), edge->width(), CV_8UC3, (uchar*)edge->bits(), edge->bytesPerLine());
-        imwrite("edge.jpg", image);
-        */
-        //cv::Mat image(iprocess->edgeHeight, iprocess->edgeWidth, CV_32S, *iprocess->edgeMatrix);
-        //std::memcpy(image.data, iprocess->edgeMatrix, iprocess->edgeHeight*iprocess->edgeWidth*sizeof(int));
-        cv::Mat image(iprocess->edgeHeight, iprocess->edgeWidth, CV_32S);
-        for (int y=0; y<iprocess->edgeHeight; y++)
-            for (int x=0; x<iprocess->edgeWidth; x++)
-                image.at<int>(y,x) = iprocess->edgeMatrix[y][x];
-
-        //cv::Mat image(w->lastData->image->height(), w->lastData->image->width(), CV_8UC3, (uchar*)w->lastData->image->bits(), w->lastData->image->bytesPerLine());
-        /*
-        cv::Mat ret;
-        cv::Mat thresh;
-        cv::Mat imgray;
-        //QImage _targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
-
-        cvtColor(imgData, imgray, CV_RGB2GRAY);
-        cv::threshold(imgray, thresh, 127, 255, 0);
-        cv::Mat im2, hierarchy;
-        std::vector<std::vector<cv::Point> > contours;
-        //cv::findContours(thresh, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
-        cv::findContours(thresh, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
-        */
-
-        //Prepare the image for findContours
-        //cv::cvtColor(image, image, CV_BGR2GRAY);
-        //cv::Mat imaged;
-        cv::threshold(image, image, 128, 255, CV_THRESH_BINARY);
-/*
-        //Find the contours. Use the contourOutput Mat so the original image doesn't get overwritten
-        std::vector<std::vector<cv::Point> > contours;
-        cv::Mat contourOutput = image.clone();
-        cv::findContours( contourOutput, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
-
-        //Draw the contours
-        cv::Mat contourImage(image.size(), CV_8UC3, cv::Scalar(0,0,0));
-        cv::Scalar colors[3];
-        colors[0] = cv::Scalar(255, 0, 0);
-        colors[1] = cv::Scalar(0, 255, 0);
-        colors[2] = cv::Scalar(0, 0, 255);
-        for (size_t idx = 0; idx < contours.size(); idx++) {
-            cv::drawContours(contourImage, contours, idx, colors[idx % 3]);
-        }
-
-        QImage img = QImage( (const uchar*) contourImage.data, contourImage.cols, contourImage.rows, contourImage.step, QImage::Format_RGB888 );
-        ui->labelMono->setPixmap( QPixmap::fromImage( img ) );
-*/
-//        cv::imshow("Input Image", image);
-//        cvMoveWindow("Input Image", 0, 0);
-//        cv::imshow("Contours", contourImage);
-//        cv::waitKey(0);
-
-
-    //}
-
+    targetCopy.save(savePath+QDateTime::currentDateTime().toString("hhmmss_zzz")+".jpg");
 }
 
 void setupForm::on_maFilterSizeSlider_sliderMoved(int position){
@@ -2174,7 +2165,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
     if ( !w->play &&  imageLoadedFromFile){
         //target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
         // ** target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
-        target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
+        target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->imageFileChanged.height() );    // take target image
     }
 
 //    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ){
@@ -2266,8 +2257,9 @@ void setupForm::on_histogramAnalysisButton_clicked() {
                                                    ")**" + QString::number(iprocess->histogramMaxPoint[i].y()-iprocess->histogramMaxPointPair[i].y())
                                                    );
             }
+            int centerX = (iprocess->natBreaksMax1.x()+iprocess->natBreaksMax2.x())/2;
             ui->plainTextEdit->appendPlainText("bandWidth: " + QString::number(iprocess->bandWidth) + " / " + QString::number((1.0*iprocess->bandWidth)/iprocess->imageWidth, 'f', 2) +
-                                               "  bandCenter: " + QString::number(iprocess->bandCenter) + " / " + QString::number((1.0*iprocess->bandCenter)/iprocess->imageWidth, 'f', 3) +
+                                               "  bandCenter: (" + QString::number(centerX) + ") " + QString::number(iprocess->bandCenter) + " / " + QString::number((1.0*iprocess->bandCenter)/iprocess->imageWidth, 'f', 3) +
                                                "  bandShape: " + QString::number(iprocess->bandShape, 'f', 2) );
 
             switch ( iprocess->bandCheck_errorState ) {
@@ -2280,9 +2272,6 @@ void setupForm::on_histogramAnalysisButton_clicked() {
                 case 6: ui->plainTextEdit->appendPlainText("*** " + QString(alarm26)); break;
                 case 7: ui->plainTextEdit->appendPlainText("*** " + QString(alarm27)); break;
             }
-
-
-
         } else {
             histMultAreas();
         }
@@ -2500,14 +2489,17 @@ void setupForm::on_bandWidthMinSlider_sliderMoved(int position){
 
     if ( w->play && (w->lastData->image->format() != QImage::Format_Invalid) ){
         if (w->applyCameraEnhancements) {
-            target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+            //target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+            target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
         } else {
-            target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+            //target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+            target = w->lastData->image->copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
         }
     }
 
     if ( !w->play &&  imageLoadedFromFile){
-        target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+        //target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+        target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->imageFileChanged.height() );    // take target image
     }
 
     if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ){
@@ -2541,14 +2533,17 @@ void setupForm::on_bandCenterMaxSlider_sliderMoved(int position){
 
     if ( w->play && (w->lastData->image->format() != QImage::Format_Invalid) ){
         if (w->applyCameraEnhancements) {
-            target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+            //target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+            target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
         } else {
-            target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+            //target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+            target = w->lastData->image->copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
         }
     }
 
     if ( !w->play &&  imageLoadedFromFile){
-        target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+        //target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
+        target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->imageFileChanged.height() );    // take target image
     }
 
     if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ){
@@ -2604,9 +2599,9 @@ void setupForm::on_histAreaNoSlider_sliderMoved(int position){
         }
     }
 
-    if ( !w->play &&  imageLoadedFromFile){
+    if ( !w->play &&  imageLoadedFromFile ){
         //target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
-        target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
+        target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->imageFileChanged.height() );    // take target image
     }
 
     if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ){
@@ -2664,3 +2659,63 @@ void setupForm::on_histCornerPrecSlider_sliderReleased(){
     histDDLimit = ui->histCornerPrecSlider->value();
     on_histogramAnalysisButton_clicked();
 }
+
+
+//if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ) {   // if any image is get
+    /*
+    edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
+    edge->save("edge0.jpg");
+    cv::Mat image(edge->height(), edge->width(), CV_8UC3, (uchar*)edge->bits(), edge->bytesPerLine());
+    imwrite("edge.jpg", image);
+    */
+    //cv::Mat image(iprocess->edgeHeight, iprocess->edgeWidth, CV_32S, *iprocess->edgeMatrix);
+    //std::memcpy(image.data, iprocess->edgeMatrix, iprocess->edgeHeight*iprocess->edgeWidth*sizeof(int));
+
+//cv::Mat image(iprocess->edgeHeight, iprocess->edgeWidth, CV_32S);
+//for (int y=0; y<iprocess->edgeHeight; y++)
+//for (int x=0; x<iprocess->edgeWidth; x++)
+//image.at<int>(y,x) = iprocess->edgeMatrix[y][x];
+
+    //cv::Mat image(w->lastData->image->height(), w->lastData->image->width(), CV_8UC3, (uchar*)w->lastData->image->bits(), w->lastData->image->bytesPerLine());
+    /*
+    cv::Mat ret;
+    cv::Mat thresh;
+    cv::Mat imgray;
+    //QImage _targetArea = lastData->image->copy( offsetXCam, offsetYCam, frameWidthCam, frameHeightCam );    // take target image
+
+    cvtColor(imgData, imgray, CV_RGB2GRAY);
+    cv::threshold(imgray, thresh, 127, 255, 0);
+    cv::Mat im2, hierarchy;
+    std::vector<std::vector<cv::Point> > contours;
+    //cv::findContours(thresh, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
+    cv::findContours(thresh, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE);
+    */
+
+    //Prepare the image for findContours
+    //cv::cvtColor(image, image, CV_BGR2GRAY);
+    //cv::Mat imaged;
+//cv::threshold(image, image, 128, 255, CV_THRESH_BINARY);
+    /*
+    //Find the contours. Use the contourOutput Mat so the original image doesn't get overwritten
+    std::vector<std::vector<cv::Point> > contours;
+    cv::Mat contourOutput = image.clone();
+    cv::findContours( contourOutput, contours, CV_RETR_LIST, CV_CHAIN_APPROX_NONE );
+
+    //Draw the contours
+    cv::Mat contourImage(image.size(), CV_8UC3, cv::Scalar(0,0,0));
+    cv::Scalar colors[3];
+    colors[0] = cv::Scalar(255, 0, 0);
+    colors[1] = cv::Scalar(0, 255, 0);
+    colors[2] = cv::Scalar(0, 0, 255);
+    for (size_t idx = 0; idx < contours.size(); idx++) {
+        cv::drawContours(contourImage, contours, idx, colors[idx % 3]);
+    }
+
+    QImage img = QImage( (const uchar*) contourImage.data, contourImage.cols, contourImage.rows, contourImage.step, QImage::Format_RGB888 );
+    ui->labelMono->setPixmap( QPixmap::fromImage( img ) );
+*/
+//        cv::imshow("Input Image", image);
+//        cvMoveWindow("Input Image", 0, 0);
+//        cv::imshow("Contours", contourImage);
+//        cv::waitKey(0);
+//}

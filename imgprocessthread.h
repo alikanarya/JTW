@@ -29,7 +29,7 @@ public:
     void run();
     void stop();
 
-    void edgeDetection();
+    void edgeDetection(imgProcess *ipro);
     void Algo1();   // LASER: mono/edge(matrixFlag) > houghTr > detectLongestSolidLines
     void Algo2();   // LASER: mono/edge(matrixFlag) > houghTr > detectPrimaryVoid
     void Algo3();   // woLASER: edge > houghTr > detectMainEdges
@@ -37,6 +37,7 @@ public:
     void Algo5();   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6();   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
     void Algo7();   // woLASER: edge > houghTr > detectScanHorizontal
+    void Algo8();   // woLASER: edge > houghTr > detectMainEdges with multiple regions
 
     void histAnalysis();    // histogram analysis
 
