@@ -264,12 +264,14 @@ public:
     QPen penLimit;              // pen for dev. trend erorr limit lines
     QPen penStopLimit;          // pen for dev. trend erorr stop limit lines
     QPen penTrack;              // pen for dev. trend
+    QPen penTrackError;         // pen for dev. trend
     QList<int> deviationData;   // dev. data list
     int yRes;                   // y coor resolution between 2 successive data in pixels
     int yResIndex;              // yRes array index to get yRes value
     int deviationDataSize;      // list size determined by yRes & trend Y axis pixels
     int eCodeDev;               // deviation error code = 200
     int error;
+    int lastErrorFreeData = 0;
 
     // ui control vars
     bool play, pause, showGuide, trackOn, controlOn;

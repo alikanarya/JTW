@@ -250,6 +250,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     penLimit.setColor(Qt::red);     penLimit.setWidth(1);
     penStopLimit.setColor(Qt::green);     penStopLimit.setWidth(1);
     penTrack.setColor(Qt::blue);    penTrack.setWidth(1);
+    penTrackError.setColor(Qt::blue);    penTrackError.setWidth(1); penTrackError.setStyle(Qt::DotLine);
 
     deviationDataSize = sceneRect.height() / yRes + 2;     // sceneRect.height()/yRes+1 + 1 past data to draw first line
     deviationData.clear();
@@ -1449,6 +1450,7 @@ void MainWindow::imageProcessingCompleted(int time){
         deviationData.append(eCodeDev);     // eCodeDev: error code
     }
 
+    if (deviationData.size() >= 2) drawTrack();   // draw deviation trend
 
     // assign plc commands using dev. data findings
     if (iProcessThread->iprocess->detected){
@@ -1563,7 +1565,7 @@ void MainWindow::histAnalysisCompleted(){
         else
             histState = 1;  // transition
 
-        //qDebug() << iProcessThread->histAreaStat;
+        //qDebug() << avg;
         if (histState != histStatePrev){
             updatePassButtons();
         }
@@ -1630,12 +1632,24 @@ void MainWindow::drawTrack(){
         deviationData.removeFirst();
     }
 
+    //from first data to last data, up to down
     for (int i=1; i<deviationData.size(); i++){
-        x = sceneCenterX + deviationData[i]*mapFactorX;
-        y = i*yRes;
-        xPrev = sceneCenterX + deviationData[i-1]*mapFactorX;
+
         yPrev = (i-1)*yRes;
-        scene->addLine(xPrev,yPrev,x,y,penTrack);
+        if (deviationData[i-1] != eCodeDev) {
+            lastErrorFreeData = deviationData[i-1];
+            xPrev = sceneCenterX + deviationData[i-1]*mapFactorX;
+        } else
+            xPrev = sceneCenterX + lastErrorFreeData*mapFactorX;
+
+        y = i*yRes;
+        if (deviationData[i] != eCodeDev) {
+            x = sceneCenterX + deviationData[i]*mapFactorX;
+            scene->addLine(xPrev,yPrev,x,y,penTrack);
+        } else {
+            x = sceneCenterX + lastErrorFreeData*mapFactorX;
+            scene->addLine(xPrev,yPrev,x,y,penTrackError);
+        }
     }
     ui->trackView->show();
 }
@@ -2438,10 +2452,6 @@ void MainWindow::playCam(){
             // if joint is tracked for some interval
             if (trackOn && (fpsReal % iprocessInterval) == 0 ){
                 processImage();  // detect deviation
-
-                if ( !lineDetection ) {
-                    if (deviationData.size() >= 2) drawTrack();   // draw deviation trend
-                }
             }
         }
         //} //if (!imageGetter->imageList.isEmpty())

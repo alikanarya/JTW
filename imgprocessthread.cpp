@@ -220,7 +220,7 @@ void imgProcessThread::Algo5(){
 }
 
 void imgProcessThread::Algo6(){
-// woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
+// woLASER: canny1 > houghTr > detectMainEdges > detectMainEdgesSolidLine
     //qDebug()<<Q_FUNC_INFO;
 
     if (w->edgeDetectionState == 3) {
