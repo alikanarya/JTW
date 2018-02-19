@@ -319,6 +319,7 @@ public:
     int errorStopLimit, errorStopLimitNeg;  // deviation stop limit from center in pixels
     int errorLimitCam, errorLimitNegCam;          // deviation start limit from center in pixels
     int errorStopLimitCam, errorStopLimitNegCam;  // deviation stop limit from center in pixels
+    int errorMaxCam, errorMaxFactor = 3;    // if error is too much, it is a detection error
     bool subImageProcessingSwitch;          // sub image processing
     int subImageProcessingType;                       // 0: Void Based, 1: Solid Based
     bool thinJointAlgoActive;
@@ -403,6 +404,8 @@ public:
         cmdZState,
         cmdZStatePrev,                      // to send cmd plc if cmd is changed
         cmdZStatePrev2;                     // to make it histeryzisis between start/stop
+    QList<int> cmdBuffer;
+    int cmdBufferMaxSize = 10;
     bool cmdSended;
     bool goX;
     bool goZ;

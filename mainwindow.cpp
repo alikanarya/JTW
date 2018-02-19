@@ -1081,6 +1081,7 @@ void MainWindow::trackButton(){
         if (twoPassWelding){
             histState = histStatePrev = -1;
         }
+        cmdBuffer.clear();
 
     } else {
         ui->trackButton->setIcon(trackOffIcon);
@@ -1430,12 +1431,17 @@ void MainWindow::processImage(bool deleteObject){
 
 void MainWindow::imageProcessingCompleted(int time){
 
+    detectionError = false;
+
     // if center of track is not an error, append dev. to trend data list OR append error code to list
     if (iProcessThread->iprocess->detected){
 
 //                error = iprocess->trackCenterX - (frameWidth/2);
         error = iProcessThread->iprocess->trackCenterX - (frameWidthCam/2);
         deviationData.append(error);
+
+        // TOO MUCH DRIFT
+        if ( abs(error) > errorMaxCam ) {detectionError = true; qDebug() << "errorMaxCam"; }
 
         //if (controlInitiated) {                }
 
@@ -1448,45 +1454,59 @@ void MainWindow::imageProcessingCompleted(int time){
         }
     } else {
         deviationData.append(eCodeDev);     // eCodeDev: error code
+        detectionError = true;
     }
 
     if (deviationData.size() >= 2) drawTrack();   // draw deviation trend
 
     // assign plc commands using dev. data findings
-    if (iProcessThread->iprocess->detected){
+    if (iProcessThread->iprocess->detected && !detectionError){
 
         detectionError = false;
+        int cmdNow = _CMD_CENTER;
 
         if (jointWidthControlActive && (jointWidth > maxJointWidth || jointWidth < minJointWidth || jointWidth == 1) ) {
-            cmdState = _CMD_CENTER;     //ui->plainTextEdit->appendPlainText("error");
+            cmdNow = _CMD_CENTER;     //ui->plainTextEdit->appendPlainText("error");
         } else
         if (!controlInitiated) {
             int index = deviationData.size() - 1;
 
-            if (deviationData[index] >= errorLimitCam ){
-                cmdState = _CMD_RIGHT;
+            if (deviationData[index] >= errorLimitCam){
+                cmdNow = _CMD_RIGHT;
             } else
             if (deviationData[index] <= errorLimitNegCam){
-                cmdState = _CMD_LEFT;
+                cmdNow = _CMD_LEFT;
             } else
             if ((cmdStatePrev2 == _CMD_LEFT) && (deviationData[index] >= errorStopLimitNegCam)){
-                cmdState = _CMD_CENTER;
+                cmdNow = _CMD_CENTER;
             } else
             if ((cmdStatePrev2 == _CMD_RIGHT) && (deviationData[index] <= errorStopLimitCam)){
-                cmdState = _CMD_CENTER;
+                cmdNow = _CMD_CENTER;
             } else
             if ((cmdStatePrev2 != _CMD_RIGHT) && (cmdStatePrev2 != _CMD_LEFT)){
-                cmdState = _CMD_CENTER;
+                cmdNow = _CMD_CENTER;
             }
 
-            if (controlOn) {
+            // in order to apply the command, it should be same for some analysis number
+            // to prevent fluctions
+            cmdBuffer.append(cmdNow);
+            if (cmdBuffer.size() > cmdBufferMaxSize)
+                cmdBuffer.removeFirst();
+
+            bool controlEnable = true;
+            for (int i=1; i<cmdBuffer.size(); i++)
+                if ( cmdBuffer[i] != cmdBuffer[0] )
+                    controlEnable = false;
+
+            cmdState = cmdNow;
+
+            if (controlOn && controlEnable) {
 
                 if (!focusCheckBeforeControl) {
                     plcCommands(time);
                 } else if (focusCheckBeforeControl && camFocusState) {
                     plcCommands(time);
                 }
-
             }
         }
 
@@ -1495,8 +1515,7 @@ void MainWindow::imageProcessingCompleted(int time){
 
     } else {
         //if (deviationData[index] != eCodeDev){
-        cmdState = cmdStatePrev2;   // memorize last succesfull detection to compare next succesfull detection, bypass undetected state
-        detectionError = true;
+        cmdState = cmdStatePrev2;   // memorize last succesfull detection to compare next succesfull detection, bypass undetected state, for old plc chcek procedure?
     }
 
 
@@ -2251,6 +2270,7 @@ QString MainWindow::calcImageParametes(QImage img, bool info){
             errorLimitNegCam = errorLimitNeg / mapFactorX;
             errorStopLimitCam = errorStopLimit / mapFactorX;
             errorStopLimitNegCam = errorStopLimitNeg / mapFactorX;
+            errorMaxCam = errorLimitCam * errorMaxFactor;
         }
 
 
@@ -2658,7 +2678,7 @@ void MainWindow::plcReadings(){
 void MainWindow::plcCommands(int time){
 
     //if (controlOn){
-    if (cmdState != cmdStatePrev) {
+    //if (cmdState != cmdStatePrev) {
 
         if (controlDelay == 0) {
 
@@ -2684,7 +2704,7 @@ void MainWindow::plcCommands(int time){
             wd.time = time;
             weldCommands.append(wd);
         }
-    }
+    //}
     //}
 }
 
@@ -2714,7 +2734,6 @@ void MainWindow::processCommands() {
             weldCommands.removeFirst();
         }
     }
-
 }
 
 void MainWindow::doAutoFocus(){

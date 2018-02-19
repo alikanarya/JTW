@@ -8,7 +8,7 @@
 * 2 pass user settings in mainwindow
 
 ** abnormal error handling, trendgraph-plc commands
-** mainEdges > mainEndegsSolidLine with regional analysis
+
 ** pass1 to pass2 transtion detection speed test
 
 * 1st pass to 2nd pass transition analysis completed ...done
