@@ -2673,7 +2673,7 @@ void MainWindow::plcReadings(){
             ui->plainTextEdit->appendPlainText("Makine çalışıyor");
 
             if (hardControlStart)
-                controlInitiated = true;
+                controlButton();    //controlInitiated = true;
 
             if (timeControl) {
                 timeControlCounter = 0;
@@ -2683,6 +2683,8 @@ void MainWindow::plcReadings(){
 
         if (!mak_aktif_now && mak_aktif_old) {
             ui->plainTextEdit->appendPlainText("Makine durdu");
+            if (hardControlStart)
+                controlButton();    //controlInitiated = true;
         }
         //else alignGuide2TrackCenter = false;
         mak_aktif_old = mak_aktif_now;

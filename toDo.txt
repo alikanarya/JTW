@@ -7,11 +7,11 @@
 * system test fn for timings, process times-delays etc
 
 ** Z control
-** plc rising edge cmd
 
 * 2 pass user settings in mainwindow
 * pass1 to pass2 transtion detection region number manual at settings.ini
 
+* hard control starts the control proses ...done
 * control delay (weldCommands) isnt working for cam-torch setup & control system, disabled ...done
 * weldCommands assignments fixed according to cmdBuffer state ...done
 * plc commands assignments fixed according to cmdBuffer state, time of the first state used...done
