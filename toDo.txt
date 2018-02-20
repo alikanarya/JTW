@@ -4,13 +4,20 @@
 * track on at start up
 * control command stop, from plc-machine-hardcontrol
 * 2nd pass detection algo; detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
+* system test fn for timings, process times-delays etc
+
+** Z control
+** plc rising edge cmd
 
 * 2 pass user settings in mainwindow
+* pass1 to pass2 transtion detection region number manual at settings.ini
 
-** abnormal error handling, trendgraph-plc commands
-
-** pass1 to pass2 transtion detection speed test
-
+* control delay (weldCommands) isnt working for cam-torch setup & control system, disabled ...done
+* weldCommands assignments fixed according to cmdBuffer state ...done
+* plc commands assignments fixed according to cmdBuffer state, time of the first state used...done
+* max error calc at errorSlider change in settings form ...done
+* false error; Maximum error value protection, if error is too much ... done
+* error buffer introduced to get rid of fluctuations
 * 1st pass to 2nd pass transition analysis completed ...done
 * manual pass selection defined, both auto pass detection/manual pass selection can be used ...done
 * plc initial cmd fix if !alignGuide2TrackCenter ...done

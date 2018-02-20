@@ -90,6 +90,7 @@ void settingsForm::errorLimitSlider(){
         w->errorLimitNegCam = w->errorLimitNeg / w->mapFactorX;
         w->errorStopLimitCam = w->errorStopLimit / w->mapFactorX;
         w->errorStopLimitNegCam = w->errorStopLimitNeg / w->mapFactorX;
+        w->errorMaxCam = w->errorLimitCam * w->errorMaxFactor;
     }
 
     w->repaintDevTrend();
@@ -164,7 +165,7 @@ void settingsForm::getParameters(){
     ui->yResIndexSlider->setSliderPosition(w->yResIndex);
 
     ui->editControlDelay->setText(QString::number(w->controlDelay));
-    ui->editControlDelay->setEnabled(!w->controlOn);
+    //ui->editControlDelay->setEnabled(!w->controlOn);
 
     ui->checkCamonBoot->setChecked(w->playCamonBoot);
 

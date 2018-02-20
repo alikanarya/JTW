@@ -405,6 +405,7 @@ public:
         cmdZStatePrev,                      // to send cmd plc if cmd is changed
         cmdZStatePrev2;                     // to make it histeryzisis between start/stop
     QList<int> cmdBuffer;
+    QList<int> cmdBufferTime;
     int cmdBufferMaxSize = 10;
     bool cmdSended;
     bool goX;

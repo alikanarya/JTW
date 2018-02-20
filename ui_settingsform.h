@@ -278,7 +278,7 @@ public:
         editDBNo->setGeometry(QRect(200, 368, 51, 20));
         editControlDelay = new QLineEdit(settingsForm);
         editControlDelay->setObjectName(QStringLiteral("editControlDelay"));
-        editControlDelay->setEnabled(true);
+        editControlDelay->setEnabled(false);
         editControlDelay->setGeometry(QRect(230, 312, 80, 20));
         editControlDelay->setFont(font2);
         editControlDelay->setFocusPolicy(Qt::StrongFocus);
@@ -289,7 +289,7 @@ public:
         editControlDelay->setReadOnly(false);
         label_4 = new QLabel(settingsForm);
         label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setEnabled(true);
+        label_4->setEnabled(false);
         label_4->setGeometry(QRect(10, 311, 211, 20));
         label_4->setFont(font);
         targetSlider = new QSlider(settingsForm);

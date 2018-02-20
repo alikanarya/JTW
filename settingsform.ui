@@ -578,7 +578,7 @@ p, li { white-space: pre-wrap; }
   </widget>
   <widget class="QLineEdit" name="editControlDelay">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -632,7 +632,7 @@ p, li { white-space: pre-wrap; }
   </widget>
   <widget class="QLabel" name="label_4">
    <property name="enabled">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="geometry">
     <rect>

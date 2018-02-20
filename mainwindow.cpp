@@ -229,8 +229,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(timerSn, SIGNAL(timeout()), this, SLOT(updateSn()));
     timerSn->start(1000);
 
-    timerCommand = new QTimer(this);
-    connect(timerCommand, SIGNAL(timeout()), this, SLOT(processCommands()));
+    // conrol delay system disabled
+    //timerCommand = new QTimer(this);
+    //connect(timerCommand, SIGNAL(timeout()), this, SLOT(processCommands()));
 
     /* 1msec timer
     timer = new QTimer(this);
@@ -1082,6 +1083,7 @@ void MainWindow::trackButton(){
             histState = histStatePrev = -1;
         }
         cmdBuffer.clear();
+        // cmdBufferTime.clear();   // conrol delay system disabled
 
     } else {
         ui->trackButton->setIcon(trackOffIcon);
@@ -1133,7 +1135,7 @@ void MainWindow::controlButton(){
         offsetXpos = 0;
         repaintGuide();
 
-        timerCommand->stop();
+        // timerCommand->stop();    // conrol delay system disabled
         cmdStatePrev = _CMD_CENTER;
         cmdStatePrev2 = _CMD_CENTER;
         cmdState = _CMD_CENTER;
@@ -1176,7 +1178,9 @@ void MainWindow::startControl(){
     if (alignGuide2TrackCenter) plc->writeByte(0,_CMD_CENTER);
 
     weldCommands.clear();
-    if (controlDelay > 0)    timerCommand->start(10);
+    cmdBuffer.clear();
+    //cmdBufferTime.clear();    // conrol delay system disabled
+    // if (controlDelay > 0)    timerCommand->start(10);    // conrol delay system disabled
 
     ui->controlButton->setIcon(controlOnIcon);
     ui->plainTextEdit->appendPlainText(timeString() + message1);
@@ -1490,28 +1494,38 @@ void MainWindow::imageProcessingCompleted(int time){
             // in order to apply the command, it should be same for some analysis number
             // to prevent fluctions
             cmdBuffer.append(cmdNow);
-            if (cmdBuffer.size() > cmdBufferMaxSize)
+            //cmdBufferTime.append(time); // conrol delay system disabled
+
+            if (cmdBuffer.size() > cmdBufferMaxSize) {
                 cmdBuffer.removeFirst();
+                //cmdBufferTime.removeFirst();
 
-            bool controlEnable = true;
-            for (int i=1; i<cmdBuffer.size(); i++)
-                if ( cmdBuffer[i] != cmdBuffer[0] )
-                    controlEnable = false;
+                bool cmdStable = true;
 
-            cmdState = cmdNow;
+                for (int i=1; i<cmdBuffer.size(); i++)
+                    if ( cmdBuffer[i] != cmdBuffer[0] ) cmdStable = false;
 
-            if (controlOn && controlEnable) {
+                if (cmdStable) {
+                    cmdState = cmdNow;
 
-                if (!focusCheckBeforeControl) {
-                    plcCommands(time);
-                } else if (focusCheckBeforeControl && camFocusState) {
-                    plcCommands(time);
+                    if (controlOn) {
+
+                        if (!focusCheckBeforeControl) {
+                            plcCommands(time);  // plcCommands(cmdBufferTime[0]);
+                        } else if (focusCheckBeforeControl && camFocusState) {
+                            plcCommands(time);  // plcCommands(cmdBufferTime[0]);
+                        }
+                    }
+
+                    cmdStatePrev = cmdState;
+                    cmdStatePrev2 = cmdState;
                 }
+
             }
+
+
         }
 
-        cmdStatePrev = cmdState;
-        cmdStatePrev2 = cmdState;
 
     } else {
         //if (deviationData[index] != eCodeDev){
@@ -2678,9 +2692,9 @@ void MainWindow::plcReadings(){
 void MainWindow::plcCommands(int time){
 
     //if (controlOn){
-    //if (cmdState != cmdStatePrev) {
+    if (cmdState != cmdStatePrev) {
 
-        if (controlDelay == 0) {
+        //if (controlDelay == 0) {  // conrol delay system disabled
 
             int commandByte = 0;
 
@@ -2697,18 +2711,19 @@ void MainWindow::plcCommands(int time){
             }
             plc->writeByte(0,commandByte);
 
-        } else {
+        /*} else {
 
             weldData wd;
             wd.state = cmdState;
             wd.time = time;
             weldCommands.append(wd);
-        }
-    //}
+        }*/
+    }
     //}
 }
 
 void MainWindow::processCommands() {
+    // conrol delay system disabled
 
     if (!weldCommands.isEmpty()) {
 
