@@ -1,15 +1,18 @@
 * popup windows if plc and cam connection failure
 * plc cmd check, live state-cmd status of the queue when plc off, begin/end cmds if autoalignment or not, plcsim stat?
-* stop/play Buttons disabled from user
 * track on at start up
 * 2nd pass detection algo; detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
 * system test fn for timings, process times-delays etc
 * plc permision re activate
 ** Z control
+** camera settngs printscree/backup
+* guide target witdh increase?
+* mainwindow height smaller, bottom not shown on screen
+* drift amount at passes to settings.ini
 
-* 2 pass user settings in mainwindow
-* pass1 to pass2 transtion detection region number manual at settings.ini
-
+* drift commands enabled in control mode only
+* stop Buttons disabled from user
+* histLo, histHi, histBufferSize, areaNumber, cmdBufferMaxSize, errorMaxFactor in settings.ini
 * hard control starts the control proses ...done
 * control delay (weldCommands) isnt working for cam-torch setup & control system, disabled ...done
 * weldCommands assignments fixed according to cmdBuffer state ...done

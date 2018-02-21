@@ -627,7 +627,7 @@ void setupForm::processImage(){
                     Algo7(iprocess);
                     break;
                 case 6: // MAIN EDGES MULTIPLE AREAS
-                    Algo8(5);
+                    Algo8(w->areaNumber);
                     break;
                 case 7: // EXPERIMENTAL
                     break;
@@ -1199,7 +1199,7 @@ void setupForm::saveExitButton(){
     w->bandWidthMin = bandWidthMin;
     w->bandCenterMax = bandCenterMax;
     w->histAreaNo = histAreaNo;
-    w->histLo = round(histAreaNo * w->histLoRate);
+    w->histLo = 1; //round(histAreaNo * w->histLoRate);
     w->histHi = round(histAreaNo * w->histHiRate);
 
     w->twoPassWelding = ui->twoPassWeldingBox->isChecked();
@@ -1207,9 +1207,9 @@ void setupForm::saveExitButton(){
 
     w->ui->passOneButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
     w->ui->passTwoButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
-    w->ui->targetDriftLeft->setEnabled( twoPassWelding );
-    w->ui->targetDriftCenter->setEnabled( twoPassWelding );
-    w->ui->targetDriftRight->setEnabled( twoPassWelding );
+    w->ui->targetDriftLeft->setEnabled( false );
+    w->ui->targetDriftCenter->setEnabled( false );
+    w->ui->targetDriftRight->setEnabled( false );
 
     if (w->twoPassWelding){
         if(w->autoDetect2ndPass) {

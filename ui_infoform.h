@@ -100,8 +100,8 @@ public:
         infoForm->setWindowTitle(QApplication::translate("infoForm", "Hakk\304\261nda", 0));
         label->setText(QApplication::translate("infoForm", "JTW", 0));
         label_2->setText(QApplication::translate("infoForm", "Joint Tracker for Welding", 0));
-        label_3->setText(QApplication::translate("infoForm", "Kaynak i\303\247in Birle\305\237me Yeri Takip\303\247isi", 0));
-        label_4->setText(QApplication::translate("infoForm", "ver 2.0.01, \302\251Orun Elektronik, 2017", 0));
+        label_3->setText(QApplication::translate("infoForm", "Kaynak Takibi", 0));
+        label_4->setText(QApplication::translate("infoForm", "ver 2.3.14, \302\251Orun Elektronik, 2017", 0));
         label_5->setText(QApplication::translate("infoForm", "T\303\274m haklar\304\261 sakl\304\261d\304\261r. All rights reserved.", 0));
     } // retranslateUi
 

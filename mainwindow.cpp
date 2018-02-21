@@ -317,6 +317,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->imageFrame->setStyleSheet("background: black");
 //    ui->imageFrame->setScaledContents(true);
 
+    ui->stopButton->setEnabled(false);;
+
     ui->leftButton->setEnabled( false );
     ui->leftButton->hide();
     ui->rightButton->setEnabled( false );
@@ -324,9 +326,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->passOneButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
     ui->passTwoButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
-    ui->targetDriftLeft->setEnabled( twoPassWelding );
-    ui->targetDriftCenter->setEnabled( twoPassWelding );
-    ui->targetDriftRight->setEnabled( twoPassWelding );
+    ui->targetDriftLeft->setEnabled( false );
+    ui->targetDriftCenter->setEnabled( false );
+    ui->targetDriftRight->setEnabled( false );
 
     if (twoPassWelding){
         on_passOneButton_clicked();
@@ -1193,6 +1195,7 @@ void MainWindow::startControl(){
     ui->controlButton->setIcon(controlOnIcon);
     ui->plainTextEdit->appendPlainText(timeString() + message1);
 
+
     // for report
     errorTotal = 0;
     processCount = 0;
@@ -1616,20 +1619,35 @@ void MainWindow::histAnalysisCompleted(){
             histState = 0;  // no band
             if (!pass1detected) {
                 pass1detected = true;
-                if (controlOn) controlInitiated = alignGuide2TrackCenter; // to align guide again
+                if (controlOn)  {
+                    controlInitiated = alignGuide2TrackCenter; // to align guide again
+                    ui->targetDriftLeft->setEnabled( twoPassWelding );
+                    ui->targetDriftCenter->setEnabled( twoPassWelding );
+                    ui->targetDriftRight->setEnabled( twoPassWelding );
+                }
             }
             pass2detected = false;
         } else if (avg >= histHi) {
             histState = 2;  // full band
             if (!pass2detected) {
                 pass2detected = true;
-                if (controlOn) controlInitiated = alignGuide2TrackCenter; // to align guide again
+                if (controlOn)  {
+                    controlInitiated = alignGuide2TrackCenter; // to align guide again
+                    ui->targetDriftLeft->setEnabled( twoPassWelding );
+                    ui->targetDriftCenter->setEnabled( twoPassWelding );
+                    ui->targetDriftRight->setEnabled( twoPassWelding );
+                }
             }
             pass1detected = false;
         } else {
             histState = 1;  // transition
             pass1detected = false;
             pass2detected = false;
+            if (controlOn)  {
+                ui->targetDriftLeft->setEnabled( false );
+                ui->targetDriftCenter->setEnabled( false );
+                ui->targetDriftRight->setEnabled( false );
+            }
         }
 
         //qDebug() << avg;
@@ -1997,9 +2015,15 @@ void MainWindow::readSettings(){
             bandWidthMin = settings->value("bwidm", _BAND_WIDTH_MIN).toFloat();
             bandCenterMax = settings->value("bcenm", _BAND_CENTER_MAX).toFloat();
             histAreaNo = settings->value("harno", _HIST_AREA_NO).toInt();
-                histLo = round(histAreaNo * histLoRate);
-                histHi = round(histAreaNo * histHiRate);
+            histLo = settings->value("histlo", _HIST_LO).toInt();
+            histHi = settings->value("histhi", _HIST_HI).toInt();
+                //histLo = round(histAreaNo * histLoRate);
+                //histHi = round(histAreaNo * histHiRate);
                 //qDebug() << histAreaNo << " " << histLo << " " << histHi;
+            histBufferSize = settings->value("histbsize", _HIST_BUFFER_SIZE).toInt();
+            areaNumber = settings->value("areano", _MAIN_EDGE_AREA_NO).toInt();
+            cmdBufferMaxSize = settings->value("cmdbsize", _CMD_BUFFER_SIZE).toInt();
+            errorMaxFactor = settings->value("errmaxk", _ERROR_MAX_FACTOR).toInt();
 
             twoPassWelding = settings->value("twopass", _2_PASS_WELD).toBool();
             autoDetect2ndPass = settings->value("detpass", _DETECT_2ND_PASS).toBool();
@@ -2098,6 +2122,12 @@ void MainWindow::readSettings(){
         bandWidthMin = _BAND_WIDTH_MIN;
         bandCenterMax = _BAND_CENTER_MAX;
         histAreaNo = _HIST_AREA_NO;
+        histLo = _HIST_LO;
+        histHi = _HIST_HI;
+        histBufferSize = _HIST_BUFFER_SIZE;
+        areaNumber = _MAIN_EDGE_AREA_NO;
+        cmdBufferMaxSize = _CMD_BUFFER_SIZE;
+        errorMaxFactor = _ERROR_MAX_FACTOR;
 
         twoPassWelding = _2_PASS_WELD;
         autoDetect2ndPass = _DETECT_2ND_PASS;
@@ -2213,6 +2243,12 @@ void MainWindow::writeSettings(){
        settings->setValue("bwidm", QString::number(bandWidthMin));
        settings->setValue("bcenm", QString::number(bandCenterMax));
        settings->setValue("harno", QString::number(histAreaNo));
+       settings->setValue("histlo", QString::number(histLo));
+       settings->setValue("histhi", QString::number(histHi));
+       settings->setValue("histbsize", QString::number(histBufferSize));
+       settings->setValue("areano", QString::number(areaNumber));
+       settings->setValue("cmdbsize", QString::number(cmdBufferMaxSize));
+       settings->setValue("errmaxk", QString::number(errorMaxFactor));
 
        QVariant twopasssw(twoPassWelding);
            settings->setValue("twopass", twopasssw.toString());
@@ -3642,10 +3678,22 @@ void MainWindow::on_targetDriftLeft_clicked(){
     }
 
     offsetXpos -= step;
-    if ( abs(_offsetXpos - offsetXpos) > 20 )
-        offsetXpos += step;
-
     offsetXCam -= step/mapFactorX;
+    if ( abs(_offsetXpos - offsetXpos) > 20 ){
+        offsetXpos += step;
+        offsetXCam += step/mapFactorX;
+    }
+
+    switch(histState){
+        case 0: pass1_offsetXposDelta = pass1_offsetXpos - offsetXpos;
+                pass1_offsetXCamDelta = pass1_offsetXCam - offsetXCam;
+                qDebug() << pass1_offsetXposDelta << " " << pass1_offsetXCamDelta;
+                break;
+        case 2: pass2_offsetXposDelta = pass2_offsetXpos - offsetXpos;
+                pass2_offsetXCamDelta = pass2_offsetXCam - offsetXCam;
+                qDebug() << pass2_offsetXposDelta << " " << pass2_offsetXCamDelta;
+                break;
+    }
 
     repaintGuide();
 }
@@ -3679,10 +3727,22 @@ void MainWindow::on_targetDriftRight_clicked(){
     }
 
     offsetXpos += step;
-    if ( abs(_offsetXpos - offsetXpos) > 20 )
-        offsetXpos -= step;
-
     offsetXCam += step/mapFactorX;
+    if ( abs(_offsetXpos - offsetXpos) > 20 ){
+        offsetXpos -= step;
+        offsetXCam -= step/mapFactorX;
+    }
+
+    switch(histState){
+        case 0: pass1_offsetXposDelta = pass1_offsetXpos - offsetXpos;
+                pass1_offsetXCamDelta = pass1_offsetXCam - offsetXCam;
+                //qDebug() << pass1_offsetXposDelta << " " << pass1_offsetXCamDelta;
+                break;
+        case 2: pass2_offsetXposDelta = pass2_offsetXpos - offsetXpos;
+                pass2_offsetXCamDelta = pass2_offsetXCam - offsetXCam;
+                //qDebug() << pass2_offsetXposDelta << " " << pass2_offsetXCamDelta;
+                break;
+    }
 
     repaintGuide();
 }

@@ -68,8 +68,15 @@
 #define _BAND_WIDTH_MIN     0.2
 #define _BAND_CENTER_MAX    0.1
 #define _HIST_AREA_NO       1
+#define _HIST_LO            2
+#define _HIST_HI            7
+#define _HIST_BUFFER_SIZE   3
+#define _MAIN_EDGE_AREA_NO  5
 #define _2_PASS_WELD        false
 #define _DETECT_2ND_PASS    false
+#define _CMD_BUFFER_SIZE    3
+#define _CMD_BUFFER_SIZE    3
+#define _ERROR_MAX_FACTOR   3
 
 
 #define _PWD_SETTINGS       "nokts"
@@ -330,7 +337,7 @@ public:
     int jointWidth;
     int algorithmType = 0;
     int edgeDetectionState = 0; // 0:none, 1: sobel, 2: canny4, 3: canny1
-    int areaNumber = 5;
+    int areaNumber = 5; // main edge region number
 
     bool cannyThinning;
     int gaussianSize = 5;
@@ -387,6 +394,10 @@ public:
     int pass1_offsetXCam;
     int pass2_offsetXpos;
     int pass2_offsetXCam;
+    int pass1_offsetXposDelta = 0;
+    int pass1_offsetXCamDelta = 0;
+    int pass2_offsetXposDelta = 0;
+    int pass2_offsetXCamDelta = 0;
 
 
     // plc vars
@@ -413,7 +424,7 @@ public:
         cmdZStatePrev2;                     // to make it histeryzisis between start/stop
     QList<int> cmdBuffer;
     QList<int> cmdBufferTime;
-    int cmdBufferMaxSize = 10;
+    int cmdBufferMaxSize = 3;
     bool cmdSended;
     bool goX;
     bool goZ;
