@@ -2,10 +2,9 @@
 * plc cmd check, live state-cmd status of the queue when plc off, begin/end cmds if autoalignment or not, plcsim stat?
 * stop/play Buttons disabled from user
 * track on at start up
-* control command stop, from plc-machine-hardcontrol
 * 2nd pass detection algo; detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
 * system test fn for timings, process times-delays etc
-
+* plc permision re activate
 ** Z control
 
 * 2 pass user settings in mainwindow

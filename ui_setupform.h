@@ -158,6 +158,7 @@ public:
     QLabel *labelhistCornerPrec;
     QLabel *label_32;
     QSlider *histCornerPrecSlider;
+    QCheckBox *extendHistHeight;
     QButtonGroup *colorGrayGroup;
     QButtonGroup *laserGroup;
 
@@ -788,7 +789,7 @@ public:
         imgParametersButton->setFont(font4);
         testButton = new QPushButton(setupForm);
         testButton->setObjectName(QStringLiteral("testButton"));
-        testButton->setGeometry(QRect(290, 530, 41, 25));
+        testButton->setGeometry(QRect(410, 380, 41, 25));
         testButton->setFont(font);
         label_24 = new QLabel(setupForm);
         label_24->setObjectName(QStringLiteral("label_24"));
@@ -854,12 +855,12 @@ public:
         colorGrayGroup->setObjectName(QStringLiteral("colorGrayGroup"));
         colorGrayGroup->addButton(radioGray);
         radioGray->setObjectName(QStringLiteral("radioGray"));
-        radioGray->setGeometry(QRect(200, 530, 61, 21));
+        radioGray->setGeometry(QRect(280, 530, 41, 21));
         radioGray->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         radioColored = new QRadioButton(setupForm);
         colorGrayGroup->addButton(radioColored);
         radioColored->setObjectName(QStringLiteral("radioColored"));
-        radioColored->setGeometry(QRect(120, 530, 71, 21));
+        radioColored->setGeometry(QRect(204, 530, 61, 21));
         radioColored->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
         radioColored->setChecked(true);
         label_26 = new QLabel(setupForm);
@@ -929,7 +930,7 @@ public:
         bandCenterMaxSlider->setGeometry(QRect(144, 714, 100, 22));
         bandCenterMaxSlider->setAutoFillBackground(false);
         bandCenterMaxSlider->setMinimum(1);
-        bandCenterMaxSlider->setMaximum(10);
+        bandCenterMaxSlider->setMaximum(50);
         bandCenterMaxSlider->setSingleStep(25);
         bandCenterMaxSlider->setValue(10);
         bandCenterMaxSlider->setSliderPosition(10);
@@ -1019,6 +1020,11 @@ public:
         histCornerPrecSlider->setInvertedControls(false);
         histCornerPrecSlider->setTickPosition(QSlider::TicksBothSides);
         histCornerPrecSlider->setTickInterval(20);
+        extendHistHeight = new QCheckBox(setupForm);
+        extendHistHeight->setObjectName(QStringLiteral("extendHistHeight"));
+        extendHistHeight->setGeometry(QRect(120, 530, 61, 17));
+        extendHistHeight->setFont(font2);
+        extendHistHeight->setChecked(true);
         tabWidget->raise();
         labelTarget->raise();
         labelMono->raise();
@@ -1087,6 +1093,7 @@ public:
         labelhistCornerPrec->raise();
         label_32->raise();
         histCornerPrecSlider->raise();
+        extendHistHeight->raise();
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -1287,6 +1294,10 @@ public:
         label_31->setText(QApplication::translate("setupForm", "B\303\266lge Say\304\261s\304\261", 0));
         labelhistCornerPrec->setText(QApplication::translate("setupForm", "0", 0));
         label_32->setText(QApplication::translate("setupForm", "K\303\266\305\237e Tespit Has.", 0));
+#ifndef QT_NO_TOOLTIP
+        extendHistHeight->setToolTip(QApplication::translate("setupForm", "Kaynak ba\305\237lang\304\261c\304\261ndaki geni\305\237li\304\237in %80 ile %120 si aras\304\261n\304\261 ge\303\247erli say", 0));
+#endif // QT_NO_TOOLTIP
+        extendHistHeight->setText(QApplication::translate("setupForm", "Extend", 0));
     } // retranslateUi
 
 };

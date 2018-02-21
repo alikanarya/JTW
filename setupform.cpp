@@ -1207,6 +1207,9 @@ void setupForm::saveExitButton(){
 
     w->ui->passOneButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
     w->ui->passTwoButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
+    w->ui->targetDriftLeft->setEnabled( twoPassWelding );
+    w->ui->targetDriftCenter->setEnabled( twoPassWelding );
+    w->ui->targetDriftRight->setEnabled( twoPassWelding );
 
     if (w->twoPassWelding){
         if(w->autoDetect2ndPass) {
@@ -1219,11 +1222,17 @@ void setupForm::saveExitButton(){
         }
         w->ui->passOneButton->show();
         w->ui->passTwoButton->show();
+        w->ui->targetDriftLeft->show();
+        w->ui->targetDriftCenter->show();
+        w->ui->targetDriftRight->show();
     } else {
         w->ui->passOneButton->hide();
         w->ui->passTwoButton->hide();
         w->ui->passOneButton->setStyleSheet(w->SS_OFF);
         w->ui->passTwoButton->setStyleSheet(w->SS_OFF);
+        w->ui->targetDriftLeft->hide();
+        w->ui->targetDriftCenter->hide();
+        w->ui->targetDriftRight->hide();
     }
 
     w->writeSettings();
@@ -2149,23 +2158,31 @@ void setupForm::on_maFilterSizeSlider_sliderReleased(){
 
 void setupForm::on_histogramAnalysisButton_clicked() {
 
+    bool extend = ui->extendHistHeight->isChecked();
+
     if ( w->play && (w->lastData->image->format() != QImage::Format_Invalid) ){
         if (w->applyCameraEnhancements) {
             //target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
-            // ** target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
-            target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
+            if (extend)
+                target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
+            else
+                target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
         } else {
             //target = w->lastData->image->copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
-            // ** target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
-            target = w->lastData->image->copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
+            if (extend)
+                target = w->lastData->image->copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
+            else
+                target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
             //qDebug()<<w->offsetXCam<<" 0 "<<" "<<w->frameWidthCam<<" "<<w->lastData->image->height();
         }
     }
 
     if ( !w->play &&  imageLoadedFromFile){
         //target = w->imageFileChanged.copy( w->offsetX, w->offsetY, w->frameWidth, w->frameHeight );    // take target image
-        // ** target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
-        target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->imageFileChanged.height() );    // take target image
+        if (extend)
+            target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->imageFileChanged.height() );    // take target image
+        else
+            target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
     }
 
 //    if ( !w->imageGetter->imageList.isEmpty() || imageLoadedFromFile ){

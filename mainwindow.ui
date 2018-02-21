@@ -1185,7 +1185,7 @@ background-color: rgb(236, 233, 216);</string>
     <property name="geometry">
      <rect>
       <x>727</x>
-      <y>220</y>
+      <y>218</y>
       <width>60</width>
       <height>60</height>
      </rect>
@@ -1218,7 +1218,7 @@ PASO</string>
     <property name="geometry">
      <rect>
       <x>727</x>
-      <y>284</y>
+      <y>306</y>
       <width>60</width>
       <height>60</height>
      </rect>
@@ -1236,6 +1236,93 @@ PASO</string>
     </property>
     <property name="checkable">
      <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="targetDriftLeft">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>280</y>
+      <width>24</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Rehber Sola</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="icons.qrc">
+      <normaloff>:/resources/left-arrow-red.png</normaloff>:/resources/left-arrow-red.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="targetDriftRight">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>280</y>
+      <width>24</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Rehber Sağa</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="icons.qrc">
+      <normaloff>:/resources/right-arrow-red.png</normaloff>:/resources/right-arrow-red.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="targetDriftCenter">
+    <property name="geometry">
+     <rect>
+      <x>746</x>
+      <y>280</y>
+      <width>24</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Merkez</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="icons.qrc">
+      <normaloff>:/resources/reload.png</normaloff>:/resources/reload.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

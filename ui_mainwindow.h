@@ -72,6 +72,9 @@ public:
     QPushButton *guideAlignButton;
     QPushButton *passOneButton;
     QPushButton *passTwoButton;
+    QPushButton *targetDriftLeft;
+    QPushButton *targetDriftRight;
+    QPushButton *targetDriftCenter;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -441,7 +444,7 @@ public:
         guideAlignButton->setFlat(true);
         passOneButton = new QPushButton(centralWidget);
         passOneButton->setObjectName(QStringLiteral("passOneButton"));
-        passOneButton->setGeometry(QRect(727, 220, 60, 60));
+        passOneButton->setGeometry(QRect(727, 218, 60, 60));
         passOneButton->setFont(font);
         passOneButton->setAutoFillBackground(false);
         passOneButton->setCheckable(false);
@@ -449,9 +452,33 @@ public:
         passOneButton->setFlat(false);
         passTwoButton = new QPushButton(centralWidget);
         passTwoButton->setObjectName(QStringLiteral("passTwoButton"));
-        passTwoButton->setGeometry(QRect(727, 284, 60, 60));
+        passTwoButton->setGeometry(QRect(727, 306, 60, 60));
         passTwoButton->setFont(font);
         passTwoButton->setCheckable(false);
+        targetDriftLeft = new QPushButton(centralWidget);
+        targetDriftLeft->setObjectName(QStringLiteral("targetDriftLeft"));
+        targetDriftLeft->setGeometry(QRect(720, 280, 24, 24));
+        QIcon icon22;
+        icon22.addFile(QStringLiteral(":/resources/left-arrow-red.png"), QSize(), QIcon::Normal, QIcon::Off);
+        targetDriftLeft->setIcon(icon22);
+        targetDriftLeft->setIconSize(QSize(32, 32));
+        targetDriftLeft->setFlat(true);
+        targetDriftRight = new QPushButton(centralWidget);
+        targetDriftRight->setObjectName(QStringLiteral("targetDriftRight"));
+        targetDriftRight->setGeometry(QRect(770, 280, 24, 24));
+        QIcon icon23;
+        icon23.addFile(QStringLiteral(":/resources/right-arrow-red.png"), QSize(), QIcon::Normal, QIcon::Off);
+        targetDriftRight->setIcon(icon23);
+        targetDriftRight->setIconSize(QSize(32, 32));
+        targetDriftRight->setFlat(true);
+        targetDriftCenter = new QPushButton(centralWidget);
+        targetDriftCenter->setObjectName(QStringLiteral("targetDriftCenter"));
+        targetDriftCenter->setGeometry(QRect(746, 280, 24, 24));
+        QIcon icon24;
+        icon24.addFile(QStringLiteral(":/resources/reload.png"), QSize(), QIcon::Normal, QIcon::Off);
+        targetDriftCenter->setIcon(icon24);
+        targetDriftCenter->setIconSize(QSize(32, 32));
+        targetDriftCenter->setFlat(true);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -587,6 +614,18 @@ public:
 "PASO", 0));
         passTwoButton->setText(QApplication::translate("MainWindow", "2.\n"
 "PASO", 0));
+#ifndef QT_NO_TOOLTIP
+        targetDriftLeft->setToolTip(QApplication::translate("MainWindow", "Rehber Sola", 0));
+#endif // QT_NO_TOOLTIP
+        targetDriftLeft->setText(QString());
+#ifndef QT_NO_TOOLTIP
+        targetDriftRight->setToolTip(QApplication::translate("MainWindow", "Rehber Sa\304\237a", 0));
+#endif // QT_NO_TOOLTIP
+        targetDriftRight->setText(QString());
+#ifndef QT_NO_TOOLTIP
+        targetDriftCenter->setToolTip(QApplication::translate("MainWindow", "Merkez", 0));
+#endif // QT_NO_TOOLTIP
+        targetDriftCenter->setText(QString());
     } // retranslateUi
 
 };

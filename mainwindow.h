@@ -381,6 +381,13 @@ public:
     bool autoDetect2ndPass;
     int algorithmTypePass1 = 4; // Algo6() LINE DETECTION WITH MAIN EDGES
     int algorithmTypePass2 = 6; // Algo8() MAIN EDGES WITH AREAS
+    bool pass1detected = false;
+    bool pass2detected = false;
+    int pass1_offsetXpos;
+    int pass1_offsetXCam;
+    int pass2_offsetXpos;
+    int pass2_offsetXCam;
+
 
     // plc vars
     struct{

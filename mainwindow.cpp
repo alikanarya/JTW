@@ -324,6 +324,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->passOneButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
     ui->passTwoButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
+    ui->targetDriftLeft->setEnabled( twoPassWelding );
+    ui->targetDriftCenter->setEnabled( twoPassWelding );
+    ui->targetDriftRight->setEnabled( twoPassWelding );
 
     if (twoPassWelding){
         on_passOneButton_clicked();
@@ -332,6 +335,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         autoDetect2ndPass = false;
         ui->passOneButton->hide();
         ui->passTwoButton->hide();
+        ui->targetDriftLeft->hide();
+        ui->targetDriftCenter->hide();
+        ui->targetDriftRight->hide();
     }
 
     //**cameraChecker->cameraDown = false;
@@ -1174,6 +1180,8 @@ void MainWindow::controlButton(){
 void MainWindow::startControl(){
 
     controlInitiated = true;
+    pass1detected = false;
+    pass2detected = false;
 
     if (alignGuide2TrackCenter) plc->writeByte(0,_CMD_CENTER);
 
@@ -1399,11 +1407,11 @@ void MainWindow::processImage(bool deleteObject){
             if (twoPassWelding && autoDetect2ndPass) {
                 switch(histState){
                     case 0: iProcessThread->algoSwitch = !iProcessThread->algoSwitch;
-                            algorithmType = algorithmTypePass1;   // Algo6() LINE DETECTION WITH MAIN EDGES
+                            algorithmType = algorithmTypePass1;     // Algo6() LINE DETECTION WITH MAIN EDGES
                             break;
                     case 1: iProcessThread->algoSwitch = false; break;
                     case 2: iProcessThread->algoSwitch = !iProcessThread->algoSwitch;
-                            algorithmType = algorithmTypePass2;  // Algo3() MAIN EDGES
+                            algorithmType = algorithmTypePass2;     // Algo8() MAIN EDGES WITH AREAS
                             break;
                     default: iProcessThread->algoSwitch = false; break;
                 }
@@ -1459,6 +1467,7 @@ void MainWindow::imageProcessingCompleted(int time){
     } else {
         deviationData.append(eCodeDev);     // eCodeDev: error code
         detectionError = true;
+        //if (algorithmType == algorithmTypePass2) qDebug() << iProcessThread->iprocess->bandCheck_errorState;
     }
 
     if (deviationData.size() >= 2) drawTrack();   // draw deviation trend
@@ -1520,12 +1529,8 @@ void MainWindow::imageProcessingCompleted(int time){
                     cmdStatePrev = cmdState;
                     cmdStatePrev2 = cmdState;
                 }
-
             }
-
-
         }
-
 
     } else {
         //if (deviationData[index] != eCodeDev){
@@ -1546,8 +1551,21 @@ void MainWindow::imageProcessingCompleted(int time){
             int _offsetX = offsetX + error * mapFactorX;
 
             if ( _offsetX >= (offsetXmin+10) && ((_offsetX + frameWidth) <= (offsetXmax - 10)) ){
-                offsetXpos += error * mapFactorX;
-                offsetXCam += error;
+               offsetXpos += error * mapFactorX;
+               offsetXCam += error;
+
+               if (twoPassWelding) {
+                   if (pass1detected) {
+                      pass1_offsetXpos = offsetXpos;
+                      pass1_offsetXCam = offsetXCam;
+                      qDebug() << "pass1 aligned offsetX pos/cam: " << pass1_offsetXpos << "-" << pass1_offsetXCam;
+                   }
+                   if (pass2detected) {
+                      pass2_offsetXpos = offsetXpos;
+                      pass2_offsetXCam = offsetXCam;
+                      qDebug() << "pass2 aligned offsetX pos/cam: " << pass2_offsetXpos << "-" << pass2_offsetXCam;
+                   }
+               }
                 //qDebug() << "aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
             } else {
                 controlButton();
@@ -1591,12 +1609,25 @@ void MainWindow::histAnalysisCompleted(){
             avg += histBuffer[i];
         avg /= histBuffer.size();
 
-        if (avg <= histLo)
+        if (avg <= histLo) {
             histState = 0;  // no band
-        else if (avg >= histHi)
+            if (!pass1detected) {
+                pass1detected = true;
+                //if (controlOn) controlInitiated = alignGuide2TrackCenter; // to align guide again
+            }
+            pass2detected = false;
+        } else if (avg >= histHi) {
             histState = 2;  // full band
-        else
+            if (!pass2detected) {
+                pass2detected = true;
+                //if (controlOn) controlInitiated = alignGuide2TrackCenter; // to align guide again
+            }
+            pass1detected = false;
+        } else {
             histState = 1;  // transition
+            pass1detected = false;
+            pass2detected = false;
+        }
 
         //qDebug() << avg;
         if (histState != histStatePrev){
