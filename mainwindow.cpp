@@ -1453,7 +1453,10 @@ void MainWindow::imageProcessingCompleted(int time){
         deviationData.append(error);
 
         // TOO MUCH DRIFT
-        if ( abs(error) > errorMaxCam ) {detectionError = true; qDebug() << "errorMaxCam"; }
+        if ( abs(error) > errorMaxCam ) {
+            detectionError = true;
+            //qDebug() << "errorMaxCam";
+        }
 
         //if (controlInitiated) {                }
 
@@ -1558,12 +1561,12 @@ void MainWindow::imageProcessingCompleted(int time){
                    if (pass1detected) {
                       pass1_offsetXpos = offsetXpos;
                       pass1_offsetXCam = offsetXCam;
-                      qDebug() << "pass1 aligned offsetX pos/cam: " << pass1_offsetXpos << "-" << pass1_offsetXCam;
+                      //qDebug() << "pass1 aligned offsetX pos/cam: " << pass1_offsetXpos << "-" << pass1_offsetXCam;
                    }
                    if (pass2detected) {
                       pass2_offsetXpos = offsetXpos;
                       pass2_offsetXCam = offsetXCam;
-                      qDebug() << "pass2 aligned offsetX pos/cam: " << pass2_offsetXpos << "-" << pass2_offsetXCam;
+                      //qDebug() << "pass2 aligned offsetX pos/cam: " << pass2_offsetXpos << "-" << pass2_offsetXCam;
                    }
                }
                 //qDebug() << "aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
@@ -1613,14 +1616,14 @@ void MainWindow::histAnalysisCompleted(){
             histState = 0;  // no band
             if (!pass1detected) {
                 pass1detected = true;
-                //if (controlOn) controlInitiated = alignGuide2TrackCenter; // to align guide again
+                if (controlOn) controlInitiated = alignGuide2TrackCenter; // to align guide again
             }
             pass2detected = false;
         } else if (avg >= histHi) {
             histState = 2;  // full band
             if (!pass2detected) {
                 pass2detected = true;
-                //if (controlOn) controlInitiated = alignGuide2TrackCenter; // to align guide again
+                if (controlOn) controlInitiated = alignGuide2TrackCenter; // to align guide again
             }
             pass1detected = false;
         } else {
@@ -3622,4 +3625,64 @@ void MainWindow::on_passTwoButton_clicked(){
         ui->passOneButton->setStyleSheet(SS_OFF);
         ui->passTwoButton->setStyleSheet(SS_ON);
     }
+}
+
+void MainWindow::on_targetDriftLeft_clicked(){
+
+    float step = 1;
+    int _offsetXpos, _offsetXCam;
+
+    switch(histState){
+        case 0: _offsetXpos = pass1_offsetXpos;
+                _offsetXCam = pass1_offsetXCam;
+                break;
+        case 2: _offsetXpos = pass2_offsetXpos;
+                _offsetXCam = pass2_offsetXCam;
+                break;
+    }
+
+    offsetXpos -= step;
+    if ( abs(_offsetXpos - offsetXpos) > 20 )
+        offsetXpos += step;
+
+    offsetXCam -= step/mapFactorX;
+
+    repaintGuide();
+}
+
+void MainWindow::on_targetDriftCenter_clicked(){
+
+    switch(histState){
+        case 0: offsetXpos = pass1_offsetXpos;
+                offsetXCam = pass1_offsetXCam;
+                break;
+        case 2: offsetXpos = pass2_offsetXpos;
+                offsetXCam = pass2_offsetXCam;
+                break;
+    }
+
+    repaintGuide();
+}
+
+void MainWindow::on_targetDriftRight_clicked(){
+
+    float step = 1;
+    int _offsetXpos, _offsetXCam;
+
+    switch(histState){
+        case 0: _offsetXpos = pass1_offsetXpos;
+                _offsetXCam = pass1_offsetXCam;
+                break;
+        case 2: _offsetXpos = pass2_offsetXpos;
+                _offsetXCam = pass2_offsetXCam;
+                break;
+    }
+
+    offsetXpos += step;
+    if ( abs(_offsetXpos - offsetXpos) > 20 )
+        offsetXpos -= step;
+
+    offsetXCam += step/mapFactorX;
+
+    repaintGuide();
 }

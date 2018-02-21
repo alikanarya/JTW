@@ -248,7 +248,7 @@ void imgProcessThread::Algo7(){
 
 void imgProcessThread::Algo8(){
 // woLASER: edge > houghTr > detectMainEdges with multiple regions
-    qDebug()<<Q_FUNC_INFO;
+    //qDebug()<<Q_FUNC_INFO;
 
     if (w->edgeDetectionState != 0) {
 
@@ -331,7 +331,7 @@ void imgProcessThread::Algo8(){
 
 void imgProcessThread::histAnalysis() {
 // histogram analysis
-    qDebug()<<Q_FUNC_INFO;
+    //qDebug()<<Q_FUNC_INFO;
 
     int step = (targetArea.height()*1.0) / w->histAreaNo;
     int ptime;

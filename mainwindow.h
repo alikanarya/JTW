@@ -660,6 +660,12 @@ private slots:
     void on_guideAlignButton_clicked();
 
 
+    void on_targetDriftLeft_clicked();
+
+    void on_targetDriftCenter_clicked();
+
+    void on_targetDriftRight_clicked();
+
 private:
     protect lic;
 
