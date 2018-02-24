@@ -77,6 +77,10 @@
 #define _CMD_BUFFER_SIZE    3
 #define _CMD_BUFFER_SIZE    3
 #define _ERROR_MAX_FACTOR   3
+#define _PASS1_TIME         30000
+#define _PASSTR_TIME        10000
+#define _PASS2_TIME         40000
+#define _TIME_CONTROL_2PASS true
 
 
 #define _PWD_SETTINGS       "nokts"
@@ -387,7 +391,8 @@ public:
     bool twoPassWelding;
     bool autoDetect2ndPass;
     int algorithmTypePass1 = 4; // Algo6() LINE DETECTION WITH MAIN EDGES
-    int algorithmTypePass2 = 6; // Algo8() MAIN EDGES WITH AREAS
+    int algorithmTypePass2 = 1; // Algo3() MAIN EDGES
+    //int algorithmTypePass2 = 6; // Algo8() MAIN EDGES WITH AREAS
     bool pass1detected = false;
     bool pass2detected = false;
     int pass1_offsetXpos;
@@ -398,6 +403,10 @@ public:
     int pass1_offsetXCamDelta = 0;
     int pass2_offsetXposDelta = 0;
     int pass2_offsetXCamDelta = 0;
+    bool timeControlTwoPass;
+    int pass1TimerTime = 5000;
+    int passTrTimerTime = 2000;
+    int pass2TimerTime = 3000;
 
 
     // plc vars
@@ -454,6 +463,7 @@ public:
 
     bool lineDetection;
     int lineScoreLimit;
+
 
     bool captureVideo;
 //    QList<QImage *> videoList;
@@ -627,6 +637,9 @@ public slots:
 
     void imageProcessingCompleted(int time);
     void histAnalysisCompleted();
+
+    void passTrSlot();
+    void pass2StartSlot();
 
     void on_passOneButton_clicked();
     void on_passTwoButton_clicked();

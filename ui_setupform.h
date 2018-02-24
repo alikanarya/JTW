@@ -123,6 +123,7 @@ public:
     QLabel *label_22;
     QCheckBox *twoPassWeldingBox;
     QCheckBox *autoDetect2ndPassBox;
+    QCheckBox *twoPassTimeControlBox;
     QWidget *tab_2;
     QGraphicsView *graphicsView;
     QGraphicsView *graphicsView2;
@@ -159,8 +160,8 @@ public:
     QLabel *label_32;
     QSlider *histCornerPrecSlider;
     QCheckBox *extendHistHeight;
-    QButtonGroup *colorGrayGroup;
     QButtonGroup *laserGroup;
+    QButtonGroup *colorGrayGroup;
 
     void setupUi(QWidget *setupForm)
     {
@@ -641,7 +642,7 @@ public:
         widthControlBox->setFont(font2);
         timeControlBox = new QCheckBox(tab);
         timeControlBox->setObjectName(QStringLiteral("timeControlBox"));
-        timeControlBox->setGeometry(QRect(370, 440, 181, 17));
+        timeControlBox->setGeometry(QRect(370, 440, 201, 17));
         timeControlBox->setFont(font2);
         label_16 = new QLabel(tab);
         label_16->setObjectName(QStringLiteral("label_16"));
@@ -688,12 +689,16 @@ public:
         label_22->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
         twoPassWeldingBox = new QCheckBox(tab);
         twoPassWeldingBox->setObjectName(QStringLiteral("twoPassWeldingBox"));
-        twoPassWeldingBox->setGeometry(QRect(370, 480, 211, 17));
+        twoPassWeldingBox->setGeometry(QRect(370, 490, 211, 17));
         twoPassWeldingBox->setFont(font2);
         autoDetect2ndPassBox = new QCheckBox(tab);
         autoDetect2ndPassBox->setObjectName(QStringLiteral("autoDetect2ndPassBox"));
-        autoDetect2ndPassBox->setGeometry(QRect(370, 500, 211, 17));
+        autoDetect2ndPassBox->setGeometry(QRect(370, 510, 211, 17));
         autoDetect2ndPassBox->setFont(font2);
+        twoPassTimeControlBox = new QCheckBox(tab);
+        twoPassTimeControlBox->setObjectName(QStringLiteral("twoPassTimeControlBox"));
+        twoPassTimeControlBox->setGeometry(QRect(370, 530, 201, 17));
+        twoPassTimeControlBox->setFont(font2);
         tabWidget->addTab(tab, QString());
         label_15->raise();
         plainTextEdit->raise();
@@ -747,6 +752,7 @@ public:
         label_22->raise();
         twoPassWeldingBox->raise();
         autoDetect2ndPassBox->raise();
+        twoPassTimeControlBox->raise();
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
         graphicsView = new QGraphicsView(tab_2);
@@ -1250,7 +1256,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         timeControlBox->setToolTip(QApplication::translate("setupForm", "<html><head/><body><p>Belirli bir s\303\274re sonra kaynak komutlar\304\261n\304\261 kes</p></body></html>", 0));
 #endif // QT_NO_TOOLTIP
-        timeControlBox->setText(QApplication::translate("setupForm", "Kaynak Yapma S\303\274resi Kontrol\303\274", 0));
+        timeControlBox->setText(QApplication::translate("setupForm", "Kaynak S\303\274resi Kontrol\303\274", 0));
         label_16->setText(QApplication::translate("setupForm", "Kay\304\261t S\303\274resi (sn)", 0));
         label_13->setText(QApplication::translate("setupForm", "FPS", 0));
         editIPI->setInputMask(QApplication::translate("setupForm", "99", 0));
@@ -1269,6 +1275,10 @@ public:
         autoDetect2ndPassBox->setToolTip(QApplication::translate("setupForm", "Makineden Kaynak Ba\305\237lang\304\261c\304\261", 0));
 #endif // QT_NO_TOOLTIP
         autoDetect2ndPassBox->setText(QApplication::translate("setupForm", "2.Pasoya Oto Ge\303\247i\305\237", 0));
+#ifndef QT_NO_TOOLTIP
+        twoPassTimeControlBox->setToolTip(QApplication::translate("setupForm", "<html><head/><body><p>Belirli bir s\303\274re sonra kaynak komutlar\304\261n\304\261 kes</p></body></html>", 0));
+#endif // QT_NO_TOOLTIP
+        twoPassTimeControlBox->setText(QApplication::translate("setupForm", "\304\260ki Paso S\303\274re Kontrol\303\274", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("setupForm", "Ayarlar", 0));
         labelTarget2->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("setupForm", "Grafik", 0));

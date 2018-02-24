@@ -403,14 +403,14 @@ void setupForm::Algo7(imgProcess *iprocess){
     }
 }
 
-void setupForm::Algo8(int areaNo){
+void setupForm::Algo8(int center){
 // woLASER: edge > houghTr > detectMainEdges with multiple regions
 
-    areaNumber = areaNo;
+    areaNumber = w->areaNumber;
 
     if (edgeDetectionState != 0) {
 
-        int step = (target.height()*1.0) / areaNo;
+        int step = (target.height()*1.0) / areaNumber;
 
         if (!iproList.empty()){
             qDeleteAll(iproList);
@@ -419,7 +419,7 @@ void setupForm::Algo8(int areaNo){
 
         int totalTime = 0;
 
-        for (int area=0; area<areaNo; area++) {
+        for (int area=0; area<areaNumber; area++) {
 
             QImage pic = target.copy( 0, step*area, target.width(), step );    // take target image
             //pic.save("_area"+QString::number(area)+".jpg");
@@ -463,51 +463,89 @@ void setupForm::Algo8(int areaNo){
             ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(ipro->leftCornerX)+", "+QString::number(ipro->trackCenterX)+", "+QString::number(ipro->rightCornerX));
         }
 
+        int refCenter;
+        if (center == 0){
+            // -------HISTOGRAM PROCESSING-------
+            startTime = w->timeSystem.getSystemTimeMsec();
 
-        // -------HISTOGRAM PROCESSING-------
-        startTime = w->timeSystem.getSystemTimeMsec();
+            iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+            iprocess->maFilterKernelSize = maFilterKernelSize;
+            iprocess->histogramAngleThreshold = histogramAngleThreshold;
+            iprocess->lenRateThr = lenRateThr;
+            iprocess->bandWidthMin = bandWidthMin;
+            iprocess->bandCenterMax = bandCenterMax;
+            iprocess->histDDLimit = histDDLimit;
 
-        iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
-        iprocess->maFilterKernelSize = maFilterKernelSize;
-        iprocess->histogramAngleThreshold = histogramAngleThreshold;
-        iprocess->lenRateThr = lenRateThr;
-        iprocess->bandWidthMin = bandWidthMin;
-        iprocess->bandCenterMax = bandCenterMax;
-        iprocess->histDDLimit = histDDLimit;
+            iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
 
-        iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
+            iprocess->histogramAnalysis(colorMatrix);
+            histogramCenterX = (iprocess->natBreaksMax1.x()+iprocess->natBreaksMax2.x())/2;
 
-        iprocess->histogramAnalysis(colorMatrix);
-        histogramCenterX = (iprocess->natBreaksMax1.x()+iprocess->natBreaksMax2.x())/2;
+            endTime = w->timeSystem.getSystemTimeMsec();
+            processElapsed = endTime - startTime;
+            totalTime += processElapsed;
+            delete iprocess;
 
-        endTime = w->timeSystem.getSystemTimeMsec();
-        processElapsed = endTime - startTime;
-        totalTime += processElapsed;
-        delete iprocess;
-
-        QString message = "\nHistogram Analizi " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
-        ui->plainTextEdit->appendPlainText(message);
-        // -------END PROCESSING-------
+            QString message = "\nHistogram Analizi " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
+            ui->plainTextEdit->appendPlainText(message);
+            // -------END PROCESSING-------
+            refCenter = histogramCenterX;
+        } else {
+            refCenter = center;
+        }
 
         variance = target.width() * 0.02;
         /*
         variance = 0;
         for (int c=0; c<iproList.size(); c++)
-            variance += pow( histogramCenterX - iproList[c]->trackCenterX, 2 );
+            variance += pow( refCenter - iproList[c]->trackCenterX, 2 );
         if ( iproList.size() != 0 ) variance /= iproList.size();
         variance = sqrt(variance);
         */
+        QList<int> areaStats;
+
         int cnt = 0;
         mainEdgeCenterX = 0;
         for (int c=0; c<iproList.size(); c++)
-            if ( abs( histogramCenterX - iproList[c]->trackCenterX ) < variance ) {
+            if ( abs( refCenter - iproList[c]->trackCenterX ) <= variance ) {
                 cnt++;
                 mainEdgeCenterX += iproList[c]->trackCenterX;
+                areaStats.append(0);    // "BAND DOĞRU"
+            } else {
+                areaStats.append(1);    // "Band merkezden çok uzak"
             }
         if (cnt != 0) mainEdgeCenterX /= (cnt*1.0);
-        else mainEdgeCenterX = histogramCenterX;
+        else mainEdgeCenterX = refCenter;
 
         ui->plainTextEdit->appendPlainText("\nToplam Süre: " + QString::number(totalTime) + " ms");
+
+        for (int c=0; c<iproList.size(); c++){
+//            qDebug() << QString::number(abs(iproList[c]->rightCornerX - iproList[c]->leftCornerX)) << " " << QString::number(bandWidthMin);
+            if ( abs(iproList[c]->rightCornerX - iproList[c]->leftCornerX) < (iproList[c]->imageWidth * bandWidthMin) ){
+                if ( areaStats[c] == 1 )
+                    areaStats[c] = 3;   // "Band merkezden çok uzak" ve "Band genişliği düşük"
+                else
+                    areaStats[c] = 2;   // "Band genişliği düşük"
+            }
+        }
+
+        int found2ndPass = 0;
+        QString statList = "";
+        for (int c=0; c<areaStats.size(); c++) {
+            switch ( areaStats[c] ) {
+                case 0: ui->plainTextEdit->appendPlainText("*** " + QString(alarm20)); found2ndPass++; break;
+                case 1: ui->plainTextEdit->appendPlainText("*** " + QString(alarm25)); break;
+                case 2: ui->plainTextEdit->appendPlainText("*** " + QString(alarm24)); break;
+                case 3: ui->plainTextEdit->appendPlainText("*** " + QString(alarm25) + " ve " + QString(alarm24)); break;
+            }
+            if (areaStats[c] == 0)
+                statList += "1";
+            else
+                statList += "0";
+        }
+        QString stat = "Doğru bölge #: " + QString::number(found2ndPass) + " >> " + statList;
+        ui->plainTextEdit->appendPlainText(stat);
+
     } else {
         ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
         algoPrerequestsOk = false;
@@ -627,7 +665,7 @@ void setupForm::processImage(){
                     Algo7(iprocess);
                     break;
                 case 6: // MAIN EDGES MULTIPLE AREAS
-                    Algo8(w->areaNumber);
+                    Algo8(target.width()/2.0);
                     break;
                 case 7: // EXPERIMENTAL
                     break;
@@ -853,6 +891,9 @@ void setupForm::captureButton(){
                             graphArray2[i] = length;    // max length of solid lines for each hough data
                             if (DEBUG) ui->plainTextEdit->appendPlainText("dist/ang/vote/length: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 0) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 2)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 0) + ", " + QString::number(length));
                         }
+
+                        for (int i=0; i<iprocess->mainEdgesList.size();i++)
+                            ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
 
                         ui->plainTextEdit->appendPlainText( "dist/ang/vote: " + QString::number(hdDistance) + " / " + QString::number(hdAngle, 'f', 2) + " / "+ QString::number(hdVoteValue) );
                         ui->plainTextEdit->appendPlainText( "trackCenterX: " + QString::number(iprocess->trackCenterX) );
@@ -1142,7 +1183,8 @@ void setupForm::getParameters(){
     ui->twoPassWeldingBox->setChecked( twoPassWelding );
     ui->autoDetect2ndPassBox->setChecked( autoDetect2ndPass );
     ui->autoDetect2ndPassBox->setEnabled(twoPassWelding);
-
+    ui->twoPassTimeControlBox->setChecked( w->timeControlTwoPass );
+    ui->twoPassTimeControlBox->setEnabled(twoPassWelding);
 }
 
 void setupForm::clearButton(){
@@ -1204,6 +1246,7 @@ void setupForm::saveExitButton(){
 
     w->twoPassWelding = ui->twoPassWeldingBox->isChecked();
     w->autoDetect2ndPass = ui->autoDetect2ndPassBox->isChecked();
+    w->timeControlTwoPass = ui->twoPassTimeControlBox->isChecked();
 
     w->ui->passOneButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
     w->ui->passTwoButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
@@ -1599,8 +1642,8 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
                     ui->editHoughThetaStep->setEnabled(true);
                     break;  // CONTRAST
             case 4: algoName = "Algo6: woLASER: canny1 > houghTr > detectMainEdges > detectMainEdgesSolidLine";
-                    ui->label_21->setEnabled(false);
-                    ui->mainEdgesSlider->setEnabled(false);
+                    ui->label_21->setEnabled(true);
+                    ui->mainEdgesSlider->setEnabled(true);
                     ui->lineDetectionBox->setEnabled(true);
                     ui->editLineScore->setEnabled(true);
                     ui->label_10->setEnabled(false);
@@ -2019,7 +2062,7 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
 
     if (drawEdges) {
         QPen pen;
-        pen.setWidth(1);
+        pen.setWidth(2);
         for (int i=0; i<ipro->mainPointsList.size(); i++){
             int y=0, idx = 0;
             for (int j=0; j<ipro->histogramMaxPoint.size(); j++){
@@ -2029,7 +2072,7 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
                 }
             }
             if (ipro->mainPointsList[i].x() == ipro->natBreaksMax1.x() || ipro->mainPointsList[i].x() == ipro->natBreaksMax2.x())
-                pen.setColor(Qt::black);
+                pen.setColor(Qt::green);    // primary lines
             else
                 pen.setColor(Qt::blue);
 
@@ -2594,9 +2637,11 @@ void setupForm::on_twoPassWeldingBox_clicked(bool checked){
     if( !twoPassWelding ){
         autoDetect2ndPass = false;
         ui->autoDetect2ndPassBox->setChecked(false);
+        ui->twoPassTimeControlBox->setChecked(false);
     }
 
     ui->autoDetect2ndPassBox->setEnabled(twoPassWelding);
+    ui->twoPassTimeControlBox->setEnabled(twoPassWelding);
 }
 
 void setupForm::on_autoDetect2ndPassBox_clicked(){

@@ -1,3 +1,4 @@
+* histogramAnalysis; histogramFiltered and min/max bandWidth selections will be parametrised
 * popup windows if plc and cam connection failure
 * plc cmd check, live state-cmd status of the queue when plc off, begin/end cmds if autoalignment or not, plcsim stat?
 * track on at start up
@@ -10,6 +11,11 @@
 * mainwindow height smaller, bottom not shown on screen
 * drift amount at passes to settings.ini
 
+* pass 1 algo: Algo6; line detection with main edges, pass 2 algo: Algo1; main edges
+* time control procedure for 2 pass welding
+* Algo8 input argument as specified center in setupForm, optional to histogram center
+* mainEdges natural breaks variance from 10px to %10 of image width
+** histogramAnalysis; histogramFiltered values reversed for bright analysis, minimum bandWidth used for bright band instead of max bandwidth selection /****/
 * drift commands enabled in control mode only
 * stop Buttons disabled from user
 * histLo, histHi, histBufferSize, areaNumber, cmdBufferMaxSize, errorMaxFactor in settings.ini

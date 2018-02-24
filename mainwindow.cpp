@@ -33,8 +33,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //ui->plainTextEdit->appendPlainText(QString::number(rectScreen.width())+"x"+QString::number(rectScreen.height()));
     ui->labelTime->hide();
     ui->emergencyButton->hide();
-    //ui->testEdit->hide();
-    //ui->testButton->hide();
+    ui->testEdit->hide();
+    ui->testButton->hide();
 
     // icon assignmets
     plcOnlineIcon.addFile(":/resources/s7_200-Enabled-Icon.png");
@@ -293,6 +293,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->labelDistanceTag2->hide();
     }
 
+    ui->labelTimeTag->hide();
+    ui->timeEdit->hide();
+
     if (timeControl){
         ui->labelTimeTag->show();
         ui->timeEdit->show();
@@ -303,7 +306,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->labelTimeTag->hide();
         ui->timeEdit->hide();
         permTime = true;
-
     }
 
     // z control
@@ -824,21 +826,20 @@ void MainWindow::updateSn(){
     //QVariant boolx(permPLC);
     //ui->plainTextEdit->appendPlainText(boolx.toString());
 
-    if (timeControl) {
+    if (controlOn && timeControl) {
 
         if (startTimeControlCount){
             timeControlCounter++;
-            //ui->plainTextEdit->appendPlainText(QString::number(timeControlCounter));
+            ui->plainTextEdit->appendPlainText(QString::number(timeControlCounter));
         }
 
-        if (timeControlCounter >= (timeLimit-5)){
+        if (timeControlCounter >= timeLimit){
             permTime = false;
             startTimeControlCount = false;
-
+            controlButton();
         } else {
             permTime = true;
         }
-
     }
 
     // blink emergency stop button in case of emergency
@@ -1086,9 +1087,18 @@ void MainWindow::trackButton(){
     trackOn = !trackOn;
 
     if (trackOn){
+
         ui->trackButton->setIcon(trackOnIcon);
+
         if (twoPassWelding){
             histState = histStatePrev = -1;
+
+            if (timeControlTwoPass){
+                iProcessThread->algoSwitch = true;
+                algorithmType = algorithmTypePass1;     // Algo6() LINE DETECTION WITH MAIN EDGES
+                pass1detected = true;
+                pass2detected = false;
+            }
         }
         cmdBuffer.clear();
         // cmdBufferTime.clear();   // conrol delay system disabled
@@ -1147,13 +1157,30 @@ void MainWindow::controlButton(){
         cmdStatePrev = _CMD_CENTER;
         cmdStatePrev2 = _CMD_CENTER;
         cmdState = _CMD_CENTER;
-        ui->cmdStatus->setIcon(QIcon());
         plc->writeByte(0,_CMD_CENTER);
+        ui->cmdStatus->setIcon(QIcon());
 
         ui->controlButton->setIcon(controlOffIcon);
         ui->controlButton->setEnabled(false);
         permOperator = false;
         ui->analyzeButton->setIcon(calculatorOnIcon);
+
+        if (twoPassWelding) {
+
+            if (timeControlTwoPass) {
+                pass1detected = true;
+                pass2detected = false;
+                ui->passOneButton->setStyleSheet(SS_ON);
+                ui->passTwoButton->setStyleSheet(SS_OFF);
+            }
+
+            if (timeControlTwoPass || autoDetect2ndPass) {
+                ui->targetDriftLeft->setEnabled( false );
+                ui->targetDriftCenter->setEnabled( false );
+                ui->targetDriftRight->setEnabled( false );
+            }
+        }
+
 
         ui->plainTextEdit->appendPlainText(timeString() + message2);
 
@@ -1182,10 +1209,11 @@ void MainWindow::controlButton(){
 void MainWindow::startControl(){
 
     controlInitiated = true;
-    pass1detected = false;
-    pass2detected = false;
 
-    if (alignGuide2TrackCenter) plc->writeByte(0,_CMD_CENTER);
+    if (alignGuide2TrackCenter){
+        plc->writeByte(0,_CMD_CENTER);
+        ui->cmdStatus->setIcon(QIcon());
+    }
 
     weldCommands.clear();
     cmdBuffer.clear();
@@ -1211,17 +1239,71 @@ void MainWindow::startControl(){
         calcZParameters();
     }
 
+    if (twoPassWelding){
+
+        if (timeControlTwoPass){
+            histState = 0;
+            iProcessThread->algoSwitch = true;
+            algorithmType = algorithmTypePass1;     // Algo6() LINE DETECTION WITH MAIN EDGES
+            pass1detected = true;
+            pass2detected = false;
+            QTimer::singleShot(pass1TimerTime, this, SLOT(passTrSlot()));
+
+            ui->passOneButton->setStyleSheet(SS_ON);
+            ui->passTwoButton->setStyleSheet(SS_OFF);
+            ui->targetDriftLeft->setEnabled( true );
+            ui->targetDriftCenter->setEnabled( true );
+            ui->targetDriftRight->setEnabled( true );
+        }
+    }
+
+
     // time control: to stop the control after some amount of time after the beginning
     if (timeControl){
         timeControlCounter = 0;
         permTime = false;
-        startTimeControlCount = false;
+        startTimeControlCount = true;
     } else {
         timeControlCounter = 0;
         permTime = true;
         startTimeControlCount = false;
-
     }
+
+}
+
+void MainWindow::passTrSlot(){
+
+    pass1detected = false;
+    pass2detected = false;
+    QTimer::singleShot(passTrTimerTime, this, SLOT(pass2StartSlot()));
+
+    plc->writeByte(0,_CMD_CENTER);
+    ui->cmdStatus->setIcon(QIcon());
+    cmdBuffer.clear();
+    histState = 1;
+
+    ui->passOneButton->setStyleSheet(SS_TR);
+    ui->passTwoButton->setStyleSheet(SS_TR);
+    ui->targetDriftLeft->setEnabled( false );
+    ui->targetDriftCenter->setEnabled( false );
+    ui->targetDriftRight->setEnabled( false );
+}
+
+void MainWindow::pass2StartSlot(){
+
+    controlInitiated = alignGuide2TrackCenter; // to align guide again
+    histState = 2;
+    iProcessThread->algoSwitch = true;
+    algorithmType = algorithmTypePass2;     // Algo3() MAIN EDGES
+    pass1detected = false;
+    pass2detected = true;
+    QTimer::singleShot(pass2TimerTime, this, SLOT(controlButton()));
+
+    ui->passOneButton->setStyleSheet(SS_OFF);
+    ui->passTwoButton->setStyleSheet(SS_ON);
+    ui->targetDriftLeft->setEnabled( true );
+    ui->targetDriftCenter->setEnabled( true );
+    ui->targetDriftRight->setEnabled( true );
 }
 
 void MainWindow::emergencyButton(){
@@ -1406,7 +1488,7 @@ void MainWindow::processImage(bool deleteObject){
 
             int yOffset = offsetYCam;
             int fHeight = frameHeightCam;
-
+/*
             if (twoPassWelding && autoDetect2ndPass) {
                 switch(histState){
                     case 0: iProcessThread->algoSwitch = !iProcessThread->algoSwitch;
@@ -1425,6 +1507,21 @@ void MainWindow::processImage(bool deleteObject){
             } else {
                 iProcessThread->algoSwitch = true;
             }
+*/
+            if (twoPassWelding && autoDetect2ndPass) {
+
+                if (pass1detected && !pass2detected) {
+                    iProcessThread->algoSwitch = true;
+                    algorithmType = algorithmTypePass1;     // Algo6() LINE DETECTION WITH MAIN EDGES
+                } else if (!pass1detected && pass2detected) {
+                    iProcessThread->algoSwitch = true;
+                    algorithmType = algorithmTypePass2;     // Algo3() MAIN EDGES
+                } else {
+                    iProcessThread->algoSwitch = false;
+                }
+            } else {
+                iProcessThread->algoSwitch = true;
+            }
 
             if (applyCameraEnhancements) {
                 //targetArea = imageFileChanged.copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
@@ -1439,7 +1536,9 @@ void MainWindow::processImage(bool deleteObject){
             iProcessThread->targetArea = targetArea.copy(0,0,targetArea.width(), targetArea.height());
             thinJointAlgoActive = true;     // without laser - VERTICAL SEARCH
             iProcessThread->imageCaptureTime = imageCaptureTime;
-            iProcessThread->start();
+
+            if (iProcessThread->algoSwitch)
+                iProcessThread->start();
         }
     }
 }
@@ -1958,6 +2057,7 @@ void MainWindow::readSettings(){
             timeLimit = settings->value("tlmt", _TIME_LIMIT).toInt();
             lineDetection = settings->value("ldtc", _LINE_DETECT).toBool();
             lineScoreLimit = settings->value("scor", _LINE_SCORE).toInt();
+            timeControlTwoPass = settings->value("tctl2pass", _TIME_CONTROL_2PASS).toBool();
         settings->endGroup();
 
         settings->beginGroup("ipro");
@@ -2038,6 +2138,9 @@ void MainWindow::readSettings(){
             zControlActive = settings->value("zctrl", _Z_CONTROL).toBool();
             distanceUpTol = settings->value("uptol", _UP_TOL).toFloat();
             distanceDownTol = settings->value("dwtol", _DOWN_TOL).toFloat();
+            pass1TimerTime = settings->value("p1t", _PASS1_TIME).toInt();
+            passTrTimerTime = settings->value("pgt", _PASSTR_TIME).toInt();
+            pass2TimerTime = settings->value("p2t", _PASS2_TIME).toInt();
 
         settings->endGroup();
 
@@ -2067,6 +2170,7 @@ void MainWindow::readSettings(){
         timeLimit = _TIME_LIMIT;
         lineDetection = _LINE_DETECT;
         lineScoreLimit = _LINE_SCORE;
+        timeControlTwoPass = _TIME_CONTROL_2PASS;
 
         iprocessInterval = _IPROCESS_INT;
         frameWidth = _FRAME_WIDTH;
@@ -2140,6 +2244,10 @@ void MainWindow::readSettings(){
         distanceUpTol = _UP_TOL;
         distanceDownTol = _DOWN_TOL;
 
+        pass1TimerTime = _PASS1_TIME;
+        passTrTimerTime = _PASSTR_TIME;
+        pass2TimerTime = _PASS2_TIME;
+
         statusMessage = "ini dosyası bulunamadı";
     }
 }
@@ -2186,6 +2294,8 @@ void MainWindow::writeSettings(){
         QVariant ldtc(lineDetection);
             settings->setValue("ldtc", ldtc.toString());
         settings->setValue("scor", QString::number(lineScoreLimit));
+        QVariant tctl2pass(timeControlTwoPass);
+            settings->setValue("tctl2pass", tctl2pass.toString());
 
     settings->endGroup();
 
@@ -2266,7 +2376,12 @@ void MainWindow::writeSettings(){
 
         settings->setValue("uptol", QString::number(distanceUpTol));
         settings->setValue("dwtol", QString::number(distanceDownTol));
-    settings->endGroup();
+
+        settings->setValue("p1t", QString::number(pass1TimerTime));
+        settings->setValue("pgt", QString::number(passTrTimerTime));
+        settings->setValue("p2t", QString::number(pass2TimerTime));
+
+        settings->endGroup();
 
     settings->sync();
 }
@@ -2601,7 +2716,7 @@ void MainWindow::testEdit(){
 
 void MainWindow::testButton(){
 
-    //mak_aktif_now = !mak_aktif_now;
+    mak_aktif_now = !mak_aktif_now;
     //qDebug() << "Mak Aktif:" << mak_aktif_now;
     /*
     int *array = new int[5];
@@ -2743,7 +2858,7 @@ void MainWindow::plcReadings(){
             ui->plainTextEdit->appendPlainText("Makine çalışıyor");
 
             if (hardControlStart)
-                controlButton();    //controlInitiated = true;
+                controlButton(); //controlInitiated = true;
 
             if (timeControl) {
                 timeControlCounter = 0;
@@ -2753,7 +2868,7 @@ void MainWindow::plcReadings(){
 
         if (!mak_aktif_now && mak_aktif_old) {
             ui->plainTextEdit->appendPlainText("Makine durdu");
-            if (hardControlStart)
+            if (hardControlStart && controlOn)
                 controlButton();    //controlInitiated = true;
         }
         //else alignGuide2TrackCenter = false;
@@ -3687,11 +3802,11 @@ void MainWindow::on_targetDriftLeft_clicked(){
     switch(histState){
         case 0: pass1_offsetXposDelta = pass1_offsetXpos - offsetXpos;
                 pass1_offsetXCamDelta = pass1_offsetXCam - offsetXCam;
-                qDebug() << pass1_offsetXposDelta << " " << pass1_offsetXCamDelta;
+                //qDebug() << pass1_offsetXposDelta << " " << pass1_offsetXCamDelta;
                 break;
         case 2: pass2_offsetXposDelta = pass2_offsetXpos - offsetXpos;
                 pass2_offsetXCamDelta = pass2_offsetXCam - offsetXCam;
-                qDebug() << pass2_offsetXposDelta << " " << pass2_offsetXCamDelta;
+                //qDebug() << pass2_offsetXposDelta << " " << pass2_offsetXCamDelta;
                 break;
     }
 

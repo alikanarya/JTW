@@ -1883,7 +1883,7 @@
       <rect>
        <x>370</x>
        <y>440</y>
-       <width>181</width>
+       <width>201</width>
        <height>17</height>
       </rect>
      </property>
@@ -1898,7 +1898,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Belirli bir süre sonra kaynak komutlarını kes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>Kaynak Yapma Süresi Kontrolü</string>
+      <string>Kaynak Süresi Kontrolü</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_16">
@@ -2070,7 +2070,7 @@
      <property name="geometry">
       <rect>
        <x>370</x>
-       <y>480</y>
+       <y>490</y>
        <width>211</width>
        <height>17</height>
       </rect>
@@ -2093,7 +2093,7 @@
      <property name="geometry">
       <rect>
        <x>370</x>
-       <y>500</y>
+       <y>510</y>
        <width>211</width>
        <height>17</height>
       </rect>
@@ -2110,6 +2110,29 @@
      </property>
      <property name="text">
       <string>2.Pasoya Oto Geçiş</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="twoPassTimeControlBox">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>530</y>
+       <width>201</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Belirli bir süre sonra kaynak komutlarını kes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>İki Paso Süre Kontrolü</string>
      </property>
     </widget>
     <zorder>label_15</zorder>
@@ -2164,6 +2187,7 @@
     <zorder>label_22</zorder>
     <zorder>twoPassWeldingBox</zorder>
     <zorder>autoDetect2ndPassBox</zorder>
+    <zorder>twoPassTimeControlBox</zorder>
    </widget>
    <widget class="QWidget" name="tab_2">
     <attribute name="title">
@@ -3515,7 +3539,7 @@
   <slot>editLineScore()</slot>
  </slots>
  <buttongroups>
-  <buttongroup name="colorGrayGroup"/>
   <buttongroup name="laserGroup"/>
+  <buttongroup name="colorGrayGroup"/>
  </buttongroups>
 </ui>

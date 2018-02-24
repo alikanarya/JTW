@@ -141,7 +141,7 @@ public slots:
     void Algo5(imgProcess *iprocess);   // woLASER: value > contrast matrix > houghTr > calcAvgDistAndAngleOfMajors
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
     void Algo7(imgProcess *iprocess);   // woLASER: edge > houghTr > detectScanHorizontal
-    void Algo8(int areaNo);             // woLASER: edge > houghTr > detectMainEdges with multiple regions
+    void Algo8(int center);             // woLASER: edge > houghTr > detectMainEdges with multiple regions, if center=0 histogram center, center>0 specific denter
     void histMultAreas();
 
     void update();
