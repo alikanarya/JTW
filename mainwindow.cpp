@@ -326,8 +326,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->rightButton->setEnabled( false );
     ui->rightButton->hide();
 
-    ui->passOneButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
-    ui->passTwoButton->setEnabled( twoPassWelding && !autoDetect2ndPass );
+    ui->passOneButton->setEnabled( twoPassWelding && !autoDetect2ndPass && !timeControlTwoPass);
+    ui->passTwoButton->setEnabled( twoPassWelding && !autoDetect2ndPass && !timeControlTwoPass);
     ui->targetDriftLeft->setEnabled( false );
     ui->targetDriftCenter->setEnabled( false );
     ui->targetDriftRight->setEnabled( false );
@@ -337,6 +337,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         histState = histStatePrev = -1;
     } else {
         autoDetect2ndPass = false;
+        timeControlTwoPass = false;
         ui->passOneButton->hide();
         ui->passTwoButton->hide();
         ui->targetDriftLeft->hide();
@@ -577,6 +578,7 @@ void MainWindow::camConnected(){
 
     if( !alarmCameraOnlineLock ) {
         //qDebug()<<Q_FUNC_INFO;
+        if (trackOnBoot) trackButton();
         if (play && camStreamType == 0) {
             playStream->setFps(fpsTarget);
             //playStream->startCapture();
@@ -640,187 +642,7 @@ void MainWindow::killCamStreamThread(){
     }*/
 }
 
-/* OBSOLETE */void MainWindow:: plcControl(){
-
-    controlThreadCount++;
-
-    //ui->plainTextEdit->appendPlainText(QString::number(controlThreadCount));
-    checker();
-
-    int state = _CMD_STOP;
-    //int stateZ = _CMD_Z_CENTER;
-
-    if ( readMachineStatus || readDistance || readWeldSeam ) {
-
-        if (controlThreadCount % 4 == 0){
-
-            threadPLCControl->commandRead = true;
-
-            if (hardControlStart && readMachineStatus){
-
-                if (mak_aktif_now && !mak_aktif_old) {
-
-                    ui->plainTextEdit->appendPlainText("Makine çalışıyor");
-                    controlInitiated = true;
-
-                    if (timeControl) {
-                        timeControlCounter = 0;
-                        startTimeControlCount = true;
-                    }
-                }
-
-                if (!mak_aktif_now && mak_aktif_old) {
-                    ui->plainTextEdit->appendPlainText("Makine durdu");
-
-                }
-                //else alignGuide2TrackCenter = false;
-
-                mak_aktif_old = mak_aktif_now;
-            }
-
-            if ( readDistance ) {
-
-                distance = 300 - ((distanceRaw * 1.0) / 27648.0) * 220.0;
-                ui->labelDistance->setText( QString::number(distance, 'f', 1) );
-            }
-        }
-    }
-    if (!controlPause){
-
-        // prepare plc command
-        if (controlThreadCount == controlThreadCountSize) {
-
-            state = _CMD_CHECK;
-
-            controlThreadCount = 0;
-        } else {
-            if (emergencyStop){
-
-                state = _CMD_EMERGENCY_ACT;
-            } else {
-
-//                if (cameraChecker->cameraDown || !play || detectionError || !permOperator){
-                if (imageGetter->cameraDown || !play || !permOperator){
-
-                    state = _CMD_STOP;
-                } else {
-                    if (play && trackOn && controlOn && permPLC && permTime){
-
-                        if (hardControlStart) {
-
-                            if (mak_aktif_now)
-                                state = cmdState;   // Weld Command from image processing
-                        } else {
-                            state = cmdState;   // Weld Command from image processing
-                        }
-
-                        //stateZ = cmdZState; // Z-Control command
-                    } else
-                        state = _CMD_STOP;
-                }
-            }
-        }
-
-
-        goX = false;
-
-        if (controlInitiated){
-            goX = false;    //dont send command to plc when control is initiated firstly
-            //controlInitiated = false;
-        } else {
-            if (state != cmdStatePrev) {
-                goX = true;
-
-                if (state == _CMD_RIGHT)
-                    ui->cmdStatus->setIcon(cmd2LeftIcon);
-                else if (state == _CMD_LEFT)
-                    ui->cmdStatus->setIcon(cmd2RightIcon);
-                else if (state != _CMD_CHECK)
-                    ui->cmdStatus->setIcon(QIcon());
-            }
-        }
-        /*
-        if (state != cmdStatePrev) {
-
-            //if (hardControlStart && alignGuide2TrackCenter){
-            if (controlInitiated){
-                goX = false;    //dont send command to plc when control is initiated firstly
-            } else {
-
-                if (alignGuide2TrackCenter && controlInitiated) {
-                    goX = false;
-                } else {
-                    goX = true;
-
-                    if (state == _CMD_RIGHT)
-                        ui->cmdStatus->setIcon(cmd2LeftIcon);
-                    else if (state == _CMD_LEFT)
-                        ui->cmdStatus->setIcon(cmd2RightIcon);
-                    else if (state != _CMD_CHECK)
-                        ui->cmdStatus->setIcon(QIcon());
-                }
-            }
-        }
-        */
-        if (goX || !cmdSended || threadPLCControl->commandRead) {
-
-            if (!PLCSIM) {
-                cmdSended = false;
-
-                if (!threadPLCControl->isRunning()){
-
-                    threadPLCControl->commandState = state;
-
-                    threadPLCControl->start();
-
-                    cmdSended = true;
-                }
-
-            } else {
-                cmdSended = true;
-            }
-        }
-
-        if (state!= _CMD_CHECK) {
-            cmdStatePrev = state;
-        }
-    }
-/*
-            if (state != _CMD_CHECK || state != _CMD_EMERGENCY_ACT) {
-                if (controlDelay == 0){
-                    if (!threadPLCControl->isRunning()){
-                        threadPLCControl->commandState = state;
-                        threadPLCControl->start();
-                        cmdSended = true;
-                    }
-                } else if (controlDelayValid){
-                    weldData wd;
-                    wd.state = state;
-                    wd.time = timeSystem.getSystemTimeMsec();
-                    weldCommands.append(wd);
-
-                    if (weldCommands.size() >= weldCommandsSize){
-                        int first = weldCommands[0].state;
-
-                        //ui->plainTextEdit->appendPlainText("st: "+QString::number(first)+" diff: "+QString::number(wd.time-weldCommands[0].time)+"size:"+QString::number(weldCommands.size()));
-                        if (!threadPLCControl->isRunning()){
-                            threadPLCControl->commandState = first;
-                            threadPLCControl->start();
-                            cmdSended = true;
-                        }
-                        weldCommands.removeFirst();
-                        //ui->plainTextEdit->appendPlainText(QString::number(cmdState)+"plc "+QString::number(timeSystem.getSystemTimeMsec()));
-                    }
-                }
-            } else {
-                if (!threadPLCControl->isRunning()){
-                    threadPLCControl->commandState = state;
-                    threadPLCControl->start();
-                    cmdSended = true;
-                }
-            }
-*/
-}
+/* OBSOLETE */void MainWindow:: plcControl(){}
 
 void MainWindow::updateSn(){
     //QVariant boolx(permPLC);
@@ -1071,7 +893,6 @@ void MainWindow::guideButton(){
 void MainWindow::on_guideAlignButton_clicked(){
 
     if (showGuide && trackOn && !controlOn){
-        //alignGuide2TrackCenter = true;
         int _offsetX = offsetX + error * mapFactorX;
 
         if ( _offsetX >= (offsetXmin+10) && ((_offsetX + frameWidth) <= (offsetXmax - 10)) ){
@@ -1488,40 +1309,43 @@ void MainWindow::processImage(bool deleteObject){
 
             int yOffset = offsetYCam;
             int fHeight = frameHeightCam;
-/*
-            if (twoPassWelding && autoDetect2ndPass) {
-                switch(histState){
-                    case 0: iProcessThread->algoSwitch = !iProcessThread->algoSwitch;
-                            algorithmType = algorithmTypePass1;     // Algo6() LINE DETECTION WITH MAIN EDGES
-                            break;
-                    case 1: iProcessThread->algoSwitch = false; break;
-                    case 2: iProcessThread->algoSwitch = !iProcessThread->algoSwitch;
-                            algorithmType = algorithmTypePass2;     // Algo8() MAIN EDGES WITH AREAS
-                            break;
-                    default: iProcessThread->algoSwitch = false; break;
-                }
-                if (!iProcessThread->algoSwitch) {  // for histogram
-                    yOffset = 0;
-                    fHeight = lastData->image->height();
-                }
-            } else {
-                iProcessThread->algoSwitch = true;
-            }
-*/
-            if (twoPassWelding && autoDetect2ndPass) {
 
-                if (pass1detected && !pass2detected) {
-                    iProcessThread->algoSwitch = true;
-                    algorithmType = algorithmTypePass1;     // Algo6() LINE DETECTION WITH MAIN EDGES
-                } else if (!pass1detected && pass2detected) {
-                    iProcessThread->algoSwitch = true;
-                    algorithmType = algorithmTypePass2;     // Algo3() MAIN EDGES
-                } else {
-                    iProcessThread->algoSwitch = false;
+            if (twoPassWelding) {
+
+                if (autoDetect2ndPass && !timeControlTwoPass){
+
+                    switch(histState){
+                        case 0: iProcessThread->algoSwitch = !iProcessThread->algoSwitch;
+                                algorithmType = algorithmTypePass1;     // Algo6() LINE DETECTION WITH MAIN EDGES
+                                break;
+                        case 1: iProcessThread->algoSwitch = false; break;
+                        case 2: iProcessThread->algoSwitch = !iProcessThread->algoSwitch;
+                                algorithmType = algorithmTypePass2;     // Algo8() MAIN EDGES WITH AREAS
+                                break;
+                        default: iProcessThread->algoSwitch = false; break;
+                    }
+                    if (!iProcessThread->algoSwitch) {  // for histogram
+                        yOffset = 0;
+                        fHeight = lastData->image->height();
+                    }
+                }
+
+                if (!autoDetect2ndPass && timeControlTwoPass){
+
+                    if (pass1detected && !pass2detected) {
+                        iProcessThread->algoSwitch = true;
+                        algorithmType = algorithmTypePass1;     // Algo6() LINE DETECTION WITH MAIN EDGES
+                    } else if (!pass1detected && pass2detected) {
+                        iProcessThread->algoSwitch = true;
+                        algorithmType = algorithmTypePass2;     // Algo3() MAIN EDGES
+                    } else {
+                        iProcessThread->algoSwitch = false;
+                    }
                 }
             } else {
                 iProcessThread->algoSwitch = true;
             }
+
 
             if (applyCameraEnhancements) {
                 //targetArea = imageFileChanged.copy( offsetX, offsetY, frameWidth, frameHeight );    // take target image
@@ -1537,8 +1361,14 @@ void MainWindow::processImage(bool deleteObject){
             thinJointAlgoActive = true;     // without laser - VERTICAL SEARCH
             iProcessThread->imageCaptureTime = imageCaptureTime;
 
-            if (iProcessThread->algoSwitch)
+            if (!twoPassWelding) {
                 iProcessThread->start();
+            } else {
+                if (autoDetect2ndPass && !timeControlTwoPass)
+                    iProcessThread->start();
+                if (!autoDetect2ndPass && timeControlTwoPass && iProcessThread->algoSwitch)
+                    iProcessThread->start();
+            }
         }
     }
 }
@@ -1608,7 +1438,7 @@ void MainWindow::imageProcessingCompleted(int time){
             // in order to apply the command, it should be same for some analysis number
             // to prevent fluctions
             cmdBuffer.append(cmdNow);
-            //cmdBufferTime.append(time); // conrol delay system disabled
+            //cmdBufferTime.append(time); // control delay system disabled
 
             if (cmdBuffer.size() > cmdBufferMaxSize) {
                 cmdBuffer.removeFirst();
@@ -1673,13 +1503,13 @@ void MainWindow::imageProcessingCompleted(int time){
                }
                 //qDebug() << "aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
             } else {
-                controlButton();
-                showSetupError();
+                // *** controlButton();
+                // *** showSetupError();
+                ui->plainTextEdit->appendPlainText("KAMERA - TORCH HİZALAMASINDA ÇOK FAZLA HATA VAR !!!");
                 //qDebug() << "not aligned offsetX/min: " << _offsetX << "-" << offsetXmin;
             }
 
             repaintGuide();
-            //alignGuide2TrackCenter = false;
         } else {
             cmdStatePrev = _CMD_CENTER;
             cmdStatePrev2 = _CMD_CENTER;
@@ -2033,6 +1863,7 @@ void MainWindow::readSettings(){
             urlCam.setUrl(settings->value("urlCam", _URL_CAM).toString());
             urlCamStream.setUrl(settings->value("urlCamStrm", _URL_CAM_STREAM).toString());
             playCamonBoot = settings->value("play", _PLAY_CAM_ONBOOT).toBool();
+            trackOnBoot = settings->value("track", true).toBool();
             fpsTarget = settings->value("fps", _FPS).toInt();
             focusCheckBeforeControl = settings->value("fcschk", _FOCUS_CHECK).toBool();
             autoFocusBeforeControl = settings->value("autofcs", _AUTO_FOCUS).toBool();
@@ -2149,6 +1980,7 @@ void MainWindow::readSettings(){
         urlCam.setUrl(_URL_CAM);
         urlCamStream.setUrl(_URL_CAM_STREAM);
         playCamonBoot = _PLAY_CAM_ONBOOT;
+        trackOnBoot = true;
         fpsTarget = _FPS;
         focusCheckBeforeControl = _FOCUS_CHECK;
         autoFocusBeforeControl = _AUTO_FOCUS;
@@ -2260,6 +2092,8 @@ void MainWindow::writeSettings(){
         settings->setValue("urlCamStrm", urlCamStream.toString());
         QVariant play(playCamonBoot);
             settings->setValue("play", play.toString());
+        QVariant track(trackOnBoot);
+            settings->setValue("track", track.toString());
         settings->setValue("fps", QString::number(fpsTarget));
         QVariant fcschk(focusCheckBeforeControl);
             settings->setValue("fcschk", fcschk.toString());
@@ -2857,7 +2691,7 @@ void MainWindow::plcReadings(){
         if (mak_aktif_now && !mak_aktif_old) {
             ui->plainTextEdit->appendPlainText("Makine çalışıyor");
 
-            if (hardControlStart)
+            if (hardControlStart && !controlOn)
                 controlButton(); //controlInitiated = true;
 
             if (timeControl) {
@@ -2871,7 +2705,7 @@ void MainWindow::plcReadings(){
             if (hardControlStart && controlOn)
                 controlButton();    //controlInitiated = true;
         }
-        //else alignGuide2TrackCenter = false;
+
         mak_aktif_old = mak_aktif_now;
     }
 }
@@ -3763,7 +3597,7 @@ double MainWindow::findCurveFitting(QList<double> x1, QList<double> y1, int iter
 }
 
 void MainWindow::on_passOneButton_clicked(){
-    if (twoPassWelding && !autoDetect2ndPass) {
+    if (twoPassWelding && !autoDetect2ndPass && !timeControlTwoPass) {
         algorithmType = algorithmTypePass1;   // Algo6() LINE DETECTION WITH MAIN EDGES
         ui->passOneButton->setStyleSheet(SS_ON);
         ui->passTwoButton->setStyleSheet(SS_OFF);
@@ -3771,7 +3605,7 @@ void MainWindow::on_passOneButton_clicked(){
 }
 
 void MainWindow::on_passTwoButton_clicked(){
-    if (twoPassWelding && !autoDetect2ndPass) {
+    if (twoPassWelding && !autoDetect2ndPass && !timeControlTwoPass) {
         algorithmType = algorithmTypePass2;  // Algo3() MAIN EDGES
         ui->passOneButton->setStyleSheet(SS_OFF);
         ui->passTwoButton->setStyleSheet(SS_ON);

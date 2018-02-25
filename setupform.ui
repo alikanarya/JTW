@@ -2092,9 +2092,9 @@
     <widget class="QCheckBox" name="autoDetect2ndPassBox">
      <property name="geometry">
       <rect>
-       <x>370</x>
+       <x>386</x>
        <y>510</y>
-       <width>211</width>
+       <width>101</width>
        <height>17</height>
       </rect>
      </property>
@@ -2109,15 +2109,15 @@
       <string>Makineden Kaynak Başlangıcı</string>
      </property>
      <property name="text">
-      <string>2.Pasoya Oto Geçiş</string>
+      <string>Geçiş Tespit</string>
      </property>
     </widget>
     <widget class="QCheckBox" name="twoPassTimeControlBox">
      <property name="geometry">
       <rect>
-       <x>370</x>
-       <y>530</y>
-       <width>201</width>
+       <x>492</x>
+       <y>510</y>
+       <width>101</width>
        <height>17</height>
       </rect>
      </property>
@@ -2132,7 +2132,7 @@
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Belirli bir süre sonra kaynak komutlarını kes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>İki Paso Süre Kontrolü</string>
+      <string>Geçiş Süre</string>
      </property>
     </widget>
     <zorder>label_15</zorder>

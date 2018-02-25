@@ -181,6 +181,7 @@ public:
     QUrl urlCamStream;                  // camera url
     int camStreamType = 0;              // 0: stream (rtsp), 1: jpeg
     bool playCamonBoot;                 // play camera on app. start
+    bool trackOnBoot = false;           // start tracking on app. start
     getImage *imageGetter;              // camera image request & retrieve class
     getImage *cameraChecker;
     getImage *camApi;

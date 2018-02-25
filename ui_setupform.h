@@ -693,11 +693,11 @@ public:
         twoPassWeldingBox->setFont(font2);
         autoDetect2ndPassBox = new QCheckBox(tab);
         autoDetect2ndPassBox->setObjectName(QStringLiteral("autoDetect2ndPassBox"));
-        autoDetect2ndPassBox->setGeometry(QRect(370, 510, 211, 17));
+        autoDetect2ndPassBox->setGeometry(QRect(386, 510, 101, 17));
         autoDetect2ndPassBox->setFont(font2);
         twoPassTimeControlBox = new QCheckBox(tab);
         twoPassTimeControlBox->setObjectName(QStringLiteral("twoPassTimeControlBox"));
-        twoPassTimeControlBox->setGeometry(QRect(370, 530, 201, 17));
+        twoPassTimeControlBox->setGeometry(QRect(492, 510, 101, 17));
         twoPassTimeControlBox->setFont(font2);
         tabWidget->addTab(tab, QString());
         label_15->raise();
@@ -1274,11 +1274,11 @@ public:
 #ifndef QT_NO_TOOLTIP
         autoDetect2ndPassBox->setToolTip(QApplication::translate("setupForm", "Makineden Kaynak Ba\305\237lang\304\261c\304\261", 0));
 #endif // QT_NO_TOOLTIP
-        autoDetect2ndPassBox->setText(QApplication::translate("setupForm", "2.Pasoya Oto Ge\303\247i\305\237", 0));
+        autoDetect2ndPassBox->setText(QApplication::translate("setupForm", "Ge\303\247i\305\237 Tespit", 0));
 #ifndef QT_NO_TOOLTIP
         twoPassTimeControlBox->setToolTip(QApplication::translate("setupForm", "<html><head/><body><p>Belirli bir s\303\274re sonra kaynak komutlar\304\261n\304\261 kes</p></body></html>", 0));
 #endif // QT_NO_TOOLTIP
-        twoPassTimeControlBox->setText(QApplication::translate("setupForm", "\304\260ki Paso S\303\274re Kontrol\303\274", 0));
+        twoPassTimeControlBox->setText(QApplication::translate("setupForm", "Ge\303\247i\305\237 S\303\274re", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("setupForm", "Ayarlar", 0));
         labelTarget2->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("setupForm", "Grafik", 0));

@@ -1,7 +1,6 @@
 * histogramAnalysis; histogramFiltered and min/max bandWidth selections will be parametrised
 * popup windows if plc and cam connection failure
 * plc cmd check, live state-cmd status of the queue when plc off, begin/end cmds if autoalignment or not, plcsim stat?
-* track on at start up
 * 2nd pass detection algo; detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
 * system test fn for timings, process times-delays etc
 * plc permision re activate
@@ -11,6 +10,12 @@
 * mainwindow height smaller, bottom not shown on screen
 * drift amount at passes to settings.ini
 
+* tracking on app startup implemented, from ini file
+* hardcontrol bug fixes
+* two pass; autodetect and timecontrol interlock
+* two pass; autodetect and timecontrol coding corrections
+* 2nd pass autoalignment problems if there is a high drift in cam setup, restarts the control continuously,
+high drift control stopping disabled for now
 * pass 1 algo: Algo6; line detection with main edges, pass 2 algo: Algo1; main edges
 * time control procedure for 2 pass welding
 * Algo8 input argument as specified center in setupForm, optional to histogram center

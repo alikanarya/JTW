@@ -1164,6 +1164,7 @@ void setupForm::getParameters(){
     histAreaNo = w->histAreaNo;
     twoPassWelding = w->twoPassWelding;
     autoDetect2ndPass = w->autoDetect2ndPass;
+    timeControlTwoPass = w->timeControlTwoPass;
 
     ui->labelMAFilterSize->setText( QString::number(maFilterKernelSize) );
     ui->maFilterSizeSlider->setValue( (int)(maFilterKernelSize/2-1) );
@@ -1183,7 +1184,7 @@ void setupForm::getParameters(){
     ui->twoPassWeldingBox->setChecked( twoPassWelding );
     ui->autoDetect2ndPassBox->setChecked( autoDetect2ndPass );
     ui->autoDetect2ndPassBox->setEnabled(twoPassWelding);
-    ui->twoPassTimeControlBox->setChecked( w->timeControlTwoPass );
+    ui->twoPassTimeControlBox->setChecked( timeControlTwoPass );
     ui->twoPassTimeControlBox->setEnabled(twoPassWelding);
 }
 
@@ -2646,6 +2647,14 @@ void setupForm::on_twoPassWeldingBox_clicked(bool checked){
 
 void setupForm::on_autoDetect2ndPassBox_clicked(){
     autoDetect2ndPass = ui->autoDetect2ndPassBox->isChecked();
+    timeControlTwoPass = !autoDetect2ndPass;
+    ui->twoPassTimeControlBox->setChecked(timeControlTwoPass);
+}
+
+void setupForm::on_twoPassTimeControlBox_clicked(){
+    timeControlTwoPass = ui->twoPassTimeControlBox->isChecked();
+    autoDetect2ndPass = !timeControlTwoPass;
+    ui->autoDetect2ndPassBox->setChecked(autoDetect2ndPass);
 }
 
 void setupForm::on_histAreaNoSlider_sliderMoved(int position){
@@ -2781,3 +2790,6 @@ void setupForm::on_histCornerPrecSlider_sliderReleased(){
 //        cv::imshow("Contours", contourImage);
 //        cv::waitKey(0);
 //}
+
+void setupForm::on_twoPassTimeControlBox_stateChanged(int arg1){ }
+

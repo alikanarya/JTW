@@ -92,6 +92,7 @@ public:
 
     bool twoPassWelding;
     bool autoDetect2ndPass;
+    bool timeControlTwoPass;
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
@@ -212,6 +213,8 @@ private slots:
     void on_regionBox_currentIndexChanged(int index);
     void on_histCornerPrecSlider_sliderMoved(int position);
     void on_histCornerPrecSlider_sliderReleased();
+    void on_twoPassTimeControlBox_stateChanged(int arg1);
+    void on_twoPassTimeControlBox_clicked();
 };
 
 #endif // SETUPFORM_H
