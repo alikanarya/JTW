@@ -1,14 +1,16 @@
-* histogramAnalysis; histogramFiltered and min/max bandWidth selections will be parametrised
+* histogramAnalysis; histogramFiltered and min/max bandWidth selections will be parametrised (bright/dark analysis)
 * popup windows if plc and cam connection failure
 * plc cmd check, live state-cmd status of the queue when plc off, begin/end cmds if autoalignment or not, plcsim stat?
 * 2nd pass detection algo; detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
 * system test fn for timings, process times-delays etc
 * plc permision re activate
 ** Z control
-** camera settngs printscree/backup
+** camera settngs printscree/backup, app backup, internet connection
 * guide target witdh increase?
 * mainwindow height smaller, bottom not shown on screen
 * drift amount at passes to settings.ini
+
+* settings and setup forms passwords re-enabled
 
 * tracking on app startup implemented, from ini file
 * hardcontrol bug fixes

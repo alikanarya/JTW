@@ -236,6 +236,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="analyzeButton">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -1332,7 +1335,7 @@ PASO</string>
      <x>0</x>
      <y>0</y>
      <width>794</width>
-     <height>21</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>

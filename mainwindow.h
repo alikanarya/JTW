@@ -83,7 +83,7 @@
 #define _TIME_CONTROL_2PASS true
 
 
-#define _PWD_SETTINGS       "nokts"
+#define _PWD_SETTINGS       "orn"
 #define _PWD_SETUP          "ryhn"
 
 #define _CMD_CENTER         0

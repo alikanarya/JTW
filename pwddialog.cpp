@@ -26,8 +26,8 @@ void pwdDialog::acceptButton(){
     pwd = ui->lineEdit->text();
 
     if (flag == 0){
-        if(true){
-        //if(QString::compare(pwd, _PWD_SETTINGS, Qt::CaseSensitive) == 0){
+//        if(true){
+        if(QString::compare(pwd, _PWD_SETTINGS, Qt::CaseSensitive) == 0){
             w->settingsPWDOK = true;
             w->showSettingsForm();
             this->close();
@@ -36,8 +36,8 @@ void pwdDialog::acceptButton(){
             displayWarning();
         }
     } else if (flag == 1){
-        if(true){
-//        if(QString::compare(pwd, _PWD_SETUP, Qt::CaseSensitive) == 0){
+//        if(true){
+        if(QString::compare(pwd, _PWD_SETUP, Qt::CaseSensitive) == 0){
             w->setupPWDOK = true;
             w->showSetupForm();
             this->close();
@@ -59,8 +59,12 @@ void pwdDialog::displayWarning(){
 
     QMessageBox msgBox;
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setText("Yanlýþ Þifre!");
-    msgBox.setInformativeText("Büyük/Küçük harf duyarlýdýr.");
+    QString str1 = "Yanlýþ Þifre!";
+    QString str2 = "Büyük/Küçük harf duyarlýdýr.";
+    msgBox.setText(str1);
+    msgBox.setInformativeText(str2);
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.setDefaultButton(QMessageBox::Ok);
     msgBox.exec();
 }
 

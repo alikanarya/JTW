@@ -160,6 +160,7 @@ public:
         plainTextEdit->setReadOnly(true);
         analyzeButton = new QPushButton(centralWidget);
         analyzeButton->setObjectName(QStringLiteral("analyzeButton"));
+        analyzeButton->setEnabled(false);
         analyzeButton->setGeometry(QRect(20, 38, 32, 32));
         QIcon icon4;
         icon4.addFile(QStringLiteral(":/resources/calculator-icon.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -482,7 +483,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 794, 21));
+        menuBar->setGeometry(QRect(0, 0, 794, 27));
         MainWindow->setMenuBar(menuBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
