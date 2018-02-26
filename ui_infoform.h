@@ -77,7 +77,7 @@ public:
         label_3->setAlignment(Qt::AlignCenter);
         label_4 = new QLabel(infoForm);
         label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setGeometry(QRect(5, 120, 392, 32));
+        label_4->setGeometry(QRect(5, 130, 392, 32));
         QFont font2;
         font2.setFamily(QStringLiteral("Arial"));
         font2.setPointSize(10);
@@ -89,6 +89,7 @@ public:
         label_5->setObjectName(QStringLiteral("label_5"));
         label_5->setGeometry(QRect(20, 176, 361, 20));
         label_5->setFont(font2);
+        label_5->setAlignment(Qt::AlignCenter);
 
         retranslateUi(infoForm);
 
@@ -101,8 +102,8 @@ public:
         label->setText(QApplication::translate("infoForm", "JTW", 0));
         label_2->setText(QApplication::translate("infoForm", "Joint Tracker for Welding", 0));
         label_3->setText(QApplication::translate("infoForm", "Kaynak Takibi", 0));
-        label_4->setText(QApplication::translate("infoForm", "ver 2.3.17, \302\251Orun Elektronik, 2017", 0));
-        label_5->setText(QApplication::translate("infoForm", "T\303\274m haklar\304\261 sakl\304\261d\304\261r. All rights reserved.", 0));
+        label_4->setText(QApplication::translate("infoForm", "ver 2.3.19,   \302\251Orun Elektronik, 2017", 0));
+        label_5->setText(QApplication::translate("infoForm", "T\303\274m haklar\304\261 sakl\304\261d\304\261r. (All rights reserved.)", 0));
     } // retranslateUi
 
 };

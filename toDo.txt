@@ -4,14 +4,14 @@
 * 2nd pass detection algo; detectMainEdges natural breaks x coors and histogram x coors comparison for 2nd pass detection
 * system test fn for timings, process times-delays etc
 * plc permision re activate
-** Z control
 ** camera settngs printscree/backup, app backup, internet connection
 * guide target witdh increase?
 * mainwindow height smaller, bottom not shown on screen
 * drift amount at passes to settings.ini
 
+* after 2nd pass done automatic application restarting introduced
+* zm control for to elevate the torch at the beginning of the 2nd pass programmed
 * settings and setup forms passwords re-enabled
-
 * tracking on app startup implemented, from ini file
 * hardcontrol bug fixes
 * two pass; autodetect and timecontrol interlock

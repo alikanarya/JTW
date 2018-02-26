@@ -132,7 +132,7 @@
    <property name="geometry">
     <rect>
      <x>5</x>
-     <y>120</y>
+     <y>130</y>
      <width>392</width>
      <height>32</height>
     </rect>
@@ -146,7 +146,7 @@
     </font>
    </property>
    <property name="text">
-    <string>ver 2.3.18   ©Orun Elektronik, 2017</string>
+    <string>ver 2.3.19,   ©Orun Elektronik, 2017</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -170,7 +170,10 @@
     </font>
    </property>
    <property name="text">
-    <string>Tüm hakları saklıdır. All rights reserved.</string>
+    <string>Tüm hakları saklıdır. (All rights reserved.)</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

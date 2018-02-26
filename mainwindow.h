@@ -166,6 +166,7 @@ class MainWindow : public QMainWindow {
 
 public:
 
+    bool restartApp = false;
     QRect rectScreen;                   // screen geometry
     QString title;                      // window title
     bool settingsPWDOK;                 // to switch pwd dialog or settings form
@@ -389,6 +390,10 @@ public:
           distanceDownStop;     // stop action
     float zStartStopRate;
 
+    // ZM-Control   FIXED PULSE FOR TORCH HEIGHT
+    bool zmControlActive = false;
+    int zmControlTime = 100;    // mili second
+
     // 2 PASS WELDING
     bool twoPassWelding;
     bool autoDetect2ndPass;
@@ -397,6 +402,7 @@ public:
     //int algorithmTypePass2 = 6; // Algo8() MAIN EDGES WITH AREAS
     bool pass1detected = false;
     bool pass2detected = false;
+    bool passCompleted = false;
     int pass1_offsetXpos;
     int pass1_offsetXCam;
     int pass2_offsetXpos;

@@ -648,6 +648,10 @@ void MainWindow::updateSn(){
     //QVariant boolx(permPLC);
     //ui->plainTextEdit->appendPlainText(boolx.toString());
 
+    if (!controlOn && plcConnected) {
+        plc->writeByte(0,_CMD_CENTER);
+    }
+
     if (controlOn && timeControl) {
 
         if (startTimeControlCount){
@@ -1021,6 +1025,12 @@ void MainWindow::controlButton(){
         fileData.append("---------.---------.---------.---------.---------.---------");
 
         if (!writeReport()) ui->plainTextEdit->appendPlainText(timeString() + message5);
+
+        if (twoPassWelding && restartApp) { // && passCompleted
+            qApp->quit();
+            WinExec("JTW.exe", SW_SHOW);    // restart application
+        }
+
     }
 
     //ui->stopButton->setEnabled(!controlOn);
@@ -1062,6 +1072,7 @@ void MainWindow::startControl(){
 
     if (twoPassWelding){
 
+        passCompleted = false;
         errorLimit = errorLimitOrginal;
         errorLimitNeg = -1 * errorLimit;
         errorStopLimit = errorLimit * errorStopScale;
@@ -1132,19 +1143,26 @@ void MainWindow::passTrSlot(){
 
 void MainWindow::pass2StartSlot(){
 
+    if (zmControlActive) {
+        plc->writeWord(4, zmControlTime);
+        plc->writeByte(6, 1);
+    }
+
     controlInitiated = alignGuide2TrackCenter; // to align guide again
     histState = 2;
     iProcessThread->algoSwitch = true;
     algorithmType = algorithmTypePass2;     // Algo3() MAIN EDGES
     pass1detected = false;
     pass2detected = true;
-    QTimer::singleShot(pass2TimerTime, this, SLOT(controlButton()));
 
     ui->passOneButton->setStyleSheet(SS_OFF);
     ui->passTwoButton->setStyleSheet(SS_ON);
     ui->targetDriftLeft->setEnabled( true );
     ui->targetDriftCenter->setEnabled( true );
     ui->targetDriftRight->setEnabled( true );
+
+    passCompleted = true;
+    QTimer::singleShot(pass2TimerTime, this, SLOT(controlButton()));
 }
 
 void MainWindow::emergencyButton(){
@@ -1989,11 +2007,14 @@ void MainWindow::readSettings(){
             title = settings->value("title", _TITLE).toString();
 
             zControlActive = settings->value("zctrl", _Z_CONTROL).toBool();
+            zmControlActive = settings->value("zmctrl", false).toBool();
+            zmControlTime = settings->value("zmtime", 100).toInt();
             distanceUpTol = settings->value("uptol", _UP_TOL).toFloat();
             distanceDownTol = settings->value("dwtol", _DOWN_TOL).toFloat();
             pass1TimerTime = settings->value("p1t", _PASS1_TIME).toInt();
             passTrTimerTime = settings->value("pgt", _PASSTR_TIME).toInt();
             pass2TimerTime = settings->value("p2t", _PASS2_TIME).toInt();
+            restartApp = settings->value("rst", false).toBool();
 
         settings->endGroup();
 
@@ -2096,12 +2117,16 @@ void MainWindow::readSettings(){
         title = _TITLE;
 
         zControlActive = _Z_CONTROL;
+        zmControlActive = false;
+        zmControlTime = 100;
         distanceUpTol = _UP_TOL;
         distanceDownTol = _DOWN_TOL;
 
         pass1TimerTime = _PASS1_TIME;
         passTrTimerTime = _PASSTR_TIME;
         pass2TimerTime = _PASS2_TIME;
+
+        restartApp = false;
 
         statusMessage = "ini dosyası bulunamadı";
     }
@@ -2234,12 +2259,19 @@ void MainWindow::writeSettings(){
         QVariant zcontrolsw(zControlActive);
             settings->setValue("zctrl", zcontrolsw.toString());
 
+        QVariant zmcontrolsw(zmControlActive);
+            settings->setValue("zmctrl", zmcontrolsw.toString());
+        settings->setValue("zmtime", QString::number(zmControlTime));
+
         settings->setValue("uptol", QString::number(distanceUpTol));
         settings->setValue("dwtol", QString::number(distanceDownTol));
 
         settings->setValue("p1t", QString::number(pass1TimerTime));
         settings->setValue("pgt", QString::number(passTrTimerTime));
         settings->setValue("p2t", QString::number(pass2TimerTime));
+
+        QVariant rstsw(restartApp);
+            settings->setValue("rst", rstsw.toString());
 
         settings->endGroup();
 
@@ -2576,7 +2608,10 @@ void MainWindow::testEdit(){
 
 void MainWindow::testButton(){
 
-    mak_aktif_now = !mak_aktif_now;
+    //plc->writeWord(4, zmControlTime);
+    //plc->writeByte(6, 1);
+
+    //mak_aktif_now = !mak_aktif_now;
     //qDebug() << "Mak Aktif:" << mak_aktif_now;
     /*
     int *array = new int[5];
