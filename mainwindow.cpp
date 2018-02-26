@@ -1062,6 +1062,16 @@ void MainWindow::startControl(){
 
     if (twoPassWelding){
 
+        errorLimit = errorLimitOrginal;
+        errorLimitNeg = -1 * errorLimit;
+        errorStopLimit = errorLimit * errorStopScale;
+        errorStopLimitNeg = -1 * errorStopLimit;
+        errorLimitCam = errorLimit / mapFactorX;
+        errorLimitNegCam = errorLimitNeg / mapFactorX;
+        errorStopLimitCam = errorStopLimit / mapFactorX;
+        errorStopLimitNegCam = errorStopLimitNeg / mapFactorX;
+        errorMaxCam = errorLimitCam * errorMaxFactor;
+
         if (timeControlTwoPass){
             histState = 0;
             iProcessThread->algoSwitch = true;
@@ -1102,6 +1112,16 @@ void MainWindow::passTrSlot(){
     ui->cmdStatus->setIcon(QIcon());
     cmdBuffer.clear();
     histState = 1;
+
+    errorLimit += errorLimitDiff;
+    errorLimitNeg = -1 * errorLimit;
+    errorStopLimit = errorLimit * errorStopScale;
+    errorStopLimitNeg = -1 * errorStopLimit;
+    errorLimitCam = errorLimit / mapFactorX;
+    errorLimitNegCam = errorLimitNeg / mapFactorX;
+    errorStopLimitCam = errorStopLimit / mapFactorX;
+    errorStopLimitNegCam = errorStopLimitNeg / mapFactorX;
+    errorMaxCam = errorLimitCam * errorMaxFactor;
 
     ui->passOneButton->setStyleSheet(SS_TR);
     ui->passTwoButton->setStyleSheet(SS_TR);
@@ -1909,7 +1929,9 @@ void MainWindow::readSettings(){
             voteThreshold = settings->value("vth", _VOTE_THRESHOLD).toInt();
             voidThreshold = settings->value("vdth", _VOID_THRESHOLD).toInt();
             errorLimit = settings->value("elm", _ERROR_LIMIT).toInt();
+                errorLimitOrginal = errorLimit;
                 errorLimitNeg = -1 * errorLimit;
+            errorLimitDiff = settings->value("elmd", 2).toInt();
 
             errorStopScale = settings->value("esc", _ERROR_SCALE).toFloat();
                 if (errorStopScale > 1.0) errorStopScale = 1.0;
@@ -2023,6 +2045,7 @@ void MainWindow::readSettings(){
         voidThreshold = _VOID_THRESHOLD;
         errorLimit = _ERROR_LIMIT;
             errorLimitNeg = -1 * errorLimit;
+        errorLimitDiff = 2;
 
         errorStopScale = _ERROR_SCALE;
             errorStopLimit = errorLimit * errorStopScale;
@@ -2085,6 +2108,8 @@ void MainWindow::readSettings(){
 }
 
 void MainWindow::writeSettings(){
+
+    errorLimit = errorLimitOrginal;
 
     settings->beginGroup("kamera");
         settings->setValue("camstrm", QString::number(camStreamType));
@@ -2152,6 +2177,7 @@ void MainWindow::writeSettings(){
         settings->setValue("vth", QString::number(voteThreshold));
         settings->setValue("vdth", QString::number(voidThreshold));
         settings->setValue("elm", QString::number(errorLimit));
+        settings->setValue("elmd", QString::number(errorLimitDiff));
         settings->setValue("esc", QString::number(errorStopScale));
 
         QVariant thinjointsw(thinJointAlgoActive);

@@ -327,7 +327,8 @@ public:
     float thetaStepSub;
     int houghLineNo;
     int voteThreshold, voidThreshold;
-    int errorLimit, errorLimitNeg;          // deviation start limit from center in pixels
+    int errorLimit, errorLimitNeg, errorLimitOrginal;          // deviation start limit from center in pixels
+    int errorLimitDiff;
     int errorStopLimit, errorStopLimitNeg;  // deviation stop limit from center in pixels
     int errorLimitCam, errorLimitNegCam;          // deviation start limit from center in pixels
     int errorStopLimitCam, errorStopLimitNegCam;  // deviation stop limit from center in pixels
