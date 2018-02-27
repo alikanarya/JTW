@@ -17,6 +17,7 @@
 #define alarm12     "Kamera Odak Ayarı DOĞRU"
 #define alarm13     "Kamera Odak Ayarı BOZUK !"
 #define alarm14     "KAYNAK BAŞLATILAMADI !"
+#define alarm15     "Girilen değer geçersiz !!! Tekrar deneyiniz."
 
 #define alarm20     "BAND DOĞRU"
 #define alarm21     "Maksimum nokta sayısı 2'den az"

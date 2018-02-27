@@ -9,6 +9,7 @@
 * mainwindow height smaller, bottom not shown on screen
 * drift amount at passes to settings.ini
 
+* algoTypePass1 & algoTypePass2 written to ini file
 * after 2nd pass done automatic application restarting introduced
 * zm control for to elevate the torch at the beginning of the 2nd pass programmed
 * settings and setup forms passwords re-enabled

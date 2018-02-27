@@ -75,6 +75,12 @@ public:
     QPushButton *targetDriftLeft;
     QPushButton *targetDriftRight;
     QPushButton *targetDriftCenter;
+    QLabel *pass1timeLabel;
+    QLineEdit *pass1timeEdit;
+    QLineEdit *pass2timeEdit;
+    QLabel *pass2timeLabel;
+    QLabel *torchUpLabel;
+    QLineEdit *torchUpEdit;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -119,7 +125,7 @@ public:
         labelTime = new QLabel(centralWidget);
         labelTime->setObjectName(QStringLiteral("labelTime"));
         labelTime->setEnabled(false);
-        labelTime->setGeometry(QRect(560, 558, 61, 23));
+        labelTime->setGeometry(QRect(480, 10, 61, 23));
         QFont font;
         font.setPointSize(10);
         font.setBold(true);
@@ -244,7 +250,7 @@ public:
         controlButton->setFlat(true);
         plcStatus = new QPushButton(centralWidget);
         plcStatus->setObjectName(QStringLiteral("plcStatus"));
-        plcStatus->setGeometry(QRect(740, 488, 32, 32));
+        plcStatus->setGeometry(QRect(740, 490, 32, 32));
         QIcon icon9;
         icon9.addFile(QStringLiteral(":/resources/s7_200-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         plcStatus->setIcon(icon9);
@@ -290,7 +296,7 @@ public:
         emergencyButton = new QPushButton(centralWidget);
         emergencyButton->setObjectName(QStringLiteral("emergencyButton"));
         emergencyButton->setEnabled(false);
-        emergencyButton->setGeometry(QRect(740, 408, 32, 32));
+        emergencyButton->setGeometry(QRect(740, 4, 32, 32));
         QIcon icon12;
         icon12.addFile(QStringLiteral(":/resources/Emergency-Stop-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         icon12.addFile(QStringLiteral(":/resources/Emergency-Stop-Enabled-Icon.png"), QSize(), QIcon::Normal, QIcon::On);
@@ -299,7 +305,7 @@ public:
         emergencyButton->setFlat(true);
         cameraStatus = new QPushButton(centralWidget);
         cameraStatus->setObjectName(QStringLiteral("cameraStatus"));
-        cameraStatus->setGeometry(QRect(740, 448, 32, 32));
+        cameraStatus->setGeometry(QRect(740, 450, 32, 32));
         QIcon icon13;
         icon13.addFile(QStringLiteral(":/resources/Camera-Disabled-Icon.png"), QSize(), QIcon::Normal, QIcon::Off);
         cameraStatus->setIcon(icon13);
@@ -362,7 +368,7 @@ public:
         rightButton->setFlat(true);
         labelDistanceTag = new QLabel(centralWidget);
         labelDistanceTag->setObjectName(QStringLiteral("labelDistanceTag"));
-        labelDistanceTag->setGeometry(QRect(570, 638, 43, 44));
+        labelDistanceTag->setGeometry(QRect(736, 368, 43, 44));
         QFont font4;
         font4.setPointSize(11);
         font4.setBold(true);
@@ -376,7 +382,7 @@ public:
         labelDistanceTag->setAlignment(Qt::AlignCenter);
         labelDistance = new QLabel(centralWidget);
         labelDistance->setObjectName(QStringLiteral("labelDistance"));
-        labelDistance->setGeometry(QRect(613, 639, 61, 23));
+        labelDistance->setGeometry(QRect(726, 412, 61, 23));
         labelDistance->setFont(font);
         labelDistance->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
         labelDistance->setFrameShape(QFrame::NoFrame);
@@ -385,7 +391,7 @@ public:
         testEdit = new QLineEdit(centralWidget);
         testEdit->setObjectName(QStringLiteral("testEdit"));
         testEdit->setEnabled(true);
-        testEdit->setGeometry(QRect(570, 610, 51, 20));
+        testEdit->setGeometry(QRect(730, 190, 51, 20));
         QFont font5;
         font5.setPointSize(9);
         font5.setBold(true);
@@ -393,7 +399,7 @@ public:
         testEdit->setFont(font5);
         labelDistanceTag2 = new QLabel(centralWidget);
         labelDistanceTag2->setObjectName(QStringLiteral("labelDistanceTag2"));
-        labelDistanceTag2->setGeometry(QRect(613, 657, 61, 23));
+        labelDistanceTag2->setGeometry(QRect(724, 424, 61, 23));
         labelDistanceTag2->setFont(font);
         labelDistanceTag2->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
         labelDistanceTag2->setFrameShape(QFrame::NoFrame);
@@ -402,13 +408,13 @@ public:
         testButton = new QPushButton(centralWidget);
         testButton->setObjectName(QStringLiteral("testButton"));
         testButton->setEnabled(true);
-        testButton->setGeometry(QRect(570, 588, 41, 23));
+        testButton->setGeometry(QRect(730, 168, 41, 23));
         timeEdit = new QLineEdit(centralWidget);
         timeEdit->setObjectName(QStringLiteral("timeEdit"));
-        timeEdit->setGeometry(QRect(740, 557, 41, 20));
+        timeEdit->setGeometry(QRect(730, 674, 41, 20));
         labelTimeTag = new QLabel(centralWidget);
         labelTimeTag->setObjectName(QStringLiteral("labelTimeTag"));
-        labelTimeTag->setGeometry(QRect(620, 558, 121, 23));
+        labelTimeTag->setGeometry(QRect(580, 673, 121, 23));
         QFont font6;
         font6.setPointSize(8);
         font6.setBold(true);
@@ -480,6 +486,45 @@ public:
         targetDriftCenter->setIcon(icon24);
         targetDriftCenter->setIconSize(QSize(32, 32));
         targetDriftCenter->setFlat(true);
+        pass1timeLabel = new QLabel(centralWidget);
+        pass1timeLabel->setObjectName(QStringLiteral("pass1timeLabel"));
+        pass1timeLabel->setGeometry(QRect(573, 561, 141, 23));
+        pass1timeLabel->setFont(font6);
+        pass1timeLabel->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
+        pass1timeLabel->setFrameShape(QFrame::NoFrame);
+        pass1timeLabel->setLineWidth(2);
+        pass1timeLabel->setAlignment(Qt::AlignCenter);
+        pass1timeEdit = new QLineEdit(centralWidget);
+        pass1timeEdit->setObjectName(QStringLiteral("pass1timeEdit"));
+        pass1timeEdit->setGeometry(QRect(724, 562, 65, 21));
+        pass1timeEdit->setFont(font5);
+        pass1timeEdit->setAlignment(Qt::AlignCenter);
+        pass2timeEdit = new QLineEdit(centralWidget);
+        pass2timeEdit->setObjectName(QStringLiteral("pass2timeEdit"));
+        pass2timeEdit->setGeometry(QRect(724, 590, 65, 21));
+        pass2timeEdit->setFont(font5);
+        pass2timeEdit->setAlignment(Qt::AlignCenter);
+        pass2timeLabel = new QLabel(centralWidget);
+        pass2timeLabel->setObjectName(QStringLiteral("pass2timeLabel"));
+        pass2timeLabel->setGeometry(QRect(573, 589, 141, 23));
+        pass2timeLabel->setFont(font6);
+        pass2timeLabel->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
+        pass2timeLabel->setFrameShape(QFrame::NoFrame);
+        pass2timeLabel->setLineWidth(2);
+        pass2timeLabel->setAlignment(Qt::AlignCenter);
+        torchUpLabel = new QLabel(centralWidget);
+        torchUpLabel->setObjectName(QStringLiteral("torchUpLabel"));
+        torchUpLabel->setGeometry(QRect(573, 616, 141, 23));
+        torchUpLabel->setFont(font6);
+        torchUpLabel->setStyleSheet(QStringLiteral("color: rgb(0, 0, 0);"));
+        torchUpLabel->setFrameShape(QFrame::NoFrame);
+        torchUpLabel->setLineWidth(2);
+        torchUpLabel->setAlignment(Qt::AlignCenter);
+        torchUpEdit = new QLineEdit(centralWidget);
+        torchUpEdit->setObjectName(QStringLiteral("torchUpEdit"));
+        torchUpEdit->setGeometry(QRect(724, 617, 65, 21));
+        torchUpEdit->setFont(font5);
+        torchUpEdit->setAlignment(Qt::AlignCenter);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -627,6 +672,21 @@ public:
         targetDriftCenter->setToolTip(QApplication::translate("MainWindow", "Merkez", 0));
 #endif // QT_NO_TOOLTIP
         targetDriftCenter->setText(QString());
+        pass1timeLabel->setText(QApplication::translate("MainWindow", "1.PASO S\303\234RE(ms)", 0));
+#ifndef QT_NO_TOOLTIP
+        pass1timeEdit->setToolTip(QApplication::translate("MainWindow", "30000 ile 40000 aras\304\261", 0));
+#endif // QT_NO_TOOLTIP
+        pass1timeEdit->setText(QApplication::translate("MainWindow", "35000", 0));
+#ifndef QT_NO_TOOLTIP
+        pass2timeEdit->setToolTip(QApplication::translate("MainWindow", "30000 ile 40000 aras\304\261", 0));
+#endif // QT_NO_TOOLTIP
+        pass2timeEdit->setText(QApplication::translate("MainWindow", "35000", 0));
+        pass2timeLabel->setText(QApplication::translate("MainWindow", "2.PASO S\303\234RE(ms)", 0));
+        torchUpLabel->setText(QApplication::translate("MainWindow", "TORCH YUKARI", 0));
+#ifndef QT_NO_TOOLTIP
+        torchUpEdit->setToolTip(QApplication::translate("MainWindow", "500 ile 2000 aras\304\261", 0));
+#endif // QT_NO_TOOLTIP
+        torchUpEdit->setText(QApplication::translate("MainWindow", "35000", 0));
     } // retranslateUi
 
 };

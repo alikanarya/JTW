@@ -412,9 +412,13 @@ public:
     int pass2_offsetXposDelta = 0;
     int pass2_offsetXCamDelta = 0;
     bool timeControlTwoPass;
+    int pass1TotalTime = 5000;
     int pass1TimerTime = 5000;
     int passTrTimerTime = 2000;
     int pass2TimerTime = 3000;
+    QTimer timerPass1st;
+    QTimer timerPassTr;
+    QTimer timerPass2nd;
 
 
     // plc vars
@@ -697,6 +701,12 @@ private slots:
     void on_targetDriftCenter_clicked();
 
     void on_targetDriftRight_clicked();
+
+    void on_pass1timeEdit_returnPressed();
+
+    void on_pass2timeEdit_returnPressed();
+
+    void on_torchUpEdit_returnPressed();
 
 private:
     protect lic;

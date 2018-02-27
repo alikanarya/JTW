@@ -335,6 +335,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     if (twoPassWelding){
         on_passOneButton_clicked();
         histState = histStatePrev = -1;
+
+        if (timeControlTwoPass) {
+            ui->pass1timeEdit->setText( QString::number(pass1TotalTime) );
+            ui->pass2timeEdit->setText( QString::number(pass2TimerTime) );
+            ui->torchUpEdit->setText( QString::number(zmControlTime) );
+        } else {
+            ui->pass1timeEdit->hide();
+            ui->pass1timeLabel->hide();
+            ui->pass2timeEdit->hide();
+            ui->pass2timeLabel->hide();
+            ui->torchUpEdit->hide();
+            ui->torchUpLabel->hide();
+        }
     } else {
         autoDetect2ndPass = false;
         timeControlTwoPass = false;
@@ -343,6 +356,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->targetDriftLeft->hide();
         ui->targetDriftCenter->hide();
         ui->targetDriftRight->hide();
+
+        ui->pass1timeEdit->hide();
+        ui->pass1timeLabel->hide();
+        ui->pass2timeEdit->hide();
+        ui->pass2timeLabel->hide();
+        ui->torchUpEdit->hide();
+        ui->torchUpLabel->hide();
     }
 
     //**cameraChecker->cameraDown = false;
@@ -990,6 +1010,11 @@ void MainWindow::controlButton(){
         permOperator = false;
         ui->analyzeButton->setIcon(calculatorOnIcon);
 
+        /*
+        timerPass1st.stop();
+        timerPassTr.stop();
+        timerPass2nd.stop();
+        */
         if (twoPassWelding) {
 
             if (timeControlTwoPass) {
@@ -1027,6 +1052,7 @@ void MainWindow::controlButton(){
         if (!writeReport()) ui->plainTextEdit->appendPlainText(timeString() + message5);
 
         if (twoPassWelding && restartApp) { // && passCompleted
+            writeSettings();
             qApp->quit();
             WinExec("JTW.exe", SW_SHOW);    // restart application
         }
@@ -1090,6 +1116,12 @@ void MainWindow::startControl(){
             pass1detected = true;
             pass2detected = false;
             QTimer::singleShot(pass1TimerTime, this, SLOT(passTrSlot()));
+            /*
+            connect(&timerPass1st, SIGNAL(timeout()), this, SLOT(passTrSlot()));
+            timerPass1st.start(pass1TimerTime);
+            timerPassTr.stop();
+            timerPass2nd.stop();
+            */
 
             ui->passOneButton->setStyleSheet(SS_ON);
             ui->passTwoButton->setStyleSheet(SS_OFF);
@@ -1118,6 +1150,11 @@ void MainWindow::passTrSlot(){
     pass1detected = false;
     pass2detected = false;
     QTimer::singleShot(passTrTimerTime, this, SLOT(pass2StartSlot()));
+    /*
+    timerPass1st.stop();
+    connect(&timerPassTr, SIGNAL(timeout()), this, SLOT(pass2StartSlot()));
+    timerPassTr.start(passTrTimerTime);
+    */
 
     plc->writeByte(0,_CMD_CENTER);
     ui->cmdStatus->setIcon(QIcon());
@@ -1143,9 +1180,10 @@ void MainWindow::passTrSlot(){
 
 void MainWindow::pass2StartSlot(){
 
+    // ELEVATE TORCH BEFORE 2ND PASS
     if (zmControlActive) {
-        plc->writeWord(4, zmControlTime);
-        plc->writeByte(6, 1);
+        plc->writeWord(4, zmControlTime);   // update timer duration
+        plc->writeByte(6, 1);               // start timer
     }
 
     controlInitiated = alignGuide2TrackCenter; // to align guide again
@@ -1163,6 +1201,11 @@ void MainWindow::pass2StartSlot(){
 
     passCompleted = true;
     QTimer::singleShot(pass2TimerTime, this, SLOT(controlButton()));
+    /*
+    timerPassTr.stop();
+    connect(&timerPass2nd, SIGNAL(timeout()), this, SLOT(controlButton()));
+    timerPass2nd.start(pass2TimerTime);
+    */
 }
 
 void MainWindow::emergencyButton(){
@@ -1976,6 +2019,8 @@ void MainWindow::readSettings(){
             cannyThinning = settings->value("cannythin", _CANNY_THIN).toBool();
             edgeDetectionState = settings->value("edgealgo", _EDGE_ALGO).toInt();
             algorithmType = settings->value("algotype", _ALGO_TYPE).toInt();
+            algorithmTypePass1 = settings->value("algotype1", 4).toInt();
+            algorithmTypePass2 = settings->value("algotype2", 1).toInt();
             mainEdgesNumber = settings->value("medgeno", _MAIN_EDGE_NO).toInt();
             alignGuide2TrackCenter = settings->value("align", _ALIGN).toBool();
 
@@ -2008,14 +2053,16 @@ void MainWindow::readSettings(){
 
             zControlActive = settings->value("zctrl", _Z_CONTROL).toBool();
             zmControlActive = settings->value("zmctrl", false).toBool();
-            zmControlTime = settings->value("zmtime", 100).toInt();
+            zmControlTime = settings->value("zmtime", 1000).toInt();
             distanceUpTol = settings->value("uptol", _UP_TOL).toFloat();
             distanceDownTol = settings->value("dwtol", _DOWN_TOL).toFloat();
-            pass1TimerTime = settings->value("p1t", _PASS1_TIME).toInt();
+            pass1TotalTime = settings->value("p1t", _PASS1_TIME).toInt();
             passTrTimerTime = settings->value("pgt", _PASSTR_TIME).toInt();
+                pass1TimerTime = pass1TotalTime - passTrTimerTime;
             pass2TimerTime = settings->value("p2t", _PASS2_TIME).toInt();
             restartApp = settings->value("rst", false).toBool();
 
+            //qDebug() << pass1TotalTime << " " << passTrTimerTime << " " << pass1TimerTime << " " << pass2TimerTime;
         settings->endGroup();
 
     } else {    // assign default values if file not exist
@@ -2092,6 +2139,8 @@ void MainWindow::readSettings(){
         cannyThinning = _CANNY_THIN;
         edgeDetectionState = _EDGE_ALGO;
         algorithmType = _ALGO_TYPE;
+        algorithmTypePass1 = 4;
+        algorithmTypePass2 = 1;
         mainEdgesNumber = _MAIN_EDGE_NO;
         alignGuide2TrackCenter = _ALIGN;
 
@@ -2118,12 +2167,13 @@ void MainWindow::readSettings(){
 
         zControlActive = _Z_CONTROL;
         zmControlActive = false;
-        zmControlTime = 100;
+        zmControlTime = 1000;
         distanceUpTol = _UP_TOL;
         distanceDownTol = _DOWN_TOL;
 
-        pass1TimerTime = _PASS1_TIME;
+        pass1TotalTime = _PASS1_TIME;
         passTrTimerTime = _PASSTR_TIME;
+        pass1TimerTime = pass1TotalTime - passTrTimerTime;
         pass2TimerTime = _PASS2_TIME;
 
         restartApp = false;
@@ -2225,6 +2275,8 @@ void MainWindow::writeSettings(){
 
         settings->setValue("edgealgo", QString::number(edgeDetectionState));
         settings->setValue("algotype", QString::number(algorithmType));
+        settings->setValue("algotype1", QString::number(algorithmTypePass1));
+        settings->setValue("algotype2", QString::number(algorithmTypePass2));
         settings->setValue("medgeno", QString::number(mainEdgesNumber));
 
         QVariant alignsw(alignGuide2TrackCenter);
@@ -2266,7 +2318,7 @@ void MainWindow::writeSettings(){
         settings->setValue("uptol", QString::number(distanceUpTol));
         settings->setValue("dwtol", QString::number(distanceDownTol));
 
-        settings->setValue("p1t", QString::number(pass1TimerTime));
+        settings->setValue("p1t", QString::number(pass1TotalTime));
         settings->setValue("pgt", QString::number(passTrTimerTime));
         settings->setValue("p2t", QString::number(pass2TimerTime));
 
@@ -3755,4 +3807,57 @@ void MainWindow::on_targetDriftRight_clicked(){
     }
 
     repaintGuide();
+}
+
+void MainWindow::on_pass1timeEdit_returnPressed(){
+    bool valid = false;
+    pass1TotalTime = ui->pass1timeEdit->text().toInt(&valid, 10);    //valid: true if conversion is ok
+
+    if (!valid) {
+        ui->plainTextEdit->appendPlainText(alarm15);
+        pass1TotalTime = 37000;
+        ui->pass1timeEdit->setText("37000");
+    } else {
+        if (pass1TotalTime > 40000 || pass1TotalTime < 30000){
+            pass1TotalTime = 37000;
+            ui->pass1timeEdit->setText("37000");
+        }
+    }
+    pass1TimerTime = pass1TotalTime - passTrTimerTime;
+    //qDebug() << pass1TotalTime << " " << pass1TimerTime;
+}
+
+void MainWindow::on_pass2timeEdit_returnPressed(){
+    bool valid = false;
+    pass2TimerTime = ui->pass2timeEdit->text().toInt(&valid, 10);    //valid: true if conversion is ok
+
+    if (!valid) {
+        ui->plainTextEdit->appendPlainText(alarm15);
+        pass2TimerTime = 37000;
+        ui->pass2timeEdit->setText("37000");
+    } else {
+        if (pass2TimerTime > 40000 || pass2TimerTime < 30000){
+            pass2TimerTime = 37000;
+            ui->pass2timeEdit->setText("37000");
+        }
+    }
+    //qDebug() << pass2TimerTime;
+}
+
+void MainWindow::on_torchUpEdit_returnPressed(){
+
+    bool valid = false;
+    zmControlTime = ui->torchUpEdit->text().toInt(&valid, 10);    //valid: true if conversion is ok
+
+    if (!valid) {
+        ui->plainTextEdit->appendPlainText(alarm15);
+        zmControlTime = 1000;
+        ui->torchUpEdit->setText("1000");
+    } else {
+        if (zmControlTime > 2000 || zmControlTime < 500){
+            zmControlTime = 1000;
+            ui->torchUpEdit->setText("1000");
+        }
+    }
+    //qDebug() << zmControlTime;
 }
