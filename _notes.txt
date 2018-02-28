@@ -1,0 +1,32 @@
+thinJointAlgoActive	// without laser - VERTICAL SEARCH
+1:	Algo3()		// MAIN EDGES *** for pass 2
+2:	Algo4()		// THIN JOINT - DARK AREA
+3:	Algo5()		// CONTRAST
+4:	Algo6()		// LINE DETECTION WITH MAIN EDGES *** for pass 1
+5:	Algo7()		// SCAN HORIZONTAL
+6:	Algo8()		// MAIN EDGES WITH AREAS
+
+!thinJointAlgoActive	// with laser - HORIZONTAL SEARCH
+1:	Algo1()		// LONGEST SOLID LINES
+2:	Algo2()		// PRIMARY VOID
+
+
+S7-200 Memory
+-----------------------------------------------------------------
+VB0	...from PC
+V0.0	TORCH RIGHT COMMAND
+V0.1	TORCH LEFT COMMAND
+
+VB1	...to PC
+VB1.0	MACHINE STARTED
+
+VW2	DISTANCE SENSOR		...to PC
+
+VW4	TORCH UP DURATION IN MILISECONDS	...from PC
+
+VB6	...from pc
+V6.0	TORCH UP COMMAND
+-----------------------------------------------------------------
+
+
+CTRL+SHIFT to bypass password check at settings/setup forms

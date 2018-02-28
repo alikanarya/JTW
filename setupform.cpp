@@ -1406,6 +1406,7 @@ void setupForm::on_captureButton_2_clicked(){
         ui->capturePrev->setEnabled(true);
         ui->captureNext->setEnabled(true);
         ui->checkProcessing->setEnabled(true);
+        ui->checkProcessingHist->setEnabled(true);
 
         imageLoadedFromFile = true;
 
@@ -1479,6 +1480,8 @@ void setupForm::update(){
 
     if (ui->checkProcessing->isChecked())
         captureButton();
+    if (ui->checkProcessingHist->isChecked())
+        on_histogramAnalysisButton_clicked();
 }
 
 void setupForm::on_brightnessSlider_sliderReleased(){

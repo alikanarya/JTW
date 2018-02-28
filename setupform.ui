@@ -613,12 +613,12 @@
     <rect>
      <x>399</x>
      <y>10</y>
-     <width>101</width>
+     <width>61</width>
      <height>17</height>
     </rect>
    </property>
    <property name="text">
-    <string>Analiz Aktif</string>
+    <string>Analiz</string>
    </property>
   </widget>
   <widget class="QComboBox" name="edgeDetectionBox">
@@ -825,9 +825,9 @@
   <widget class="QLabel" name="labelPicNo">
    <property name="geometry">
     <rect>
-     <x>479</x>
+     <x>530</x>
      <y>10</y>
-     <width>150</width>
+     <width>191</width>
      <height>16</height>
     </rect>
    </property>
@@ -3166,7 +3166,7 @@
     <rect>
      <x>120</x>
      <y>530</y>
-     <width>61</width>
+     <width>71</width>
      <height>17</height>
     </rect>
    </property>
@@ -3185,6 +3185,22 @@
    </property>
    <property name="checked">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="checkProcessingHist">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>10</y>
+     <width>51</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Hist</string>
    </property>
   </widget>
   <zorder>tabWidget</zorder>
@@ -3256,6 +3272,7 @@
   <zorder>label_32</zorder>
   <zorder>histCornerPrecSlider</zorder>
   <zorder>extendHistHeight</zorder>
+  <zorder>checkProcessingHist</zorder>
  </widget>
  <resources>
   <include location="icons.qrc"/>

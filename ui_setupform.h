@@ -160,6 +160,7 @@ public:
     QLabel *label_32;
     QSlider *histCornerPrecSlider;
     QCheckBox *extendHistHeight;
+    QCheckBox *checkProcessingHist;
     QButtonGroup *laserGroup;
     QButtonGroup *colorGrayGroup;
 
@@ -335,7 +336,7 @@ public:
         checkProcessing = new QCheckBox(setupForm);
         checkProcessing->setObjectName(QStringLiteral("checkProcessing"));
         checkProcessing->setEnabled(false);
-        checkProcessing->setGeometry(QRect(399, 10, 101, 17));
+        checkProcessing->setGeometry(QRect(399, 10, 61, 17));
         edgeDetectionBox = new QComboBox(setupForm);
         edgeDetectionBox->setObjectName(QStringLiteral("edgeDetectionBox"));
         edgeDetectionBox->setGeometry(QRect(855, 375, 121, 22));
@@ -386,7 +387,7 @@ public:
         debugModeBox->setFont(font2);
         labelPicNo = new QLabel(setupForm);
         labelPicNo->setObjectName(QStringLiteral("labelPicNo"));
-        labelPicNo->setGeometry(QRect(479, 10, 150, 16));
+        labelPicNo->setGeometry(QRect(530, 10, 191, 16));
         labelPicNo->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
         labelPicNo->setAlignment(Qt::AlignCenter);
         tabWidget = new QTabWidget(setupForm);
@@ -1028,9 +1029,13 @@ public:
         histCornerPrecSlider->setTickInterval(20);
         extendHistHeight = new QCheckBox(setupForm);
         extendHistHeight->setObjectName(QStringLiteral("extendHistHeight"));
-        extendHistHeight->setGeometry(QRect(120, 530, 61, 17));
+        extendHistHeight->setGeometry(QRect(120, 530, 71, 17));
         extendHistHeight->setFont(font2);
         extendHistHeight->setChecked(true);
+        checkProcessingHist = new QCheckBox(setupForm);
+        checkProcessingHist->setObjectName(QStringLiteral("checkProcessingHist"));
+        checkProcessingHist->setEnabled(false);
+        checkProcessingHist->setGeometry(QRect(470, 10, 51, 17));
         tabWidget->raise();
         labelTarget->raise();
         labelMono->raise();
@@ -1100,6 +1105,7 @@ public:
         label_32->raise();
         histCornerPrecSlider->raise();
         extendHistHeight->raise();
+        checkProcessingHist->raise();
 
         retranslateUi(setupForm);
         QObject::connect(captureButton, SIGNAL(clicked()), setupForm, SLOT(captureButton()));
@@ -1150,7 +1156,7 @@ public:
         brightnessReset->setText(QApplication::translate("setupForm", "R", 0));
         contrastReset->setText(QApplication::translate("setupForm", "R", 0));
         gammaReset->setText(QApplication::translate("setupForm", "R", 0));
-        checkProcessing->setText(QApplication::translate("setupForm", "Analiz Aktif", 0));
+        checkProcessing->setText(QApplication::translate("setupForm", "Analiz", 0));
         edgeDetectionBox->clear();
         edgeDetectionBox->insertItems(0, QStringList()
          << QApplication::translate("setupForm", "Yok", 0)
@@ -1308,6 +1314,7 @@ public:
         extendHistHeight->setToolTip(QApplication::translate("setupForm", "Kaynak ba\305\237lang\304\261c\304\261ndaki geni\305\237li\304\237in %80 ile %120 si aras\304\261n\304\261 ge\303\247erli say", 0));
 #endif // QT_NO_TOOLTIP
         extendHistHeight->setText(QApplication::translate("setupForm", "Extend", 0));
+        checkProcessingHist->setText(QApplication::translate("setupForm", "Hist", 0));
     } // retranslateUi
 
 };

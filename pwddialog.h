@@ -2,6 +2,7 @@
 #define PWDDIALOG_H
 
 #include <QtWidgets/QDialog>
+#include <QSet>
 
 namespace Ui {
     class pwdDialog;
@@ -13,9 +14,16 @@ class pwdDialog : public QDialog {
 public:
     int flag;
     QString pwd;
+    bool m_bFirstRelease;
+//    QSet<Qt::Key> keysPressed;
+    QSet<int> keys;
 
     explicit pwdDialog(int flag, QWidget *parent = 0);
     ~pwdDialog();
+
+protected:
+    void keyPressEvent(QKeyEvent *);
+    void keyReleaseEvent(QKeyEvent *event);
 
 private:
     Ui::pwdDialog *ui;

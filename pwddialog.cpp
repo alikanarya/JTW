@@ -26,28 +26,52 @@ void pwdDialog::acceptButton(){
     pwd = ui->lineEdit->text();
 
     if (flag == 0){
-//        if(true){
-        if(QString::compare(pwd, _PWD_SETTINGS, Qt::CaseSensitive) == 0){
+
+        if ( keys.contains(Qt::Key_Control) && keys.contains(Qt::Key_Shift) ) {
+
             w->settingsPWDOK = true;
             w->showSettingsForm();
             this->close();
+
         } else {
-            w->settingsPWDOK = false;
-            displayWarning();
+            if(QString::compare(pwd, _PWD_SETTINGS, Qt::CaseSensitive) == 0){
+                w->settingsPWDOK = true;
+                w->showSettingsForm();
+                this->close();
+            } else {
+                w->settingsPWDOK = false;
+                displayWarning();
+            }
         }
+
     } else if (flag == 1){
-//        if(true){
-        if(QString::compare(pwd, _PWD_SETUP, Qt::CaseSensitive) == 0){
+
+        if ( keys.contains(Qt::Key_Control) && keys.contains(Qt::Key_Shift) ) {
             w->setupPWDOK = true;
             w->showSetupForm();
             this->close();
         } else {
-            w->setupPWDOK = false;
-            displayWarning();
+            if(QString::compare(pwd, _PWD_SETUP, Qt::CaseSensitive) == 0){
+                w->setupPWDOK = true;
+                w->showSetupForm();
+                this->close();
+            } else {
+                w->setupPWDOK = false;
+                displayWarning();
+            }
         }
     }
 }
 
+void pwdDialog::keyPressEvent(QKeyEvent *event){
+
+    keys+= event->key();
+
+    //if(event->key() == Qt::Key_Control::Key_Escape) { qDebug() << "You pressed ESC";  }
+}
+
+void pwdDialog::keyReleaseEvent(QKeyEvent *event) {
+}
 
 void pwdDialog::cancelButton(){
 
