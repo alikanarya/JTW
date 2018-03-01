@@ -478,7 +478,7 @@ void setupForm::Algo8(int center){
 
             iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
 
-            iprocess->histogramAnalysis(colorMatrix);
+            iprocess->histogramAnalysis(colorMatrix, invertHist);
             histogramCenterX = (iprocess->natBreaksMax1.x()+iprocess->natBreaksMax2.x())/2;
 
             endTime = w->timeSystem.getSystemTimeMsec();
@@ -2205,7 +2205,10 @@ void setupForm::on_maFilterSizeSlider_sliderReleased(){
 
 void setupForm::on_histogramAnalysisButton_clicked() {
 
-    bool extend = ui->extendHistHeight->isChecked();
+    extend = ui->extendHistHeight->isChecked();
+    invertHist = ui->invertHist->isChecked();
+
+    on_histAreaNoSlider_sliderMoved(histAreaNo);
 
     if ( w->play && (w->lastData->image->format() != QImage::Format_Invalid) ){
         if (w->applyCameraEnhancements) {
@@ -2250,7 +2253,6 @@ void setupForm::on_histogramAnalysisButton_clicked() {
         clearGraph(ui->graphicsView2);
         clearGraph(ui->graphicsView3);
 
-        on_histAreaNoSlider_sliderMoved(histAreaNo);
 
         if (histAreaNo == 1) {
             // -------START PROCESSING-------
@@ -2267,7 +2269,7 @@ void setupForm::on_histogramAnalysisButton_clicked() {
 
             iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
 
-            iprocess->histogramAnalysis(colorMatrix);
+            iprocess->histogramAnalysis(colorMatrix, invertHist);
 
             endTime = w->timeSystem.getSystemTimeMsec();
             processElapsed = endTime - startTime;
@@ -2373,7 +2375,7 @@ void setupForm::histMultAreas() {
 
         ipro->constructValueMatrix( ipro->imgOrginal, 0 );
 
-        ipro->histogramAnalysis(colorMatrix);
+        ipro->histogramAnalysis(colorMatrix, invertHist);
 
         endTime = w->timeSystem.getSystemTimeMsec();
         processElapsed = endTime - startTime;
@@ -2665,17 +2667,23 @@ void setupForm::on_histAreaNoSlider_sliderMoved(int position){
 
     if ( w->play && (w->lastData->image->format() != QImage::Format_Invalid) ){
         if (w->applyCameraEnhancements) {
-            //target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
-            target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
+            if (extend)
+                target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
+            else
+                target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
         } else {
-            //target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
-            target = w->lastData->image->copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
+            if (extend)
+                target = w->lastData->image->copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
+            else
+                target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
         }
     }
 
-    if ( !w->play &&  imageLoadedFromFile ){
-        //target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
-        target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->imageFileChanged.height() );    // take target image
+    if ( !w->play &&  imageLoadedFromFile){
+        if (extend)
+            target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->imageFileChanged.height() );    // take target image
+        else
+            target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
     }
 
     if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ){

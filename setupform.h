@@ -77,6 +77,8 @@ public:
     int maFilterKernelSize = 11;
     int histogramAngleThreshold = 10;
     bool colorMatrix = true; // true=colored, false=gray
+    bool extend;    // extend area height to image height
+    bool invertHist = false;  // true:invert hist (bright val to lower values)
     double lenRateThr = 0.50;
     double bandWidthMin = 0.20;
     double bandCenterMax = 0.10;
