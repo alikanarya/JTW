@@ -120,6 +120,7 @@ public:
     void drawGraphHist(QGraphicsView *graph, QPen *pen, int *array, int size, QPoint yRange, bool scaleMin = true); // with extreme points
     bool drawEdges = true;
     bool drawExtremes = true;
+    QList<int> linesForHist;
     void drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen, int *array, int size, QPoint yRange, bool scaleMin = true);// with extreme filtered points
     void drawGraphList(QGraphicsView *graph, QPen *pen, QList<range> list, int *yVals, QPoint xRange, QPoint yRange);
     void drawGraphXY(QGraphicsView *graph,int *xAarray,int *yAarray, int size);

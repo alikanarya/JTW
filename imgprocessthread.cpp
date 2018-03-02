@@ -64,7 +64,10 @@ void imgProcessThread::run(){
                 case 6: // MAIN EDGES WITH AREAS
                     Algo8();
                     break;
-                case 7: // EXPERIMENTAL
+                case 7: // MAIN EDGES WITH DARY TRACKS
+                    Algo9();
+                    break;
+                case 8: // EXPERIMENTAL
                     break;
             }
         } else {    // with laser - HORIZONTAL SEARCH
@@ -194,6 +197,7 @@ void imgProcessThread::Algo3(){
         iprocess->thinCornerNum = w->mainEdgesNumber;
         iprocess->detectMainEdges(0, false);
         /**/iprocess->angleAvg = iprocess->centerLine.angle;
+
     } else {
         //ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritmasý seçilmelidir");
     }
@@ -376,5 +380,57 @@ void imgProcessThread::histAnalysis() {
     emit histAnalysisCompleted();
 
     //qDebug() << stat;
+
+}
+
+void imgProcessThread::Algo9() {
+// woLASER: edge > houghTr > detectMainEdges > histAnalysis for dark tracks
+    //qDebug()<<Q_FUNC_INFO;
+
+        if (w->edgeDetectionState != 0) {
+            iprocess->calculateHoughMaxs( w->houghLineNo );            // get max voted line(s)
+            iprocess->thinCornerNum = w->mainEdgesNumber;
+            iprocess->detectMainEdges(0, false);
+
+            QImage pic = targetArea.copy( 0, 0, targetArea.width(), targetArea.height() );    // take target image
+            imgProcess *iprocessHist = new imgProcess( pic, pic.width(), pic.height() );   // new imgProcess object
+            //imgProcess *iprocessHist = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+            iprocessHist->maFilterKernelSize = w->maFilterKernelSize;
+            iprocessHist->bandWidthMin = w->bandWidthMin;
+            iprocessHist->bandCenterMax = w->bandCenterMax;
+
+            iprocessHist->constructValueMatrix( iprocessHist->imgOrginal, 0 );
+
+            iprocessHist->histogramAnalysisDarkTracks(w->colorMatrix, false);
+
+            int _minLeft = 2000, _minLeftX = iprocess->leftCornerX;
+            int _minRight = 2000, _minRightX = iprocess->rightCornerX;
+            int _leftLimit = iprocess->trackCenterX / 2.0;
+            int _rightLimit = (iprocess->imageWidth - iprocess->trackCenterX) / 2.0  + iprocess->trackCenterX;
+            int val;
+            for (int i=0; i<iprocessHist->histogramMins.size(); i++){
+                val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
+                if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].start > _leftLimit ){
+                    if (val < _minLeft) {
+                        _minLeft = val;
+                        _minLeftX = iprocessHist->histogramMins[i].end;
+                    }
+                }
+
+                if (iprocessHist->histogramMins[i].start > iprocess->trackCenterX && iprocessHist->histogramMins[i].end < _rightLimit ){
+                    if (val < _minRight) {
+                        _minRight = val;
+                        _minRightX = iprocessHist->histogramMins[i].start;
+                    }
+                }
+            }
+            iprocess->leftCornerX = _minLeftX;
+            iprocess->rightCornerX = _minRightX;
+            iprocess->trackCenterX = (_minLeftX+_minRightX) / 2.0;
+qDebug() << iprocess->leftCornerX << " " << iprocess->trackCenterX << " " << iprocess->rightCornerX;
+            delete iprocessHist;
+        } else {
+            //ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritmasý seçilmelidir");
+        }
 
 }

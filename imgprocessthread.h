@@ -38,6 +38,7 @@ public:
     void Algo6();   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
     void Algo7();   // woLASER: edge > houghTr > detectScanHorizontal
     void Algo8();   // woLASER: edge > houghTr > detectMainEdges with multiple regions
+    void Algo9();   // woLASER: edge > houghTr > detectMainEdges > histAnalysis for dark tracks
 
     void histAnalysis();    // histogram analysis
 

@@ -1438,17 +1438,20 @@ void MainWindow::processImage(bool deleteObject){
                 targetArea = lastData->image->copy( offsetXCam, yOffset, frameWidthCam, fHeight );    // take target image
             }
 
-            iProcessThread->targetArea = targetArea.copy(0,0,targetArea.width(), targetArea.height());
-            thinJointAlgoActive = true;     // without laser - VERTICAL SEARCH
-            iProcessThread->imageCaptureTime = imageCaptureTime;
 
-            if (!twoPassWelding) {
-                iProcessThread->start();
-            } else {
-                if (autoDetect2ndPass && !timeControlTwoPass)
+            if (!iProcessThread->isRunning()) {
+                iProcessThread->targetArea = targetArea.copy(0,0,targetArea.width(), targetArea.height());
+                thinJointAlgoActive = true;     // without laser - VERTICAL SEARCH
+                iProcessThread->imageCaptureTime = imageCaptureTime;
+
+                if (!twoPassWelding) {
                     iProcessThread->start();
-                if (!autoDetect2ndPass && timeControlTwoPass && iProcessThread->algoSwitch)
-                    iProcessThread->start();
+                } else {
+                    if (autoDetect2ndPass && !timeControlTwoPass)
+                        iProcessThread->start();
+                    if (!autoDetect2ndPass && timeControlTwoPass && iProcessThread->algoSwitch)
+                        iProcessThread->start();
+                }
             }
         }
     }
