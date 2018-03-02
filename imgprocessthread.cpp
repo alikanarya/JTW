@@ -427,7 +427,7 @@ void imgProcessThread::Algo9() {
             iprocess->leftCornerX = _minLeftX;
             iprocess->rightCornerX = _minRightX;
             iprocess->trackCenterX = (_minLeftX+_minRightX) / 2.0;
-qDebug() << iprocess->leftCornerX << " " << iprocess->trackCenterX << " " << iprocess->rightCornerX;
+            //qDebug() << iprocess->leftCornerX << " " << iprocess->trackCenterX << " " << iprocess->rightCornerX;
             delete iprocessHist;
         } else {
             //ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritmasý seçilmelidir");

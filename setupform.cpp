@@ -552,6 +552,84 @@ void setupForm::Algo8(int center){
     }
 }
 
+void setupForm::Algo9(imgProcess *iprocess){
+// woLASER: edge > houghTr > detectMainEdges
+
+    if (edgeDetectionState != 0) {
+        iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+            /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
+        iprocess->thinCornerNum = mainEdgesNumber;
+        iprocess->detectMainEdges(0, DEBUG);
+            /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
+
+        linesForHist.clear();
+        linesForHist.append(iprocess->leftCornerX);
+        linesForHist.append(iprocess->trackCenterX);
+        linesForHist.append(iprocess->rightCornerX);
+
+        // -------START PROCESSING-------
+        startTime = w->timeSystem.getSystemTimeMsec();
+
+        iprocessHist = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+        iprocessHist->maFilterKernelSize = maFilterKernelSize;
+        iprocessHist->bandWidthMin = bandWidthMin;
+        iprocessHist->bandCenterMax = bandCenterMax;
+
+        iprocessHist->constructValueMatrix( iprocessHist->imgOrginal, 0 );
+
+        iprocessHist->histogramAnalysisDarkTracks(colorMatrix, invertHist);
+
+        endTime = w->timeSystem.getSystemTimeMsec();
+        processElapsed = endTime - startTime;
+        // -------END PROCESSING-------
+
+        int _minLeft = 2000, _minLeftX = iprocess->leftCornerX;
+        int _minRight = 2000, _minRightX = iprocess->rightCornerX;
+        int _leftLimit = iprocess->trackCenterX / 2.0;
+        int _rightLimit = (iprocess->imageWidth - iprocess->trackCenterX) / 2.0  + iprocess->trackCenterX;
+        int val;
+        for (int i=0; i<iprocessHist->histogramMins.size(); i++){
+            val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
+            if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].start > _leftLimit ){
+                if (val < _minLeft) {
+                    _minLeft = val;
+                    _minLeftX = iprocessHist->histogramMins[i].end;
+                }
+            }
+
+            if (iprocessHist->histogramMins[i].start > iprocess->trackCenterX && iprocessHist->histogramMins[i].end < _rightLimit ){
+                if (val < _minRight) {
+                    _minRight = val;
+                    _minRightX = iprocessHist->histogramMins[i].start;
+                }
+            }
+        }
+        linesForHist.append(_minLeftX);
+        linesForHist.append(_minRightX);
+
+        for (int i=0; i<iprocess->mainEdgesList.size();i++)
+            ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
+        ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
+        ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges( iprocess->naturalBreaksNumber ) ) );
+
+        iprocess->natBreaksMax1.setX(_minLeftX);
+        iprocess->natBreaksMax2.setX(_minRightX);
+        iprocess->mainEdgesList[0].distance = _minLeftX;
+        iprocess->mainEdgesList[1].distance = _minRightX;
+        iprocess->mainEdgesList[0].angle = iprocess->mainEdgesList[1].angle = 0;
+        iprocess->leftCornerX = _minLeftX;
+        iprocess->rightCornerX = _minRightX;
+        iprocess->trackCenterX = (_minLeftX+_minRightX) / 2.0;
+        iprocess->centerLine.distance = iprocess->trackCenterX;
+
+        algoPrerequestsOk = true;
+        captured = true;
+    } else {
+        ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
+        algoPrerequestsOk = false;
+    }
+}
+
 void setupForm::processImage(){
 
 //    if ( w->play && !w->imageGetter->imageList.isEmpty() ){
@@ -599,7 +677,9 @@ void setupForm::processImage(){
                         path += "-Algo7/"; break;
                     case 6: // MAIN EDGES MULTIPLE AREAS
                         path += "-Algo3MA/"; break;
-                    case 7: // EXPERIMENTAL
+                    case 7: // MAIN EDGES WITH HISTOGRAM DARK
+                        path += "-Algo9/"; break;
+                    case 8: // EXPERIMENTAL
                         path += "-AlgoY/"; break;
                 }
             } else {    // with laser - HORIZONTAL SEARCH
@@ -667,7 +747,10 @@ void setupForm::processImage(){
                 case 6: // MAIN EDGES MULTIPLE AREAS
                     Algo8(target.width()/2.0);
                     break;
-                case 7: // EXPERIMENTAL
+                case 7: // MAIN EDGES WITH HISTOGRAM DARK
+                    Algo9(iprocess);
+                    break;
+                case 8: // EXPERIMENTAL
                     break;
             }
         } else {    // with laser - HORIZONTAL SEARCH
@@ -997,7 +1080,59 @@ void setupForm::captureButton(){
                         //ui->labelAnalyze->setPixmap( QPixmap::fromImage( iproList[2]->getImageMainEdges( iproList[2]->naturalBreaksNumber ) ) );
                         }
                         break;
-                    case 7: // EXPERIMENTAL
+                    case 7: // MAIN EDGES WITH HISTOGRAM DARK
+
+                        /**/if (DEBUG) {
+                                ui->plainTextEdit->appendPlainText("-2nd hough vals---");
+                                for (int i=0; i<iprocess->listHoughData2ndSize;i++)
+                                    ui->plainTextEdit->appendPlainText("dist/ang/vote: "+QString::number(iprocess->listHoughData2ndArray[i][0], 'f', 1) +", "+QString::number(iprocess->listHoughData2ndArray[i][1], 'f', 1)+", "+QString::number(iprocess->listHoughData2ndArray[i][2], 'f', 0));
+
+                                if ( iprocess->naturalBreaksNumber != 0 ){
+                                    ui->plainTextEdit->appendPlainText("-pointListSorted---");
+                                    for (int i=0; i<iprocess->pointListSorted.size();i++)
+                                        ui->plainTextEdit->appendPlainText("x/vote: "+QString::number(iprocess->pointListSorted[i].x())+", "+QString::number(iprocess->pointListSorted[i].y()));
+                                    ui->plainTextEdit->appendPlainText("-mainPointsList---");
+                                    for (int i=0; i<iprocess->mainPointsList.size();i++)
+                                        ui->plainTextEdit->appendPlainText("x/vote: "+QString::number(iprocess->mainPointsList[i].x())+", "+QString::number(iprocess->mainPointsList[i].y()));
+                                }
+                            }
+
+                        //ui->labelMono->clear();
+                        //ui->labelEdge->clear();
+                        //ui->labelHough->clear();
+                        ui->labelAnalyze->clear();
+
+                        clearGraph(ui->graphicsView);
+                        clearGraph(ui->graphicsView2);
+                        clearGraph(ui->graphicsView3);
+
+                        if (DEBUG) {
+                            for (int i=0; i<iprocess->histogramPeaks.size(); i++)
+                                ui->plainTextEdit->appendPlainText("hist peaks i/start/end/vote: " +QString::number(i) +", "+QString::number(iprocess->histogramPeaks[i].start) +", "+QString::number(iprocess->histogramPeaks[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramPeaks[i].start ]) );
+                            for (int i=0; i<iprocess->histogramMins.size(); i++)
+                                ui->plainTextEdit->appendPlainText("hist mins i/start/end/vote: " +QString::number(i) +", "+QString::number(iprocess->histogramMins[i].start) +", "+QString::number(iprocess->histogramMins[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramMins[i].start ]) );
+                        }
+                        if (colorMatrix)
+                            ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
+                        else
+                            ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
+
+                        if (iprocessHist->bandCheck_errorState!=10 && !iprocessHist->histogramExtremesFiltered.isEmpty()) {
+                            drawEdges = false;
+                            drawExtremes = true;
+                            clearGraph(ui->graphicsView2);
+                            drawGraphHist2(iprocessHist, ui->graphicsView2, penRed, iprocessHist->histogramFiltered, iprocessHist->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+                            drawEdges = true;
+                            drawExtremes = false;
+                            clearGraph(ui->graphicsView3);
+                            drawGraphHist2(iprocessHist, ui->graphicsView3, penRed, iprocessHist->histogramFiltered, iprocessHist->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+                        }
+                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges( iprocess->naturalBreaksNumber ) ) );
+
+                        ui->plainTextEdit->appendPlainText("Corrected leftX-centerX-rightX: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
+
+                        break;
+                    case 8: // EXPERIMENTAL
                         break;
                 }
 
@@ -1398,7 +1533,6 @@ void setupForm::on_captureButton_2_clicked(){
         //tr("Open Image"), "", tr("Image Files (*.png *.jpg *.bmp)"));
         tr("Open Image"), "C:/xampp/htdocs/images", tr("Image Files (*.png *.jpg *.bmp)"));
 
-
     if (!w->loadedFileNamewPath.isEmpty() && !w->loadedFileNamewPath.isNull()){
 
         w->stopButton();
@@ -1697,6 +1831,23 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
                     ui->label_8->setEnabled(true);
                     ui->editHoughThetaStep->setEnabled(true);
                     break;  // EXPERIMENTAL
+            case 7: algoName = "Algo3: edge > houghTr > detectMainEdges > histAnalysis for dark tracks";
+                    ui->label_21->setEnabled(true);
+                    ui->mainEdgesSlider->setEnabled(true);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(true);
+                    ui->editHoughLineNo->setEnabled(true);
+                    ui->label_9->setEnabled(true);
+                    ui->editHoughThetaMax->setEnabled(true);
+                    ui->editHoughThetaMin->setEnabled(true);
+                    ui->label_8->setEnabled(true);
+                    ui->editHoughThetaStep->setEnabled(true);
+                    break;  // MAIN EDGES
             default:
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
@@ -1843,8 +1994,9 @@ void setupForm::on_radioWoLaser_clicked() {
     ui->algorithmBox->addItem("Ana Kenarlar ile Çizgi");
     ui->algorithmBox->addItem("Yatay Tarama");
     ui->algorithmBox->addItem("Ana Kenarlar: Bölgeli");
+    ui->algorithmBox->addItem("Ana Kenar+Histogram");
     ui->algorithmBox->addItem("Deneme");
-    if (algo > 7) algo = 7;
+    if (algo > 8) algo = 8;
     algorithmType = algo;
     ui->algorithmBox->setCurrentIndex( algorithmType );
 }

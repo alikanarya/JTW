@@ -98,6 +98,7 @@ public:
 
     imgProcess *iprocess;       // image processing class
     imgProcess *iprocessLeft, *iprocessRight;
+    imgProcess *iprocessHist;
     bool iprocessInitSwitch, iprocessLeftInitSwitch, iprocessRightInitSwitch;
     bool imageLoadedFromFile = false;
 
@@ -146,6 +147,7 @@ public slots:
     void Algo6(imgProcess *iprocess);   // woLASER: canny1 > houghTr > detectMainEdges > thickenEdgeMap > scoreLineCrossing
     void Algo7(imgProcess *iprocess);   // woLASER: edge > houghTr > detectScanHorizontal
     void Algo8(int center);             // woLASER: edge > houghTr > detectMainEdges with multiple regions, if center=0 histogram center, center>0 specific denter
+    void Algo9(imgProcess *iprocess);   // woLASER: edge > houghTr > detectMainEdges > histAnalysis for dark tracks
     void histMultAreas();
 
     void update();
