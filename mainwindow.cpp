@@ -1577,11 +1577,15 @@ void MainWindow::imageProcessingCompleted(int time){
                    if (pass1detected) {
                       pass1_offsetXpos = offsetXpos;
                       pass1_offsetXCam = offsetXCam;
+                      offsetXpos -= pass1_offsetXposDelta;
+                      offsetXCam -= pass1_offsetXCamDelta;
                       //qDebug() << "pass1 aligned offsetX pos/cam: " << pass1_offsetXpos << "-" << pass1_offsetXCam;
                    }
                    if (pass2detected) {
                       pass2_offsetXpos = offsetXpos;
                       pass2_offsetXCam = offsetXCam;
+                      offsetXpos -= pass2_offsetXposDelta;
+                      offsetXCam -= pass2_offsetXCamDelta;
                       //qDebug() << "pass2 aligned offsetX pos/cam: " << pass2_offsetXpos << "-" << pass2_offsetXCam;
                    }
                }
@@ -2046,6 +2050,10 @@ void MainWindow::readSettings(){
 
             twoPassWelding = settings->value("twopass", _2_PASS_WELD).toBool();
             autoDetect2ndPass = settings->value("detpass", _DETECT_2ND_PASS).toBool();
+            pass1_offsetXposDelta = settings->value("p1xd", 0).toInt();
+            pass1_offsetXCamDelta = settings->value("p1cd", 0).toInt();
+            pass2_offsetXposDelta = settings->value("p2xd", 0).toInt();
+            pass2_offsetXCamDelta = settings->value("p2cd", 0).toInt();
 
         settings->endGroup();
 
@@ -2163,6 +2171,10 @@ void MainWindow::readSettings(){
 
         twoPassWelding = _2_PASS_WELD;
         autoDetect2ndPass = _DETECT_2ND_PASS;
+        pass1_offsetXposDelta = 0;
+        pass1_offsetXCamDelta = 0;
+        pass2_offsetXposDelta = 0;
+        pass2_offsetXCamDelta = 0;
 
         yResIndex = _YRES_ARRAY_INDEX;
             yRes = yResArray[yResIndex];
@@ -2304,6 +2316,11 @@ void MainWindow::writeSettings(){
            settings->setValue("twopass", twopasssw.toString());
        QVariant detpasssw(autoDetect2ndPass);
            settings->setValue("detpass", detpasssw.toString());
+
+       settings->setValue("p1xd", QString::number(pass1_offsetXposDelta));
+       settings->setValue("p1cd", QString::number(pass1_offsetXCamDelta));
+       settings->setValue("p2xd", QString::number(pass2_offsetXposDelta));
+       settings->setValue("p2cd", QString::number(pass2_offsetXCamDelta));
 
     settings->endGroup();
 
@@ -3768,9 +3785,13 @@ void MainWindow::on_targetDriftCenter_clicked(){
     switch(histState){
         case 0: offsetXpos = pass1_offsetXpos;
                 offsetXCam = pass1_offsetXCam;
+                pass1_offsetXposDelta = 0;
+                pass1_offsetXCamDelta = 0;
                 break;
         case 2: offsetXpos = pass2_offsetXpos;
                 offsetXCam = pass2_offsetXCam;
+                pass2_offsetXposDelta = 0;
+                pass2_offsetXCamDelta = 0;
                 break;
     }
 

@@ -568,7 +568,6 @@ void setupForm::Algo9(imgProcess *iprocess){
         linesForHist.append(iprocess->rightCornerX);
 
         // -------START PROCESSING-------
-        startTime = w->timeSystem.getSystemTimeMsec();
 
         iprocessHist = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
         iprocessHist->maFilterKernelSize = maFilterKernelSize;
@@ -581,8 +580,6 @@ void setupForm::Algo9(imgProcess *iprocess){
 
         iprocessHist->histogramAnalysisDarkTracks(colorMatrix, invertHist);
 
-        endTime = w->timeSystem.getSystemTimeMsec();
-        processElapsed = endTime - startTime;
         // -------END PROCESSING-------
 
         int _minLeft = 2000, _minLeftX = iprocess->leftCornerX;
@@ -1099,7 +1096,7 @@ void setupForm::captureButton(){
                                 }
                             }
 
-                       ui->labelAnalyze->clear();
+                        ui->labelAnalyze->clear();
 
                         clearGraph(ui->graphicsView);
                         clearGraph(ui->graphicsView2);
@@ -2357,177 +2354,6 @@ void setupForm::on_imgParametersButton_clicked(){
 
 void setupForm::on_testButton_clicked(){
     //targetCopy.save(savePath+QDateTime::currentDateTime().toString("hhmmss_zzz")+".jpg");
-
-    extend = ui->extendHistHeight->isChecked();
-    invertHist = ui->invertHist->isChecked();
-
-    on_histAreaNoSlider_sliderMoved(histAreaNo);
-
-    if ( w->play && (w->lastData->image->format() != QImage::Format_Invalid) ){
-        if (w->applyCameraEnhancements) {
-            if (extend)
-                target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
-            else
-                target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
-        } else {
-            if (extend)
-                target = w->lastData->image->copy( w->offsetXCam, 0, w->frameWidthCam, w->lastData->image->height() );    // take target image
-            else
-                target = w->lastData->image->copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
-        }
-    }
-
-    if ( !w->play &&  imageLoadedFromFile){
-        if (extend)
-            target = w->imageFileChanged.copy( w->offsetXCam, 0, w->frameWidthCam, w->imageFileChanged.height() );    // take target image
-        else
-            target = w->imageFileChanged.copy( w->offsetXCam, w->offsetYCam, w->frameWidthCam, w->frameHeightCam );    // take target image
-    }
-
-    if ( (w->lastData->image->format() != QImage::Format_Invalid) || imageLoadedFromFile ){
-
-        if (iprocessInitSwitch) {
-            delete iprocess;
-            iprocessInitSwitch = false;
-        }
-
-        ui->labelTarget->setPixmap( QPixmap::fromImage( target ) );
-        //ui->labelMono->clear();
-        ui->labelEdge->clear();
-        ui->labelHough->clear();
-        ui->labelAnalyze->clear();
-
-        clearGraph(ui->graphicsView);
-        clearGraph(ui->graphicsView2);
-        clearGraph(ui->graphicsView3);
-
-        linesForHist.clear();
-
-        startTime = w->timeSystem.getSystemTimeMsec();
-
-        imgProcess *ipro = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
-
-        ipro->thetaMin = thetaMin;
-        ipro->thetaMax = thetaMax;
-        ipro->thetaStep = thetaStep;
-        ipro->maFilterKernelSize = maFilterKernelSize;
-        ipro->centerX = 0;
-        ipro->centerY = 0;
-
-        ipro->toMono();                                     // convert target to mono
-
-        edgeDetection(ipro);
-
-        ipro->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
-            /**/if (saveAnalysis) ipro->saveMatrix(ipro->houghLines, 3, ipro->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
-        ipro->thinCornerNum = mainEdgesNumber;
-        ipro->detectMainEdges(0, DEBUG);
-            /**/if (saveAnalysis) ipro->saveMatrix(ipro->houghLinesSorted, 3, ipro->houghLineNo, path+"04-max hough lines distance sorted.csv");
-
-        algoPrerequestsOk = true;
-        captured = true;
-
-        endTime = w->timeSystem.getSystemTimeMsec();
-        processElapsed = endTime - startTime;
-        // -------END PROCESSING-------
-
-        QString message = "\nKenar Analizi " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
-        ui->plainTextEdit->appendPlainText(message);
-
-        for (int i=0; i<ipro->mainEdgesList.size();i++)
-            ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(ipro->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(ipro->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(ipro->mainEdgesList[i].voteValue));
-        ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(ipro->leftCornerX)+", "+QString::number(ipro->trackCenterX)+", "+QString::number(ipro->rightCornerX));
-        ui->labelHough->setPixmap( QPixmap::fromImage( ipro->getImageMainEdges( ipro->naturalBreaksNumber ) ) );
-
-        linesForHist.append(ipro->leftCornerX);
-        linesForHist.append(ipro->trackCenterX);
-        linesForHist.append(ipro->rightCornerX);
-
-        // -------START PROCESSING-------
-        startTime = w->timeSystem.getSystemTimeMsec();
-
-        iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
-        iprocessInitSwitch = true;
-        iprocess->maFilterKernelSize = maFilterKernelSize;
-        iprocess->histogramAngleThreshold = histogramAngleThreshold;
-        iprocess->lenRateThr = lenRateThr;
-        iprocess->bandWidthMin = bandWidthMin;
-        iprocess->bandCenterMax = bandCenterMax;
-        iprocess->histDDLimit = histDDLimit;
-
-        iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
-
-        iprocess->histogramAnalysisDarkTracks(colorMatrix, invertHist);
-
-        endTime = w->timeSystem.getSystemTimeMsec();
-        processElapsed = endTime - startTime;
-        // -------END PROCESSING-------
-
-        message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
-        ui->plainTextEdit->appendPlainText(message);
-
-        if (DEBUG) {
-            for (int i=0; i<iprocess->histogramPeaks.size(); i++)
-                ui->plainTextEdit->appendPlainText("hist peaks i/start/end/vote: " +QString::number(i) +", "+QString::number(iprocess->histogramPeaks[i].start) +", "+QString::number(iprocess->histogramPeaks[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramPeaks[i].start ]) );
-            for (int i=0; i<iprocess->histogramMins.size(); i++)
-                ui->plainTextEdit->appendPlainText("hist mins i/start/end/vote: " +QString::number(i) +", "+QString::number(iprocess->histogramMins[i].start) +", "+QString::number(iprocess->histogramMins[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramMins[i].start ]) );
-        }
-
-        int _minLeft = 2000, _minLeftX = ipro->leftCornerX;
-        int _minRight = 2000, _minRightX = ipro->rightCornerX;
-        int _leftLimit = ipro->trackCenterX / 2.0;
-        int _rightLimit = (ipro->imageWidth - ipro->trackCenterX) / 2.0  + ipro->trackCenterX;
-        int val;
-        for (int i=0; i<iprocess->histogramMins.size(); i++){
-            val = iprocess->histogramFiltered[ iprocess->histogramMins[i].start ];
-            if (iprocess->histogramMins[i].end < ipro->trackCenterX && iprocess->histogramMins[i].start > _leftLimit ){
-                if (val < _minLeft) {
-                    _minLeft = val;
-                    _minLeftX = iprocess->histogramMins[i].end;
-                }
-            }
-
-            if (iprocess->histogramMins[i].start > ipro->trackCenterX && iprocess->histogramMins[i].end < _rightLimit ){
-                if (val < _minRight) {
-                    _minRight = val;
-                    _minRightX = iprocess->histogramMins[i].start;
-                }
-            }
-        }
-        linesForHist.append(_minLeftX);
-        linesForHist.append(_minRightX);
-
-        if (colorMatrix)
-            ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
-        else
-            ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
-
-        if (iprocess->bandCheck_errorState!=10 && !iprocess->histogramExtremesFiltered.isEmpty()) {
-            drawEdges = false;
-            drawExtremes = true;
-            clearGraph(ui->graphicsView2);
-            drawGraphHist2(iprocess, ui->graphicsView2, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
-            drawEdges = true;
-            drawExtremes = false;
-            clearGraph(ui->graphicsView3);
-            drawGraphHist2(iprocess, ui->graphicsView3, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
-        }
-
-        ipro->natBreaksMax1.setX(_minLeftX);
-        ipro->natBreaksMax2.setX(_minRightX);
-        ipro->mainEdgesList[0].distance = _minLeftX;
-        ipro->mainEdgesList[1].distance = _minRightX;
-        ipro->mainEdgesList[0].angle = ipro->mainEdgesList[1].angle = 0;
-        ipro->leftCornerX = _minLeftX;
-        ipro->rightCornerX = _minRightX;
-        ipro->trackCenterX = (_minLeftX+_minRightX) / 2.0;
-        ipro->centerLine.distance = ipro->trackCenterX;
-        ui->labelAnalyze->setPixmap( QPixmap::fromImage( ipro->getImageMainEdges( ipro->naturalBreaksNumber ) ) );
-
-        ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(ipro->leftCornerX)+", "+QString::number(ipro->trackCenterX)+", "+QString::number(ipro->rightCornerX));
-        delete ipro;
-    }
-
 }
 
 void setupForm::on_maFilterSizeSlider_sliderMoved(int position){
