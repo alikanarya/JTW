@@ -392,9 +392,7 @@ void imgProcessThread::Algo9() {
             iprocess->thinCornerNum = w->mainEdgesNumber;
             iprocess->detectMainEdges(0, false);
 
-            QImage pic = targetArea.copy( 0, 0, targetArea.width(), targetArea.height() );    // take target image
-            imgProcess *iprocessHist = new imgProcess( pic, pic.width(), pic.height() );   // new imgProcess object
-            //imgProcess *iprocessHist = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
+            imgProcess *iprocessHist = new imgProcess( targetArea, targetArea.width(), targetArea.height() );   // new imgProcess object
             iprocessHist->maFilterKernelSize = w->maFilterKernelSize;
             iprocessHist->bandWidthMin = w->bandWidthMin;
             iprocessHist->bandCenterMax = w->bandCenterMax;

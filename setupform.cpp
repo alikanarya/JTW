@@ -553,7 +553,7 @@ void setupForm::Algo8(int center){
 }
 
 void setupForm::Algo9(imgProcess *iprocess){
-// woLASER: edge > houghTr > detectMainEdges
+// woLASER: edge > houghTr > detectMainEdges > histAnalysis for dark tracks
 
     if (edgeDetectionState != 0) {
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
@@ -576,6 +576,8 @@ void setupForm::Algo9(imgProcess *iprocess){
         iprocessHist->bandCenterMax = bandCenterMax;
 
         iprocessHist->constructValueMatrix( iprocessHist->imgOrginal, 0 );
+
+        invertHist = ui->invertHist->isChecked();
 
         iprocessHist->histogramAnalysisDarkTracks(colorMatrix, invertHist);
 
@@ -1097,10 +1099,7 @@ void setupForm::captureButton(){
                                 }
                             }
 
-                        //ui->labelMono->clear();
-                        //ui->labelEdge->clear();
-                        //ui->labelHough->clear();
-                        ui->labelAnalyze->clear();
+                       ui->labelAnalyze->clear();
 
                         clearGraph(ui->graphicsView);
                         clearGraph(ui->graphicsView2);
@@ -1131,6 +1130,7 @@ void setupForm::captureButton(){
 
                         ui->plainTextEdit->appendPlainText("Corrected leftX-centerX-rightX: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
 
+                        delete iprocessHist;
                         break;
                     case 8: // EXPERIMENTAL
                         break;
