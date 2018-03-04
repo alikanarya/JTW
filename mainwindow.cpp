@@ -240,6 +240,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     firstTimeTick = timeSystem.getSystemTimeMsec();
     timer->start(1); */
 
+    connect(&videoTimer, SIGNAL(timeout()), this, SLOT(videoSlot()));
+
     settingsPWDOK = false;
     setupPWDOK = false;
 
@@ -805,7 +807,7 @@ void MainWindow::updateSn(){
 
     }
 
-    msecCount = 0;
+    //msecCount = 0;
     pause = false;
 
     //ui->plainTextEdit->ensureCursorVisible();
@@ -1128,6 +1130,9 @@ void MainWindow::startControl(){
             ui->targetDriftLeft->setEnabled( true );
             ui->targetDriftCenter->setEnabled( true );
             ui->targetDriftRight->setEnabled( true );
+
+            if (autoVideo)
+                videoButton();
         }
     }
 
@@ -2072,6 +2077,10 @@ void MainWindow::readSettings(){
                 pass1TimerTime = pass1TotalTime - passTrTimerTime;
             pass2TimerTime = settings->value("p2t", _PASS2_TIME).toInt();
             restartApp = settings->value("rst", false).toBool();
+            videoMode = settings->value("videomode", 0).toInt();
+            autoVideo = settings->value("videoauto", false).toBool();
+            if (autoVideo)
+                ui->plainTextEdit->appendPlainText("Oto Kayıt Aktif!");
 
             //qDebug() << pass1TotalTime << " " << passTrTimerTime << " " << pass1TimerTime << " " << pass2TimerTime;
         settings->endGroup();
@@ -2192,6 +2201,9 @@ void MainWindow::readSettings(){
         pass2TimerTime = _PASS2_TIME;
 
         restartApp = false;
+
+        videoMode = 0;
+        autoVideo = false;
 
         statusMessage = "ini dosyası bulunamadı";
     }
@@ -2344,6 +2356,10 @@ void MainWindow::writeSettings(){
 
         QVariant rstsw(restartApp);
             settings->setValue("rst", rstsw.toString());
+
+        settings->setValue("videomode", QString::number(videoMode));
+        QVariant videoautosw(autoVideo);
+            settings->setValue("videoauto", videoautosw.toString());
 
         settings->endGroup();
 
@@ -2592,44 +2608,45 @@ void MainWindow::playCam(){
             }
 
 
-            if ( captureVideo ) { // VIDEO SAVE
+            if ( captureVideo && videoMode == 0) { // VIDEO SAVE
 
                 if (videoFrameCount == 0)
                     folderName = savePath + QDateTime::currentDateTime().toString("yyMMdd_hhmmss") + "/";
 
-                int index = videoFrameCount % threadVideoSave->bufferLength;
+                if ( (fpsReal % 12) == 0 ){
+                    int index = videoFrameCount % threadVideoSave->bufferLength;
 
-                if (applyCameraEnhancements) {
-                    //videoList[videoFrameCount] = imageFileChanged.copy();
-                    videoList[index] = imageFileChanged.copy();
-                } else {
-                    //videoList[videoFrameCount] = lastData->image->copy();
-                    videoList[index] = lastData->image->copy();
-                }
-                videoFrameCount++;
-
-                if (videoFrameCount % threadVideoSave->bufferLength == 0 || videoFrameCount >= videoFrameSize) {
-
-                    if (!threadVideoSave->isRunning()){
-                        int lastSize = threadVideoSave->bufferLength;
-                        threadVideoSave->lastSave = false;
-
-                        if (videoFrameCount >= videoFrameSize){
-                            lastSize = index+1;
-                            threadVideoSave->lastSave = true;
-                            captureVideo = false;
-                        }
-
-                        threadVideoSave->saveSize = lastSize;
-                        for (int i=0;i<lastSize;i++)
-                            threadVideoSave->buffer[i] = videoList[i];
-                        threadVideoSave->count++;
-
-                        threadVideoSave->start();
+                    if (applyCameraEnhancements) {
+                        //videoList[videoFrameCount] = imageFileChanged.copy();
+                        videoList[index] = imageFileChanged.copy();
+                    } else {
+                        //videoList[videoFrameCount] = lastData->image->copy();
+                        videoList[index] = lastData->image->copy();
                     }
-                }
+                    videoFrameCount++;
 
-                //ui->plainTextEdit->appendPlainText(QString::number(videoFrameCount));
+                    if (videoFrameCount % threadVideoSave->bufferLength == 0 || videoFrameCount >= videoFrameSize) {
+
+                        if (!threadVideoSave->isRunning()){
+                            int lastSize = threadVideoSave->bufferLength;
+                            threadVideoSave->lastSave = false;
+
+                            if (videoFrameCount >= videoFrameSize){
+                                lastSize = index+1;
+                                threadVideoSave->lastSave = true;
+                                captureVideo = false;
+                            }
+
+                            threadVideoSave->saveSize = lastSize;
+                            for (int i=0;i<lastSize;i++)
+                                threadVideoSave->buffer[i] = videoList[i];
+                            threadVideoSave->count++;
+
+                            threadVideoSave->start();
+                        }
+                    }
+                    //ui->plainTextEdit->appendPlainText(QString::number(videoFrameCount));
+                }
             }
 
             // if joint is tracked for some interval
@@ -2654,16 +2671,40 @@ void MainWindow::timeEdit(){
 
 void MainWindow::videoButton(){
 
-    videoFrameSize = videoDuration * fpsRealLast;
-    //ui->plainTextEdit->appendPlainText(QString::number(videoFrameSize)+"-"+QString::number(videoDuration)+"-"+QString::number(fpsRealLast));
-    //videoList = new QImage[videoFrameSize];
-    videoList = new QImage[threadVideoSave->bufferLength];
-    //videoList = (QImage *)malloc(videoFrameSize * sizeof(QImage));
-    videoFrameCount = 0;
-    ui->videoButton->setEnabled(false);
-    captureVideo = true;
+    if (play) {
+        captureVideo = true;
+        ui->videoButton->setEnabled(false);
+        ui->videoButton->setIcon(videoSaveDisabled);
 
-    ui->videoButton->setIcon(videoSaveDisabled);
+        if (videoMode == 0) {
+
+            videoFrameSize = videoDuration * fpsRealLast;
+            //ui->plainTextEdit->appendPlainText(QString::number(videoFrameSize)+"-"+QString::number(videoDuration)+"-"+QString::number(fpsRealLast));
+            videoList = new QImage[threadVideoSave->bufferLength];
+            //videoList = (QImage *)malloc(videoFrameSize * sizeof(QImage));
+            videoFrameCount = 0;
+        }
+        else if (videoMode == 1) {
+
+            folderName = savePath + QDateTime::currentDateTime().toString("yyMMdd_hhmmss") + "/";
+            if (!QDir(folderName).exists())
+                QDir().mkdir(folderName);
+            videoTimer.start(500);
+        }
+    }
+}
+
+void MainWindow::videoSlot(){
+
+    if (!threadVideoSave->isRunning()){
+
+        if (applyCameraEnhancements) {
+            threadVideoSave->bufferImage = imageFileChanged.copy();
+        } else {
+            threadVideoSave->bufferImage = lastData->image->copy();
+        }
+        threadVideoSave->start();
+    }
 }
 
 void MainWindow::saveFinished(){

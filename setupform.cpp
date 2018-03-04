@@ -582,11 +582,66 @@ void setupForm::Algo9(imgProcess *iprocess){
 
         // -------END PROCESSING-------
 
-        int _minLeft = 2000, _minLeftX = iprocess->leftCornerX;
-        int _minRight = 2000, _minRightX = iprocess->rightCornerX;
         int _leftLimit = iprocess->trackCenterX / 2.0;
         int _rightLimit = (iprocess->imageWidth - iprocess->trackCenterX) / 2.0  + iprocess->trackCenterX;
         int val;
+        QList<QPoint> leftList;
+        QList<QPoint> rightList;
+        for (int i=0; i<iprocessHist->histogramMins.size(); i++){
+            val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
+            if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].start > _leftLimit ){
+                int j=1; bool flag=true; int valMax=val;
+                do {
+                    if (iprocessHist->histogramPeaks[j].end > iprocessHist->histogramMins[i].start) {
+                        valMax = iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[j-1].end ];
+                        flag = false;
+                    }
+                    j++;
+                } while (j<iprocessHist->histogramPeaks.size() && flag);
+
+                QPoint p(iprocessHist->histogramMins[i].end,valMax-val);
+                leftList.append(p);
+            }
+
+            if (iprocessHist->histogramMins[i].start > iprocess->trackCenterX && iprocessHist->histogramMins[i].end < _rightLimit ){
+                int j=0; bool flag=true; int valMax=val;
+                do {
+                    if (iprocessHist->histogramPeaks[j].start > iprocessHist->histogramMins[i].end) {
+                        valMax = iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[j].end ];
+                        flag = false;
+                    }
+                    j++;
+                } while (j<iprocessHist->histogramPeaks.size() && flag);
+
+                QPoint p(iprocessHist->histogramMins[i].start,valMax-val);
+                rightList.append(p);
+            }
+        }
+        //qDebug() << leftList;
+        //qDebug() << rightList;
+
+        int _minLeftX = iprocess->leftCornerX;
+        int _minRightX = iprocess->rightCornerX;
+
+        int maxDeriv = 0;
+        for (int i=0; i<leftList.size(); i++){
+            if (leftList[i].y() > maxDeriv) {
+                maxDeriv = leftList[i].y();
+                _minLeftX = leftList[i].x();
+            }
+        }
+
+        maxDeriv = 0;
+        for (int i=0; i<rightList.size(); i++){
+            if (rightList[i].y() > maxDeriv) {
+                maxDeriv = rightList[i].y();
+                _minRightX = rightList[i].x();
+            }
+        }
+
+        /*
+        int _minLeft = 2000;
+        int _minRight = 2000;
         for (int i=0; i<iprocessHist->histogramMins.size(); i++){
             val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
             if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].start > _leftLimit ){
@@ -602,7 +657,7 @@ void setupForm::Algo9(imgProcess *iprocess){
                     _minRightX = iprocessHist->histogramMins[i].start;
                 }
             }
-        }
+        }*/
         linesForHist.append(_minLeftX);
         linesForHist.append(_minRightX);
 
@@ -1080,7 +1135,7 @@ void setupForm::captureButton(){
                         }
                         break;
                     case 7: // MAIN EDGES WITH HISTOGRAM DARK
-
+                        {
                         /**/if (DEBUG) {
                                 ui->plainTextEdit->appendPlainText("-2nd hough vals---");
                                 for (int i=0; i<iprocess->listHoughData2ndSize;i++)
@@ -1103,10 +1158,10 @@ void setupForm::captureButton(){
                         clearGraph(ui->graphicsView3);
 
                         if (DEBUG) {
-                            for (int i=0; i<iprocess->histogramPeaks.size(); i++)
-                                ui->plainTextEdit->appendPlainText("hist peaks i/start/end/vote: " +QString::number(i) +", "+QString::number(iprocess->histogramPeaks[i].start) +", "+QString::number(iprocess->histogramPeaks[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramPeaks[i].start ]) );
-                            for (int i=0; i<iprocess->histogramMins.size(); i++)
-                                ui->plainTextEdit->appendPlainText("hist mins i/start/end/vote: " +QString::number(i) +", "+QString::number(iprocess->histogramMins[i].start) +", "+QString::number(iprocess->histogramMins[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramMins[i].start ]) );
+                            for (int i=0; i<iprocessHist->histogramPeaks.size(); i++)
+                                ui->plainTextEdit->appendPlainText("hist peaks i/start/end/val: " +QString::number(i) +", "+QString::number(iprocessHist->histogramPeaks[i].start) +", "+QString::number(iprocessHist->histogramPeaks[i].end) +", " + QString::number(iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[i].start ]) );
+                            for (int i=0; i<iprocessHist->histogramMins.size(); i++)
+                                ui->plainTextEdit->appendPlainText("hist mins i/start/end/val: " +QString::number(i) +", "+QString::number(iprocessHist->histogramMins[i].start) +", "+QString::number(iprocessHist->histogramMins[i].end) +", " + QString::number(iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ]) );
                         }
                         if (colorMatrix)
                             ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
@@ -1123,11 +1178,20 @@ void setupForm::captureButton(){
                             clearGraph(ui->graphicsView3);
                             drawGraphHist2(iprocessHist, ui->graphicsView3, penRed, iprocessHist->histogramFiltered, iprocessHist->histogramSize, QPoint(-1,-1), true); // recursive MA filter
                         }
-                        ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges( iprocess->naturalBreaksNumber ) ) );
+                        iprocess->getImageMainEdges( iprocess->naturalBreaksNumber );
+
+                        QPixmap px = QPixmap::fromImage(iprocess->imgSolidLines);
+                        QPainter p(&px);
+                        p.setPen(QPen(Qt::red, 3, Qt::DotLine));
+                        p.drawLine (linesForHist[1], 0, linesForHist[1], iprocess->imgSolidLines.height());
+                        p.end ();
+
+                        ui->labelAnalyze->setPixmap( px );
 
                         ui->plainTextEdit->appendPlainText("Corrected leftX-centerX-rightX: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
 
                         delete iprocessHist;
+                        }
                         break;
                     case 8: // EXPERIMENTAL
                         break;

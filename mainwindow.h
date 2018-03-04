@@ -484,6 +484,9 @@ public:
     int videoFrameCount;
     int videoFrameSize = 25;
     int videoDuration = 1;
+    QTimer videoTimer;
+    int videoMode = 0;  // 0:old time mode, 1: fps mode
+    bool autoVideo = false;
 
     /*
     int right_VMEM_BYTE, right_BITofBYTE;
@@ -680,6 +683,7 @@ private slots:
     void showLicenseDialog();
     void showReport();
     void thinJointButton();
+    void videoSlot();
 
 
     // process controls

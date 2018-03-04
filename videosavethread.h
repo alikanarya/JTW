@@ -18,6 +18,8 @@ public:
     bool lastSave = false;
     int saveSize = 0;
 
+    QImage bufferImage;
+
 public slots:
 
 protected:
