@@ -570,13 +570,53 @@ for (int x=0; x<iprocess->edgeWidth; x++){
     edgeHist[x] = sum;
     totalSum += sum;
 }
+edgeHistAvg = totalSum / iprocess->edgeWidth;
 
+totalSum = 0;
 double moments = 0;
 for (int x=0; x<iprocess->edgeWidth; x++){
-    moments += x*edgeHist[x];
-
+    if (edgeHist[x] > edgeHistAvg) {
+        moments += x*edgeHist[x];
+        totalSum += edgeHist[x];
+    }
 }
-edgeHistMean = moments/totalSum;
+edgeHistMean = moments/totalSum + 1;
+/*
+int rightDist = iprocess->edgeWidth - edgeHistMean1;
+if (edgeHistMean1 >= rightDist ){
+    totalSum = 0;
+    double moments = 0;
+    for (int x=0; x<iprocess->edgeWidth; x++){
+        if (edgeHist[x] > edgeHistAvg) {
+            if (x < edgeHistMean1) {
+                moments += x*edgeHist[x];
+                totalSum += edgeHist[x];
+            } else {
+                moments += (2*edgeHistMean1-x)*edgeHist[x];
+                totalSum += edgeHist[x];
+            }
+
+        }
+    }
+    edgeHistMean = moments/totalSum;
+} else {
+    totalSum = 0;
+    double moments = 0;
+    for (int x=0; x<iprocess->edgeWidth; x++){
+        if (edgeHist[x] > edgeHistAvg) {
+            if (x < edgeHistMean1) {
+                moments += (rightDist-edgeHistMean1+x) *edgeHist[x];
+                totalSum += edgeHist[x];
+            } else {
+                moments += (rightDist+edgeHistMean1-x)*edgeHist[x];
+                totalSum += edgeHist[x];
+            }
+
+        }
+    }
+    edgeHistMean = moments/totalSum;
+}
+*/
 /*
 if (iprocess->edgeWidth != 0) {
     double sampleAve = totalSum / iprocess->edgeWidth;
@@ -611,6 +651,8 @@ iprocess->trackCenterX = edgeHistMean;
 
         int _leftLimit = iprocess->trackCenterX / 2.0;
         int _rightLimit = (iprocess->imageWidth - iprocess->trackCenterX) / 2.0  + iprocess->trackCenterX;
+        int _leftMostLimit = iprocess->imageWidth * 0.2;
+        int _rightMostLimit = iprocess->imageWidth * 0.8;
         int _minLeftX = iprocess->leftCornerX;
         int _minRightX = iprocess->rightCornerX;
         int val;
@@ -669,24 +711,81 @@ iprocess->trackCenterX = edgeHistMean;
 
         int _minLeft = 2000;
         int _minRight = 2000;
+
         for (int i=0; i<iprocessHist->histogramMins.size(); i++){
+
             val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
-            if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].start > _leftLimit ){
+
+            if (iprocessHist->histogramMins[i].start > iprocess->trackCenterX && iprocessHist->histogramMins[i].start < _rightLimit ){
+                if (val <= _minRight) {
+                    _minRight = val;
+                    _minRightX = iprocessHist->histogramMins[i].start;
+                }
+            }
+
+            if (iprocessHist->histogramMins[i].start >= _rightLimit && iprocessHist->histogramMins[i].start < _rightMostLimit && _minRight > iprocessHist->histogramAvg){
+                if (val <= _minRight) {
+                    _minRight = val;
+                    _minRightX = iprocessHist->histogramMins[i].start;
+                }
+            }
+        }
+
+        for (int i=iprocessHist->histogramMins.size()-1; 0<=i; i--){
+
+            val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].end ];
+
+            if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].end > _leftLimit ){
+                if (val <= _minLeft) {
+                    _minLeft = val;
+                    _minLeftX = iprocessHist->histogramMins[i].end;
+                }
+            }
+
+            if (iprocessHist->histogramMins[i].end <= _leftLimit && iprocessHist->histogramMins[i].end > _leftMostLimit && _minLeft > iprocessHist->histogramAvg){
+                if (val <= _minLeft) {
+                    _minLeft = val;
+                    _minLeftX = iprocessHist->histogramMins[i].end;
+                }
+            }
+        }
+/*
+        for (int i=0; i<iprocessHist->histogramMins.size(); i++){
+
+            val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
+
+            if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].end > _leftLimit ){
                 if (val < _minLeft) {
                     _minLeft = val;
                     _minLeftX = iprocessHist->histogramMins[i].end;
                 }
             }
 
-            if (iprocessHist->histogramMins[i].start > iprocess->trackCenterX && iprocessHist->histogramMins[i].end < _rightLimit ){
+            if (iprocessHist->histogramMins[i].end <= _leftLimit && iprocessHist->histogramMins[i].end > _leftMostLimit && _minLeft > iprocessHist->histogramAvg){
+                if (val < _minLeft) {
+                    _minLeft = val;
+                    _minLeftX = iprocessHist->histogramMins[i].end;
+                }
+            }
+
+            if (iprocessHist->histogramMins[i].start > iprocess->trackCenterX && iprocessHist->histogramMins[i].start < _rightLimit ){
+                if (val < _minRight) {
+                    _minRight = val;
+                    _minRightX = iprocessHist->histogramMins[i].start;
+                }
+            }
+
+            if (iprocessHist->histogramMins[i].start >= _rightLimit && iprocessHist->histogramMins[i].start < _rightMostLimit && _minRight > iprocessHist->histogramAvg){
                 if (val < _minRight) {
                     _minRight = val;
                     _minRightX = iprocessHist->histogramMins[i].start;
                 }
             }
         }
+*/
         linesForHist.append(_minLeftX);
         linesForHist.append(_minRightX);
+        //qDebug() << linesForHist;
 
         for (int i=0; i<iprocess->mainEdgesList.size();i++)
             ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
@@ -2224,6 +2323,11 @@ void setupForm::drawGraphHist(QGraphicsView *graph, QPen *pen, int *array, int s
         //if (array[i] == max) qDebug() << max << " - " << (int)(sceneHeight-(array[i]-min)*yScale);
         //graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-(array[i]-min)*yScale), *pen);
         graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-yOffset-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-yOffset-(array[i]-min)*yScale), *pen);
+    }
+
+    if (edgeHistMean != 0){
+        graph->scene()->addLine(edgeHistMean*xScale, 0, edgeHistMean*xScale, sceneHeight, QPen(Qt::green));
+        graph->scene()->addLine(0, (int)(sceneHeight-yOffset-(edgeHistAvg-min)*yScale), sceneWidth, (int)(sceneHeight-yOffset-(edgeHistAvg-min)*yScale), QPen(Qt::blue));
     }
 
     // **** int avgVal = (int)(sceneHeight-(iprocess->histogramAvg-min)*yScale);
