@@ -561,7 +561,34 @@ void setupForm::Algo9(imgProcess *iprocess){
         iprocess->thinCornerNum = mainEdgesNumber;
         iprocess->detectMainEdges(0, DEBUG);
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
+edgeHist = new int[iprocess->edgeWidth];
+double totalSum = 0;
+for (int x=0; x<iprocess->edgeWidth; x++){
+    int sum = 0;
+    for (int y=0; y<iprocess->edgeHeight; y++)
+         if( iprocess->edgeMapMatrix[y][x] ) sum++;
+    edgeHist[x] = sum;
+    totalSum += sum;
+}
 
+double moments = 0;
+for (int x=0; x<iprocess->edgeWidth; x++){
+    moments += x*edgeHist[x];
+
+}
+edgeHistMean = moments/totalSum;
+/*
+if (iprocess->edgeWidth != 0) {
+    double sampleAve = totalSum / iprocess->edgeWidth;
+    double powSum = 0;
+    for (int c=0; c<iprocess->edgeWidth; c++)
+        powSum += pow(sampleAve-edgeHist[c], 2);
+    powSum /= iprocess->edgeWidth;
+    edgeHistMean = sqrt(powSum);
+}
+*/
+//qDebug() << edgeHistMean;
+iprocess->trackCenterX = edgeHistMean;
         linesForHist.clear();
         linesForHist.append(iprocess->leftCornerX);
         linesForHist.append(iprocess->trackCenterX);
@@ -584,7 +611,10 @@ void setupForm::Algo9(imgProcess *iprocess){
 
         int _leftLimit = iprocess->trackCenterX / 2.0;
         int _rightLimit = (iprocess->imageWidth - iprocess->trackCenterX) / 2.0  + iprocess->trackCenterX;
+        int _minLeftX = iprocess->leftCornerX;
+        int _minRightX = iprocess->rightCornerX;
         int val;
+/*
         QList<QPoint> leftList;
         QList<QPoint> rightList;
         for (int i=0; i<iprocessHist->histogramMins.size(); i++){
@@ -620,9 +650,6 @@ void setupForm::Algo9(imgProcess *iprocess){
         //qDebug() << leftList;
         //qDebug() << rightList;
 
-        int _minLeftX = iprocess->leftCornerX;
-        int _minRightX = iprocess->rightCornerX;
-
         int maxDeriv = 0;
         for (int i=0; i<leftList.size(); i++){
             if (leftList[i].y() > maxDeriv) {
@@ -638,8 +665,8 @@ void setupForm::Algo9(imgProcess *iprocess){
                 _minRightX = rightList[i].x();
             }
         }
+*/
 
-        /*
         int _minLeft = 2000;
         int _minRight = 2000;
         for (int i=0; i<iprocessHist->histogramMins.size(); i++){
@@ -657,7 +684,7 @@ void setupForm::Algo9(imgProcess *iprocess){
                     _minRightX = iprocessHist->histogramMins[i].start;
                 }
             }
-        }*/
+        }
         linesForHist.append(_minLeftX);
         linesForHist.append(_minRightX);
 
@@ -1169,6 +1196,10 @@ void setupForm::captureButton(){
                             ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
 
                         if (iprocessHist->bandCheck_errorState!=10 && !iprocessHist->histogramExtremesFiltered.isEmpty()) {
+                            drawExtremes = false;
+                            drawhistogramMaxPoint = false;
+                            clearGraph(ui->graphicsView);
+                            drawGraphHist(ui->graphicsView, penRed, edgeHist, iprocess->edgeWidth, QPoint(-1,-1), true);
                             drawEdges = false;
                             drawExtremes = true;
                             clearGraph(ui->graphicsView2);
@@ -2178,7 +2209,8 @@ void setupForm::drawGraphHist(QGraphicsView *graph, QPen *pen, int *array, int s
     int sceneHeight = graph->geometry().height();
     int sceneWidth = graph->geometry().width();
 
-    float yScale = sceneHeight*1.0 / (max - min);
+    float yScale = sceneHeight*0.9 / (max - min);
+    int yOffset = sceneHeight*0.05;
     float xScale = sceneWidth*1.0 / size;
 
     //qDebug() << min << ":" << max << ":" << QString::number(xScale,'f',2) << ":" << QString::number(yScale,'f',2) << ":" << graph->geometry().height() << ":" << graph->geometry().width();
@@ -2190,34 +2222,38 @@ void setupForm::drawGraphHist(QGraphicsView *graph, QPen *pen, int *array, int s
 
     for (int i=1; i<size; i++){
         //if (array[i] == max) qDebug() << max << " - " << (int)(sceneHeight-(array[i]-min)*yScale);
-        graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-(array[i]-min)*yScale), *pen);
+        //graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-(array[i]-min)*yScale), *pen);
+        graph->scene()->addLine((i-1)*xScale, (int)(sceneHeight-yOffset-(array[i-1]-min)*yScale), i*xScale, (int)(sceneHeight-yOffset-(array[i]-min)*yScale), *pen);
     }
 
-    int avgVal = (int)(sceneHeight-(iprocess->histogramAvg-min)*yScale);
-    graph->scene()->addLine(0, avgVal, sceneWidth, avgVal, *penGreen);
+    // **** int avgVal = (int)(sceneHeight-(iprocess->histogramAvg-min)*yScale);
+    //graph->scene()->addLine(0, avgVal, sceneWidth, avgVal, *penGreen);
 
 //    for (int i=1; i<iprocess->histogramExtremes.size(); i++)
 //        graph->scene()->addLine(iprocess->histogramExtremes[i-1].end*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i-1].end ]-min)*yScale), iprocess->histogramExtremes[i].start*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]-min)*yScale), *penBlue);
 
-    for (int i=0; i<iprocess->histogramExtremes.size(); i++) {
-        //graph->scene()->addEllipse(iprocess->histogramExtremes[i].end*xScale - 1, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]-min)*yScale) - 1, 2, 2, *penBlue, QBrush(Qt::blue));
-        QPen pS, pE;
-        if (iprocess->histogramExtremes[i].start == iprocess->histogramExtremes[i].end){
-            pS.setColor(Qt::green); pE.setColor(Qt::green);
-        } else {
-            pS.setColor(Qt::blue); pE.setColor(Qt::black);
+    if (drawExtremes) {
+        for (int i=0; i<iprocess->histogramExtremes.size(); i++) {
+            //graph->scene()->addEllipse(iprocess->histogramExtremes[i].end*xScale - 1, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]-min)*yScale) - 1, 2, 2, *penBlue, QBrush(Qt::blue));
+            QPen pS, pE;
+            if (iprocess->histogramExtremes[i].start == iprocess->histogramExtremes[i].end){
+                pS.setColor(Qt::green); pE.setColor(Qt::green);
+            } else {
+                pS.setColor(Qt::blue); pE.setColor(Qt::black);
+            }
+            graph->scene()->addLine(iprocess->histogramExtremes[i].start*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]-min)*yScale -10),
+                                    iprocess->histogramExtremes[i].start*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]-min)*yScale +10), pS);
+            graph->scene()->addLine(iprocess->histogramExtremes[i].end*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]-min)*yScale -10),
+                                    iprocess->histogramExtremes[i].end*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]-min)*yScale +10), pE);
         }
-        graph->scene()->addLine(iprocess->histogramExtremes[i].start*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]-min)*yScale -10),
-                                iprocess->histogramExtremes[i].start*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].start ]-min)*yScale +10), pS);
-        graph->scene()->addLine(iprocess->histogramExtremes[i].end*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]-min)*yScale -10),
-                                iprocess->histogramExtremes[i].end*xScale, (int)(sceneHeight-(iprocess->histogramFiltered[ iprocess->histogramExtremes[i].end ]-min)*yScale +10), pE);
     }
 
-    penBlue->setWidth(2);
-    for (int i=0; i<iprocess->histogramMaxPoint.size(); i++){
-        graph->scene()->addLine(iprocess->histogramMaxPoint[i].x()*xScale, (int)(sceneHeight-(iprocess->histogramMaxPoint[i].y()-min)*yScale), iprocess->histogramMaxPointPair[i].x()*xScale, (int)(sceneHeight-(iprocess->histogramMaxPointPair[i].y()-min)*yScale), *penBlue);
+    if (drawhistogramMaxPoint) {
+        penBlue->setWidth(2);
+        for (int i=0; i<iprocess->histogramMaxPoint.size(); i++){
+            graph->scene()->addLine(iprocess->histogramMaxPoint[i].x()*xScale, (int)(sceneHeight-(iprocess->histogramMaxPoint[i].y()-min)*yScale), iprocess->histogramMaxPointPair[i].x()*xScale, (int)(sceneHeight-(iprocess->histogramMaxPointPair[i].y()-min)*yScale), *penBlue);
+        }
     }
-    penBlue->setWidth(2);
 
     graph->show();
 }

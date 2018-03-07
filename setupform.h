@@ -86,6 +86,8 @@ public:
     QList<imgProcess*> iproList;
     bool graphLock = true;
     double histDDLimit = 0;
+    int *edgeHist;
+    int edgeHistMean;
 
     // for multi region main edge algorithm
     int histogramCenterX = 0;
@@ -121,6 +123,7 @@ public:
     void drawGraphHist(QGraphicsView *graph, QPen *pen, int *array, int size, QPoint yRange, bool scaleMin = true); // with extreme points
     bool drawEdges = true;
     bool drawExtremes = true;
+    bool drawhistogramMaxPoint = true;
     QList<int> linesForHist;
     void drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen, int *array, int size, QPoint yRange, bool scaleMin = true);// with extreme filtered points
     void drawGraphList(QGraphicsView *graph, QPen *pen, QList<range> list, int *yVals, QPoint xRange, QPoint yRange);
