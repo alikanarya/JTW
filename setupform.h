@@ -87,7 +87,9 @@ public:
     bool graphLock = true;
     double histDDLimit = 0;
     int *edgeHist;
-    int edgeHistMean=0;
+    int edgeHistMean = 0;
+    int mainEdgeMean = 0;
+    int histMean = 0;
     int edgeHistAvg=0;
 
     // for multi region main edge algorithm

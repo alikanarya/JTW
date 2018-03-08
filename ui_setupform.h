@@ -388,6 +388,7 @@ public:
         labelPicNo->setObjectName(QStringLiteral("labelPicNo"));
         labelPicNo->setGeometry(QRect(530, 10, 191, 16));
         labelPicNo->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
+        labelPicNo->setTextFormat(Qt::PlainText);
         labelPicNo->setAlignment(Qt::AlignCenter);
         tabWidget = new QTabWidget(setupForm);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
