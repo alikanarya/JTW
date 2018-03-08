@@ -564,289 +564,298 @@ void setupForm::Algo9(imgProcess *iprocess){
         iprocess->detectMainEdges(0, DEBUG);
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLinesSorted, 3, iprocess->houghLineNo, path+"04-max hough lines distance sorted.csv");
 
-        for (int i=0; i<iprocess->mainEdgesList.size();i++)
-            ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
-        ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
-        ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges( iprocess->naturalBreaksNumber ) ) );
+        if (iprocess->detected) {
+            for (int i=0; i<iprocess->mainEdgesList.size();i++)
+                ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(iprocess->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(iprocess->mainEdgesList[i].voteValue));
+            ui->plainTextEdit->appendPlainText("leftX-centerX-rightX: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
+            ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges( iprocess->naturalBreaksNumber ) ) );
 
-        mainEdgeMean = iprocess->trackCenterX;
-        edgeHist = new int[iprocess->edgeWidth];
-double totalSum = 0;
-for (int x=0; x<iprocess->edgeWidth; x++){
-    int sum = 0;
-    for (int y=0; y<iprocess->edgeHeight; y++)
-         if( iprocess->edgeMapMatrix[y][x] ) sum++;
-    edgeHist[x] = sum;
-    totalSum += sum;
-}
-edgeHistAvg = totalSum / iprocess->edgeWidth;
+            mainEdgeMean = iprocess->trackCenterX;
+            edgeHist = new int[iprocess->edgeWidth];
+            double totalSum = 0;
+            for (int x=0; x<iprocess->edgeWidth; x++){
+                int sum = 0;
+                for (int y=0; y<iprocess->edgeHeight; y++)
+                    if( iprocess->edgeMapMatrix[y][x] ) sum++;
+                    edgeHist[x] = sum;
+                totalSum += sum;
+            }
+            edgeHistAvg = totalSum / iprocess->edgeWidth;
 
-totalSum = 0;
-double moments = 0;
-for (int x=0; x<iprocess->edgeWidth; x++){
-    if (edgeHist[x] > edgeHistAvg) {
-        moments += x*edgeHist[x];
-        totalSum += edgeHist[x];
+            totalSum = 0;
+            double moments = 0;
+            for (int x=0; x<iprocess->edgeWidth; x++){
+                if (edgeHist[x] > edgeHistAvg) {
+                    moments += x*edgeHist[x];
+                    totalSum += edgeHist[x];
+                }
+            }
+            edgeHistMean = moments/totalSum + 1;
+            /*
+    int rightDist = iprocess->edgeWidth - edgeHistMean1;
+    if (edgeHistMean1 >= rightDist ){
+        totalSum = 0;
+        double moments = 0;
+        for (int x=0; x<iprocess->edgeWidth; x++){
+            if (edgeHist[x] > edgeHistAvg) {
+                if (x < edgeHistMean1) {
+                    moments += x*edgeHist[x];
+                    totalSum += edgeHist[x];
+                } else {
+                    moments += (2*edgeHistMean1-x)*edgeHist[x];
+                    totalSum += edgeHist[x];
+                }
+
+            }
+        }
+        edgeHistMean = moments/totalSum;
+    } else {
+        totalSum = 0;
+        double moments = 0;
+        for (int x=0; x<iprocess->edgeWidth; x++){
+            if (edgeHist[x] > edgeHistAvg) {
+                if (x < edgeHistMean1) {
+                    moments += (rightDist-edgeHistMean1+x) *edgeHist[x];
+                    totalSum += edgeHist[x];
+                } else {
+                    moments += (rightDist+edgeHistMean1-x)*edgeHist[x];
+                    totalSum += edgeHist[x];
+                }
+
+            }
+        }
+        edgeHistMean = moments/totalSum;
     }
-}
-edgeHistMean = moments/totalSum + 1;
-/*
-int rightDist = iprocess->edgeWidth - edgeHistMean1;
-if (edgeHistMean1 >= rightDist ){
-    totalSum = 0;
-    double moments = 0;
-    for (int x=0; x<iprocess->edgeWidth; x++){
-        if (edgeHist[x] > edgeHistAvg) {
-            if (x < edgeHistMean1) {
-                moments += x*edgeHist[x];
-                totalSum += edgeHist[x];
-            } else {
-                moments += (2*edgeHistMean1-x)*edgeHist[x];
-                totalSum += edgeHist[x];
+    */
+            /*
+    if (iprocess->edgeWidth != 0) {
+        double sampleAve = totalSum / iprocess->edgeWidth;
+        double powSum = 0;
+        for (int c=0; c<iprocess->edgeWidth; c++)
+            powSum += pow(sampleAve-edgeHist[c], 2);
+        powSum /= iprocess->edgeWidth;
+        edgeHistMean = sqrt(powSum);
+    }
+    */
+            //qDebug() << edgeHistMean;
+            iprocess->trackCenterX = edgeHistMean;
+            linesForHist.clear();
+            linesForHist.append(iprocess->leftCornerX);
+            linesForHist.append(iprocess->trackCenterX);
+            linesForHist.append(iprocess->rightCornerX);
+
+            // -------START PROCESSING-------
+
+            iprocessHist = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+            iprocessHist->maFilterKernelSize = maFilterKernelSize;
+            iprocessHist->bandWidthMin = bandWidthMin;
+            iprocessHist->bandCenterMax = bandCenterMax;
+
+            iprocessHist->constructValueMatrix( iprocessHist->imgOrginal, 0 );
+
+            invertHist = ui->invertHist->isChecked();
+
+            iprocessHist->histogramAnalysisDarkTracks(colorMatrix, invertHist);
+
+            // -------END PROCESSING-------
+
+            int _leftLimit = iprocess->trackCenterX / 2.0;
+            int _rightLimit = (iprocess->imageWidth - iprocess->trackCenterX) / 2.0  + iprocess->trackCenterX;
+            int _leftMostLimit = iprocess->imageWidth * 0.2;
+            int _rightMostLimit = iprocess->imageWidth * 0.8;
+            int _minLeftX = iprocess->leftCornerX;
+            int _minRightX = iprocess->rightCornerX;
+            int val;
+            /*
+            QList<QPoint> leftList;
+            QList<QPoint> rightList;
+            for (int i=0; i<iprocessHist->histogramMins.size(); i++){
+                val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
+                if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].start > _leftLimit ){
+                    int j=1; bool flag=true; int valMax=val;
+                    do {
+                        if (iprocessHist->histogramPeaks[j].end > iprocessHist->histogramMins[i].start) {
+                            valMax = iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[j-1].end ];
+                            flag = false;
+                        }
+                        j++;
+                    } while (j<iprocessHist->histogramPeaks.size() && flag);
+
+                    QPoint p(iprocessHist->histogramMins[i].end,valMax-val);
+                    leftList.append(p);
+                }
+
+                if (iprocessHist->histogramMins[i].start > iprocess->trackCenterX && iprocessHist->histogramMins[i].end < _rightLimit ){
+                    int j=0; bool flag=true; int valMax=val;
+                    do {
+                        if (iprocessHist->histogramPeaks[j].start > iprocessHist->histogramMins[i].end) {
+                            valMax = iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[j].end ];
+                            flag = false;
+                        }
+                        j++;
+                    } while (j<iprocessHist->histogramPeaks.size() && flag);
+
+                    QPoint p(iprocessHist->histogramMins[i].start,valMax-val);
+                    rightList.append(p);
+                }
+            }
+            //qDebug() << leftList;
+            //qDebug() << rightList;
+
+            int maxDeriv = 0;
+            for (int i=0; i<leftList.size(); i++){
+                if (leftList[i].y() > maxDeriv) {
+                    maxDeriv = leftList[i].y();
+                    _minLeftX = leftList[i].x();
+                }
             }
 
-        }
-    }
-    edgeHistMean = moments/totalSum;
-} else {
-    totalSum = 0;
-    double moments = 0;
-    for (int x=0; x<iprocess->edgeWidth; x++){
-        if (edgeHist[x] > edgeHistAvg) {
-            if (x < edgeHistMean1) {
-                moments += (rightDist-edgeHistMean1+x) *edgeHist[x];
-                totalSum += edgeHist[x];
-            } else {
-                moments += (rightDist+edgeHistMean1-x)*edgeHist[x];
-                totalSum += edgeHist[x];
+            maxDeriv = 0;
+            for (int i=0; i<rightList.size(); i++){
+                if (rightList[i].y() > maxDeriv) {
+                    maxDeriv = rightList[i].y();
+                    _minRightX = rightList[i].x();
+                }
             }
+    */
 
-        }
-    }
-    edgeHistMean = moments/totalSum;
-}
-*/
-/*
-if (iprocess->edgeWidth != 0) {
-    double sampleAve = totalSum / iprocess->edgeWidth;
-    double powSum = 0;
-    for (int c=0; c<iprocess->edgeWidth; c++)
-        powSum += pow(sampleAve-edgeHist[c], 2);
-    powSum /= iprocess->edgeWidth;
-    edgeHistMean = sqrt(powSum);
-}
-*/
-//qDebug() << edgeHistMean;
-iprocess->trackCenterX = edgeHistMean;
-        linesForHist.clear();
-        linesForHist.append(iprocess->leftCornerX);
-        linesForHist.append(iprocess->trackCenterX);
-        linesForHist.append(iprocess->rightCornerX);
+            int _minLeft = 2000;
+            int _minRight = 2000;
 
-        // -------START PROCESSING-------
+            QList<QPoint> leftList, rightList;
+            for (int i=0; i<iprocessHist->histogramMins.size(); i++){
 
-        iprocessHist = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
-        iprocessHist->maFilterKernelSize = maFilterKernelSize;
-        iprocessHist->bandWidthMin = bandWidthMin;
-        iprocessHist->bandCenterMax = bandCenterMax;
+                val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
 
-        iprocessHist->constructValueMatrix( iprocessHist->imgOrginal, 0 );
-
-        invertHist = ui->invertHist->isChecked();
-
-        iprocessHist->histogramAnalysisDarkTracks(colorMatrix, invertHist);
-
-        // -------END PROCESSING-------
-
-        int _leftLimit = iprocess->trackCenterX / 2.0;
-        int _rightLimit = (iprocess->imageWidth - iprocess->trackCenterX) / 2.0  + iprocess->trackCenterX;
-        int _leftMostLimit = iprocess->imageWidth * 0.2;
-        int _rightMostLimit = iprocess->imageWidth * 0.8;
-        int _minLeftX = iprocess->leftCornerX;
-        int _minRightX = iprocess->rightCornerX;
-        int val;
-/*
-        QList<QPoint> leftList;
-        QList<QPoint> rightList;
-        for (int i=0; i<iprocessHist->histogramMins.size(); i++){
-            val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
-            if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].start > _leftLimit ){
-                int j=1; bool flag=true; int valMax=val;
-                do {
-                    if (iprocessHist->histogramPeaks[j].end > iprocessHist->histogramMins[i].start) {
-                        valMax = iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[j-1].end ];
-                        flag = false;
+                if (iprocessHist->histogramMins[i].start > iprocess->trackCenterX && iprocessHist->histogramMins[i].start < _rightLimit ){
+                    if (val <= _minRight) {
+                        _minRight = val;
+                        _minRightX = iprocessHist->histogramMins[i].start;
+                        rightList.append(QPoint(_minRight,_minRightX));
                     }
-                    j++;
-                } while (j<iprocessHist->histogramPeaks.size() && flag);
+                }
 
-                QPoint p(iprocessHist->histogramMins[i].end,valMax-val);
-                leftList.append(p);
-            }
-
-            if (iprocessHist->histogramMins[i].start > iprocess->trackCenterX && iprocessHist->histogramMins[i].end < _rightLimit ){
-                int j=0; bool flag=true; int valMax=val;
-                do {
-                    if (iprocessHist->histogramPeaks[j].start > iprocessHist->histogramMins[i].end) {
-                        valMax = iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[j].end ];
-                        flag = false;
+                if (iprocessHist->histogramMins[i].start >= _rightLimit && iprocessHist->histogramMins[i].start < _rightMostLimit && _minRight > iprocessHist->histogramAvg){
+                    if (val <= _minRight) {
+                        _minRight = val;
+                        _minRightX = iprocessHist->histogramMins[i].start;
+                        rightList.append(QPoint(_minRight,_minRightX));
                     }
-                    j++;
-                } while (j<iprocessHist->histogramPeaks.size() && flag);
-
-                QPoint p(iprocessHist->histogramMins[i].start,valMax-val);
-                rightList.append(p);
+                }
             }
+
+            for (int i=iprocessHist->histogramMins.size()-1; 0<=i; i--){
+
+                val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].end ];
+
+                if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].end > _leftLimit ){
+                    if (val <= _minLeft) {
+                        _minLeft = val;
+                        _minLeftX = iprocessHist->histogramMins[i].end;
+                        leftList.append(QPoint(_minLeft,_minLeftX));
+                    }
+                }
+
+                if (iprocessHist->histogramMins[i].end <= _leftLimit && iprocessHist->histogramMins[i].end > _leftMostLimit && _minLeft > iprocessHist->histogramAvg){
+                    if (val <= _minLeft) {
+                        _minLeft = val;
+                        _minLeftX = iprocessHist->histogramMins[i].end;
+                        leftList.append(QPoint(_minLeft,_minLeftX));
+                    }
+                }
+            }
+
+            if (!leftList.isEmpty() && !rightList.isEmpty()) {
+
+                _minLeftX = leftList.last().y();
+                _minRightX = rightList.last().y();
+
+                /*
+                int _minLeft = 0;
+                int _minRight = 0;
+
+                for (int i=0; i<iprocessHist->histogramPeaks.size(); i++){
+
+                    val = iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[i].start ];
+
+                    if (iprocessHist->histogramPeaks[i].start > iprocess->trackCenterX && iprocessHist->histogramPeaks[i].start < _rightLimit ){
+                        if (val >= _minRight) {
+                            _minRight = val;
+                            _minRightX = iprocessHist->histogramPeaks[i].start;
+                        }
+                    }
+
+                    if (iprocessHist->histogramPeaks[i].start >= _rightLimit && iprocessHist->histogramPeaks[i].start < _rightMostLimit && _minRight < iprocessHist->histogramAvg){
+                        if (val >= _minRight) {
+                            _minRight = val;
+                            _minRightX = iprocessHist->histogramPeaks[i].start;
+                        }
+                    }
+                }
+
+                for (int i=iprocessHist->histogramPeaks.size()-1; 0<=i; i--){
+
+                    val = iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[i].end ];
+
+                    if (iprocessHist->histogramPeaks[i].end < iprocess->trackCenterX && iprocessHist->histogramPeaks[i].end > _leftLimit ){
+                        if (val >= _minLeft) {
+                            _minLeft = val;
+                            _minLeftX = iprocessHist->histogramPeaks[i].end;
+                        }
+                    }
+
+                    if (iprocessHist->histogramPeaks[i].end <= _leftLimit && iprocessHist->histogramPeaks[i].end > _leftMostLimit && _minLeft < iprocessHist->histogramAvg){
+                        if (val >= _minLeft) {
+                            _minLeft = val;
+                            _minLeftX = iprocessHist->histogramPeaks[i].end;
+                        }
+                    }
+                }
+        */
+
+                linesForHist.append(_minLeftX);
+                linesForHist.append(_minRightX);
+                //qDebug() << linesForHist;
+
+                iprocess->natBreaksMax1.setX(_minLeftX);
+                iprocess->natBreaksMax2.setX(_minRightX);
+                iprocess->mainEdgesList[0].distance = _minLeftX;
+                iprocess->mainEdgesList[0].voteValue = iprocess->natBreaksMax1.y();
+                iprocess->mainEdgesList[1].distance = _minRightX;
+                iprocess->mainEdgesList[1].voteValue = iprocess->natBreaksMax2.y();
+                iprocess->mainEdgesList[0].angle = iprocess->mainEdgesList[1].angle = 0;
+                iprocess->leftCornerX = _minLeftX;
+                iprocess->rightCornerX = _minRightX;
+
+                histMean = (_minLeftX+_minRightX) / 2.0;
+                /*
+                QList<QPoint> dist;
+                dist.append( QPoint( mainEdgeMean, abs(mainEdgeMean - iprocess->imageWidth/2) ) );
+                dist.append( QPoint( edgeHistMean, abs(edgeHistMean - iprocess->imageWidth/2) ) );
+                dist.append( QPoint( histMean, abs(histMean - iprocess->imageWidth/2) ) );
+
+                int distMin = 100;
+                int distIdx = 0;
+                for (int i=0; i<dist.size(); i++){
+                    if( dist[i].y() < distMin) {
+                        distMin = dist[i].y();
+                        distIdx = i;
+                    }
+
+                }*/
+
+                iprocess->trackCenterX = histMean;//dist[distIdx].x();
+                iprocess->centerLine.distance = iprocess->trackCenterX;
+
+                algoPrerequestsOk = true;
+            } else {
+                iprocess->detected = false;
+                algoPrerequestsOk = false;
+            }
+        } else {
+            algoPrerequestsOk = false;
         }
-        //qDebug() << leftList;
-        //qDebug() << rightList;
 
-        int maxDeriv = 0;
-        for (int i=0; i<leftList.size(); i++){
-            if (leftList[i].y() > maxDeriv) {
-                maxDeriv = leftList[i].y();
-                _minLeftX = leftList[i].x();
-            }
-        }
-
-        maxDeriv = 0;
-        for (int i=0; i<rightList.size(); i++){
-            if (rightList[i].y() > maxDeriv) {
-                maxDeriv = rightList[i].y();
-                _minRightX = rightList[i].x();
-            }
-        }
-*/
-
-        int _minLeft = 2000;
-        int _minRight = 2000;
-
-        QList<QPoint> leftList, rightList;
-        for (int i=0; i<iprocessHist->histogramMins.size(); i++){
-
-            val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
-
-            if (iprocessHist->histogramMins[i].start > iprocess->trackCenterX && iprocessHist->histogramMins[i].start < _rightLimit ){
-                if (val <= _minRight) {
-                    _minRight = val;
-                    _minRightX = iprocessHist->histogramMins[i].start;
-                    rightList.append(QPoint(_minRight,_minRightX));
-                }
-            }
-
-            if (iprocessHist->histogramMins[i].start >= _rightLimit && iprocessHist->histogramMins[i].start < _rightMostLimit && _minRight > iprocessHist->histogramAvg){
-                if (val <= _minRight) {
-                    _minRight = val;
-                    _minRightX = iprocessHist->histogramMins[i].start;
-                    rightList.append(QPoint(_minRight,_minRightX));
-                }
-            }
-        }
-
-        for (int i=iprocessHist->histogramMins.size()-1; 0<=i; i--){
-
-            val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].end ];
-
-            if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].end > _leftLimit ){
-                if (val <= _minLeft) {
-                    _minLeft = val;
-                    _minLeftX = iprocessHist->histogramMins[i].end;
-                    leftList.append(QPoint(_minLeft,_minLeftX));
-                }
-            }
-
-            if (iprocessHist->histogramMins[i].end <= _leftLimit && iprocessHist->histogramMins[i].end > _leftMostLimit && _minLeft > iprocessHist->histogramAvg){
-                if (val <= _minLeft) {
-                    _minLeft = val;
-                    _minLeftX = iprocessHist->histogramMins[i].end;
-                    leftList.append(QPoint(_minLeft,_minLeftX));
-                }
-            }
-        }
-
-        _minLeftX = leftList.last().y();
-        _minRightX = rightList.last().y();
-
-
-/*
-        int _minLeft = 0;
-        int _minRight = 0;
-
-        for (int i=0; i<iprocessHist->histogramPeaks.size(); i++){
-
-            val = iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[i].start ];
-
-            if (iprocessHist->histogramPeaks[i].start > iprocess->trackCenterX && iprocessHist->histogramPeaks[i].start < _rightLimit ){
-                if (val >= _minRight) {
-                    _minRight = val;
-                    _minRightX = iprocessHist->histogramPeaks[i].start;
-                }
-            }
-
-            if (iprocessHist->histogramPeaks[i].start >= _rightLimit && iprocessHist->histogramPeaks[i].start < _rightMostLimit && _minRight < iprocessHist->histogramAvg){
-                if (val >= _minRight) {
-                    _minRight = val;
-                    _minRightX = iprocessHist->histogramPeaks[i].start;
-                }
-            }
-        }
-
-        for (int i=iprocessHist->histogramPeaks.size()-1; 0<=i; i--){
-
-            val = iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[i].end ];
-
-            if (iprocessHist->histogramPeaks[i].end < iprocess->trackCenterX && iprocessHist->histogramPeaks[i].end > _leftLimit ){
-                if (val >= _minLeft) {
-                    _minLeft = val;
-                    _minLeftX = iprocessHist->histogramPeaks[i].end;
-                }
-            }
-
-            if (iprocessHist->histogramPeaks[i].end <= _leftLimit && iprocessHist->histogramPeaks[i].end > _leftMostLimit && _minLeft < iprocessHist->histogramAvg){
-                if (val >= _minLeft) {
-                    _minLeft = val;
-                    _minLeftX = iprocessHist->histogramPeaks[i].end;
-                }
-            }
-        }
-*/
-
-        linesForHist.append(_minLeftX);
-        linesForHist.append(_minRightX);
-        //qDebug() << linesForHist;
-
-
-        iprocess->natBreaksMax1.setX(_minLeftX);
-        iprocess->natBreaksMax2.setX(_minRightX);
-        iprocess->mainEdgesList[0].distance = _minLeftX;
-        iprocess->mainEdgesList[0].voteValue = iprocess->natBreaksMax1.y();
-        iprocess->mainEdgesList[1].distance = _minRightX;
-        iprocess->mainEdgesList[1].voteValue = iprocess->natBreaksMax2.y();
-        iprocess->mainEdgesList[0].angle = iprocess->mainEdgesList[1].angle = 0;
-        iprocess->leftCornerX = _minLeftX;
-        iprocess->rightCornerX = _minRightX;
-
-        histMean = (_minLeftX+_minRightX) / 2.0;
-        /*
-        QList<QPoint> dist;
-        dist.append( QPoint( mainEdgeMean, abs(mainEdgeMean - iprocess->imageWidth/2) ) );
-        dist.append( QPoint( edgeHistMean, abs(edgeHistMean - iprocess->imageWidth/2) ) );
-        dist.append( QPoint( histMean, abs(histMean - iprocess->imageWidth/2) ) );
-
-        int distMin = 100;
-        int distIdx = 0;
-        for (int i=0; i<dist.size(); i++){
-            if( dist[i].y() < distMin) {
-                distMin = dist[i].y();
-                distIdx = i;
-            }
-
-        }*/
-
-        iprocess->trackCenterX = histMean;//dist[distIdx].x();
-        iprocess->centerLine.distance = iprocess->trackCenterX;
-
-        algoPrerequestsOk = true;
         captured = true;
     } else {
         ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
