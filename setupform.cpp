@@ -227,7 +227,7 @@ void setupForm::edgeDetection(imgProcess *iprocess){
             iprocess->gaussianBlur();
                 /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight, edgePath+"03-value matrix.csv" );
                 /*D*/if (saveAnalysis) iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight )->save(edgePath+"03-blurred image.jpg");
-            ui->labelMono->setPixmap( QPixmap::fromImage ( *iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight ) ) );
+            //ui->labelMono->setPixmap( QPixmap::fromImage ( *iprocess->getImage( iprocess->valueMatrix, iprocess->imageWidth, iprocess->imageHeight ) ) );
             iprocess->detectEdgeSobelwDirections();
                 /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"04-edge matrix.csv");
                 /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeGradientMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"05-edge gradients matrix.csv");
@@ -558,6 +558,7 @@ void setupForm::Algo9(imgProcess *iprocess){
 // woLASER: edge > houghTr > detectMainEdges > histAnalysis for dark tracks
 
     if (edgeDetectionState != 0) {
+
         iprocess->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
             /**/if (saveAnalysis) iprocess->saveMatrix(iprocess->houghLines, 3, iprocess->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
         iprocess->thinCornerNum = mainEdgesNumber;
@@ -592,51 +593,49 @@ void setupForm::Algo9(imgProcess *iprocess){
             }
             edgeHistMean = moments/totalSum + 1;
             /* EXPERIMENT: 2 ITERATIONS FORM HIST MEAN
-    int rightDist = iprocess->edgeWidth - edgeHistMean1;
-    if (edgeHistMean1 >= rightDist ){
-        totalSum = 0;
-        double moments = 0;
-        for (int x=0; x<iprocess->edgeWidth; x++){
-            if (edgeHist[x] > edgeHistAvg) {
-                if (x < edgeHistMean1) {
-                    moments += x*edgeHist[x];
-                    totalSum += edgeHist[x];
-                } else {
-                    moments += (2*edgeHistMean1-x)*edgeHist[x];
-                    totalSum += edgeHist[x];
+            int rightDist = iprocess->edgeWidth - edgeHistMean1;
+            if (edgeHistMean1 >= rightDist ){
+                totalSum = 0;
+                double moments = 0;
+                for (int x=0; x<iprocess->edgeWidth; x++){
+                    if (edgeHist[x] > edgeHistAvg) {
+                        if (x < edgeHistMean1) {
+                            moments += x*edgeHist[x];
+                            totalSum += edgeHist[x];
+                        } else {
+                            moments += (2*edgeHistMean1-x)*edgeHist[x];
+                            totalSum += edgeHist[x];
+                        }
+                    }
                 }
-
-            }
-        }
-        edgeHistMean = moments/totalSum;
-    } else {
-        totalSum = 0;
-        double moments = 0;
-        for (int x=0; x<iprocess->edgeWidth; x++){
-            if (edgeHist[x] > edgeHistAvg) {
-                if (x < edgeHistMean1) {
-                    moments += (rightDist-edgeHistMean1+x) *edgeHist[x];
-                    totalSum += edgeHist[x];
-                } else {
-                    moments += (rightDist+edgeHistMean1-x)*edgeHist[x];
-                    totalSum += edgeHist[x];
+                edgeHistMean = moments/totalSum;
+            } else {
+                totalSum = 0;
+                double moments = 0;
+                for (int x=0; x<iprocess->edgeWidth; x++){
+                    if (edgeHist[x] > edgeHistAvg) {
+                        if (x < edgeHistMean1) {
+                            moments += (rightDist-edgeHistMean1+x) *edgeHist[x];
+                            totalSum += edgeHist[x];
+                        } else {
+                            moments += (rightDist+edgeHistMean1-x)*edgeHist[x];
+                            totalSum += edgeHist[x];
+                        }
+                    }
                 }
-
+                edgeHistMean = moments/totalSum;
             }
-        }
-        edgeHistMean = moments/totalSum;
-    }
-    */
+            */
             /* EXOERIMENT: STANDARD DEV TO FIND OUT HIST MEAN
-    if (iprocess->edgeWidth != 0) {
-        double sampleAve = totalSum / iprocess->edgeWidth;
-        double powSum = 0;
-        for (int c=0; c<iprocess->edgeWidth; c++)
-            powSum += pow(sampleAve-edgeHist[c], 2);
-        powSum /= iprocess->edgeWidth;
-        edgeHistMean = sqrt(powSum);
-    }
-    */
+            if (iprocess->edgeWidth != 0) {
+                double sampleAve = totalSum / iprocess->edgeWidth;
+                double powSum = 0;
+                for (int c=0; c<iprocess->edgeWidth; c++)
+                    powSum += pow(sampleAve-edgeHist[c], 2);
+                powSum /= iprocess->edgeWidth;
+                edgeHistMean = sqrt(powSum);
+            }
+            */
             //qDebug() << edgeHistMean;
             iprocess->trackCenterX = edgeHistMean;
             linesForHist.clear();
@@ -717,7 +716,7 @@ void setupForm::Algo9(imgProcess *iprocess){
                     _minRightX = rightList[i].x();
                 }
             }
-    */
+            */
 
             int _minLeft = 2000;
             int _minRight = 2000;
@@ -811,7 +810,7 @@ void setupForm::Algo9(imgProcess *iprocess){
                         }
                     }
                 }
-        */
+                */
 
                 linesForHist.append(_minLeftX);
                 linesForHist.append(_minRightX);
@@ -867,6 +866,115 @@ void setupForm::Algo10(){
 // woLASER: edge > houghTr > detectMainEdges > histAnalysis for dark tracks (multiple regions)
     //qDebug()<<Q_FUNC_INFO;
 
+{   // FOR COMPARISION WITH SINGLE REGION
+    iprocessHist = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+    iprocessHist->thetaMin = thetaMin;
+    iprocessHist->thetaMax = thetaMax;
+    iprocessHist->thetaStep = thetaStep;
+    iprocessHist->centerX = 0;
+    iprocessHist->centerY = 0;
+    iprocessHist->toMono();                                     // convert target to mono
+    edgeDetection(iprocessHist);
+    iprocessHist->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+    iprocessHist->thinCornerNum = mainEdgesNumber;
+    iprocessHist->detectMainEdges(0, DEBUG);
+    if (iprocessHist->detected) {
+        mainEdgeMean = iprocessHist->trackCenterX;
+        edgeHist = new int[iprocessHist->edgeWidth];
+        double totalSum = 0;
+        for (int x=0; x<iprocessHist->edgeWidth; x++){
+            int sum = 0;
+            for (int y=0; y<iprocessHist->edgeHeight; y++)
+                if( iprocessHist->edgeMapMatrix[y][x] ) sum++;
+                edgeHist[x] = sum;
+            totalSum += sum;
+        }
+        edgeHistAvg = totalSum / iprocessHist->edgeWidth;
+
+        totalSum = 0;
+        double moments = 0;
+        for (int x=0; x<iprocessHist->edgeWidth; x++){
+            if (edgeHist[x] > edgeHistAvg) {
+                moments += x*edgeHist[x];
+                totalSum += edgeHist[x];
+            }
+        }
+        edgeHistMean = moments/totalSum + 1;
+        iprocessHist->trackCenterX = edgeHistMean;
+        iprocessHist->maFilterKernelSize = maFilterKernelSize;
+        iprocessHist->histogramAnalysisDarkTracks(colorMatrix, invertHist);
+        int _leftLimit = iprocessHist->trackCenterX / 2.0;
+        int _rightLimit = (iprocessHist->imageWidth - iprocessHist->trackCenterX) / 2.0  + iprocessHist->trackCenterX;
+        int _leftMostLimit = iprocessHist->imageWidth * 0.2;
+        int _rightMostLimit = iprocessHist->imageWidth * 0.8;
+        int _minLeftX = iprocessHist->leftCornerX;
+        int _minRightX = iprocessHist->rightCornerX;
+        int val;
+        int _minLeft = 2000;
+        int _minRight = 2000;
+
+        QList<QPoint> leftList, rightList;
+        for (int i=0; i<iprocessHist->histogramMins.size(); i++){
+            val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
+            if (iprocessHist->histogramMins[i].start > iprocessHist->trackCenterX && iprocessHist->histogramMins[i].start < _rightLimit ){
+                if (val <= _minRight) {
+                    _minRight = val;
+                    _minRightX = iprocessHist->histogramMins[i].start;
+                    rightList.append(QPoint(_minRight,_minRightX));
+                }
+            }
+            if (iprocessHist->histogramMins[i].start >= _rightLimit && iprocessHist->histogramMins[i].start < _rightMostLimit && _minRight > iprocessHist->histogramAvg){
+                if (val <= _minRight) {
+                    _minRight = val;
+                    _minRightX = iprocessHist->histogramMins[i].start;
+                    rightList.append(QPoint(_minRight,_minRightX));
+                }
+            }
+        }
+        for (int i=iprocessHist->histogramMins.size()-1; 0<=i; i--){
+            val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].end ];
+            if (iprocessHist->histogramMins[i].end < iprocessHist->trackCenterX && iprocessHist->histogramMins[i].end > _leftLimit ){
+                if (val <= _minLeft) {
+                    _minLeft = val;
+                    _minLeftX = iprocessHist->histogramMins[i].end;
+                    leftList.append(QPoint(_minLeft,_minLeftX));
+                }
+            }
+            if (iprocessHist->histogramMins[i].end <= _leftLimit && iprocessHist->histogramMins[i].end > _leftMostLimit && _minLeft > iprocessHist->histogramAvg){
+                if (val <= _minLeft) {
+                    _minLeft = val;
+                    _minLeftX = iprocessHist->histogramMins[i].end;
+                    leftList.append(QPoint(_minLeft,_minLeftX));
+                }
+            }
+        }
+        if (!leftList.isEmpty() && !rightList.isEmpty()) {
+            _minLeftX = leftList.last().y();
+            _minRightX = rightList.last().y();
+            iprocessHist->natBreaksMax1.setX(_minLeftX);
+            iprocessHist->natBreaksMax2.setX(_minRightX);
+            iprocessHist->mainEdgesList[0].distance = _minLeftX;
+            iprocessHist->mainEdgesList[0].voteValue = iprocessHist->natBreaksMax1.y();
+            iprocessHist->mainEdgesList[1].distance = _minRightX;
+            iprocessHist->mainEdgesList[1].voteValue = iprocessHist->natBreaksMax2.y();
+            iprocessHist->mainEdgesList[0].angle = iprocessHist->mainEdgesList[1].angle = 0;
+            iprocessHist->leftCornerX = _minLeftX;
+            iprocessHist->rightCornerX = _minRightX;
+            histMean = (_minLeftX+_minRightX) / 2.0;
+            iprocessHist->trackCenterX = histMean;
+            iprocessHist->centerLine.distance = iprocessHist->trackCenterX;
+
+            comprasionImage = QPixmap::fromImage(iprocessHist->imgOrginal);
+            QPainter p(&comprasionImage);
+            p.setPen(QPen(Qt::red, 3, Qt::DotLine));
+            p.drawLine (iprocessHist->trackCenterX, 0, iprocessHist->trackCenterX, iprocessHist->imgOrginal.height()); // histogram center
+            p.end();
+            //ui->labelMono->setPixmap( comprasionImage );
+
+            delete iprocessHist;
+        }
+    }
+}
     areaNumber = w->areaNumber;
     invertHist = ui->invertHist->isChecked();
 
@@ -1060,8 +1168,22 @@ void setupForm::Algo10(){
 
         } // for loop
 
+        int c = 0;
+        double sum = 0;
+        for (int area=0; area<areaNumber; area++) {
+            if(iproList[area]->detected){
+                c++;
+                sum += iproList[area]->trackCenterX;
+            }
+        }
+        if (c!=0)
+            sum /= c;
 
-
+        QPainter p(&comprasionImage);
+        p.setPen(QPen(Qt::green, 3, Qt::SolidLine));
+        p.drawLine (sum, 0, sum, comprasionImage.height()); // histogram center
+        p.end();
+        ui->labelMono->setPixmap( comprasionImage );
 
         captured = true;
     } else {
@@ -1123,7 +1245,9 @@ void setupForm::processImage(){
                         path += "-Algo3MA/"; break;
                     case 7: // MAIN EDGES WITH HISTOGRAM DARK
                         path += "-Algo9/"; break;
-                    case 8: // EXPERIMENTAL
+                    case 8: // HISTOGRAM WITH MULTIPLE REGIONS
+                        path += "-Algo10/"; break;
+                    case 9: // EXPERIMENTAL
                         path += "-AlgoY/"; break;
                 }
             } else {    // with laser - HORIZONTAL SEARCH
@@ -1194,8 +1318,10 @@ void setupForm::processImage(){
                 case 7: // MAIN EDGES WITH HISTOGRAM DARK
                     Algo9(iprocess);
                     break;
-                case 8: // EXPERIMENTAL
+                case 8: // HISTOGRAM WITH MULTIPLE REGIONS
                     Algo10();
+                    break;
+                case 9: // EXPERIMENTAL
                     break;
             }
         } else {    // with laser - HORIZONTAL SEARCH
@@ -1284,7 +1410,7 @@ void setupForm::captureButton(){
 
 
             ui->labelTarget->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
-            //ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->imgMono ) );
+            //ui->->setPixmap( QPixmap::fromImage ( iprocess->imgMono ) );
 
             if ( edgeDetectionState != 0) {
                 edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
@@ -1300,6 +1426,7 @@ void setupForm::captureButton(){
                     case 0: // NONE
                         break;
                     case 1: // MAIN EDGES
+                        {
 //                        iprocess->constructHoughMatrixFindX();   // FOR THINJOINT - edge matrix + coded #houghLineNo lines
 //                        hough = iprocess->getImage( iprocess->houghMatrix, iprocess->edgeWidth, iprocess->edgeHeight );     // produce hough image
 //                        ui->labelHough->setPixmap( QPixmap::fromImage( *hough ) );
@@ -1347,9 +1474,10 @@ void setupForm::captureButton(){
 
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->getImageMainEdges( iprocess->naturalBreaksNumber ) ) );
                             /**/if (saveAnalysis) iprocess->imgSolidLines.save(path+"06-mainEdges centerline image.jpg");
-
+                        }
                         break;
                     case 2: // THIN JOINT
+                        {
                         minCostedLines *centerline;
                         centerline = new minCostedLines();
                         centerline->c = iprocess->centerC;
@@ -1365,8 +1493,10 @@ void setupForm::captureButton(){
                         ui->labelHough->setPixmap( QPixmap::fromImage( iprocess->drawLine(centerline, iprocess->slopeBest) ));
                         iprocess->cornerImage();
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
+                        }
                         break;
                     case 3: // CONTRAST
+                        {
                         ui->labelMono->setPixmap( QPixmap::fromImage ( iprocess->getImageContrast() ) );
                         iprocess->constructContrastMatrixMajor2Lines();
                             /**/if (saveAnalysis) iprocess->saveMatrix( iprocess->contrastMatrix, iprocess->imageWidth, iprocess->imageHeight, path+"07-contrast with lines matrix.csv" );
@@ -1378,6 +1508,7 @@ void setupForm::captureButton(){
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCorner ) );
                             /**/if (saveAnalysis) iprocess->imgCorner.save(path+"09-corner image.jpg");
                         ui->plainTextEdit->appendPlainText("avg dist, angle: " + QString::number(iprocess->distanceAvg) + ", " + QString::number(iprocess->thetaAvg));
+                        }
                         break;
                     case 4: // LINE DETECTION WITH MAIN EDGES
                         {
@@ -1448,7 +1579,6 @@ void setupForm::captureButton(){
 
                         }
                         break;
-
                     case 5: // SCAN HORIZONTAL
                         {
                         int *graphArray = new int[iprocess->edgeWidth];
@@ -1579,7 +1709,7 @@ void setupForm::captureButton(){
                         QPainter p(&px);
                         p.setPen(QPen(Qt::red, 3, Qt::DotLine));
                         p.drawLine (linesForHist[1], 0, linesForHist[1], iprocess->imgSolidLines.height()); // histogram center
-                        p.end ();
+                        p.end();
 
                         ui->labelAnalyze->setPixmap( px );
 
@@ -1588,7 +1718,7 @@ void setupForm::captureButton(){
                         delete iprocessHist;
                         }
                         break;
-                    case 8: // EXPERIMENTAL
+                    case 8: // HISTOGRAM WITH MULTIPLE REGIONS
                         {
                         // draw global mono & edge images
                         iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
@@ -2330,8 +2460,8 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
                     ui->editHoughThetaMin->setEnabled(true);
                     ui->label_8->setEnabled(true);
                     ui->editHoughThetaStep->setEnabled(true);
-                    break;  // EXPERIMENTAL
-            case 7: algoName = "Algo3: edge > houghTr > detectMainEdges > histAnalysis for dark tracks";
+                    break;  // MAIN EDGES WITH MULTIPLE REGIONS
+            case 7: algoName = "Algo9: edge > houghTr > detectMainEdges > histAnalysis for dark tracks";
                     ui->label_21->setEnabled(true);
                     ui->mainEdgesSlider->setEnabled(true);
                     ui->lineDetectionBox->setEnabled(false);
@@ -2348,6 +2478,23 @@ void setupForm::on_algorithmBox_currentIndexChanged(int index){
                     ui->label_8->setEnabled(true);
                     ui->editHoughThetaStep->setEnabled(true);
                     break;  // MAIN EDGES
+            case 8: algoName = "Algo10: edge > histAnalysis for dark tracks Multiple regions";
+                    ui->label_21->setEnabled(true);
+                    ui->mainEdgesSlider->setEnabled(true);
+                    ui->lineDetectionBox->setEnabled(false);
+                    ui->editLineScore->setEnabled(false);
+                    ui->label_10->setEnabled(false);
+                    ui->editVoidThreshold->setEnabled(false);
+                    ui->label_7->setEnabled(false);
+                    ui->editHoughThreshold->setEnabled(false);
+                    ui->label_6->setEnabled(true);
+                    ui->editHoughLineNo->setEnabled(true);
+                    ui->label_9->setEnabled(true);
+                    ui->editHoughThetaMax->setEnabled(true);
+                    ui->editHoughThetaMin->setEnabled(true);
+                    ui->label_8->setEnabled(true);
+                    ui->editHoughThetaStep->setEnabled(true);
+                    break;  // HISTOGRAM WITH MUTIPLE REGIONS
             default:
                     ui->label_21->setEnabled(false);
                     ui->mainEdgesSlider->setEnabled(false);
@@ -2495,8 +2642,9 @@ void setupForm::on_radioWoLaser_clicked() {
     ui->algorithmBox->addItem("Yatay Tarama");
     ui->algorithmBox->addItem("Ana Kenarlar: Bölgeli");
     ui->algorithmBox->addItem("Ana Kenar+Histogram");
+    ui->algorithmBox->addItem("Histogram: Bölgeli");
     ui->algorithmBox->addItem("Deneme");
-    if (algo > 8) algo = 8;
+    if (algo > 9) algo = 9;
     algorithmType = algo;
     ui->algorithmBox->setCurrentIndex( algorithmType );
 }
