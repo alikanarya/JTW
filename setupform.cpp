@@ -591,7 +591,7 @@ void setupForm::Algo9(imgProcess *iprocess){
                 }
             }
             edgeHistMean = moments/totalSum + 1;
-            /*
+            /* EXPERIMENT: 2 ITERATIONS FORM HIST MEAN
     int rightDist = iprocess->edgeWidth - edgeHistMean1;
     if (edgeHistMean1 >= rightDist ){
         totalSum = 0;
@@ -627,7 +627,7 @@ void setupForm::Algo9(imgProcess *iprocess){
         edgeHistMean = moments/totalSum;
     }
     */
-            /*
+            /* EXOERIMENT: STANDARD DEV TO FIND OUT HIST MEAN
     if (iprocess->edgeWidth != 0) {
         double sampleAve = totalSum / iprocess->edgeWidth;
         double powSum = 0;
@@ -666,7 +666,7 @@ void setupForm::Algo9(imgProcess *iprocess){
             int _minLeftX = iprocess->leftCornerX;
             int _minRightX = iprocess->rightCornerX;
             int val;
-            /*
+            /* MAX DERIVATIVE EXPERIMENT
             QList<QPoint> leftList;
             QList<QPoint> rightList;
             for (int i=0; i<iprocessHist->histogramMins.size(); i++){
@@ -770,7 +770,7 @@ void setupForm::Algo9(imgProcess *iprocess){
                 _minLeftX = leftList.last().y();
                 _minRightX = rightList.last().y();
 
-                /*
+                /* PEAK POINTS(BRIGHT VALS) EXPERIMENT
                 int _minLeft = 0;
                 int _minRight = 0;
 
@@ -828,7 +828,7 @@ void setupForm::Algo9(imgProcess *iprocess){
                 iprocess->rightCornerX = _minRightX;
 
                 histMean = (_minLeftX+_minRightX) / 2.0;
-                /*
+                /* EXPERIMENT: USES MAINEDGE-MEAN, EDGEHIST-MEAN AND CALCULATED HIST-MEAN TO FIND CENTER POINT
                 QList<QPoint> dist;
                 dist.append( QPoint( mainEdgeMean, abs(mainEdgeMean - iprocess->imageWidth/2) ) );
                 dist.append( QPoint( edgeHistMean, abs(edgeHistMean - iprocess->imageWidth/2) ) );
@@ -855,6 +855,213 @@ void setupForm::Algo9(imgProcess *iprocess){
         } else {
             algoPrerequestsOk = false;
         }
+
+        captured = true;
+    } else {
+        ui->plainTextEdit->appendPlainText("Bir kenar tespiti algoritması seçilmelidir");
+        algoPrerequestsOk = false;
+    }
+}
+
+void setupForm::Algo10(){
+// woLASER: edge > houghTr > detectMainEdges > histAnalysis for dark tracks (multiple regions)
+    //qDebug()<<Q_FUNC_INFO;
+
+    areaNumber = w->areaNumber;
+    invertHist = ui->invertHist->isChecked();
+
+    if (edgeDetectionState != 0) {
+
+        int step = (target.height()*1.0) / areaNumber;
+
+        if (!iproList.empty()){
+            qDeleteAll(iproList);
+            iproList.clear();
+        }
+
+        int totalTime = 0;
+
+        for (int area=0; area<areaNumber; area++) {
+
+            QImage pic = target.copy( 0, step*area, target.width(), step );    // take target image
+            //pic.save("_area"+QString::number(area)+".jpg");
+
+            startTime = w->timeSystem.getSystemTimeMsec();
+
+            imgProcess *ipro = new imgProcess( pic, pic.width(), pic.height() );   // new imgProcess object
+            iproList.append(ipro);
+
+            ipro->thetaMin = thetaMin;
+            ipro->thetaMax = thetaMax;
+            ipro->thetaStep = thetaStep;
+            ipro->centerX = 0;
+            ipro->centerY = 0;
+
+            ipro->toMono();                                     // convert target to mono
+            /*D*/if (saveAnalysis) ipro->imgMono.save(path+"02-mono image.jpg");
+
+            edgeDetection(ipro);
+
+            ipro->calculateHoughMaxs( houghLineNo );            // get max voted line(s)
+                /**/if (saveAnalysis) ipro->saveMatrix(ipro->houghLines, 3, ipro->houghLineNo, path+"03-max hough lines matrix -dist-angle-vote.csv");
+            ipro->thinCornerNum = mainEdgesNumber;
+            ipro->detectMainEdges(0, DEBUG);
+                /**/if (saveAnalysis) ipro->saveMatrix(ipro->houghLinesSorted, 3, ipro->houghLineNo, path+"04-max hough lines distance sorted.csv");
+
+            algoPrerequestsOk = true;
+            captured = true;
+
+            endTime = w->timeSystem.getSystemTimeMsec();
+            processElapsed = endTime - startTime;
+            totalTime += processElapsed;
+            // -------END PROCESSING-------
+
+            QString message = "\nKenar Analizi " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
+            ui->plainTextEdit->appendPlainText(message);
+
+            for (int i=0; i<ipro->mainEdgesList.size();i++)
+                ui->plainTextEdit->appendPlainText("mainEdges dist/ang/vote: " + QString::number(ipro->mainEdgesList[i].distance, 'f', 1) + ", " + QString::number(ipro->mainEdgesList[i].angle, 'f', 1) + ", " + QString::number(ipro->mainEdgesList[i].voteValue));
+
+            if (ipro->detected) {
+
+                //ui->labelHough->setPixmap( QPixmap::fromImage( ipro->getImageMainEdges( ipro->naturalBreaksNumber ) ) );
+
+                mainEdgeMean = ipro->trackCenterX;
+                edgeHist = new int[ipro->edgeWidth];
+                double totalSum = 0;
+                for (int x=0; x<ipro->edgeWidth; x++){
+                    int sum = 0;
+                    for (int y=0; y<ipro->edgeHeight; y++)
+                        if( ipro->edgeMapMatrix[y][x] ) sum++;
+                        edgeHist[x] = sum;
+                    totalSum += sum;
+                }
+                edgeHistAvg = totalSum / ipro->edgeWidth;
+
+                totalSum = 0;
+                double moments = 0;
+                for (int x=0; x<ipro->edgeWidth; x++){
+                    if (edgeHist[x] > edgeHistAvg) {
+                        moments += x*edgeHist[x];
+                        totalSum += edgeHist[x];
+                    }
+                }
+                edgeHistMean = moments/totalSum + 1;
+
+                //qDebug() << edgeHistMean;
+                ipro->trackCenterX = edgeHistMean;
+                /*
+                linesForHist.clear();
+                linesForHist.append(iprocess->leftCornerX);
+                linesForHist.append(iprocess->trackCenterX);
+                linesForHist.append(iprocess->rightCornerX);
+                */
+                // -------START PROCESSING-------
+
+                //iprocessHist = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+                ipro->maFilterKernelSize = maFilterKernelSize;
+                ipro->bandWidthMin = bandWidthMin;
+                ipro->bandCenterMax = bandCenterMax;
+
+                //ipro->constructValueMatrix( iprocessHist->imgOrginal, 0 );
+                ipro->histogramAnalysisDarkTracks(colorMatrix, invertHist);
+
+                // -------END PROCESSING-------
+
+                int _leftLimit = ipro->trackCenterX / 2.0;
+                int _rightLimit = (ipro->imageWidth - ipro->trackCenterX) / 2.0  + ipro->trackCenterX;
+                int _leftMostLimit = ipro->imageWidth * 0.2;
+                int _rightMostLimit = ipro->imageWidth * 0.8;
+                int _minLeftX = ipro->leftCornerX;
+                int _minRightX = ipro->rightCornerX;
+                int val;
+
+                int _minLeft = 2000;
+                int _minRight = 2000;
+
+                QList<QPoint> leftList, rightList;
+                for (int i=0; i<ipro->histogramMins.size(); i++){
+
+                    val = ipro->histogramFiltered[ ipro->histogramMins[i].start ];
+
+                    if (ipro->histogramMins[i].start > ipro->trackCenterX && ipro->histogramMins[i].start < _rightLimit ){
+                        if (val <= _minRight) {
+                            _minRight = val;
+                            _minRightX = ipro->histogramMins[i].start;
+                            rightList.append(QPoint(_minRight,_minRightX));
+                        }
+                    }
+
+                    if (ipro->histogramMins[i].start >= _rightLimit && ipro->histogramMins[i].start < _rightMostLimit && _minRight > ipro->histogramAvg){
+                        if (val <= _minRight) {
+                            _minRight = val;
+                            _minRightX = ipro->histogramMins[i].start;
+                            rightList.append(QPoint(_minRight,_minRightX));
+                        }
+                    }
+                }
+
+                for (int i=ipro->histogramMins.size()-1; 0<=i; i--){
+
+                    val = ipro->histogramFiltered[ ipro->histogramMins[i].end ];
+
+                    if (ipro->histogramMins[i].end < ipro->trackCenterX && ipro->histogramMins[i].end > _leftLimit ){
+                        if (val <= _minLeft) {
+                            _minLeft = val;
+                            _minLeftX = ipro->histogramMins[i].end;
+                            leftList.append(QPoint(_minLeft,_minLeftX));
+                        }
+                    }
+
+                    if (ipro->histogramMins[i].end <= _leftLimit && ipro->histogramMins[i].end > _leftMostLimit && _minLeft > ipro->histogramAvg){
+                        if (val <= _minLeft) {
+                            _minLeft = val;
+                            _minLeftX = ipro->histogramMins[i].end;
+                            leftList.append(QPoint(_minLeft,_minLeftX));
+                        }
+                    }
+                }
+
+                if (!leftList.isEmpty() && !rightList.isEmpty()) {
+
+                    _minLeftX = leftList.last().y();
+                    _minRightX = rightList.last().y();
+
+
+                    linesForHist.append(_minLeftX);
+                    linesForHist.append(_minRightX);
+                    //qDebug() << linesForHist;
+
+                    ipro->natBreaksMax1.setX(_minLeftX);
+                    ipro->natBreaksMax2.setX(_minRightX);
+                    ipro->mainEdgesList[0].distance = _minLeftX;
+                    ipro->mainEdgesList[0].voteValue = ipro->natBreaksMax1.y();
+                    ipro->mainEdgesList[1].distance = _minRightX;
+                    ipro->mainEdgesList[1].voteValue = ipro->natBreaksMax2.y();
+                    ipro->mainEdgesList[0].angle = ipro->mainEdgesList[1].angle = 0;
+                    ipro->leftCornerX = _minLeftX;
+                    ipro->rightCornerX = _minRightX;
+
+                    histMean = (_minLeftX+_minRightX) / 2.0;
+
+                    ipro->trackCenterX = histMean;//dist[distIdx].x();
+                    ipro->centerLine.distance = ipro->trackCenterX;
+                    ui->plainTextEdit->appendPlainText("leftX-centerX-rightX-bwidth: " +QString::number(ipro->leftCornerX)+", "+QString::number(ipro->trackCenterX)+", "+QString::number(ipro->rightCornerX)+" - "+QString::number(ipro->rightCornerX-ipro->leftCornerX));
+
+                    algoPrerequestsOk = true;
+                } else {
+                    ipro->detected = false;
+                    algoPrerequestsOk = false;
+                }
+            } else {
+                algoPrerequestsOk = false;
+            }
+
+
+        } // for loop
+
+
+
 
         captured = true;
     } else {
@@ -934,7 +1141,7 @@ void setupForm::processImage(){
             QDir().mkdir(path);
         }
 
-        if (!(thinJointAlgoActive && algorithmType==6)){
+        if (!(thinJointAlgoActive && (algorithmType==6 || algorithmType==8))){
             iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
                 /*D*/if (saveAnalysis) iprocess->imgOrginal.save(path+"01-orginal image.jpg");
             iprocessInitSwitch = true;
@@ -988,6 +1195,7 @@ void setupForm::processImage(){
                     Algo9(iprocess);
                     break;
                 case 8: // EXPERIMENTAL
+                    Algo10();
                     break;
             }
         } else {    // with laser - HORIZONTAL SEARCH
@@ -1063,7 +1271,7 @@ void setupForm::captureButton(){
         ui->labelTarget->setPixmap( QPixmap::fromImage( target ) );
         QString message = "";
 
-        if (!(thinJointAlgoActive && algorithmType==6)){
+        if (!(thinJointAlgoActive && (algorithmType==6 || algorithmType==8))){
             message = "\nAnaliz " + QString::number(processElapsed) + " milisaniye içinde gerçekleştirildi.";
             ui->plainTextEdit->appendPlainText(message);
 
@@ -1281,7 +1489,6 @@ void setupForm::captureButton(){
                             edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
                             ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
                         }
-
                         delete iprocess;
 
                         int imgWidth = iproList[0]->imageWidth;
@@ -1382,6 +1589,50 @@ void setupForm::captureButton(){
                         }
                         break;
                     case 8: // EXPERIMENTAL
+                        {
+                        // draw global mono & edge images
+                        iprocess = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+                        iprocess->centerX = 0; iprocess->centerY = 0;
+                        iprocess->toMono();                                     // convert target to mono
+                        edgeDetection(iprocess);
+                        if ( edgeDetectionState != 0) {
+                            edge = iprocess->getImage( iprocess->edgeMatrix, iprocess->edgeWidth, iprocess->edgeHeight );   // produce edge image
+                            ui->labelEdge->setPixmap( QPixmap::fromImage( *edge ) );
+                        }
+                        delete iprocess;
+
+                        int imgWidth = iproList[0]->imageWidth;
+                        int imgHeight = 0;
+                        for (int i=0; i<areaNumber; i++)
+                            imgHeight += iproList[i]->imageHeight;
+
+                        // draw listHoughData2nd image
+                        QImage mainEdgesImage2ndList(imgWidth, imgHeight, QImage::Format_RGB16); // image to hold the join of image 1 & 2
+                        QPainter mainEdgesImagePainter2ndList(&mainEdgesImage2ndList);
+                        int y = 0;
+                        mainEdgesImagePainter2ndList.setPen(QPen(Qt::yellow));
+                        for (int i=0; i<areaNumber; i++){
+                            mainEdgesImagePainter2ndList.drawImage(0, y, iproList[i]->getImageMainEdges_2ndList(true));
+                            y += iproList[i]->imageHeight;
+                            mainEdgesImagePainter2ndList.drawLine(0, y-1, imgWidth, y-1);
+                        }
+                        ui->labelHough->setPixmap( QPixmap::fromImage(mainEdgesImage2ndList) );
+
+                        // draw main edges image
+                        QImage mainEdgesImage(imgWidth, imgHeight, QImage::Format_RGB16); // image to hold the join of image 1 & 2
+                        QPainter mainEdgesImagePainter(&mainEdgesImage);
+                        y = 0;
+                        mainEdgesImagePainter.setPen(QPen(Qt::yellow));
+                        for (int i=0; i<areaNumber; i++){
+                            mainEdgesImagePainter.drawImage(0, y, iproList[i]->getImageMainEdges( iproList[i]->naturalBreaksNumber ));
+                            y += iproList[i]->imageHeight;
+                            mainEdgesImagePainter.drawLine(0, y-1, imgWidth, y-1);
+                        }
+                        ui->labelAnalyze->setPixmap( QPixmap::fromImage(mainEdgesImage) );
+
+                        }
+                        break;
+                    case 9: // EXPERIMENTAL
                         break;
                 }
 
@@ -1443,7 +1694,7 @@ void setupForm::captureButton(){
 
         }
 
-        if (!(thinJointAlgoActive && algorithmType==6)){
+        if (!(thinJointAlgoActive && (algorithmType==6 || algorithmType==8))){
             if ( iprocess->major2Lines.size() > 0) {
                 ui->plainTextEdit->appendPlainText("Çizgi {Uzunluk-Mesafe-Açı-Başlagıç(x,y)-Bitiş(x,y)}");
                 for (int i=0;i<iprocess->major2Lines.size();i++){

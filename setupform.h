@@ -154,6 +154,7 @@ public slots:
     void Algo7(imgProcess *iprocess);   // woLASER: edge > houghTr > detectScanHorizontal
     void Algo8(int center);             // woLASER: edge > houghTr > detectMainEdges with multiple regions, if center=0 histogram center, center>0 specific denter
     void Algo9(imgProcess *iprocess);   // woLASER: edge > houghTr > detectMainEdges > histAnalysis for dark tracks
+    void Algo10();                      // woLASER: edge > houghTr > detectMainEdges > histAnalysis for dark tracks (multiple regions)
     void histMultAreas();
 
     void update();
