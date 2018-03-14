@@ -1166,6 +1166,8 @@ void setupForm::Algo10(){
 
         } // for loop
 
+        int bwidthMin = 0;  //91;
+        int bwidthMax = iproList[0]->imageWidth;    //135;
         QString centers = "CentersAll: ";
         QString centersBwd = "CentersBwd: ";
         QString label;
@@ -1175,7 +1177,7 @@ void setupForm::Algo10(){
             if(iproList[area]->detected){
                 label = "w,";
                 int bwidth = iproList[area]->rightCornerX - iproList[area]->leftCornerX;
-                if (bwidth > 91 && bwidth < 135) {
+                if (bwidth > bwidthMin && bwidth < bwidthMax) {
                     sum += iproList[area]->trackCenterX;
                     acceptedList.append(iproList[area]->trackCenterX);
                     label = QString::number(bwidth)+",";
