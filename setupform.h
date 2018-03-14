@@ -39,7 +39,6 @@ public:
     QImage *leftImage;          // edge image with red primary line
     QImage *rightImage;         // edge image with red primary line
     QImage targetCopy;          // original image
-    QPixmap comprasionImage;
 
     // image processing vars
     int thetaMin, thetaMax;

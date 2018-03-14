@@ -865,6 +865,7 @@ void setupForm::Algo9(imgProcess *iprocess){
 void setupForm::Algo10(){
 // woLASER: edge > houghTr > detectMainEdges > histAnalysis for dark tracks (multiple regions)
     //qDebug()<<Q_FUNC_INFO;
+    QPixmap comprasionImage;
 
 {   // FOR COMPARISION WITH SINGLE REGION
     iprocessHist = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
@@ -1032,8 +1033,6 @@ void setupForm::Algo10(){
 
             if (ipro->detected) {
 
-                //ui->labelHough->setPixmap( QPixmap::fromImage( ipro->getImageMainEdges( ipro->naturalBreaksNumber ) ) );
-
                 mainEdgeMean = ipro->trackCenterX;
                 edgeHist = new int[ipro->edgeWidth];
                 double totalSum = 0;
@@ -1066,7 +1065,6 @@ void setupForm::Algo10(){
                 */
                 // -------START PROCESSING-------
 
-                //iprocessHist = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
                 ipro->maFilterKernelSize = maFilterKernelSize;
                 ipro->bandWidthMin = bandWidthMin;
                 ipro->bandCenterMax = bandCenterMax;
@@ -1168,20 +1166,63 @@ void setupForm::Algo10(){
 
         } // for loop
 
-        int c = 0;
-        double sum = 0;
+        QString centers = "CentersAll: ";
+        QString centersBwd = "CentersBwd: ";
+        QString label;
+        double sum = 0, powSum = 0;;
+        QList<int> acceptedList;
         for (int area=0; area<areaNumber; area++) {
             if(iproList[area]->detected){
-                c++;
-                sum += iproList[area]->trackCenterX;
+                label = "w,";
+                int bwidth = iproList[area]->rightCornerX - iproList[area]->leftCornerX;
+                if (bwidth > 91 && bwidth < 135) {
+                    sum += iproList[area]->trackCenterX;
+                    acceptedList.append(iproList[area]->trackCenterX);
+                    label = QString::number(bwidth)+",";
+                }
+                centers += QString::number(iproList[area]->trackCenterX)+",";
+                centersBwd += label;
+            } else {
+                centers += "un,";
+                centersBwd += "un,";
             }
         }
-        if (c!=0)
-            sum /= c;
+        ui->plainTextEdit->appendPlainText(centers);
+        ui->plainTextEdit->appendPlainText(centersBwd);
+
+        if (acceptedList.size()!=0) {
+            sum /= acceptedList.size();
+            powSum = 0;
+            for (int area=0; area<acceptedList.size(); area++) {
+                powSum += pow(sum-acceptedList[area], 2);
+            }
+            powSum /= acceptedList.size();
+            double variance = sqrt(powSum);
+
+            QString centersAvg = "centersAvg: ";
+            powSum = 0;
+            int c = 0;
+            for (int area=0; area<acceptedList.size(); area++) {
+                label = "x,";
+                if (abs(sum-acceptedList[area]) <= variance) {
+                    powSum += acceptedList[area];
+                    c++;
+                    label = QString::number(acceptedList[area])+",";
+                }
+                centersAvg += label;
+            }
+            if (c!=0) powSum /= c;
+
+            ui->plainTextEdit->appendPlainText(centersAvg);
+            ui->plainTextEdit->appendPlainText("Last leftX-centerX-rightX: " +QString::number(powSum-variance,'f',0)+", "+QString::number(powSum,'f',0)+", "+QString::number(powSum+variance,'f',0));
+
+        }
 
         QPainter p(&comprasionImage);
         p.setPen(QPen(Qt::green, 3, Qt::SolidLine));
-        p.drawLine (sum, 0, sum, comprasionImage.height()); // histogram center
+        p.drawLine (powSum, 0, powSum, comprasionImage.height()); // histogram center
+        p.setPen(QPen(Qt::yellow, 3, Qt::SolidLine));
+        p.drawLine (0, comprasionImage.height()/2, comprasionImage.width(), comprasionImage.height()/2); // horizontal guide
         p.end();
         ui->labelMono->setPixmap( comprasionImage );
 
@@ -1654,7 +1695,7 @@ void setupForm::captureButton(){
                         //ui->labelAnalyze->setPixmap( QPixmap::fromImage( iproList[2]->getImageMainEdges( iproList[2]->naturalBreaksNumber ) ) );
                         }
                         break;
-                    case 7: // MAIN EDGES WITH HISTOGRAM DARK
+                    case 7: // ALGO9() - MAIN EDGES WITH HISTOGRAM DARK
                         {
                         /**/if (DEBUG) {
                                 ui->plainTextEdit->appendPlainText("-2nd hough vals---");
@@ -1688,7 +1729,7 @@ void setupForm::captureButton(){
                         else
                             ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
 
-                        if (iprocessHist->bandCheck_errorState!=10 && !iprocessHist->histogramExtremesFiltered.isEmpty()) {
+                        if (!iprocessHist->histogramExtremesFiltered.isEmpty()) {
                             drawExtremes = false;
                             drawhistogramMaxPoint = false;
                             clearGraph(ui->graphicsView);
