@@ -243,8 +243,12 @@ void setupForm::edgeDetection(imgProcess *iprocess){
                 /*D*/if (saveAnalysis) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"11-canny image.jpg");
                 /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"12-edge map matrix.csv");
 
-iprocess->saveList(iprocess->edgeListStart, edgePath+"edgeListStart.csv");
-iprocess->saveList(iprocess->edgeListEnd, edgePath+"edgeListEnd.csv");
+                // EDGE LISTS
+                /*D*/if (saveAnalysis){
+                        iprocess->edgeMapTracing();
+                        iprocess->saveList(iprocess->edgeListStart, edgePath+"edgeListStart.csv");
+                        iprocess->saveList(iprocess->edgeListEnd, edgePath+"edgeListEnd.csv");
+                    }
 
             for (int y = 0; y < iprocess->edgeHeight; y++)  // to display edge image
                 for (int x = 0; x < iprocess->edgeWidth; x++){
@@ -654,6 +658,7 @@ void setupForm::Algo9(imgProcess *iprocess){
             iprocess->bandCenterMax = bandCenterMax;
 
             //iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
+            /* EXPERIMENT: CONVOLUSION OF IMAGE AND EDGE MATRIX
             int bdryPx = 1;
             for (int y = 0; y < iprocess->imageHeight; y++)
                 for (int x = 0; x < iprocess->imageWidth; x++){
@@ -664,8 +669,8 @@ void setupForm::Algo9(imgProcess *iprocess){
                     else if (!iprocess->edgeMapMatrix[y-1][x-1])
                         iprocess->valueMatrixOrg[y][x] = 0;
                 }
-
             ui->labelMono->setPixmap( QPixmap::fromImage(*iprocess->getImage(iprocess->valueMatrixOrg,iprocess->imageWidth,iprocess->imageHeight)) );
+            */
 
             invertHist = ui->invertHist->isChecked();
 
@@ -865,7 +870,7 @@ void setupForm::Algo9(imgProcess *iprocess){
 
                 algoPrerequestsOk = true;
 
-
+                /* EXPERIMENT: WINDOW SEARCH
                 windowArray = new int[iprocess->edgeWidth];
                 for (int x=0; x < iprocess->edgeWidth; x++)
                     windowArray[x] = 0;
@@ -876,6 +881,7 @@ void setupForm::Algo9(imgProcess *iprocess){
                         sum += edgeHist[x+w];
                     windowArray[x+winCenter] = sum;
                 }
+                */
 
 
             } else {
@@ -1773,16 +1779,17 @@ void setupForm::captureButton(){
                             clearGraph(ui->graphicsView2);
                             drawGraphHist2(iprocess, ui->graphicsView2, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
 
-                            /*drawEdges = true;
+                            drawEdges = false;
                             drawExtremes = false;
                             clearGraph(ui->graphicsView3);
                             drawGraphHist2(iprocess, ui->graphicsView3, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
-                            */
 
+                            /* EXPERIMENT: WINDOW SEARCH
                             drawExtremes = false;
                             drawhistogramMaxPoint = false;
                             clearGraph(ui->graphicsView3);
                             drawGraphHist(ui->graphicsView3, penRed, windowArray, iprocess->edgeWidth, QPoint(-1,-1), true);
+                            */
                         }
                         iprocess->getImageMainEdges( iprocess->naturalBreaksNumber );
 
