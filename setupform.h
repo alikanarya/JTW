@@ -91,6 +91,7 @@ public:
     int mainEdgeMean = 0;
     int histMean = 0;
     int edgeHistAvg=0;
+    int *windowArray;
 
     // for multi region main edge algorithm
     int histogramCenterX = 0;

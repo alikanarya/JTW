@@ -243,6 +243,9 @@ void setupForm::edgeDetection(imgProcess *iprocess){
                 /*D*/if (saveAnalysis) iprocess->getImage( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight )->save(edgePath+"11-canny image.jpg");
                 /*D*/if (saveAnalysis) iprocess->saveMatrix( iprocess->edgeMapMatrix, iprocess->edgeWidth, iprocess->edgeHeight, edgePath+"12-edge map matrix.csv");
 
+iprocess->saveList(iprocess->edgeListStart, edgePath+"edgeListStart.csv");
+iprocess->saveList(iprocess->edgeListEnd, edgePath+"edgeListEnd.csv");
+
             for (int y = 0; y < iprocess->edgeHeight; y++)  // to display edge image
                 for (int x = 0; x < iprocess->edgeWidth; x++){
                     if (iprocess->edgeMapMatrix[y][x])
@@ -645,16 +648,28 @@ void setupForm::Algo9(imgProcess *iprocess){
 
             // -------START PROCESSING-------
 
-            iprocessHist = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
-            iprocessHist->maFilterKernelSize = maFilterKernelSize;
-            iprocessHist->bandWidthMin = bandWidthMin;
-            iprocessHist->bandCenterMax = bandCenterMax;
+            //iprocessHist = new imgProcess( target, target.width(), target.height() );   // new imgProcess object
+            iprocess->maFilterKernelSize = maFilterKernelSize;
+            iprocess->bandWidthMin = bandWidthMin;
+            iprocess->bandCenterMax = bandCenterMax;
 
-            iprocessHist->constructValueMatrix( iprocessHist->imgOrginal, 0 );
+            //iprocess->constructValueMatrix( iprocess->imgOrginal, 0 );
+            int bdryPx = 1;
+            for (int y = 0; y < iprocess->imageHeight; y++)
+                for (int x = 0; x < iprocess->imageWidth; x++){
+                    if ( x<bdryPx || x >= (iprocess->imageWidth-bdryPx) )
+                        iprocess->valueMatrixOrg[y][x] = 0;
+                    else if ( y<bdryPx || y >= (iprocess->imageHeight-bdryPx) )
+                        iprocess->valueMatrixOrg[y][x] = 0;
+                    else if (!iprocess->edgeMapMatrix[y-1][x-1])
+                        iprocess->valueMatrixOrg[y][x] = 0;
+                }
+
+            ui->labelMono->setPixmap( QPixmap::fromImage(*iprocess->getImage(iprocess->valueMatrixOrg,iprocess->imageWidth,iprocess->imageHeight)) );
 
             invertHist = ui->invertHist->isChecked();
 
-            iprocessHist->histogramAnalysisDarkTracks(colorMatrix, invertHist);
+            iprocess->histogramAnalysisDarkTracks(colorMatrix, invertHist);
 
             // -------END PROCESSING-------
 
@@ -722,43 +737,43 @@ void setupForm::Algo9(imgProcess *iprocess){
             int _minRight = 2000;
 
             QList<QPoint> leftList, rightList;
-            for (int i=0; i<iprocessHist->histogramMins.size(); i++){
+            for (int i=0; i<iprocess->histogramMins.size(); i++){
 
-                val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ];
+                val = iprocess->histogramFiltered[ iprocess->histogramMins[i].start ];
 
-                if (iprocessHist->histogramMins[i].start > iprocess->trackCenterX && iprocessHist->histogramMins[i].start < _rightLimit ){
+                if (iprocess->histogramMins[i].start > iprocess->trackCenterX && iprocess->histogramMins[i].start < _rightLimit ){
                     if (val <= _minRight) {
                         _minRight = val;
-                        _minRightX = iprocessHist->histogramMins[i].start;
+                        _minRightX = iprocess->histogramMins[i].start;
                         rightList.append(QPoint(_minRight,_minRightX));
                     }
                 }
 
-                if (iprocessHist->histogramMins[i].start >= _rightLimit && iprocessHist->histogramMins[i].start < _rightMostLimit && _minRight > iprocessHist->histogramAvg){
+                if (iprocess->histogramMins[i].start >= _rightLimit && iprocess->histogramMins[i].start < _rightMostLimit && _minRight > iprocess->histogramAvg){
                     if (val <= _minRight) {
                         _minRight = val;
-                        _minRightX = iprocessHist->histogramMins[i].start;
+                        _minRightX = iprocess->histogramMins[i].start;
                         rightList.append(QPoint(_minRight,_minRightX));
                     }
                 }
             }
 
-            for (int i=iprocessHist->histogramMins.size()-1; 0<=i; i--){
+            for (int i=iprocess->histogramMins.size()-1; 0<=i; i--){
 
-                val = iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].end ];
+                val = iprocess->histogramFiltered[ iprocess->histogramMins[i].end ];
 
-                if (iprocessHist->histogramMins[i].end < iprocess->trackCenterX && iprocessHist->histogramMins[i].end > _leftLimit ){
+                if (iprocess->histogramMins[i].end < iprocess->trackCenterX && iprocess->histogramMins[i].end > _leftLimit ){
                     if (val <= _minLeft) {
                         _minLeft = val;
-                        _minLeftX = iprocessHist->histogramMins[i].end;
+                        _minLeftX = iprocess->histogramMins[i].end;
                         leftList.append(QPoint(_minLeft,_minLeftX));
                     }
                 }
 
-                if (iprocessHist->histogramMins[i].end <= _leftLimit && iprocessHist->histogramMins[i].end > _leftMostLimit && _minLeft > iprocessHist->histogramAvg){
+                if (iprocess->histogramMins[i].end <= _leftLimit && iprocess->histogramMins[i].end > _leftMostLimit && _minLeft > iprocess->histogramAvg){
                     if (val <= _minLeft) {
                         _minLeft = val;
-                        _minLeftX = iprocessHist->histogramMins[i].end;
+                        _minLeftX = iprocess->histogramMins[i].end;
                         leftList.append(QPoint(_minLeft,_minLeftX));
                     }
                 }
@@ -844,9 +859,25 @@ void setupForm::Algo9(imgProcess *iprocess){
                 }*/
 
                 iprocess->trackCenterX = histMean;//dist[distIdx].x();
+                iprocess->bandWidth = abs(iprocess->rightCornerX-iprocess->leftCornerX);
                 iprocess->centerLine.distance = iprocess->trackCenterX;
+                linesForHist.append(iprocess->trackCenterX);
 
                 algoPrerequestsOk = true;
+
+
+                windowArray = new int[iprocess->edgeWidth];
+                for (int x=0; x < iprocess->edgeWidth; x++)
+                    windowArray[x] = 0;
+                int winCenter = iprocess->bandWidth / 2.0;
+                for (int x=0; x <= (iprocess->edgeWidth-iprocess->bandWidth); x++) {
+                    int sum = 0;
+                    for (int w=0; w<iprocess->bandWidth; w++)
+                        sum += edgeHist[x+w];
+                    windowArray[x+winCenter] = sum;
+                }
+
+
             } else {
                 iprocess->detected = false;
                 algoPrerequestsOk = false;
@@ -1721,29 +1752,37 @@ void setupForm::captureButton(){
                         clearGraph(ui->graphicsView3);
 
                         if (DEBUG) {
-                            for (int i=0; i<iprocessHist->histogramPeaks.size(); i++)
-                                ui->plainTextEdit->appendPlainText("hist peaks i/start/end/val: " +QString::number(i) +", "+QString::number(iprocessHist->histogramPeaks[i].start) +", "+QString::number(iprocessHist->histogramPeaks[i].end) +", " + QString::number(iprocessHist->histogramFiltered[ iprocessHist->histogramPeaks[i].start ]) );
-                            for (int i=0; i<iprocessHist->histogramMins.size(); i++)
-                                ui->plainTextEdit->appendPlainText("hist mins i/start/end/val: " +QString::number(i) +", "+QString::number(iprocessHist->histogramMins[i].start) +", "+QString::number(iprocessHist->histogramMins[i].end) +", " + QString::number(iprocessHist->histogramFiltered[ iprocessHist->histogramMins[i].start ]) );
+                            for (int i=0; i<iprocess->histogramPeaks.size(); i++)
+                                ui->plainTextEdit->appendPlainText("hist peaks i/start/end/val: " +QString::number(i) +", "+QString::number(iprocess->histogramPeaks[i].start) +", "+QString::number(iprocess->histogramPeaks[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramPeaks[i].start ]) );
+                            for (int i=0; i<iprocess->histogramMins.size(); i++)
+                                ui->plainTextEdit->appendPlainText("hist mins i/start/end/val: " +QString::number(i) +", "+QString::number(iprocess->histogramMins[i].start) +", "+QString::number(iprocess->histogramMins[i].end) +", " + QString::number(iprocess->histogramFiltered[ iprocess->histogramMins[i].start ]) );
                         }
                         if (colorMatrix)
                             ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal ) );
                         else
                             ui->labelTarget2->setPixmap( QPixmap::fromImage( iprocess->imgOrginal.convertToFormat(QImage::Format_Grayscale8) ) );
 
-                        if (!iprocessHist->histogramExtremesFiltered.isEmpty()) {
+                        if (!iprocess->histogramExtremesFiltered.isEmpty()) {
                             drawExtremes = false;
                             drawhistogramMaxPoint = false;
                             clearGraph(ui->graphicsView);
                             drawGraphHist(ui->graphicsView, penRed, edgeHist, iprocess->edgeWidth, QPoint(-1,-1), true);
+
                             drawEdges = false;
                             drawExtremes = true;
                             clearGraph(ui->graphicsView2);
-                            drawGraphHist2(iprocessHist, ui->graphicsView2, penRed, iprocessHist->histogramFiltered, iprocessHist->histogramSize, QPoint(-1,-1), true); // recursive MA filter
-                            drawEdges = true;
+                            drawGraphHist2(iprocess, ui->graphicsView2, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+
+                            /*drawEdges = true;
                             drawExtremes = false;
                             clearGraph(ui->graphicsView3);
-                            drawGraphHist2(iprocessHist, ui->graphicsView3, penRed, iprocessHist->histogramFiltered, iprocessHist->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+                            drawGraphHist2(iprocess, ui->graphicsView3, penRed, iprocess->histogramFiltered, iprocess->histogramSize, QPoint(-1,-1), true); // recursive MA filter
+                            */
+
+                            drawExtremes = false;
+                            drawhistogramMaxPoint = false;
+                            clearGraph(ui->graphicsView3);
+                            drawGraphHist(ui->graphicsView3, penRed, windowArray, iprocess->edgeWidth, QPoint(-1,-1), true);
                         }
                         iprocess->getImageMainEdges( iprocess->naturalBreaksNumber );
 
@@ -1756,9 +1795,9 @@ void setupForm::captureButton(){
 
                         ui->labelAnalyze->setPixmap( px );
 
-                        ui->plainTextEdit->appendPlainText("Corrected leftX-centerX-rightX: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX));
+                        ui->plainTextEdit->appendPlainText("Corrected leftX-centerX-rightX-bWidth: " +QString::number(iprocess->leftCornerX)+", "+QString::number(iprocess->trackCenterX)+", "+QString::number(iprocess->rightCornerX)+" - "+QString::number(iprocess->bandWidth));
 
-                        delete iprocessHist;
+                        //delete iprocessHist;
                         }
                         break;
                     case 8: // HISTOGRAM WITH MULTIPLE REGIONS
@@ -1816,6 +1855,7 @@ void setupForm::captureButton(){
                     case 0: // NONE
                         break;
                     case 1: // LONGEST SOLID LINES
+                        {
                             /**/if (saveAnalysis) iprocess->saveList(iprocess->solidSpaceMain, path+"05-solid space main matrix.csv");
                             /**/if (saveAnalysis) iprocess->saveList(iprocess->solidSpaceMainTrimmed, path+"06-solid space trimmed matrix.csv");
                             /**/if (saveAnalysis) iprocess->saveList(iprocess->primaryGroup, path+"07-primary group matrix.csv");
@@ -1841,8 +1881,10 @@ void setupForm::captureButton(){
                         if ( iprocess->primaryLineFound ) {
                             ui->plainTextEdit->appendPlainText("Ortalama Açı: " + QString::number(iprocess->angleAvg));
                         }
+                        }
                         break;
                     case 2: // PRIMARY VOID
+                        {
                         ui->plainTextEdit->appendPlainText("Bulunan boşluk parametreleri:");
                         ui->plainTextEdit->appendPlainText("start.X, start.Y, end.X, end.Y, boy");
 
@@ -1859,6 +1901,7 @@ void setupForm::captureButton(){
                         iprocess->cornerAndPrimaryLineImage( iprocess->primaryLine, iprocess->primaryLine, 0 );
                         ui->labelAnalyze->setPixmap( QPixmap::fromImage( iprocess->imgCornerAndPrimaryLines ) );
                             /**/if (saveAnalysis) iprocess->imgCornerAndPrimaryLines.save(path+"05-major2lines image.jpg");
+                        }
                         break;
                     case 3: // EXPERIMENTAL
                         break;
@@ -2944,9 +2987,13 @@ void setupForm::drawGraphHist2(imgProcess *ipro, QGraphicsView *graph, QPen *pen
     if (!linesForHist.isEmpty()) {
         for (int i=0; i<linesForHist.size(); i++){
             if (i==3)
-                graph->scene()->addLine(linesForHist[i]*xScale, 0, linesForHist[i]*xScale, sceneHeight, QPen(Qt::yellow));
+                graph->scene()->addLine(linesForHist[i]*xScale, 0, linesForHist[i]*xScale, sceneHeight, QPen(Qt::yellow));  // new left
             else if (i==4)
-                graph->scene()->addLine(linesForHist[i]*xScale, 0, linesForHist[i]*xScale, sceneHeight, QPen(Qt::red));
+                graph->scene()->addLine(linesForHist[i]*xScale, 0, linesForHist[i]*xScale, sceneHeight, QPen(Qt::red));     // new rigth
+            else if (i==5)
+                graph->scene()->addLine(linesForHist[i]*xScale, 0, linesForHist[i]*xScale, sceneHeight, QPen(Qt::red, Qt::DotLine)); // new center
+            else if (i==1)
+                graph->scene()->addLine(linesForHist[i]*xScale, 0, linesForHist[i]*xScale, sceneHeight, QPen(Qt::green, Qt::DotLine)); // old center
             else
                 graph->scene()->addLine(linesForHist[i]*xScale, 0, linesForHist[i]*xScale, sceneHeight, QPen(Qt::green));
 
