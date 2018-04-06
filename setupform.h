@@ -98,6 +98,8 @@ public:
     int mainEdgeCenterX = 0;
     double variance;
 
+    double varianceRate = 0.01; // for natural breaks
+
     bool twoPassWelding;
     bool autoDetect2ndPass;
     bool timeControlTwoPass;
@@ -228,6 +230,8 @@ private slots:
     void on_histCornerPrecSlider_sliderReleased();
     void on_twoPassTimeControlBox_stateChanged(int arg1);
     void on_twoPassTimeControlBox_clicked();
+    void on_natBreaksVarSlider_sliderMoved(int position);
+    void on_natBreaksVarSlider_sliderReleased();
 };
 
 #endif // SETUPFORM_H

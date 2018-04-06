@@ -1355,6 +1355,7 @@ void setupForm::processImage(){
             iprocess->thetaMax = thetaMax;
             iprocess->thetaStep = thetaStep;
             iprocess->maFilterKernelSize = maFilterKernelSize;
+            iprocess->varianceRate = varianceRate;
 
             if (thinJointAlgoActive){    // without laser
                 iprocess->centerX = 0;
@@ -3724,3 +3725,11 @@ void setupForm::on_histCornerPrecSlider_sliderReleased(){
 
 void setupForm::on_twoPassTimeControlBox_stateChanged(int arg1){ }
 
+
+void setupForm::on_natBreaksVarSlider_sliderMoved(int position){
+    ui->labelNatBreaksVar->setText(QString::number(position/100.0));
+}
+
+void setupForm::on_natBreaksVarSlider_sliderReleased(){
+    varianceRate = ui->natBreaksVarSlider->value()/100.0;
+}

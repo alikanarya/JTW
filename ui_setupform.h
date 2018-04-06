@@ -124,6 +124,9 @@ public:
     QCheckBox *twoPassWeldingBox;
     QCheckBox *autoDetect2ndPassBox;
     QCheckBox *twoPassTimeControlBox;
+    QSlider *natBreaksVarSlider;
+    QLabel *label_30;
+    QLabel *labelNatBreaksVar;
     QWidget *tab_2;
     QGraphicsView *graphicsView;
     QGraphicsView *graphicsView2;
@@ -160,8 +163,8 @@ public:
     QCheckBox *extendHistHeight;
     QCheckBox *checkProcessingHist;
     QCheckBox *invertHist;
-    QButtonGroup *laserGroup;
     QButtonGroup *colorGrayGroup;
+    QButtonGroup *laserGroup;
 
     void setupUi(QWidget *setupForm)
     {
@@ -700,6 +703,34 @@ public:
         twoPassTimeControlBox->setObjectName(QStringLiteral("twoPassTimeControlBox"));
         twoPassTimeControlBox->setGeometry(QRect(492, 510, 101, 17));
         twoPassTimeControlBox->setFont(font2);
+        natBreaksVarSlider = new QSlider(tab);
+        natBreaksVarSlider->setObjectName(QStringLiteral("natBreaksVarSlider"));
+        natBreaksVarSlider->setGeometry(QRect(162, 590, 131, 22));
+        natBreaksVarSlider->setAutoFillBackground(false);
+        natBreaksVarSlider->setMinimum(1);
+        natBreaksVarSlider->setMaximum(20);
+        natBreaksVarSlider->setSingleStep(10);
+        natBreaksVarSlider->setValue(1);
+        natBreaksVarSlider->setSliderPosition(1);
+        natBreaksVarSlider->setTracking(true);
+        natBreaksVarSlider->setOrientation(Qt::Horizontal);
+        natBreaksVarSlider->setInvertedAppearance(false);
+        natBreaksVarSlider->setInvertedControls(false);
+        natBreaksVarSlider->setTickPosition(QSlider::TicksBothSides);
+        natBreaksVarSlider->setTickInterval(20);
+        label_30 = new QLabel(tab);
+        label_30->setObjectName(QStringLiteral("label_30"));
+        label_30->setGeometry(QRect(12, 590, 141, 20));
+        label_30->setFont(font1);
+        label_30->setStyleSheet(QStringLiteral(""));
+        label_30->setFrameShape(QFrame::NoFrame);
+        label_30->setAlignment(Qt::AlignRight|Qt::AlignTop|Qt::AlignTrailing);
+        labelNatBreaksVar = new QLabel(tab);
+        labelNatBreaksVar->setObjectName(QStringLiteral("labelNatBreaksVar"));
+        labelNatBreaksVar->setGeometry(QRect(300, 590, 42, 20));
+        labelNatBreaksVar->setStyleSheet(QStringLiteral("color: rgb(255, 0, 0);"));
+        labelNatBreaksVar->setFrameShape(QFrame::Box);
+        labelNatBreaksVar->setAlignment(Qt::AlignCenter);
         tabWidget->addTab(tab, QString());
         label_15->raise();
         plainTextEdit->raise();
@@ -754,6 +785,9 @@ public:
         twoPassWeldingBox->raise();
         autoDetect2ndPassBox->raise();
         twoPassTimeControlBox->raise();
+        natBreaksVarSlider->raise();
+        label_30->raise();
+        labelNatBreaksVar->raise();
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
         graphicsView = new QGraphicsView(tab_2);
@@ -872,7 +906,7 @@ public:
         radioColored->setChecked(true);
         label_26 = new QLabel(setupForm);
         label_26->setObjectName(QStringLiteral("label_26"));
-        label_26->setGeometry(QRect(80, 662, 91, 20));
+        label_26->setGeometry(QRect(70, 662, 101, 20));
         label_26->setFont(font1);
         label_26->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
         label_26->setFrameShape(QFrame::NoFrame);
@@ -915,7 +949,7 @@ public:
         bandWidthMinSlider->setTickInterval(20);
         label_27 = new QLabel(setupForm);
         label_27->setObjectName(QStringLiteral("label_27"));
-        label_27->setGeometry(QRect(80, 688, 91, 20));
+        label_27->setGeometry(QRect(60, 688, 111, 20));
         label_27->setFont(font1);
         label_27->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
         label_27->setFrameShape(QFrame::NoFrame);
@@ -943,7 +977,7 @@ public:
         bandCenterMaxSlider->setTickInterval(20);
         label_29 = new QLabel(setupForm);
         label_29->setObjectName(QStringLiteral("label_29"));
-        label_29->setGeometry(QRect(60, 714, 111, 20));
+        label_29->setGeometry(QRect(40, 714, 131, 20));
         label_29->setFont(font1);
         label_29->setStyleSheet(QStringLiteral("color: rgb(0, 0, 255);"));
         label_29->setFrameShape(QFrame::NoFrame);
@@ -1277,6 +1311,8 @@ public:
         twoPassTimeControlBox->setToolTip(QApplication::translate("setupForm", "<html><head/><body><p>Belirli bir s\303\274re sonra kaynak komutlar\304\261n\304\261 kes</p></body></html>", 0));
 #endif // QT_NO_TOOLTIP
         twoPassTimeControlBox->setText(QApplication::translate("setupForm", "Ge\303\247i\305\237 S\303\274re", 0));
+        label_30->setText(QApplication::translate("setupForm", "Nat Breaks Variance%", 0));
+        labelNatBreaksVar->setText(QApplication::translate("setupForm", "0", 0));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("setupForm", "Ayarlar", 0));
         labelTarget2->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("setupForm", "Grafik", 0));
