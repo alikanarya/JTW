@@ -28,5 +28,5 @@ VB6	...from pc
 V6.0	TORCH UP COMMAND
 -----------------------------------------------------------------
 
-
-CTRL+SHIFT to bypass password check at settings/setup forms
+to bypass password check at settings/setup forms;
+CTRL+SHIFT +click TAMAM on password screen
