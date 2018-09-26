@@ -1,0 +1,60 @@
+* popup windows if plc and cam connection failure
+* plc cmd check, live state-cmd status of the queue when plc off, begin/end cmds if autoalignment or not, plcsim stat?
+* system test fn for timings, process times-delays etc
+* plc permision re activate
+* customer logo, load dynamically from a bitmap
+
+
+
+
+
+-------------------
+* histogramAnalysis; histogramFiltered and min/max bandWidth selections will be parametrised (bright/dark analysis) ...done
+* drift amount at passes to settings.ini ... done
+* algoTypePass1 & algoTypePass2 written to ini file
+* after 2nd pass done automatic application restarting introduced
+* zm control for to elevate the torch at the beginning of the 2nd pass programmed
+* settings and setup forms passwords re-enabled
+* tracking on app startup implemented, from ini file
+* hardcontrol bug fixes
+* two pass; autodetect and timecontrol interlock
+* two pass; autodetect and timecontrol coding corrections
+* 2nd pass autoalignment problems if there is a high drift in cam setup, restarts the control continuously,
+high drift control stopping disabled for now
+* pass 1 algo: Algo6; line detection with main edges, pass 2 algo: Algo1; main edges
+* time control procedure for 2 pass welding
+* Algo8 input argument as specified center in setupForm, optional to histogram center
+* mainEdges natural breaks variance from 10px to %10 of image width
+** histogramAnalysis; histogramFiltered values reversed for bright analysis, minimum bandWidth used for bright band instead of max bandwidth selection /****/
+* drift commands enabled in control mode only
+* stop Buttons disabled from user
+* histLo, histHi, histBufferSize, areaNumber, cmdBufferMaxSize, errorMaxFactor in settings.ini
+* hard control starts the control proses ...done
+* control delay (weldCommands) isnt working for cam-torch setup & control system, disabled ...done
+* weldCommands assignments fixed according to cmdBuffer state ...done
+* plc commands assignments fixed according to cmdBuffer state, time of the first state used...done
+* max error calc at errorSlider change in settings form ...done
+* false error; Maximum error value protection, if error is too much ... done
+* error buffer introduced to get rid of fluctuations
+* 1st pass to 2nd pass transition analysis completed ...done
+* manual pass selection defined, both auto pass detection/manual pass selection can be used ...done
+* plc initial cmd fix if !alignGuide2TrackCenter ...done
+* delay introduced to control getImage rate ...done
+* 1 and multi region hist anlys comparision in setupform ...done
+* 2nd derivative threshold disable in settingsform, auto calculation used ...done
+* histAreaNo slider lines showed on image while changing the value ...done
+* histogram find corners with 2nd derivative	...done
+* histAreaNo slider modified for odd values by signals	...done
+* histogram multi region data are saved in data folder at debug	...done
+* setupForm, histogram area number implemented to divide in regions	
+in order to detect 1st pass to 2nd pass transition	...done
+* 2 pass selection in manwindow processImage fn		...done
+* setupform algo edits reflected to iprocessthread mainwindow algo functions	...done			
+* pushbottons for double pass on mainW, selection boxes on setupForm	...done
+* 2nd pass selection and auto pass detection variables definitions			...done
+* histogramAnalysis; bandCenterMax implemented on setupForm				...done
+* histogramAnalysis; bandCenterMax and bandWidthMax are shown on image with lines in setupForm	...done
+* natural breaks debug info in setupForm						...done 
+* natural breaks main edge list and centerline image to setup form			...done
+* detectMainEdges; mainedgeslist for natural breaks					...done
+* detectMainEdges algo parameters control; thinjointactive, mainedges number etc	...done
