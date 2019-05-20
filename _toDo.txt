@@ -1,3 +1,5 @@
+* auto video mod sadece 2pass de zaman kontrolünü ve continuous proses için zaman limitine de baðlanýr, kayýt þu anda oto stop yapmýyor kayda devam ediyor
+* video kayýt tuþuna basýldýðýnda mod 1 ise durdurmak için zaman limitine baðlanabilir, video butonu da aktife çevrilecek durdurmak için
 * popup windows if plc and cam connection failure
 * plc cmd check, live state-cmd status of the queue when plc off, begin/end cmds if autoalignment or not, plcsim stat?
 * system test fn for timings, process times-delays etc
