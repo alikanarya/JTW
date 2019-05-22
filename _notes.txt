@@ -1,10 +1,13 @@
+imgProcessThread ile AlgoX seçimi yapýlýyor:
+
 thinJointAlgoActive	// without laser - VERTICAL SEARCH
-1:	Algo3()		// MAIN EDGES *** for pass 2
+1:	Algo3()		// MAIN EDGES * OLD for pass 2
 2:	Algo4()		// THIN JOINT - DARK AREA
 3:	Algo5()		// CONTRAST
 4:	Algo6()		// LINE DETECTION WITH MAIN EDGES *** for pass 1
 5:	Algo7()		// SCAN HORIZONTAL
 6:	Algo8()		// MAIN EDGES WITH AREAS
+7:	Algo9()		// MAIN EDGES WITH DARK TRACKS *** for pass 2
 
 !thinJointAlgoActive	// with laser - HORIZONTAL SEARCH
 1:	Algo1()		// LONGEST SOLID LINES
@@ -30,3 +33,30 @@ V6.0	TORCH UP COMMAND
 
 to bypass password check at settings/setup forms;
 CTRL+SHIFT +click TAMAM on password screen
+
+-----------------------------------------------------------------
+üç takip tipi var: sürekli kaynak (spiral boru), kesikli/süreli (batch-tüp kaynaðý): tek paso süre kontrolü ve çift paso süre kontrolü
+-----------------------------------------------------------------
+çift paso süre kontrolü: 
+1. kaynak süresine 1'den 2'ye geçiþ süresi dahil, yani 1.kaynakta kontrol
+pass1TimerTime = pass1TotalTime(p1t) - passTrTimerTime(pgt) mili saniye sonra duruyor, 
+passTrTimerTime(pgt) süresince kontrol yapýlmýyor
+pass2TimerTime(p2t) süresince 2.paso algoritmasý uygulanýyor
+-----------------------------------------------------------------
+
+video kayýt;
+
+videomode=1 (videomode=0; kurulum ekranýndan girilen süre x reel fps kadar image kaydediliyor, þu anda kullanýlmýyor)
+
+eðer kontrol baþlatýlmamýþsa video düðmesine basýnca baþlar, tekrar basýnca biter. 
+videoDuration süresi (saniye) bitince otomatik durdurulur, daha fazla kayýt yapmasý engellenir, istenirse terkrar baþlatýlýr veya süre ile oynanabilir.
+
+kontrol baþlatýlmýþsa da aynýdýr
+
+ancak autoVideo true ise kaynak baþlatlýnca otomatik baþlar
+1- sürekli kaynakta: videoDuration süresi (saniye) bitince otomatik durdurulur, bundan sonra video düðmesi ile tekrar baþlatýlabilir.
+2- süreli kaynakta: kaynak bitinceye kadar devam eder (kaynak süresi ne tanýmlanmýþsa)
+-----------------------------------------------------------------
+
+
+

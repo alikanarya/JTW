@@ -241,6 +241,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     timer->start(1); */
 
     connect(&videoTimer, SIGNAL(timeout()), this, SLOT(videoSlot()));
+    connect(&videoStopTimer, SIGNAL(timeout()), this, SLOT(videoTimerStopSlot()));
 
     settingsPWDOK = false;
     setupPWDOK = false;
@@ -1031,6 +1032,15 @@ void MainWindow::controlButton(){
                 ui->targetDriftCenter->setEnabled( false );
                 ui->targetDriftRight->setEnabled( false );
             }
+
+        }
+        if (autoVideo) {
+            if (videoTimer.isActive()) {
+                videoTimer.stop();
+                saveFinished();
+                ui->videoButton->setEnabled(true);
+                ui->videoButton->setIcon(videoSaveEnabled);
+            }
         }
 
 
@@ -1130,11 +1140,9 @@ void MainWindow::startControl(){
             ui->targetDriftLeft->setEnabled( true );
             ui->targetDriftCenter->setEnabled( true );
             ui->targetDriftRight->setEnabled( true );
+        } // timeControlTwoPass
 
-            if (autoVideo)
-                videoButton();
-        }
-    }
+    } //twoPassWelding
 
 
     // time control: to stop the control after some amount of time after the beginning
@@ -1146,6 +1154,21 @@ void MainWindow::startControl(){
         timeControlCounter = 0;
         permTime = true;
         startTimeControlCount = false;
+    }
+
+    if (autoVideo) {
+        if (videoTimer.isActive()) videoTimer.stop();
+        ui->videoButton->setEnabled(false);
+        ui->videoButton->setIcon(videoSaveDisabled);
+
+        folderName = savePath + QDateTime::currentDateTime().toString("yyMMdd_hhmmss") + "/";
+        if (!QDir(folderName).exists())
+            QDir().mkdir(folderName);
+        videoTimer.start(videoPeriod);
+        if (!(twoPassWelding || timeControl)){
+            videoStopTimer.start(videoDuration*1000);
+        }
+
     }
 
 }
@@ -1194,7 +1217,7 @@ void MainWindow::pass2StartSlot(){
     controlInitiated = alignGuide2TrackCenter; // to align guide again
     histState = 2;
     iProcessThread->algoSwitch = true;
-    algorithmType = algorithmTypePass2;     // Algo3() MAIN EDGES
+    algorithmType = algorithmTypePass2;     // Algo9() MAIN EDGES WITH DARK TRACKS
     pass1detected = false;
     pass2detected = true;
 
@@ -1423,7 +1446,7 @@ void MainWindow::processImage(bool deleteObject){
                         algorithmType = algorithmTypePass1;     // Algo6() LINE DETECTION WITH MAIN EDGES
                     } else if (!pass1detected && pass2detected) {
                         iProcessThread->algoSwitch = true;
-                        algorithmType = algorithmTypePass2;     // Algo3() MAIN EDGES
+                        algorithmType = algorithmTypePass2;     // Algo9() MAIN EDGES WITH DARK TRACKS
                     } else {
                         iProcessThread->algoSwitch = false;
                     }
@@ -2079,6 +2102,8 @@ void MainWindow::readSettings(){
             restartApp = settings->value("rst", false).toBool();
             videoMode = settings->value("videomode", 0).toInt();
             autoVideo = settings->value("videoauto", false).toBool();
+            videoDuration = settings->value("videoduration", 0).toInt();
+            videoPeriod = settings->value("videoperiod", 0).toInt();
             if (autoVideo)
                 ui->plainTextEdit->appendPlainText("Oto Kayıt Aktif!");
 
@@ -2204,6 +2229,8 @@ void MainWindow::readSettings(){
 
         videoMode = 0;
         autoVideo = false;
+        videoDuration = 60;
+        videoPeriod = 500;
 
         statusMessage = "ini dosyası bulunamadı";
     }
@@ -2360,6 +2387,8 @@ void MainWindow::writeSettings(){
         settings->setValue("videomode", QString::number(videoMode));
         QVariant videoautosw(autoVideo);
             settings->setValue("videoauto", videoautosw.toString());
+        settings->setValue("videoduration", QString::number(videoDuration));
+        settings->setValue("videoperiod", QString::number(videoPeriod));
 
         settings->endGroup();
 
@@ -2671,10 +2700,9 @@ void MainWindow::timeEdit(){
 
 void MainWindow::videoButton(){
 
-    if (play) {
-        captureVideo = true;
-        ui->videoButton->setEnabled(false);
-        ui->videoButton->setIcon(videoSaveDisabled);
+    if (play) captureVideo = !captureVideo;
+
+    if (captureVideo) {
 
         if (videoMode == 0) {
 
@@ -2689,8 +2717,18 @@ void MainWindow::videoButton(){
             folderName = savePath + QDateTime::currentDateTime().toString("yyMMdd_hhmmss") + "/";
             if (!QDir(folderName).exists())
                 QDir().mkdir(folderName);
-            videoTimer.start(500);
+            videoTimer.start(videoPeriod);
+            videoStopTimer.start(videoDuration*1000);
+            ui->videoButton->setIcon(videoSaveDisabled);
+
         }
+    } else {
+        if (videoTimer.isActive()) {
+            videoTimer.stop();
+            saveFinished();
+            ui->videoButton->setIcon(videoSaveEnabled);
+        }
+        if (videoStopTimer.isActive()) videoStopTimer.stop();
     }
 }
 
@@ -2705,6 +2743,17 @@ void MainWindow::videoSlot(){
         }
         threadVideoSave->start();
     }
+}
+
+void MainWindow::videoTimerStopSlot(){
+
+    if (videoTimer.isActive()) {
+        videoTimer.stop();
+        saveFinished();
+    }
+    videoStopTimer.stop();
+    captureVideo = false;
+    ui->videoButton->setIcon(videoSaveEnabled);
 }
 
 void MainWindow::saveFinished(){
@@ -3780,7 +3829,7 @@ void MainWindow::on_passOneButton_clicked(){
 
 void MainWindow::on_passTwoButton_clicked(){
     if (twoPassWelding && !autoDetect2ndPass && !timeControlTwoPass) {
-        algorithmType = algorithmTypePass2;  // Algo3() MAIN EDGES
+        algorithmType = algorithmTypePass2;  // Algo9() MAIN EDGES WITH DARK TRACKS
         ui->passOneButton->setStyleSheet(SS_OFF);
         ui->passTwoButton->setStyleSheet(SS_ON);
     }

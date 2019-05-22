@@ -483,8 +483,9 @@ public:
     QImage *videoList;
     int videoFrameCount;
     int videoFrameSize = 25;
-    int videoDuration = 1;
-    QTimer videoTimer;
+    int videoDuration = 60; // second
+    int videoPeriod = 500;  // milisecond, snapshot interval
+    QTimer videoTimer, videoStopTimer;
     int videoMode = 0;  // 0:old time mode, 1: fps mode
     bool autoVideo = false;
 
@@ -684,7 +685,7 @@ private slots:
     void showReport();
     void thinJointButton();
     void videoSlot();
-
+    void videoTimerStopSlot();
 
     // process controls
     void update();                                  // 1msec timer actions
